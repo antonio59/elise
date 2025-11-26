@@ -38,6 +38,18 @@ export const toggle = mutation({
       createdAt: Date.now(),
     });
 
+    // Create notification
+    const users = await ctx.db.query("users").collect();
+    const follower = users.find((u) => u._id === session.userId);
+    await ctx.db.insert("notifications", {
+      userId: args.userId,
+      type: "follow",
+      message: `${follower?.username || "Someone"} started following you`,
+      fromUserId: session.userId,
+      read: false,
+      createdAt: Date.now(),
+    });
+
     return { following: true };
   },
 });

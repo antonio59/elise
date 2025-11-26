@@ -6,6 +6,7 @@ import { useQuery, useMutation } from 'convex/react'
 import { api, useAuth } from '@/lib/convex'
 import { Id } from '../../../convex/_generated/dataModel'
 import LikeButton from '@/components/LikeButton'
+import ShareButton from '@/components/ShareButton'
 
 export default function ArtworkDetailPage() {
   const { id } = useParams()
@@ -21,8 +22,22 @@ export default function ArtworkDetailPage() {
   const artwork = useQuery(api.artworks.getById, { artworkId: id as Id<"artworks"> })
   const updateArtwork = useMutation(api.artworks.update)
   const deleteArtwork = useMutation(api.artworks.remove)
+  const addCustomSticker = useMutation(api.preferences.addCustomSticker)
+  const [stickerAdded, setStickerAdded] = useState(false)
 
   const isOwner = user && artwork && user._id === artwork.userId
+
+  const handleAddSticker = async () => {
+    if (!token || !artwork) return
+    await addCustomSticker({
+      token,
+      name: artwork.title || 'My Art',
+      imageUrl: artwork.imageUrl,
+      artworkId: artwork._id,
+    })
+    setStickerAdded(true)
+    setTimeout(() => setStickerAdded(false), 2000)
+  }
 
   const handleEdit = () => {
     if (artwork) { setTitle(artwork.title || ''); setStyle(artwork.style || ''); setPublished(artwork.published) }
@@ -72,6 +87,16 @@ export default function ArtworkDetailPage() {
           </div>
           <div className="flex flex-col gap-2">
             <LikeButton contentId={artwork._id} contentType="artwork" />
+            <ShareButton title={artwork.title || 'Artwork'} />
+            {isOwner && (
+              <button
+                onClick={handleAddSticker}
+                disabled={stickerAdded}
+                className="rounded-md bg-inkYellow text-inkBlack px-4 py-2 text-sm font-medium hover:bg-yellow-400 transition-colors disabled:opacity-50"
+              >
+                {stickerAdded ? '✓ Added!' : '🎨 Make Sticker'}
+              </button>
+            )}
             {isOwner && !editing && <div className="flex gap-2 mt-2"><button onClick={handleEdit} className="rounded-md bg-inkCyan text-white px-4 py-2 text-sm">Edit</button><button onClick={handleDelete} disabled={deleting} className="rounded-md bg-red-500 text-white px-4 py-2 text-sm disabled:opacity-50">{deleting ? '...' : 'Delete'}</button></div>}
           </div>
         </div>

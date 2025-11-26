@@ -133,4 +133,27 @@ export default defineSchema({
   })
     .index("by_user", ["userId"])
     .index("by_user_date", ["userId", "date"]),
+
+  notifications: defineTable({
+    userId: v.id("users"),
+    type: v.union(v.literal("like"), v.literal("follow"), v.literal("achievement"), v.literal("goal")),
+    message: v.string(),
+    fromUserId: v.optional(v.id("users")),
+    contentId: v.optional(v.string()),
+    contentType: v.optional(v.string()),
+    read: v.boolean(),
+    createdAt: v.number(),
+  })
+    .index("by_user", ["userId"])
+    .index("by_user_unread", ["userId", "read"]),
+
+  readingGoals: defineTable({
+    userId: v.id("users"),
+    year: v.number(),
+    targetBooks: v.number(),
+    targetPages: v.optional(v.number()),
+    createdAt: v.number(),
+  })
+    .index("by_user", ["userId"])
+    .index("by_user_year", ["userId", "year"]),
 });

@@ -1,12 +1,24 @@
 'use client'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/convex'
+import NotificationBell from './NotificationBell'
 
 export default function Header() {
   const { user, loading, logout } = useAuth()
+  const router = useRouter()
   const [mobileOpen, setMobileOpen] = useState(false)
   const [darkMode, setDarkMode] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (searchQuery.trim()) {
+      router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`)
+      setSearchQuery('')
+    }
+  }
 
   useEffect(() => {
     const stored = localStorage.getItem('theme')
@@ -42,7 +54,10 @@ export default function Header() {
             <>
               <Link href="/dashboard" className="hover:text-inkLime transition-colors">Dashboard</Link>
               {user.role === 'parent' && (
-                <Link href="/manage" className="hover:text-inkPurple transition-colors">Manage</Link>
+                <>
+                  <Link href="/parent" className="hover:text-inkYellow transition-colors">Parent View</Link>
+                  <Link href="/manage" className="hover:text-inkPurple transition-colors">Manage</Link>
+                </>
               )}
               <Link href="/profile" className="hover:text-inkYellow transition-colors">
                 {user.avatarUrl ? (
@@ -55,6 +70,17 @@ export default function Header() {
         </nav>
 
         <div className="hidden md:flex items-center gap-3">
+          <form onSubmit={handleSearch} className="relative">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search..."
+              className="w-40 lg:w-56 px-3 py-1.5 pl-8 rounded-full border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 text-sm focus:outline-none focus:ring-2 focus:ring-inkPink"
+            />
+            <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-sm">🔍</span>
+          </form>
+          {user && <NotificationBell />}
           <button
             onClick={toggleDark}
             className="p-2 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
@@ -103,7 +129,10 @@ export default function Header() {
             <>
               <Link href="/dashboard" className="block py-2 hover:text-inkLime" onClick={() => setMobileOpen(false)}>Dashboard</Link>
               {user.role === 'parent' && (
-                <Link href="/manage" className="block py-2 hover:text-inkPurple" onClick={() => setMobileOpen(false)}>Manage Content</Link>
+                <>
+                  <Link href="/parent" className="block py-2 hover:text-inkYellow" onClick={() => setMobileOpen(false)}>Parent View</Link>
+                  <Link href="/manage" className="block py-2 hover:text-inkPurple" onClick={() => setMobileOpen(false)}>Manage Content</Link>
+                </>
               )}
               <Link href="/profile" className="block py-2 hover:text-inkYellow" onClick={() => setMobileOpen(false)}>Profile</Link>
             </>

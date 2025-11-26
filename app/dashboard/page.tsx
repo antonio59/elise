@@ -5,6 +5,8 @@ import { api, useAuth } from '@/lib/convex'
 import ArtUpload from '@/components/ArtUpload'
 import BookForm from '@/components/BookForm'
 import ReviewEditor from '@/components/ReviewEditor'
+import ReadingGoal from '@/components/ReadingGoal'
+import BookRecommendations from '@/components/BookRecommendations'
 import { useState } from 'react'
 
 type Achievement = {
@@ -99,6 +101,10 @@ export default function DashboardPage() {
               <p className="text-3xl font-bold text-inkLime">{artworks.length}</p>
             </div>
           </div>
+
+          <ReadingGoal />
+
+          <BookRecommendations />
 
           <div className="rounded-xl border border-neutral-200 dark:border-neutral-800 p-4 bg-white dark:bg-neutral-900">
             <h4 className="font-medium mb-3">Reading Stats</h4>

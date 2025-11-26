@@ -12,9 +12,12 @@ import type * as artworks from "../artworks.js";
 import type * as auth from "../auth.js";
 import type * as books from "../books.js";
 import type * as follows from "../follows.js";
+import type * as goals from "../goals.js";
 import type * as likes from "../likes.js";
+import type * as notifications from "../notifications.js";
 import type * as preferences from "../preferences.js";
 import type * as reviews from "../reviews.js";
+import type * as search from "../search.js";
 import type * as storage from "../storage.js";
 import type * as users from "../users.js";
 
@@ -29,9 +32,12 @@ declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   books: typeof books;
   follows: typeof follows;
+  goals: typeof goals;
   likes: typeof likes;
+  notifications: typeof notifications;
   preferences: typeof preferences;
   reviews: typeof reviews;
+  search: typeof search;
   storage: typeof storage;
   users: typeof users;
 }>;

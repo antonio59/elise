@@ -42,6 +42,35 @@ export const toggle = mutation({
       createdAt: Date.now(),
     });
 
+    // Create notification for content owner
+    if (userId) {
+      let ownerId: typeof userId | null = null;
+      if (args.contentType === "artwork") {
+        const artworks = await ctx.db.query("artworks").collect();
+        const artwork = artworks.find((a) => a._id === args.contentId);
+        if (artwork) ownerId = artwork.userId;
+      } else if (args.contentType === "review") {
+        const reviews = await ctx.db.query("reviews").collect();
+        const review = reviews.find((r) => r._id === args.contentId);
+        if (review) ownerId = review.userId;
+      }
+
+      if (ownerId && ownerId !== userId) {
+        const users = await ctx.db.query("users").collect();
+        const liker = users.find((u) => u._id === userId);
+        await ctx.db.insert("notifications", {
+          userId: ownerId,
+          type: "like",
+          message: `${liker?.username || "Someone"} liked your ${args.contentType}`,
+          fromUserId: userId,
+          contentId: args.contentId,
+          contentType: args.contentType,
+          read: false,
+          createdAt: Date.now(),
+        });
+      }
+    }
+
     return { liked: true };
   },
 });
