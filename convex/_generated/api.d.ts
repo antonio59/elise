@@ -13,6 +13,7 @@ import type * as auth from "../auth.js";
 import type * as books from "../books.js";
 import type * as follows from "../follows.js";
 import type * as likes from "../likes.js";
+import type * as preferences from "../preferences.js";
 import type * as reviews from "../reviews.js";
 import type * as storage from "../storage.js";
 import type * as users from "../users.js";
@@ -29,6 +30,7 @@ declare const fullApi: ApiFromModules<{
   books: typeof books;
   follows: typeof follows;
   likes: typeof likes;
+  preferences: typeof preferences;
   reviews: typeof reviews;
   storage: typeof storage;
   users: typeof users;

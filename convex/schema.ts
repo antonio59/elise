@@ -68,8 +68,24 @@ export default defineSchema({
     bookTitle: v.string(),
     author: v.string(),
     rating: v.number(),
+    ratingType: v.optional(v.string()),
     moodColor: v.string(),
     content: v.string(),
+    richContent: v.optional(v.string()),
+    stickers: v.optional(v.array(v.object({
+      id: v.string(),
+      emoji: v.string(),
+      x: v.number(),
+      y: v.number(),
+      isCustom: v.optional(v.boolean()),
+      imageUrl: v.optional(v.string()),
+    }))),
+    gifs: v.optional(v.array(v.object({
+      id: v.string(),
+      url: v.string(),
+      width: v.number(),
+      height: v.number(),
+    }))),
     imageUrl: v.optional(v.string()),
     storageId: v.optional(v.id("_storage")),
     published: v.boolean(),
@@ -78,6 +94,18 @@ export default defineSchema({
     .index("by_user", ["userId"])
     .index("by_published", ["published"])
     .index("by_book", ["bookTitle"]),
+
+  userPreferences: defineTable({
+    userId: v.id("users"),
+    preferredRatingType: v.optional(v.string()),
+    customStickers: v.optional(v.array(v.object({
+      id: v.string(),
+      name: v.string(),
+      imageUrl: v.string(),
+      artworkId: v.optional(v.id("artworks")),
+    }))),
+    createdAt: v.number(),
+  }).index("by_user", ["userId"]),
 
   likes: defineTable({
     userId: v.optional(v.id("users")),

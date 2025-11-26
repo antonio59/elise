@@ -44,3 +44,46 @@ export const MOOD_COLORS = {
   inkPurple: 'bg-inkPurple',
   inkYellow: 'bg-inkYellow'
 } as const
+
+export const RATING_TYPES = {
+  stars: { icon: '⭐', empty: '☆', label: 'Stars', max: 5 },
+  hearts: { icon: '❤️', empty: '🤍', label: 'Hearts', max: 5 },
+  books: { icon: '📚', empty: '📖', label: 'Books', max: 5 },
+  sparkles: { icon: '✨', empty: '💫', label: 'Sparkles', max: 5 },
+  flames: { icon: '🔥', empty: '🕯️', label: 'Fire', max: 5 },
+  cats: { icon: '😺', empty: '🐱', label: 'Cats', max: 5 },
+  rainbows: { icon: '🌈', empty: '☁️', label: 'Rainbows', max: 5 },
+  cookies: { icon: '🍪', empty: '🥠', label: 'Cookies', max: 5 },
+  thumbsUp: { icon: '👍', empty: '👎', label: 'Thumbs', max: 1 },
+} as const
+
+export type RatingType = keyof typeof RATING_TYPES
+
+export const CHILD_FRIENDLY_EMOJI_CATEGORIES = [
+  'people',
+  'nature', 
+  'foods',
+  'activity',
+  'objects',
+  'symbols',
+  'flags'
+] as const
+
+export const STICKER_PACKS = {
+  reading: {
+    name: 'Reading Time',
+    stickers: ['📚', '📖', '📕', '📗', '📘', '📙', '🔖', '📑', '✏️', '🖊️', '📝', '💭']
+  },
+  feelings: {
+    name: 'Book Feelings', 
+    stickers: ['🥰', '😍', '🤩', '😭', '😱', '🤯', '💕', '💖', '💗', '✨', '🌟', '⭐']
+  },
+  animals: {
+    name: 'Cute Animals',
+    stickers: ['🐱', '🐶', '🐰', '🦊', '🐻', '🐼', '🦋', '🐝', '🌸', '🌺', '🌻', '🌷']
+  },
+  magic: {
+    name: 'Magic & Fantasy',
+    stickers: ['🧙', '🧚', '🦄', '🐉', '🏰', '👑', '🗡️', '🛡️', '🔮', '🪄', '⚡', '🌙']
+  }
+} as const

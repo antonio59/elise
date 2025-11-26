@@ -7,8 +7,24 @@ export const create = mutation({
     bookTitle: v.string(),
     author: v.string(),
     rating: v.number(),
+    ratingType: v.optional(v.string()),
     moodColor: v.string(),
     content: v.string(),
+    richContent: v.optional(v.string()),
+    stickers: v.optional(v.array(v.object({
+      id: v.string(),
+      emoji: v.string(),
+      x: v.number(),
+      y: v.number(),
+      isCustom: v.optional(v.boolean()),
+      imageUrl: v.optional(v.string()),
+    }))),
+    gifs: v.optional(v.array(v.object({
+      id: v.string(),
+      url: v.string(),
+      width: v.number(),
+      height: v.number(),
+    }))),
     imageUrl: v.optional(v.string()),
     storageId: v.optional(v.id("_storage")),
     published: v.boolean(),
@@ -28,8 +44,12 @@ export const create = mutation({
       bookTitle: args.bookTitle,
       author: args.author,
       rating: args.rating,
+      ratingType: args.ratingType,
       moodColor: args.moodColor,
       content: args.content,
+      richContent: args.richContent,
+      stickers: args.stickers,
+      gifs: args.gifs,
       imageUrl: args.imageUrl,
       storageId: args.storageId,
       published: args.published,
@@ -43,8 +63,24 @@ export const update = mutation({
     token: v.string(),
     reviewId: v.id("reviews"),
     rating: v.optional(v.number()),
+    ratingType: v.optional(v.string()),
     moodColor: v.optional(v.string()),
     content: v.optional(v.string()),
+    richContent: v.optional(v.string()),
+    stickers: v.optional(v.array(v.object({
+      id: v.string(),
+      emoji: v.string(),
+      x: v.number(),
+      y: v.number(),
+      isCustom: v.optional(v.boolean()),
+      imageUrl: v.optional(v.string()),
+    }))),
+    gifs: v.optional(v.array(v.object({
+      id: v.string(),
+      url: v.string(),
+      width: v.number(),
+      height: v.number(),
+    }))),
     published: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
@@ -67,8 +103,12 @@ export const update = mutation({
 
     const updates: any = {};
     if (args.rating !== undefined) updates.rating = args.rating;
+    if (args.ratingType !== undefined) updates.ratingType = args.ratingType;
     if (args.moodColor !== undefined) updates.moodColor = args.moodColor;
     if (args.content !== undefined) updates.content = args.content;
+    if (args.richContent !== undefined) updates.richContent = args.richContent;
+    if (args.stickers !== undefined) updates.stickers = args.stickers;
+    if (args.gifs !== undefined) updates.gifs = args.gifs;
     if (args.published !== undefined) updates.published = args.published;
 
     await ctx.db.patch(args.reviewId, updates);
