@@ -9,8 +9,9 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Trash2, Plus } from "lucide-react";
+import { Trash2, Plus, Search, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 // Mock Schema for Book
 const bookSchema = z.object({
@@ -32,6 +33,9 @@ export default function Admin() {
   const store = useStore();
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("books");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchResults, setSearchResults] = useState<any[]>([]);
 
   // Forms
   const bookForm = useForm({
@@ -53,6 +57,35 @@ export default function Admin() {
       image: "https://placehold.co/400x400/e2e8f0/475569?text=Art", // Default placeholder
     },
   });
+
+  const searchBooks = async () => {
+    if (!searchQuery.trim()) return;
+    
+    setIsSearching(true);
+    try {
+      const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(searchQuery)}`);
+      const data = await response.json();
+      setSearchResults(data.items || []);
+    } catch (error) {
+      toast({ title: "Error", description: "Failed to search books", variant: "destructive" });
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  const selectBook = (book: any) => {
+    const info = book.volumeInfo;
+    bookForm.setValue("title", info.title || "");
+    bookForm.setValue("author", info.authors?.[0] || "");
+    bookForm.setValue("cover", info.imageLinks?.thumbnail?.replace("http:", "https:") || "https://placehold.co/400x600/e2e8f0/475569?text=No+Cover");
+    // Set a default review placeholder or keep empty if user wants to write their own
+    if (!bookForm.getValues("review")) {
+        bookForm.setValue("review", "");
+    }
+    setSearchResults([]);
+    setSearchQuery("");
+    toast({ title: "Book Selected", description: "Fill in your review and rating!" });
+  };
 
   const onAddBook = (data: any) => {
     store.addBook({
@@ -98,7 +131,60 @@ export default function Admin() {
                   <CardTitle>Add New Book</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <form onSubmit={bookForm.handleSubmit(onAddBook)} className="space-y-4">
+                  <div className="mb-6 space-y-2">
+                    <Label>Search Google Books</Label>
+                    <div className="flex gap-2">
+                      <Input 
+                        placeholder="Search by title..." 
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && searchBooks()}
+                      />
+                      <Button onClick={searchBooks} disabled={isSearching} variant="secondary">
+                        {isSearching ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
+                      </Button>
+                    </div>
+                    
+                    {/* Search Results Dropdown */}
+                    {searchResults.length > 0 && (
+                      <div className="absolute z-10 mt-1 w-full max-w-[350px] bg-white rounded-md shadow-xl border border-gray-100 overflow-hidden">
+                        <ScrollArea className="h-[300px]">
+                          <div className="p-2 space-y-1">
+                            {searchResults.map((book) => (
+                              <div 
+                                key={book.id}
+                                className="flex items-start gap-3 p-2 hover:bg-purple-50 rounded-md cursor-pointer transition-colors"
+                                onClick={() => selectBook(book)}
+                              >
+                                <img 
+                                  src={book.volumeInfo.imageLinks?.thumbnail || "https://placehold.co/40x60"} 
+                                  alt="" 
+                                  className="w-10 h-14 object-cover rounded bg-gray-100"
+                                />
+                                <div className="flex-1 min-w-0">
+                                  <p className="text-sm font-bold truncate">{book.volumeInfo.title}</p>
+                                  <p className="text-xs text-muted-foreground truncate">
+                                    {book.volumeInfo.authors?.join(", ")}
+                                  </p>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </ScrollArea>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="relative">
+                    <div className="absolute inset-0 flex items-center">
+                      <span className="w-full border-t" />
+                    </div>
+                    <div className="relative flex justify-center text-xs uppercase">
+                      <span className="bg-white px-2 text-muted-foreground">Or enter manually</span>
+                    </div>
+                  </div>
+
+                  <form onSubmit={bookForm.handleSubmit(onAddBook)} className="space-y-4 mt-4">
                     <div className="space-y-2">
                       <Label>Title</Label>
                       <Input {...bookForm.register("title")} placeholder="Book Title" />
