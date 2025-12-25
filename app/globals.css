@@ -1,0 +1,172 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #faf5ff;
+  --bg-mint: #e8f5f0;
+  --text-primary: #1f2937;
+  --text-secondary: #6b7280;
+  --text-purple: #7c3aed;
+  --text-pink: #ec4899;
+  --border-color: #e5e7eb;
+}
+
+.dark {
+  --bg-primary: #0b0b10;
+  --bg-secondary: #0f172a;
+  --bg-mint: #0f172a;
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-purple: #c084fc;
+  --text-pink: #f472b6;
+  --border-color: #1f2937;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.2s ease, color 0.2s ease;
+  background-image: radial-gradient(circle at 16px 16px, rgba(0,0,0,0.02) 1px, transparent 0);
+  background-size: 24px 24px;
+}
+
+/* Gradient text utility */
+.text-gradient-purple {
+  background: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-pink {
+  background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Card styles */
+.card {
+  @apply bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300;
+}
+
+.card:hover {
+  @apply shadow-lg -translate-y-1;
+}
+
+.dark .card {
+  @apply bg-neutral-900 border-neutral-800;
+}
+
+/* Button styles */
+.btn-primary {
+  @apply px-6 py-2.5 rounded-full font-semibold text-white transition-all duration-200;
+  background: linear-gradient(135deg, #9333ea 0%, #ec4899 100%);
+}
+
+.btn-primary:hover {
+  @apply shadow-lg;
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  @apply px-6 py-2.5 rounded-full font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 transition-all duration-200;
+}
+
+/* Nav pill styles */
+.nav-pill {
+  @apply px-5 py-2 rounded-full font-medium text-sm transition-all duration-200 flex items-center gap-2;
+}
+
+.nav-pill-active {
+  @apply text-white;
+  background: linear-gradient(135deg, #9333ea 0%, #ec4899 100%);
+}
+
+.nav-pill-inactive {
+  @apply text-gray-600 hover:text-gray-900 hover:bg-gray-100;
+}
+
+.dark .nav-pill-inactive {
+  @apply text-neutral-300 hover:text-white hover:bg-neutral-800;
+}
+
+.dark .nav-pill-active {
+  background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+}
+
+/* Progress bar */
+.progress-bar {
+  @apply h-1 rounded-full overflow-hidden bg-gray-100;
+}
+
+.progress-bar-fill {
+  @apply h-full rounded-full transition-all duration-500;
+  background: linear-gradient(90deg, #f472b6 0%, #ec4899 100%);
+}
+
+/* Star ratings */
+.star-rating {
+  @apply flex gap-0.5;
+}
+
+.star-filled {
+  @apply text-yellow-400;
+}
+
+.star-empty {
+  @apply text-gray-300;
+}
+
+/* Skeleton loading */
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.skeleton {
+  animation: pulse-soft 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  @apply bg-gray-200 rounded;
+}
+
+/* Metric cards */
+.metric-card {
+  @apply bg-white rounded-2xl p-6 shadow-sm border border-gray-100;
+}
+
+.metric-card-purple {
+  @apply bg-gradient-to-br from-purple-50 to-pink-50 border-purple-100;
+}
+
+.metric-card-mint {
+  @apply bg-gradient-to-br from-emerald-50 to-teal-50 border-emerald-100;
+}
+
+.metric-card-gold {
+  @apply bg-gradient-to-br from-amber-50 to-yellow-50 border-amber-100;
+}
+
+/* Section headers */
+.section-header {
+  @apply flex items-center gap-3 mb-6;
+}
+
+.section-title {
+  @apply text-2xl font-bold text-gray-900;
+}
+
+.section-badge {
+  @apply px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-700;
+}
+
+/* Mobile menu */
+.hamburger-line {
+  @apply block h-0.5 w-6 bg-current transition-all duration-300;
+}
+
+/* Hero section mint background */
+.hero-mint {
+  background: linear-gradient(180deg, #e8f5f0 0%, #ffffff 100%);
+}

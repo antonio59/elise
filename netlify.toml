@@ -1,0 +1,58 @@
+# Netlify Configuration for Elise - Book Tracking & Art Sharing Site
+# Two environments: staging (main branch) and production (production branch)
+
+[build]
+  command = "bun run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Staging context (main branch - default)
+[context.production]
+  command = "bunx convex deploy --cmd 'bun run build'"
+  [context.production.environment]
+    # This is actually STAGING since main branch deploys here
+    # Set CONVEX_DEPLOY_KEY in Netlify UI for staging Convex project
+    NEXT_PUBLIC_CONVEX_URL = "https://rare-blackbird-695.convex.cloud"
+
+# Production branch context
+[context.branch.production]
+  command = "bunx convex deploy --cmd 'bun run build'"
+  [context.branch.production.environment]
+    NEXT_PUBLIC_CONVEX_URL = "https://agile-shrimp-456.convex.cloud"
+
+# Preview deploys (pull requests) - use staging
+[context.deploy-preview]
+  command = "bunx convex deploy --cmd 'bun run build'"
+  [context.deploy-preview.environment]
+    NEXT_PUBLIC_CONVEX_URL = "https://rare-blackbird-695.convex.cloud"
+
+# Headers for security and caching
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[headers]]
+  for = "/_next/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+# Redirects
+[[redirects]]
+  from = "/api/*"
+  to = "/api/:splat"
+  status = 200
+
+# Next.js SSR/ISR support
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
