@@ -1,7 +1,11 @@
 import bcrypt from "bcryptjs";
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
-import { normalizeEmail, sanitizeOptionalUrl, sanitizePlainText } from "./utils";
+import {
+  normalizeEmail,
+  sanitizeOptionalUrl,
+  sanitizePlainText,
+} from "./utils";
 
 const PASSWORD_MIN_LENGTH = 8;
 const SESSION_TTL_MS = 30 * 24 * 60 * 60 * 1000;
@@ -9,7 +13,8 @@ const RATE_LIMIT_WINDOW_MS = 5 * 60 * 1000;
 const RATE_LIMIT_MAX = 10;
 
 async function hashPassword(password: string): Promise<string> {
-  return await bcrypt.hash(password, 12);
+  // Use cost factor 10 for Convex runtime compatibility (12 can timeout)
+  return await bcrypt.hash(password, 10);
 }
 
 async function legacySha256(password: string): Promise<string> {
@@ -39,7 +44,9 @@ async function enforceRateLimit(ctx: any, identifier: string, action: string) {
   const now = Date.now();
   const record = await ctx.db
     .query("rateLimits")
-    .withIndex("by_identifier_action", (q: any) => q.eq("identifier", identifier).eq("action", action))
+    .withIndex("by_identifier_action", (q: any) =>
+      q.eq("identifier", identifier).eq("action", action),
+    )
     .first();
 
   if (!record || record.windowExpiresAt <= now) {
