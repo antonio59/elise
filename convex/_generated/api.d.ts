@@ -10,6 +10,7 @@
 
 import type * as artworks from "../artworks.js";
 import type * as auth from "../auth.js";
+import type * as bookSuggestions from "../bookSuggestions.js";
 import type * as books from "../books.js";
 import type * as follows from "../follows.js";
 import type * as goals from "../goals.js";
@@ -23,6 +24,7 @@ import type * as siteSettings from "../siteSettings.js";
 import type * as stickers from "../stickers.js";
 import type * as storage from "../storage.js";
 import type * as users from "../users.js";
+import type * as utils from "../utils.js";
 
 import type {
   ApiFromModules,
@@ -33,6 +35,7 @@ import type {
 declare const fullApi: ApiFromModules<{
   artworks: typeof artworks;
   auth: typeof auth;
+  bookSuggestions: typeof bookSuggestions;
   books: typeof books;
   follows: typeof follows;
   goals: typeof goals;
@@ -46,6 +49,7 @@ declare const fullApi: ApiFromModules<{
   stickers: typeof stickers;
   storage: typeof storage;
   users: typeof users;
+  utils: typeof utils;
 }>;
 
 /**

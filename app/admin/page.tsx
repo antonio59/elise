@@ -26,12 +26,17 @@ import {
   Flame,
   Loader2,
   ShieldAlert,
+  Gift,
+  Check,
+  X,
+  Filter,
 } from "lucide-react";
 
 type Tab =
   | "overview"
   | "add-book"
   | "add-art"
+  | "suggestions"
   | "stickers"
   | "settings"
   | "manage";
@@ -55,6 +60,22 @@ export default function AdminPage() {
   const updateHeroImage = useMutation(api.siteSettings.updateHeroImage);
   const createSticker = useMutation(api.stickers.create);
   const removeSticker = useMutation(api.stickers.remove);
+
+  // Book suggestions
+  const pendingSuggestions =
+    useQuery(api.bookSuggestions.getPending, token ? { token } : "skip") ?? [];
+  const approveSuggestion = useMutation(api.bookSuggestions.approve);
+  const rejectSuggestion = useMutation(api.bookSuggestions.reject);
+
+  // Gifters for filtering
+  const gifters =
+    useQuery(api.books.getGifters, token ? { token } : "skip") ?? [];
+  const [selectedGifter, setSelectedGifter] = useState<string | null>(null);
+  const booksByGifter =
+    useQuery(
+      api.books.getByGifter,
+      token && selectedGifter ? { token, gifter: selectedGifter } : "skip",
+    ) ?? [];
 
   // Sticker form
   const [stickerName, setStickerName] = useState("");
@@ -183,10 +204,36 @@ export default function AdminPage() {
     }
   };
 
+  const handleApproveSuggestion = async (
+    suggestionId: any,
+    addToWishlist: boolean,
+  ) => {
+    if (!token) return;
+    try {
+      await approveSuggestion({ token, suggestionId, addToWishlist });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleRejectSuggestion = async (suggestionId: any) => {
+    if (!token) return;
+    try {
+      await rejectSuggestion({ token, suggestionId });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const tabs = [
     { key: "overview", label: "Overview", icon: BarChart3 },
     { key: "add-book", label: "Add Book", icon: BookPlus },
     { key: "add-art", label: "Add Art", icon: Palette },
+    {
+      key: "suggestions",
+      label: `Suggestions${pendingSuggestions.length > 0 ? ` (${pendingSuggestions.length})` : ""}`,
+      icon: Gift,
+    },
     { key: "stickers", label: "Stickers", icon: Sticker },
     { key: "settings", label: "Settings", icon: Settings },
     { key: "manage", label: "Manage", icon: FolderOpen },
@@ -448,6 +495,198 @@ export default function AdminPage() {
             token={token}
             onComplete={() => setActiveTab("overview")}
           />
+        )}
+
+        {/* Book Suggestions */}
+        {activeTab === "suggestions" && (
+          <div className="max-w-3xl space-y-6">
+            <div>
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                Book Suggestions
+              </h2>
+              <p className="text-gray-500 dark:text-gray-400 text-sm">
+                Review book recommendations from visitors. Approve to add to
+                your wishlist.
+              </p>
+            </div>
+
+            {pendingSuggestions.length === 0 ? (
+              <Card padding="lg" className="text-center">
+                <Gift className="w-12 h-12 mx-auto text-gray-300 dark:text-neutral-600 mb-3" />
+                <p className="text-gray-500 dark:text-gray-400">
+                  No pending suggestions
+                </p>
+                <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">
+                  When visitors suggest books, they&apos;ll appear here
+                </p>
+              </Card>
+            ) : (
+              <div className="space-y-4">
+                {pendingSuggestions.map((suggestion) => (
+                  <Card key={suggestion._id} padding="md">
+                    <div className="flex gap-4">
+                      {suggestion.coverUrl ? (
+                        <img
+                          src={suggestion.coverUrl}
+                          alt=""
+                          className="w-16 h-24 object-cover rounded-lg flex-shrink-0"
+                        />
+                      ) : (
+                        <div className="w-16 h-24 bg-gray-100 dark:bg-neutral-800 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <Gift className="w-6 h-6 text-gray-400" />
+                        </div>
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-gray-900 dark:text-white">
+                          {suggestion.title}
+                        </h3>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                          by {suggestion.author}
+                        </p>
+                        {suggestion.genre && (
+                          <Badge variant="default" className="mt-1">
+                            {suggestion.genre}
+                          </Badge>
+                        )}
+                        <div className="mt-2 pt-2 border-t border-gray-100 dark:border-neutral-800">
+                          <p className="text-xs text-gray-400 dark:text-gray-500">
+                            Suggested by{" "}
+                            <span className="font-medium text-gray-600 dark:text-gray-300">
+                              {suggestion.suggestedBy}
+                            </span>
+                          </p>
+                          {suggestion.reason && (
+                            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1 italic">
+                              &ldquo;{suggestion.reason}&rdquo;
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        <button
+                          onClick={() =>
+                            handleApproveSuggestion(suggestion._id, true)
+                          }
+                          className="flex items-center gap-1 px-3 py-1.5 bg-emerald-500 text-white text-sm font-medium rounded-lg hover:bg-emerald-600 transition-colors"
+                          title="Approve and add to wishlist"
+                        >
+                          <Check size={14} />
+                          Add
+                        </button>
+                        <button
+                          onClick={() =>
+                            handleApproveSuggestion(suggestion._id, false)
+                          }
+                          className="flex items-center gap-1 px-3 py-1.5 bg-gray-100 dark:bg-neutral-800 text-gray-600 dark:text-gray-300 text-sm font-medium rounded-lg hover:bg-gray-200 dark:hover:bg-neutral-700 transition-colors"
+                          title="Approve without adding"
+                        >
+                          <Check size={14} />
+                          OK
+                        </button>
+                        <button
+                          onClick={() => handleRejectSuggestion(suggestion._id)}
+                          className="flex items-center gap-1 px-3 py-1.5 text-red-500 text-sm font-medium rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                          title="Reject"
+                        >
+                          <X size={14} />
+                        </button>
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            )}
+
+            {/* Filter by Gifter Section */}
+            {gifters.length > 0 && (
+              <div className="mt-8 pt-8 border-t border-gray-200 dark:border-neutral-800">
+                <div className="flex items-center gap-2 mb-4">
+                  <Filter size={18} className="text-gray-400" />
+                  <h3 className="text-lg font-bold text-gray-900 dark:text-white">
+                    Books by Gifter
+                  </h3>
+                </div>
+                <div className="flex flex-wrap gap-2 mb-4">
+                  <button
+                    onClick={() => setSelectedGifter(null)}
+                    className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${
+                      selectedGifter === null
+                        ? "bg-gray-900 dark:bg-white text-white dark:text-gray-900"
+                        : "bg-gray-100 dark:bg-neutral-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-neutral-700"
+                    }`}
+                  >
+                    All
+                  </button>
+                  {gifters.map((gifter) => (
+                    <button
+                      key={gifter}
+                      onClick={() => setSelectedGifter(gifter)}
+                      className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${
+                        selectedGifter === gifter
+                          ? "bg-gray-900 dark:bg-white text-white dark:text-gray-900"
+                          : "bg-gray-100 dark:bg-neutral-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-neutral-700"
+                      }`}
+                    >
+                      <Gift size={12} className="inline mr-1" />
+                      {gifter}
+                    </button>
+                  ))}
+                </div>
+
+                {selectedGifter && (
+                  <div className="space-y-3">
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      {booksByGifter.length} book
+                      {booksByGifter.length !== 1 ? "s" : ""} from{" "}
+                      {selectedGifter}
+                    </p>
+                    {booksByGifter.map((book) => (
+                      <Card
+                        key={book._id}
+                        padding="sm"
+                        className="flex items-center gap-4"
+                      >
+                        {book.coverUrl ? (
+                          <img
+                            src={book.coverUrl}
+                            alt=""
+                            className="w-12 h-16 object-cover rounded"
+                          />
+                        ) : (
+                          <div className="w-12 h-16 bg-gray-100 dark:bg-neutral-800 rounded flex items-center justify-center">
+                            <Gift size={16} className="text-gray-400" />
+                          </div>
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-gray-900 dark:text-white truncate">
+                            {book.title}
+                          </p>
+                          <p className="text-sm text-gray-500 dark:text-gray-400">
+                            {book.author}
+                          </p>
+                        </div>
+                        <Badge
+                          variant={
+                            book.status === "read"
+                              ? "success"
+                              : book.status === "reading"
+                                ? "info"
+                                : "default"
+                          }
+                        >
+                          {book.status === "read"
+                            ? "Read"
+                            : book.status === "reading"
+                              ? "Reading"
+                              : "Wishlist"}
+                        </Badge>
+                      </Card>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         )}
 
         {/* Stickers */}

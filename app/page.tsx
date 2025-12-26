@@ -6,7 +6,8 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import BookCard, { BookCardSkeleton } from "@/components/BookCard";
 import ArtCard, { ArtCardSkeleton } from "@/components/ArtCard";
-import { ChevronRight } from "lucide-react";
+import SuggestBookModal from "@/components/SuggestBookModal";
+import { ChevronRight, Gift } from "lucide-react";
 import { useState } from "react";
 
 type TabType = "all" | "reading" | "read" | "wishlist";
@@ -14,6 +15,7 @@ type TabType = "all" | "reading" | "read" | "wishlist";
 export default function HomePage() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<TabType>("all");
+  const [showSuggestModal, setShowSuggestModal] = useState(false);
 
   const books = useQuery(api.books.getPublicBooks, { limit: 20 }) ?? [];
   const artworks = useQuery(api.artworks.getPublished, { limit: 8 }) ?? [];
@@ -151,6 +153,29 @@ export default function HomePage() {
             </div>
           </div>
 
+          {/* Suggest a Book Button - Show when Wishlist is active */}
+          {activeTab === "wishlist" && (
+            <div className="mb-6 p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg border border-emerald-100 dark:border-emerald-900/50">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <div>
+                  <h3 className="font-medium text-emerald-800 dark:text-emerald-300">
+                    Know a great book?
+                  </h3>
+                  <p className="text-sm text-emerald-600 dark:text-emerald-400">
+                    Suggest a book you think I&apos;d love to read!
+                  </p>
+                </div>
+                <button
+                  onClick={() => setShowSuggestModal(true)}
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-500 text-white font-medium rounded-lg hover:bg-emerald-600 transition-colors"
+                >
+                  <Gift size={18} />
+                  Suggest a Book
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* Books Grid */}
           {books === undefined ? (
             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4">
@@ -166,6 +191,15 @@ export default function HomePage() {
                   ? "No books yet"
                   : `No ${activeTab === "read" ? "completed" : activeTab} books`}
               </p>
+              {activeTab === "wishlist" && (
+                <button
+                  onClick={() => setShowSuggestModal(true)}
+                  className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-emerald-500 text-white font-medium rounded-lg hover:bg-emerald-600 transition-colors"
+                >
+                  <Gift size={18} />
+                  Suggest a Book
+                </button>
+              )}
             </div>
           ) : (
             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4">
@@ -280,6 +314,11 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+      {/* Suggest Book Modal */}
+      <SuggestBookModal
+        isOpen={showSuggestModal}
+        onClose={() => setShowSuggestModal(false)}
+      />
     </main>
   );
 }

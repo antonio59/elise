@@ -11,7 +11,7 @@ import StickerLibraryPicker from "@/components/StickerLibraryPicker";
 import { BookResult, getPopularBooks } from "@/lib/bookSearch";
 import { GENRES } from "@/lib/types";
 import { Id } from "@/convex/_generated/dataModel";
-import { Book, Sparkles, X } from "lucide-react";
+import { Book, Sparkles, X, Gift } from "lucide-react";
 
 type Props = {
   token: string | null;
@@ -49,6 +49,7 @@ export default function AddBookPanel({ token, onComplete }: Props) {
   >([]);
   const [pages, setPages] = useState("");
   const [published, setPublished] = useState(true);
+  const [giftedBy, setGiftedBy] = useState("");
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -99,6 +100,7 @@ export default function AddBookPanel({ token, onComplete }: Props) {
         review: reviewWithMedia || undefined,
         published,
         pagesTotal: pages ? parseInt(pages) : undefined,
+        giftedBy: giftedBy || undefined,
       });
 
       setTitle("");
@@ -114,6 +116,7 @@ export default function AddBookPanel({ token, onComplete }: Props) {
       setReviewStickers([]);
       setPages("");
       setPublished(true);
+      setGiftedBy("");
       setMessage("Book added!");
       onComplete?.();
     } catch (err: any) {
@@ -321,21 +324,37 @@ export default function AddBookPanel({ token, onComplete }: Props) {
               className="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
             />
           </div>
-          <div className="flex items-center gap-2 mt-6">
-            <input
-              id="book-published"
-              type="checkbox"
-              checked={published}
-              onChange={(e) => setPublished(e.target.checked)}
-              className="w-4 h-4 rounded border-gray-300 dark:border-neutral-600 text-emerald-500 focus:ring-emerald-500"
-            />
-            <label
-              htmlFor="book-published"
-              className="text-sm text-gray-700 dark:text-gray-300"
-            >
-              Share publicly
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <span className="flex items-center gap-1.5">
+                <Gift size={14} className="text-emerald-500" />
+                Gifted By
+              </span>
             </label>
+            <input
+              type="text"
+              value={giftedBy}
+              onChange={(e) => setGiftedBy(e.target.value)}
+              placeholder="e.g., Grandma, Uncle Joe"
+              className="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            />
           </div>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <input
+            id="book-published"
+            type="checkbox"
+            checked={published}
+            onChange={(e) => setPublished(e.target.checked)}
+            className="w-4 h-4 rounded border-gray-300 dark:border-neutral-600 text-emerald-500 focus:ring-emerald-500"
+          />
+          <label
+            htmlFor="book-published"
+            className="text-sm text-gray-700 dark:text-gray-300"
+          >
+            Share publicly
+          </label>
         </div>
 
         <div>

@@ -30,7 +30,11 @@ export default defineSchema({
     coverStorageId: v.optional(v.id("_storage")),
     rating: v.optional(v.number()),
     review: v.optional(v.string()),
-    status: v.union(v.literal("reading"), v.literal("read"), v.literal("wishlist")),
+    status: v.union(
+      v.literal("reading"),
+      v.literal("read"),
+      v.literal("wishlist"),
+    ),
     genre: v.optional(v.string()),
     series: v.optional(v.string()),
     published: v.optional(v.boolean()),
@@ -38,12 +42,33 @@ export default defineSchema({
     pagesRead: v.optional(v.number()),
     isFavorite: v.boolean(),
     finishedAt: v.optional(v.number()),
+    giftedBy: v.optional(v.string()),
     createdAt: v.number(),
   })
     .index("by_user", ["userId"])
     .index("by_user_status", ["userId", "status"])
     .index("by_user_favorite", ["userId", "isFavorite"])
-    .index("by_published", ["published"]),
+    .index("by_published", ["published"])
+    .index("by_gifted_by", ["giftedBy"]),
+
+  bookSuggestions: defineTable({
+    suggestedBy: v.string(),
+    suggestedByEmail: v.optional(v.string()),
+    title: v.string(),
+    author: v.string(),
+    coverUrl: v.optional(v.string()),
+    genre: v.optional(v.string()),
+    reason: v.optional(v.string()),
+    status: v.union(
+      v.literal("pending"),
+      v.literal("approved"),
+      v.literal("rejected"),
+    ),
+    createdAt: v.number(),
+    reviewedAt: v.optional(v.number()),
+  })
+    .index("by_status", ["status"])
+    .index("by_created", ["createdAt"]),
 
   artSeries: defineTable({
     userId: v.id("users"),
@@ -89,20 +114,28 @@ export default defineSchema({
     moodColor: v.string(),
     content: v.string(),
     richContent: v.optional(v.string()),
-    stickers: v.optional(v.array(v.object({
-      id: v.string(),
-      emoji: v.string(),
-      x: v.number(),
-      y: v.number(),
-      isCustom: v.optional(v.boolean()),
-      imageUrl: v.optional(v.string()),
-    }))),
-    gifs: v.optional(v.array(v.object({
-      id: v.string(),
-      url: v.string(),
-      width: v.number(),
-      height: v.number(),
-    }))),
+    stickers: v.optional(
+      v.array(
+        v.object({
+          id: v.string(),
+          emoji: v.string(),
+          x: v.number(),
+          y: v.number(),
+          isCustom: v.optional(v.boolean()),
+          imageUrl: v.optional(v.string()),
+        }),
+      ),
+    ),
+    gifs: v.optional(
+      v.array(
+        v.object({
+          id: v.string(),
+          url: v.string(),
+          width: v.number(),
+          height: v.number(),
+        }),
+      ),
+    ),
     imageUrl: v.optional(v.string()),
     storageId: v.optional(v.id("_storage")),
     published: v.boolean(),
@@ -115,12 +148,16 @@ export default defineSchema({
   userPreferences: defineTable({
     userId: v.id("users"),
     preferredRatingType: v.optional(v.string()),
-    customStickers: v.optional(v.array(v.object({
-      id: v.string(),
-      name: v.string(),
-      imageUrl: v.string(),
-      artworkId: v.optional(v.id("artworks")),
-    }))),
+    customStickers: v.optional(
+      v.array(
+        v.object({
+          id: v.string(),
+          name: v.string(),
+          imageUrl: v.string(),
+          artworkId: v.optional(v.id("artworks")),
+        }),
+      ),
+    ),
     createdAt: v.number(),
   }).index("by_user", ["userId"]),
 
@@ -128,7 +165,11 @@ export default defineSchema({
     visitorId: v.optional(v.string()),
     userId: v.optional(v.id("users")),
     contentId: v.string(),
-    contentType: v.union(v.literal("artwork"), v.literal("review"), v.literal("book")),
+    contentType: v.union(
+      v.literal("artwork"),
+      v.literal("review"),
+      v.literal("book"),
+    ),
     reactionType: v.optional(v.union(v.literal("like"), v.literal("love"))),
     createdAt: v.number(),
   })
@@ -138,11 +179,14 @@ export default defineSchema({
 
   shares: defineTable({
     contentId: v.string(),
-    contentType: v.union(v.literal("artwork"), v.literal("review"), v.literal("book")),
+    contentType: v.union(
+      v.literal("artwork"),
+      v.literal("review"),
+      v.literal("book"),
+    ),
     platform: v.optional(v.string()),
     createdAt: v.number(),
-  })
-    .index("by_content", ["contentId"]),
+  }).index("by_content", ["contentId"]),
 
   stickers: defineTable({
     name: v.string(),
@@ -150,8 +194,7 @@ export default defineSchema({
     storageId: v.optional(v.id("_storage")),
     category: v.optional(v.string()),
     createdAt: v.number(),
-  })
-    .index("by_category", ["category"]),
+  }).index("by_category", ["category"]),
 
   follows: defineTable({
     followerId: v.id("users"),
@@ -173,7 +216,12 @@ export default defineSchema({
 
   notifications: defineTable({
     userId: v.id("users"),
-    type: v.union(v.literal("like"), v.literal("follow"), v.literal("achievement"), v.literal("goal")),
+    type: v.union(
+      v.literal("like"),
+      v.literal("follow"),
+      v.literal("achievement"),
+      v.literal("goal"),
+    ),
     message: v.string(),
     fromUserId: v.optional(v.id("users")),
     contentId: v.optional(v.string()),
