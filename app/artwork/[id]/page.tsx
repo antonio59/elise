@@ -58,7 +58,7 @@ export default function ArtworkDetailPage() {
               </span>
             )}
             {artwork.dateDrawn && (
-              <span className="px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-700">
+              <span className="px-3 py-1 rounded-full text-sm font-medium bg-emerald-100 text-emerald-700">
                 📅 {new Date(artwork.dateDrawn).toLocaleDateString()}
               </span>
             )}

@@ -127,7 +127,7 @@ export default function BookDetailPage() {
     return (
       <main className="py-10 px-4 text-center">
         <p className="text-gray-500">Book not found.</p>
-        <Link href="/" className="text-purple-600 hover:underline mt-4 inline-block">Go back home</Link>
+        <Link href="/" className="text-emerald-600 hover:underline mt-4 inline-block">Go back home</Link>
       </main>
     )
   }
@@ -135,7 +135,7 @@ export default function BookDetailPage() {
   return (
     <main className="py-10 px-4">
       <div className="max-w-4xl mx-auto">
-        <Link href="/" className="text-sm text-gray-500 hover:text-purple-600 mb-6 inline-block">
+        <Link href="/" className="text-sm text-gray-500 hover:text-emerald-600 mb-6 inline-block">
           ← Back to Bookshelf
         </Link>
 
@@ -144,7 +144,7 @@ export default function BookDetailPage() {
             {book.coverUrl ? (
               <img src={book.coverUrl} alt={book.title} className="w-full aspect-[2/3] object-cover rounded-2xl shadow-lg" />
             ) : (
-              <div className="w-full aspect-[2/3] bg-gradient-to-br from-purple-100 to-pink-100 rounded-2xl flex items-center justify-center">
+              <div className="w-full aspect-[2/3] bg-gradient-to-br from-gray-100 to-gray-50 rounded-2xl flex items-center justify-center">
                 <span className="text-6xl">📚</span>
               </div>
             )}
@@ -155,7 +155,7 @@ export default function BookDetailPage() {
             <p className="text-lg text-gray-600 mt-1">{book.author}</p>
 
             {book.genre && (
-              <span className="inline-block mt-3 px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-700">
+              <span className="inline-block mt-3 px-3 py-1 rounded-full text-sm font-medium bg-emerald-100 text-emerald-700">
                 {book.genre}
               </span>
             )}
@@ -243,7 +243,7 @@ export default function BookDetailPage() {
                       value={reviewContent}
                       onChange={(e) => setReviewContent(e.target.value)}
                       placeholder="What did you think of this book? 📚✨"
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 min-h-[120px]"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 min-h-[120px]"
                     />
                     
                     {/* Emoji and GIF toolbar */}

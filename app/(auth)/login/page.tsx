@@ -35,7 +35,7 @@ export default function LoginPage() {
       <div className="w-full max-w-md">
         {/* Logo/Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 mb-4">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gray-900 dark:bg-white mb-4">
             <span className="text-3xl">📚</span>
           </div>
           <h1 className="text-3xl font-black text-gray-900 dark:text-white">
@@ -91,7 +91,7 @@ export default function LoginPage() {
               Don&apos;t have an account?{" "}
               <Link
                 href="/register"
-                className="font-semibold text-purple-600 dark:text-purple-400 hover:underline"
+                className="font-semibold text-emerald-600 dark:text-emerald-400 hover:underline"
               >
                 Sign up
               </Link>

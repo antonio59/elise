@@ -61,7 +61,7 @@ export default function StickerLibraryPicker({ onSelect }: StickerLibraryPickerP
                 onClick={() => setActiveCategory(cat)}
                 className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap transition-colors ${
                   activeCategory === cat
-                    ? 'bg-purple-500 text-white'
+                    ? 'bg-emerald-500 text-white'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}
               >

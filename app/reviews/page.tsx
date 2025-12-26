@@ -28,8 +28,8 @@ const moodColors: Record<string, { bg: string; text: string; label: string }> =
       label: "Sky",
     },
     kawaii: {
-      bg: "bg-purple-100 dark:bg-purple-900/30",
-      text: "text-purple-700 dark:text-purple-300",
+      bg: "bg-emerald-100 dark:bg-emerald-900/30",
+      text: "text-emerald-700 dark:text-emerald-300",
       label: "Kawaii",
     },
     gold: {

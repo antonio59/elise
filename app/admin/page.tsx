@@ -94,7 +94,7 @@ export default function AdminPage() {
   if (loading) {
     return (
       <main className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
+        <Loader2 className="w-8 h-8 animate-spin text-emerald-500" />
       </main>
     );
   }
@@ -104,7 +104,7 @@ export default function AdminPage() {
     return (
       <main className="min-h-screen flex items-center justify-center px-4">
         <Card className="max-w-md w-full text-center" padding="lg">
-          <ShieldAlert className="w-16 h-16 mx-auto text-purple-500 mb-4" />
+          <ShieldAlert className="w-16 h-16 mx-auto text-emerald-500 mb-4" />
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
             Sign In Required
           </h1>
@@ -215,7 +215,7 @@ export default function AdminPage() {
                 onClick={() => setActiveTab(tab.key as Tab)}
                 className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium text-sm whitespace-nowrap transition-all ${
                   activeTab === tab.key
-                    ? "bg-gradient-to-r from-purple-600 to-pink-500 text-white shadow-md"
+                    ? "bg-gradient-to-r from-gray-800 to-gray-900 text-white shadow-md"
                     : "bg-white dark:bg-neutral-900 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-neutral-800 border border-gray-200 dark:border-neutral-800"
                 }`}
               >
@@ -236,7 +236,7 @@ export default function AdminPage() {
                 value={booksRead}
                 subtitle={`of ${totalBooks} total`}
                 icon="📚"
-                variant="purple"
+                variant="emerald"
               />
               <MetricCard
                 title="Total Pages"
@@ -312,16 +312,16 @@ export default function AdminPage() {
                     </div>
                   </div>
                 </Card>
-                <Card className="bg-purple-50 dark:bg-purple-900/20 border-purple-100 dark:border-purple-900/50">
+                <Card className="bg-emerald-50 dark:bg-emerald-900/20 border-emerald-100 dark:border-emerald-900/50">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 bg-purple-100 dark:bg-purple-900/50 rounded-lg">
-                      <Flame className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+                    <div className="p-2 bg-emerald-100 dark:bg-emerald-900/50 rounded-lg">
+                      <Flame className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
                     </div>
                     <div>
-                      <p className="text-sm text-purple-600 dark:text-purple-400 font-medium">
+                      <p className="text-sm text-emerald-600 dark:text-emerald-400 font-medium">
                         Engagement
                       </p>
-                      <p className="text-2xl font-bold text-purple-700 dark:text-purple-300">
+                      <p className="text-2xl font-bold text-emerald-700 dark:text-emerald-300">
                         {engagementStats?.totalEngagement ?? 0}
                       </p>
                     </div>
@@ -356,7 +356,7 @@ export default function AdminPage() {
                           className="w-12 h-16 object-cover rounded-lg"
                         />
                       ) : (
-                        <div className="w-12 h-16 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center">
+                        <div className="w-12 h-16 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg flex items-center justify-center">
                           📚
                         </div>
                       )}
@@ -536,7 +536,7 @@ export default function AdminPage() {
                 Site Settings
               </h2>
               <form onSubmit={handleSaveSettings} className="space-y-6">
-                <div className="p-5 bg-purple-50 dark:bg-purple-900/20 rounded-xl">
+                <div className="p-5 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl">
                   <h3 className="font-semibold text-gray-900 dark:text-white mb-4">
                     My Avatar
                   </h3>
@@ -585,7 +585,7 @@ export default function AdminPage() {
                     onChange={(e) => setHeroDescription(e.target.value)}
                     placeholder="Welcome to my little corner of the internet..."
                     rows={3}
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500"
+                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
                   />
                 </div>
 
@@ -638,7 +638,7 @@ export default function AdminPage() {
                           className="w-10 h-14 object-cover rounded"
                         />
                       ) : (
-                        <div className="w-10 h-14 bg-purple-100 dark:bg-purple-900/30 rounded flex items-center justify-center text-sm">
+                        <div className="w-10 h-14 bg-emerald-100 dark:bg-emerald-900/30 rounded flex items-center justify-center text-sm">
                           📚
                         </div>
                       )}

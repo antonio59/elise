@@ -58,7 +58,7 @@ export default function ParentDashboard() {
         </div>
         <Link
           href="/manage"
-          className="px-4 py-2 rounded-lg bg-inkPurple text-white text-sm font-medium hover:bg-purple-700"
+          className="px-4 py-2 rounded-lg bg-emerald-500 text-white text-sm font-medium hover:bg-emerald-600"
         >
           Manage Content
         </Link>
@@ -175,7 +175,7 @@ export default function ParentDashboard() {
                       </div>
                       <div className="h-2 bg-neutral-100 dark:bg-neutral-800 rounded-full overflow-hidden">
                         <div
-                          className="h-full bg-inkPurple rounded-full"
+                          className="h-full bg-emerald-500 rounded-full"
                           style={{ width: `${(count / books.length) * 100}%` }}
                         />
                       </div>
@@ -223,7 +223,7 @@ export default function ParentDashboard() {
               </Link>
               <Link
                 href="/gallery"
-                className="block w-full px-4 py-2 rounded-lg bg-inkPurple/10 text-inkPurple text-center text-sm font-medium hover:bg-inkPurple/20 transition-colors"
+                className="block w-full px-4 py-2 rounded-lg bg-emerald-500/10 text-inkPurple text-center text-sm font-medium hover:bg-emerald-500/20 transition-colors"
               >
                 View Gallery
               </Link>

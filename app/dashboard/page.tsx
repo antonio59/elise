@@ -39,7 +39,7 @@ export default function DashboardPage() {
     { key: 'first_steps', title: 'First Steps', icon: '🌟', description: 'Add your first book or artwork', earned: booksRead > 0 || artworks.length > 0, color: 'yellow' },
     { key: 'bookworm', title: 'Bookworm', icon: '📚', description: 'Read 5 books', earned: booksRead >= 5, color: 'blue' },
     { key: 'avid_reader', title: 'Avid Reader', icon: '📖', description: 'Read 10 books', earned: booksRead >= 10, color: 'indigo' },
-    { key: 'library_master', title: 'Library Master', icon: '🏰', description: 'Read 25 books', earned: booksRead >= 25, color: 'purple' },
+    { key: 'library_master', title: 'Library Master', icon: '🏰', description: 'Read 25 books', earned: booksRead >= 25, color: 'emerald' },
     { key: 'artiste', title: 'Artiste', icon: '🎨', description: 'Upload 5 artworks', earned: artworks.length >= 5, color: 'lime' },
     { key: 'gallery_owner', title: 'Gallery Owner', icon: '🖼️', description: 'Upload 15 artworks', earned: artworks.length >= 15, color: 'green' },
     { key: 'critic', title: 'Critic', icon: '✍️', description: 'Write 5 reviews', earned: reviews.length >= 5, color: 'pink' },

@@ -45,7 +45,7 @@ export default function Avatar({
     <div
       className={clsx(
         "rounded-full flex items-center justify-center font-semibold",
-        "bg-gradient-to-br from-purple-500 to-pink-500 text-white",
+        "bg-emerald-500 text-white",
         sizes[size],
         className,
       )}

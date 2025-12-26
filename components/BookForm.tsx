@@ -146,7 +146,7 @@ export default function BookForm({ book, onSaved }: BookFormProps) {
         </div>
         {status === 'read' && (<label className="block"><span className="text-sm">Rating</span><div className="flex gap-1 mt-1">{[1, 2, 3, 4, 5].map(star => (<button key={star} type="button" onClick={() => setRating(star)} className={`text-2xl transition-colors ${star <= rating ? 'text-yellow-400' : 'text-neutral-300 dark:text-neutral-600'}`}>★</button>))}</div></label>)}
         <label className="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked={isFavorite} onChange={e => setIsFavorite(e.target.checked)} className="w-4 h-4 rounded" /><span className="text-sm">⭐ Mark as Favorite</span></label>
-        <button type="submit" className="rounded-md bg-inkPurple text-white px-4 py-2 w-full hover:bg-purple-700 transition-colors">{isEditing ? 'Update Book' : 'Add Book'}</button>
+        <button type="submit" className="rounded-md bg-emerald-500 text-white px-4 py-2 w-full hover:bg-emerald-600 transition-colors">{isEditing ? 'Update Book' : 'Add Book'}</button>
         {message && <p className="text-sm text-center" role="status">{message}</p>}
       </form>
     </div>

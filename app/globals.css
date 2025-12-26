@@ -11,6 +11,8 @@
   --text-primary: #111827;
   --text-secondary: #6b7280;
   --border-color: #e5e7eb;
+  --accent: #10b981;
+  --accent-dark: #059669;
 }
 
 .dark {
@@ -19,6 +21,8 @@
   --text-primary: #f9fafb;
   --text-secondary: #9ca3af;
   --border-color: #262626;
+  --accent: #34d399;
+  --accent-dark: #10b981;
 }
 
 /* ================================
@@ -53,15 +57,8 @@ body {
 /* ================================
    Gradient Text Utilities
    ================================ */
-.text-gradient-purple {
-  background: linear-gradient(135deg, #9333ea 0%, #ec4899 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.text-gradient-pink {
-  background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
+.text-gradient-emerald {
+  background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -94,7 +91,7 @@ body {
 /* Primary Button (legacy support) */
 .btn-primary {
   @apply px-6 py-2.5 rounded-full font-semibold text-white transition-all duration-200;
-  background: linear-gradient(135deg, #9333ea 0%, #ec4899 100%);
+  @apply bg-emerald-500 hover:bg-emerald-600;
 }
 
 .btn-primary:hover {
@@ -119,12 +116,15 @@ body {
 
 /* Navigation Pills */
 .nav-pill {
-  @apply px-5 py-2 rounded-full font-medium text-sm transition-all duration-200 flex items-center gap-2;
+  @apply px-5 py-2 rounded-lg font-medium text-sm transition-all duration-200 flex items-center gap-2;
 }
 
 .nav-pill-active {
-  @apply text-white;
-  background: linear-gradient(135deg, #9333ea 0%, #ec4899 100%);
+  @apply bg-gray-900 text-white;
+}
+
+.dark .nav-pill-active {
+  @apply bg-white text-gray-900;
 }
 
 .nav-pill-inactive {
@@ -146,7 +146,7 @@ body {
 
 .progress-bar-fill {
   @apply h-full rounded-full transition-all duration-500;
-  background: linear-gradient(90deg, #a855f7 0%, #ec4899 100%);
+  @apply bg-emerald-500;
 }
 
 /* Star Ratings */
@@ -195,12 +195,12 @@ body {
   @apply bg-neutral-900 border-neutral-800;
 }
 
-.metric-card-purple {
-  @apply bg-gradient-to-br from-purple-50 to-pink-50 border-purple-100;
+.metric-card-emerald {
+  @apply bg-gradient-to-br from-emerald-50 to-teal-50 border-emerald-100;
 }
 
-.dark .metric-card-purple {
-  @apply from-purple-900/20 to-pink-900/20 border-purple-900/50;
+.dark .metric-card-emerald {
+  @apply from-emerald-900/20 to-teal-900/20 border-emerald-900/50;
 }
 
 .metric-card-mint {
@@ -233,11 +233,11 @@ body {
 }
 
 .section-badge {
-  @apply px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-700;
+  @apply px-3 py-1 rounded-full text-sm font-medium bg-emerald-100 text-emerald-700;
 }
 
 .dark .section-badge {
-  @apply bg-purple-900/30 text-purple-300;
+  @apply bg-emerald-900/30 text-emerald-300;
 }
 
 /* Mobile Menu */
@@ -257,7 +257,7 @@ body {
 
 /* Focus Ring */
 .focus-ring {
-  @apply focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:ring-offset-2;
+  @apply focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:ring-offset-2;
 }
 
 /* ================================

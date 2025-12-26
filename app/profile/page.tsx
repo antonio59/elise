@@ -114,7 +114,7 @@ export default function ProfilePage() {
               <button
                 onClick={handleSave}
                 disabled={saving}
-                className="rounded-md bg-inkPurple text-white px-6 py-2 hover:bg-purple-700 transition-colors disabled:opacity-50"
+                className="rounded-md bg-emerald-500 text-white px-6 py-2 hover:bg-emerald-600 transition-colors disabled:opacity-50"
               >
                 {saving ? 'Saving...' : 'Save Profile'}
               </button>

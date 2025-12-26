@@ -5,7 +5,7 @@ type MetricCardProps = {
   value: string | number
   subtitle?: string
   icon: string
-  variant?: 'purple' | 'mint' | 'gold' | 'default'
+  variant?: 'emerald' | 'mint' | 'gold' | 'default'
 }
 
 export default function MetricCard({ 
@@ -16,7 +16,7 @@ export default function MetricCard({
   variant = 'default' 
 }: MetricCardProps) {
   const variantClasses = {
-    purple: 'metric-card-purple',
+    emerald: 'metric-card-emerald',
     mint: 'metric-card-mint',
     gold: 'metric-card-gold',
     default: 'metric-card'
