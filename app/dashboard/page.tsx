@@ -184,20 +184,29 @@ export default function DashboardPage() {
 
   if (!user) {
     return (
-      <main className="min-h-screen py-10 px-4">
+      <main className="min-h-screen bg-gradient-to-b from-white to-gray-50 py-10 px-4">
         <div className="max-w-md mx-auto text-center">
-          <div className="text-6xl mb-4">📚</div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-            Welcome to Your Dashboard
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: "spring", duration: 0.5 }}
+            className="text-7xl mb-6"
+          >
+            📚
+          </motion.div>
+          <h1 className="text-3xl font-bold text-gray-900 mb-3">
+            Welcome to Elise&apos;s Reading Corner!
           </h1>
-          <p className="text-gray-600 dark:text-gray-400 mb-6">
-            Please log in to access your books, art, and reviews.
+          <p className="text-gray-600 mb-8">
+            Log in to track your books, share your art, and write amazing
+            reviews.
           </p>
           <Link
             href="/login"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-emerald-500 text-white font-medium rounded-xl hover:bg-emerald-600 transition-colors"
+            className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-semibold rounded-2xl hover:from-emerald-600 hover:to-teal-600 transition-all shadow-lg shadow-emerald-500/30"
           >
-            Log In
+            <Sparkles size={20} />
+            Let&apos;s Go!
           </Link>
         </div>
       </main>
@@ -228,8 +237,11 @@ export default function DashboardPage() {
     },
   ];
 
+  // Get display name - use username if set, otherwise "Elise"
+  const displayName = user.username || "Elise";
+
   return (
-    <main className="min-h-screen bg-gray-50 dark:bg-neutral-950 py-8 px-4">
+    <main className="min-h-screen bg-gradient-to-b from-white to-gray-50 dark:from-neutral-950 dark:to-neutral-900 py-8 px-4">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <motion.div
@@ -239,7 +251,7 @@ export default function DashboardPage() {
         >
           <div>
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
-              Welcome back{user.username ? `, ${user.username}` : ""}!
+              Welcome back, {displayName}!
               <motion.span
                 animate={{ rotate: [0, 14, -8, 14, -4, 10, 0] }}
                 transition={{ duration: 1.5, delay: 0.5 }}
@@ -248,8 +260,8 @@ export default function DashboardPage() {
                 👋
               </motion.span>
             </h1>
-            <p className="text-gray-500 dark:text-gray-400 mt-1">
-              What would you like to do today?
+            <p className="text-gray-600 dark:text-gray-400 mt-1">
+              Ready for your next reading adventure?
             </p>
           </div>
           {streak > 0 && (
@@ -623,30 +635,24 @@ export default function DashboardPage() {
               </h3>
               <ul className="space-y-3">
                 {[
-                  ...artworks
-                    .slice(0, 3)
-                    .map((a) => ({
-                      type: "art",
-                      title: a.title || "Untitled",
-                      date: a.createdAt,
-                      id: a._id,
-                    })),
-                  ...reviews
-                    .slice(0, 3)
-                    .map((r) => ({
-                      type: "review",
-                      title: r.bookTitle,
-                      date: r.createdAt,
-                      id: r._id,
-                    })),
-                  ...books
-                    .slice(0, 3)
-                    .map((b) => ({
-                      type: "book",
-                      title: b.title,
-                      date: b.createdAt,
-                      id: b._id,
-                    })),
+                  ...artworks.slice(0, 3).map((a) => ({
+                    type: "art",
+                    title: a.title || "Untitled",
+                    date: a.createdAt,
+                    id: a._id,
+                  })),
+                  ...reviews.slice(0, 3).map((r) => ({
+                    type: "review",
+                    title: r.bookTitle,
+                    date: r.createdAt,
+                    id: r._id,
+                  })),
+                  ...books.slice(0, 3).map((b) => ({
+                    type: "book",
+                    title: b.title,
+                    date: b.createdAt,
+                    id: b._id,
+                  })),
                 ]
                   .sort((a, b) => b.date - a.date)
                   .slice(0, 5)
