@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Badge from "./ui/Badge";
 
 type BookCardProps = {
   title: string;
@@ -15,22 +14,9 @@ type BookCardProps = {
   isFavorite?: boolean;
   href?: string;
   onClick?: () => void;
+  isNew?: boolean;
+  views?: number;
 };
-
-function StarRating({ rating, max = 5 }: { rating: number; max?: number }) {
-  return (
-    <div className="flex gap-0.5">
-      {Array.from({ length: max }).map((_, i) => (
-        <span
-          key={i}
-          className={`text-sm ${i < rating ? "text-amber-400" : "text-gray-300 dark:text-neutral-600"}`}
-        >
-          ★
-        </span>
-      ))}
-    </div>
-  );
-}
 
 export default function BookCard(props: BookCardProps) {
   const {
@@ -38,137 +24,120 @@ export default function BookCard(props: BookCardProps) {
     author,
     coverUrl,
     rating = 0,
-    review,
-    progress,
     genre,
     status,
     isFavorite,
     href,
     onClick,
+    isNew,
+    views,
   } = props;
 
-  const computedProgress =
-    progress ?? (status === "read" ? 100 : progressFromStatus(status));
-
-  const statusBadge = () => {
-    if (!status) return null;
-    const config = {
-      read: { label: "✓ Read", variant: "success" as const },
-      reading: { label: "Reading", variant: "info" as const },
-      wishlist: { label: "Wishlist", variant: "purple" as const },
-    };
-    return config[status];
-  };
-
-  const badge = statusBadge();
-
   const cardContent = (
-    <div className="group h-full bg-white dark:bg-neutral-900 rounded-2xl shadow-sm border border-gray-100 dark:border-neutral-800 overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 cursor-pointer">
-      {/* Cover Image */}
-      <div className="aspect-[2/3] overflow-hidden bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/20 dark:to-pink-900/20 relative">
+    <div className="group cursor-pointer">
+      {/* Cover Image - Tall poster style like Webtoons */}
+      <div className="relative aspect-[3/4] rounded-md overflow-hidden bg-gray-100 dark:bg-neutral-800">
         {coverUrl ? (
           <img
             src={coverUrl}
             alt={title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center">
-            <span className="text-5xl opacity-50">📚</span>
+          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 dark:from-neutral-800 dark:to-neutral-900">
+            <span className="text-4xl opacity-40">📖</span>
           </div>
         )}
 
-        {/* Favorite Star */}
-        {isFavorite && (
-          <div className="absolute top-3 right-3 w-8 h-8 bg-white/90 dark:bg-neutral-900/90 rounded-full flex items-center justify-center shadow-md">
-            <span className="text-amber-400">⭐</span>
-          </div>
-        )}
-
-        {/* Progress Overlay */}
-        {computedProgress !== undefined &&
-          computedProgress > 0 &&
-          computedProgress < 100 && (
-            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-3">
-              <div className="flex items-center gap-2">
-                <div className="flex-1 h-1.5 bg-white/30 rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-gradient-to-r from-purple-400 to-pink-400 rounded-full transition-all duration-500"
-                    style={{ width: `${computedProgress}%` }}
-                  />
-                </div>
-                <span className="text-xs text-white font-medium">
-                  {computedProgress}%
-                </span>
-              </div>
-            </div>
+        {/* Status Badges - Top left like Webtoons */}
+        <div className="absolute top-2 left-2 flex flex-col gap-1">
+          {isNew && (
+            <span className="px-1.5 py-0.5 text-[10px] font-bold bg-red-500 text-white rounded">
+              NEW
+            </span>
           )}
-      </div>
-
-      {/* Content */}
-      <div className="p-4 space-y-2">
-        <div className="flex items-start justify-between gap-2">
-          <div className="flex-1 min-w-0">
-            <h3 className="font-bold text-gray-900 dark:text-white leading-tight line-clamp-1">
-              {title}
-            </h3>
-            <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-1">
-              {author}
-            </p>
-          </div>
-          {genre && <Badge variant="pink">{genre}</Badge>}
+          {status === "reading" && (
+            <span className="px-1.5 py-0.5 text-[10px] font-bold bg-emerald-500 text-white rounded">
+              UP
+            </span>
+          )}
         </div>
 
-        {/* Status Badge */}
-        {badge && <Badge variant={badge.variant}>{badge.label}</Badge>}
-
-        {/* Rating */}
-        {rating > 0 && (
-          <div className="pt-1">
-            <StarRating rating={rating} />
+        {/* Favorite indicator */}
+        {isFavorite && (
+          <div className="absolute top-2 right-2">
+            <span className="text-amber-400 drop-shadow-md">★</span>
           </div>
         )}
 
-        {/* Review Snippet */}
-        {review && (
-          <p className="text-sm text-gray-600 dark:text-gray-400 italic line-clamp-2 pt-1">
-            &ldquo;{review}&rdquo;
-          </p>
+        {/* Gradient overlay at bottom */}
+        <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/60 to-transparent" />
+
+        {/* Genre tag on image */}
+        {genre && (
+          <span className="absolute bottom-2 left-2 text-[11px] text-white/90 font-medium">
+            {genre}
+          </span>
         )}
+      </div>
+
+      {/* Content - Minimal like Webtoons */}
+      <div className="mt-2 px-0.5">
+        <h3 className="font-semibold text-sm text-gray-900 dark:text-white leading-tight line-clamp-1 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+          {title}
+        </h3>
+        <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 line-clamp-1">
+          {author}
+        </p>
+
+        {/* Rating or Views - subtle stats */}
+        <div className="flex items-center gap-2 mt-1">
+          {rating > 0 && (
+            <div className="flex items-center gap-0.5">
+              <span className="text-amber-400 text-xs">★</span>
+              <span className="text-xs text-gray-500 dark:text-gray-400">
+                {rating.toFixed(1)}
+              </span>
+            </div>
+          )}
+          {views !== undefined && views > 0 && (
+            <span className="text-xs text-gray-400 dark:text-gray-500">
+              {formatViews(views)} views
+            </span>
+          )}
+        </div>
       </div>
     </div>
   );
 
   if (href) {
     return (
-      <Link href={href} className="block h-full" onClick={onClick}>
+      <Link href={href} className="block" onClick={onClick}>
         {cardContent}
       </Link>
     );
   }
 
-  return (
-    <div className="h-full" onClick={onClick}>
-      {cardContent}
-    </div>
-  );
+  return <div onClick={onClick}>{cardContent}</div>;
 }
 
-function progressFromStatus(status?: "reading" | "read" | "wishlist") {
-  if (status === "read") return 100;
-  if (status === "reading") return 40;
-  return 0;
+function formatViews(views: number): string {
+  if (views >= 1000000) {
+    return (views / 1000000).toFixed(1) + "M";
+  }
+  if (views >= 1000) {
+    return (views / 1000).toFixed(1) + "K";
+  }
+  return views.toString();
 }
 
 export function BookCardSkeleton() {
   return (
-    <div className="bg-white dark:bg-neutral-900 rounded-2xl shadow-sm border border-gray-100 dark:border-neutral-800 overflow-hidden">
-      <div className="aspect-[2/3] bg-gray-200 dark:bg-neutral-800 animate-pulse" />
-      <div className="p-4 space-y-3">
-        <div className="h-5 bg-gray-200 dark:bg-neutral-800 rounded animate-pulse w-3/4" />
-        <div className="h-4 bg-gray-200 dark:bg-neutral-800 rounded animate-pulse w-1/2" />
-        <div className="h-4 bg-gray-200 dark:bg-neutral-800 rounded animate-pulse w-full mt-3" />
-        <div className="h-4 bg-gray-200 dark:bg-neutral-800 rounded animate-pulse w-full" />
+    <div>
+      <div className="aspect-[3/4] bg-gray-200 dark:bg-neutral-800 rounded-md animate-pulse" />
+      <div className="mt-2 px-0.5 space-y-1.5">
+        <div className="h-4 bg-gray-200 dark:bg-neutral-800 rounded animate-pulse w-3/4" />
+        <div className="h-3 bg-gray-200 dark:bg-neutral-800 rounded animate-pulse w-1/2" />
       </div>
     </div>
   );

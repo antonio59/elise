@@ -6,17 +6,21 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import BookCard, { BookCardSkeleton } from "@/components/BookCard";
 import ArtCard, { ArtCardSkeleton } from "@/components/ArtCard";
-import Button from "@/components/ui/Button";
-import { ArrowRight, Sparkles, BookOpen, Palette } from "lucide-react";
+import { ChevronRight } from "lucide-react";
+import { useState } from "react";
+
+type TabType = "all" | "reading" | "read" | "wishlist";
 
 export default function HomePage() {
   const router = useRouter();
-  const books = useQuery(api.books.getPublicBooks, { limit: 12 }) ?? [];
-  const artworks = useQuery(api.artworks.getPublished, { limit: 6 }) ?? [];
+  const [activeTab, setActiveTab] = useState<TabType>("all");
+
+  const books = useQuery(api.books.getPublicBooks, { limit: 20 }) ?? [];
+  const artworks = useQuery(api.artworks.getPublished, { limit: 8 }) ?? [];
   const reviews = useQuery(api.reviews.getPublished, { limit: 50 }) ?? [];
   const siteSettings = useQuery(api.siteSettings.get);
 
-  const booksWithReviews = books.slice(0, 6).map((book) => {
+  const booksWithReviews = books.map((book) => {
     const bookReview = reviews.find((r) => r.bookTitle === book.title);
     return {
       ...book,
@@ -25,118 +29,85 @@ export default function HomePage() {
     };
   });
 
+  const filteredBooks =
+    activeTab === "all"
+      ? booksWithReviews
+      : booksWithReviews.filter((b) => b.status === activeTab);
+
   const heroTitle = siteSettings?.heroTitle || "My Reading";
   const heroSubtitle = siteSettings?.heroSubtitle || "Adventures";
   const heroDescription =
     siteSettings?.heroDescription ||
-    "Welcome to my little corner of the internet! Here I share the books I love and the art I create.";
+    "Welcome to my corner of the internet where I share the books I love and the art I create.";
   const heroImageUrl = siteSettings?.heroImageUrl;
 
+  const tabs: { key: TabType; label: string }[] = [
+    { key: "all", label: "All" },
+    { key: "reading", label: "Reading" },
+    { key: "read", label: "Completed" },
+    { key: "wishlist", label: "Wishlist" },
+  ];
+
   return (
-    <main className="min-h-screen">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-purple-50 via-pink-50 to-white dark:from-purple-950/20 dark:via-pink-950/10 dark:to-neutral-950">
-        {/* Decorative elements */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-20 left-10 w-64 h-64 bg-purple-200/30 dark:bg-purple-500/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-20 right-10 w-80 h-80 bg-pink-200/30 dark:bg-pink-500/10 rounded-full blur-3xl" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-amber-200/20 dark:bg-amber-500/5 rounded-full blur-3xl" />
-        </div>
-
-        <div className="relative max-w-7xl mx-auto px-4 py-16 lg:py-24">
-          <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
-            {/* Text Content */}
-            <div className="flex-1 text-center lg:text-left">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 dark:bg-neutral-900/80 shadow-sm border border-purple-100 dark:border-purple-900/50 mb-6">
-                <Sparkles className="w-4 h-4 text-purple-500" />
-                <span className="text-sm font-medium text-purple-600 dark:text-purple-400">
-                  Welcome to my space!
-                </span>
-              </div>
-
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black leading-tight">
-                <span className="text-gray-900 dark:text-white">
-                  {heroTitle}
-                </span>
-                <br />
-                <span className="bg-gradient-to-r from-purple-600 via-pink-500 to-amber-500 bg-clip-text text-transparent">
-                  {heroSubtitle}
-                </span>
-              </h1>
-
-              <p className="mt-6 text-lg text-gray-600 dark:text-gray-400 max-w-lg mx-auto lg:mx-0">
-                {heroDescription}
-              </p>
-
-              <div className="mt-8 flex flex-wrap gap-4 justify-center lg:justify-start">
-                <Link href="/gallery">
-                  <Button size="lg" rightIcon={<ArrowRight size={18} />}>
-                    View My Art
-                  </Button>
-                </Link>
-                <Link href="/reviews">
-                  <Button variant="secondary" size="lg">
-                    Read Reviews
-                  </Button>
-                </Link>
-              </div>
-
-              {/* Quick Stats */}
-              <div className="mt-10 flex gap-8 justify-center lg:justify-start">
-                <div className="text-center">
-                  <p className="text-3xl font-bold text-gray-900 dark:text-white">
-                    {books.length}
-                  </p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Books
-                  </p>
-                </div>
-                <div className="text-center">
-                  <p className="text-3xl font-bold text-gray-900 dark:text-white">
-                    {artworks.length}
-                  </p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Artworks
-                  </p>
-                </div>
-                <div className="text-center">
-                  <p className="text-3xl font-bold text-gray-900 dark:text-white">
-                    {reviews.length}
-                  </p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Reviews
-                  </p>
-                </div>
+    <main className="min-h-screen bg-white dark:bg-neutral-950">
+      {/* Hero Section - Clean and simple */}
+      <section className="border-b border-gray-100 dark:border-neutral-800">
+        <div className="max-w-6xl mx-auto px-4 py-12 lg:py-16">
+          <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
+            {/* Avatar */}
+            <div className="flex-shrink-0">
+              <div className="w-32 h-32 lg:w-40 lg:h-40 rounded-full overflow-hidden bg-gray-100 dark:bg-neutral-800 ring-4 ring-white dark:ring-neutral-900 shadow-xl">
+                {heroImageUrl ? (
+                  <img
+                    src={heroImageUrl}
+                    alt="Avatar"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <span className="text-5xl">👧</span>
+                  </div>
+                )}
               </div>
             </div>
 
-            {/* Avatar/Hero Image */}
-            <div className="flex-1 flex justify-center lg:justify-end">
-              <div className="relative">
-                {/* Floating decorations */}
-                <div className="absolute -top-4 -left-4 w-16 h-16 bg-gradient-to-br from-purple-400 to-pink-400 rounded-2xl rotate-12 flex items-center justify-center text-2xl shadow-lg z-10">
-                  📚
-                </div>
-                <div className="absolute -bottom-4 -right-4 w-14 h-14 bg-gradient-to-br from-amber-400 to-orange-400 rounded-2xl -rotate-12 flex items-center justify-center text-xl shadow-lg z-10">
-                  🎨
-                </div>
+            {/* Text */}
+            <div className="text-center lg:text-left">
+              <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white">
+                {heroTitle}{" "}
+                <span className="text-emerald-500">{heroSubtitle}</span>
+              </h1>
+              <p className="mt-3 text-gray-600 dark:text-gray-400 max-w-lg">
+                {heroDescription}
+              </p>
 
-                {/* Avatar Circle */}
-                <div className="w-64 h-64 sm:w-72 sm:h-72 lg:w-80 lg:h-80 rounded-full shadow-2xl overflow-hidden border-4 border-white dark:border-neutral-800 bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/20 dark:to-pink-900/20">
-                  {heroImageUrl ? (
-                    <img
-                      src={heroImageUrl}
-                      alt="My Avatar"
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex flex-col items-center justify-center">
-                      <div className="text-6xl mb-2">👧</div>
-                      <p className="text-gray-400 dark:text-gray-500 text-xs text-center px-6">
-                        Add your avatar in Settings
-                      </p>
-                    </div>
-                  )}
+              {/* Stats row */}
+              <div className="mt-6 flex items-center gap-6 justify-center lg:justify-start">
+                <div className="text-center">
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                    {books.length}
+                  </p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                    Books
+                  </p>
+                </div>
+                <div className="w-px h-8 bg-gray-200 dark:bg-neutral-700" />
+                <div className="text-center">
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                    {artworks.length}
+                  </p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                    Artworks
+                  </p>
+                </div>
+                <div className="w-px h-8 bg-gray-200 dark:bg-neutral-700" />
+                <div className="text-center">
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                    {reviews.length}
+                  </p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                    Reviews
+                  </p>
                 </div>
               </div>
             </div>
@@ -144,138 +115,171 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Latest Reads Section */}
-      <section className="py-16 lg:py-20 px-4 bg-white dark:bg-neutral-950">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-between mb-8">
+      {/* Books Section */}
+      <section className="py-8 lg:py-12">
+        <div className="max-w-6xl mx-auto px-4">
+          {/* Section Header with Tabs */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-xl bg-purple-100 dark:bg-purple-900/30">
-                <BookOpen className="w-5 h-5 text-purple-600 dark:text-purple-400" />
-              </div>
-              <div>
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                  Latest Reads
-                </h2>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  {books.length} books in my collection
-                </p>
-              </div>
-            </div>
-            <Link href="/bookshelf" className="hidden sm:block">
-              <Button
-                variant="ghost"
-                size="sm"
-                rightIcon={<ArrowRight size={16} />}
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+                My Books
+              </h2>
+              <Link
+                href="/bookshelf"
+                className="text-sm text-gray-400 hover:text-emerald-500 dark:hover:text-emerald-400 flex items-center gap-0.5 transition-colors"
               >
-                View All
-              </Button>
-            </Link>
+                View all
+                <ChevronRight size={14} />
+              </Link>
+            </div>
+
+            {/* Filter Tabs */}
+            <div className="flex gap-1 p-1 bg-gray-100 dark:bg-neutral-800 rounded-lg">
+              {tabs.map((tab) => (
+                <button
+                  key={tab.key}
+                  onClick={() => setActiveTab(tab.key)}
+                  className={`px-3 py-1.5 text-sm font-medium rounded-md transition-all ${
+                    activeTab === tab.key
+                      ? "bg-white dark:bg-neutral-700 text-gray-900 dark:text-white shadow-sm"
+                      : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
           </div>
 
+          {/* Books Grid */}
           {books === undefined ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[1, 2, 3].map((i) => (
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4">
+              {[1, 2, 3, 4, 5, 6].map((i) => (
                 <BookCardSkeleton key={i} />
               ))}
             </div>
-          ) : books.length === 0 ? (
-            <div className="text-center py-16 bg-gray-50 dark:bg-neutral-900 rounded-2xl">
-              <div className="text-6xl mb-4">📚</div>
-              <p className="text-gray-600 dark:text-gray-400 text-lg font-medium">
-                No books yet!
-              </p>
-              <p className="text-gray-400 dark:text-gray-500 mt-2">
-                Books will appear here once added
+          ) : filteredBooks.length === 0 ? (
+            <div className="text-center py-16 bg-gray-50 dark:bg-neutral-900 rounded-lg">
+              <span className="text-4xl mb-3 block">📚</span>
+              <p className="text-gray-500 dark:text-gray-400">
+                {activeTab === "all"
+                  ? "No books yet"
+                  : `No ${activeTab === "read" ? "completed" : activeTab} books`}
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {booksWithReviews.map((book) => (
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4">
+              {filteredBooks.slice(0, 12).map((book, index) => (
                 <BookCard
                   key={book._id}
                   title={book.title}
                   author={book.author}
                   coverUrl={book.coverUrl}
                   rating={book.rating}
-                  review={book.review}
+                  genre={book.genre}
                   status={book.status}
-                  progress={
-                    book.status === "read"
-                      ? 100
-                      : book.status === "reading"
-                        ? 50
-                        : 0
-                  }
+                  isNew={index < 2}
                   onClick={() => router.push(`/book/${book._id}`)}
                 />
               ))}
             </div>
           )}
-
-          <div className="mt-8 text-center sm:hidden">
-            <Link href="/bookshelf">
-              <Button variant="secondary" rightIcon={<ArrowRight size={16} />}>
-                View All Books
-              </Button>
-            </Link>
-          </div>
         </div>
       </section>
 
-      {/* Art Gallery Preview */}
+      {/* Art Gallery Section */}
       {artworks.length > 0 && (
-        <section className="py-16 lg:py-20 px-4 bg-gray-50 dark:bg-neutral-900">
-          <div className="max-w-7xl mx-auto">
-            <div className="flex items-center justify-between mb-8">
-              <div className="flex items-center gap-3">
-                <div className="p-2 rounded-xl bg-pink-100 dark:bg-pink-900/30">
-                  <Palette className="w-5 h-5 text-pink-600 dark:text-pink-400" />
-                </div>
-                <div>
-                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                    My Art
-                  </h2>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Latest creations from the gallery
-                  </p>
-                </div>
-              </div>
-              <Link href="/gallery" className="hidden sm:block">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  rightIcon={<ArrowRight size={16} />}
-                >
-                  View Gallery
-                </Button>
+        <section className="py-8 lg:py-12 border-t border-gray-100 dark:border-neutral-800">
+          <div className="max-w-6xl mx-auto px-4">
+            {/* Section Header */}
+            <div className="flex items-center gap-3 mb-6">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+                My Art
+              </h2>
+              <Link
+                href="/gallery"
+                className="text-sm text-gray-400 hover:text-emerald-500 dark:hover:text-emerald-400 flex items-center gap-0.5 transition-colors"
+              >
+                View all
+                <ChevronRight size={14} />
               </Link>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-6">
-              {artworks.slice(0, 4).map((art) => (
+            {/* Art Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+              {artworks.slice(0, 5).map((art, index) => (
                 <ArtCard
                   key={art._id}
                   title={art.title || "Untitled"}
                   imageUrl={art.imageUrl}
                   style={art.style}
+                  isNew={index === 0}
                   onClick={() => router.push(`/artwork/${art._id}`)}
                 />
               ))}
             </div>
-
-            <div className="mt-8 text-center sm:hidden">
-              <Link href="/gallery">
-                <Button
-                  variant="secondary"
-                  rightIcon={<ArrowRight size={16} />}
-                >
-                  View Gallery
-                </Button>
-              </Link>
-            </div>
           </div>
         </section>
       )}
+
+      {/* Quick Links / Categories - Webtoons style */}
+      <section className="py-8 lg:py-12 border-t border-gray-100 dark:border-neutral-800 bg-gray-50 dark:bg-neutral-900/50">
+        <div className="max-w-6xl mx-auto px-4">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">
+            Explore
+          </h2>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <Link
+              href="/bookshelf"
+              className="group p-4 bg-white dark:bg-neutral-800 rounded-lg border border-gray-100 dark:border-neutral-700 hover:border-emerald-200 dark:hover:border-emerald-800 hover:shadow-md transition-all"
+            >
+              <span className="text-2xl mb-2 block">📚</span>
+              <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                Bookshelf
+              </h3>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                {books.length} books
+              </p>
+            </Link>
+            <Link
+              href="/gallery"
+              className="group p-4 bg-white dark:bg-neutral-800 rounded-lg border border-gray-100 dark:border-neutral-700 hover:border-emerald-200 dark:hover:border-emerald-800 hover:shadow-md transition-all"
+            >
+              <span className="text-2xl mb-2 block">🎨</span>
+              <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                Gallery
+              </h3>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                {artworks.length} artworks
+              </p>
+            </Link>
+            <Link
+              href="/reviews"
+              className="group p-4 bg-white dark:bg-neutral-800 rounded-lg border border-gray-100 dark:border-neutral-700 hover:border-emerald-200 dark:hover:border-emerald-800 hover:shadow-md transition-all"
+            >
+              <span className="text-2xl mb-2 block">✍️</span>
+              <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                Reviews
+              </h3>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                {reviews.length} reviews
+              </p>
+            </Link>
+            <Link
+              href="/explore"
+              className="group p-4 bg-white dark:bg-neutral-800 rounded-lg border border-gray-100 dark:border-neutral-700 hover:border-emerald-200 dark:hover:border-emerald-800 hover:shadow-md transition-all"
+            >
+              <span className="text-2xl mb-2 block">🔍</span>
+              <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                Discover
+              </h3>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                Find new books
+              </p>
+            </Link>
+          </div>
+        </div>
+      </section>
     </main>
   );
 }
