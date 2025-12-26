@@ -538,18 +538,18 @@ export default function AdminPage() {
               <form onSubmit={handleSaveSettings} className="space-y-6">
                 <div className="p-5 bg-purple-50 dark:bg-purple-900/20 rounded-xl">
                   <h3 className="font-semibold text-gray-900 dark:text-white mb-4">
-                    Hero Section
+                    My Avatar
                   </h3>
                   <div className="mb-4">
                     <ImageUpload
                       token={token || ""}
-                      label="Hero Image"
-                      aspectRatio="portrait"
+                      label="Upload your avatar"
+                      aspectRatio="square"
                       currentImageUrl={heroImagePreview}
                       onUploadComplete={handleHeroImageUpload}
                     />
                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                      This image appears on your homepage
+                      This will be your profile picture on the homepage!
                     </p>
                   </div>
                 </div>

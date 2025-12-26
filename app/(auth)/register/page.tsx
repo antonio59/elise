@@ -25,8 +25,8 @@ export default function RegisterPage() {
       setMessage("Passwords do not match");
       return;
     }
-    if (password.length < 6) {
-      setMessage("Password must be at least 6 characters");
+    if (password.length < 8) {
+      setMessage("Password must be at least 8 characters");
       return;
     }
     setLoading(true);
@@ -80,7 +80,7 @@ export default function RegisterPage() {
                 required
               />
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-1.5 ml-1">
-                At least 6 characters
+                At least 8 characters
               </p>
             </div>
 

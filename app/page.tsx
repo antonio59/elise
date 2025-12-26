@@ -110,29 +110,30 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Hero Image */}
+            {/* Avatar/Hero Image */}
             <div className="flex-1 flex justify-center lg:justify-end">
               <div className="relative">
                 {/* Floating decorations */}
-                <div className="absolute -top-4 -left-4 w-16 h-16 bg-gradient-to-br from-purple-400 to-pink-400 rounded-2xl rotate-12 flex items-center justify-center text-2xl shadow-lg">
+                <div className="absolute -top-4 -left-4 w-16 h-16 bg-gradient-to-br from-purple-400 to-pink-400 rounded-2xl rotate-12 flex items-center justify-center text-2xl shadow-lg z-10">
                   📚
                 </div>
-                <div className="absolute -bottom-4 -right-4 w-14 h-14 bg-gradient-to-br from-amber-400 to-orange-400 rounded-2xl -rotate-12 flex items-center justify-center text-xl shadow-lg">
+                <div className="absolute -bottom-4 -right-4 w-14 h-14 bg-gradient-to-br from-amber-400 to-orange-400 rounded-2xl -rotate-12 flex items-center justify-center text-xl shadow-lg z-10">
                   🎨
                 </div>
 
-                <div className="w-72 h-80 sm:w-80 sm:h-96 lg:w-96 lg:h-[450px] bg-white dark:bg-neutral-900 rounded-3xl shadow-2xl overflow-hidden border-4 border-white dark:border-neutral-800">
+                {/* Avatar Circle */}
+                <div className="w-64 h-64 sm:w-72 sm:h-72 lg:w-80 lg:h-80 rounded-full shadow-2xl overflow-hidden border-4 border-white dark:border-neutral-800 bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/20 dark:to-pink-900/20">
                   {heroImageUrl ? (
                     <img
                       src={heroImageUrl}
-                      alt="Hero"
+                      alt="My Avatar"
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/20 dark:to-pink-900/20">
-                      <div className="text-7xl mb-4 animate-bounce">📖</div>
-                      <p className="text-gray-400 dark:text-gray-500 text-sm text-center px-8">
-                        Add a hero image in the dashboard
+                    <div className="w-full h-full flex flex-col items-center justify-center">
+                      <div className="text-6xl mb-2">👧</div>
+                      <p className="text-gray-400 dark:text-gray-500 text-xs text-center px-6">
+                        Add your avatar in Settings
                       </p>
                     </div>
                   )}
