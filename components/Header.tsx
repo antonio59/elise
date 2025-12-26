@@ -62,11 +62,11 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 bg-white/80 dark:bg-neutral-950/80 backdrop-blur-lg z-50 border-b border-gray-100 dark:border-neutral-800">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
+      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
           <span className="text-2xl">📚</span>
-          <span className="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
+          <span className="text-xl font-bold text-gray-900 dark:text-white">
             {siteName}
           </span>
         </Link>
@@ -79,9 +79,9 @@ export default function Header() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                   isActive(item.href)
-                    ? "bg-gradient-to-r from-purple-600 to-pink-500 text-white shadow-md"
+                    ? "bg-gray-900 dark:bg-white text-white dark:text-gray-900"
                     : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-neutral-800"
                 }`}
               >
@@ -103,9 +103,9 @@ export default function Header() {
               {/* Admin Mode Toggle */}
               <button
                 onClick={() => setIsAdminMode(!isAdminMode)}
-                className={`mr-2 p-2 rounded-full transition-all duration-200 ${
+                className={`mr-2 p-2 rounded-lg transition-all duration-200 ${
                   isAdminMode
-                    ? "bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400"
+                    ? "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400"
                     : "text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-neutral-800"
                 }`}
                 title={isAdminMode ? "Exit Admin Mode" : "Enter Admin Mode"}
@@ -226,9 +226,9 @@ export default function Header() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all ${
+                  className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all ${
                     isActive(item.href)
-                      ? "bg-gradient-to-r from-purple-600 to-pink-500 text-white"
+                      ? "bg-gray-900 dark:bg-white text-white dark:text-gray-900"
                       : "text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-neutral-800"
                   }`}
                   onClick={() => setMobileOpen(false)}
@@ -263,9 +263,9 @@ export default function Header() {
                 {/* Admin Mode Toggle - Mobile */}
                 <button
                   onClick={() => setIsAdminMode(!isAdminMode)}
-                  className={`flex items-center gap-3 w-full px-4 py-3 rounded-xl font-medium transition-all ${
+                  className={`flex items-center gap-3 w-full px-4 py-3 rounded-lg font-medium transition-all ${
                     isAdminMode
-                      ? "bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400"
+                      ? "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400"
                       : "text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-neutral-800"
                   }`}
                 >
@@ -275,7 +275,7 @@ export default function Header() {
 
                 <button
                   onClick={handleLogout}
-                  className="flex items-center gap-3 w-full px-4 py-3 rounded-xl font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
+                  className="flex items-center gap-3 w-full px-4 py-3 rounded-lg font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
                 >
                   <LogOut size={18} />
                   Sign Out

@@ -34,7 +34,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
     const variants: Record<ButtonVariant, string> = {
       primary:
-        "bg-gradient-to-r from-purple-600 to-pink-500 text-white hover:shadow-lg hover:-translate-y-0.5 focus:ring-purple-500",
+        "bg-emerald-500 text-white hover:bg-emerald-600 hover:shadow-lg hover:-translate-y-0.5 focus:ring-emerald-500",
       secondary:
         "bg-gray-100 dark:bg-neutral-800 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-neutral-700 focus:ring-gray-500",
       ghost:
