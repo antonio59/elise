@@ -23,9 +23,10 @@ export const get = query({
       return {
         heroTitle: "My Reading",
         heroSubtitle: "Adventures",
-        heroDescription: "I'm collecting all the magical worlds I've visited and the stories that made me smile. Take a look around!",
+        heroDescription:
+          "Track your reading journey, discover new books, and share your reviews. A cozy space for book lovers.",
         heroImageUrl: null,
-        siteName: "Niece's World",
+        siteName: "Elise Reads",
       };
     }
     return settings;
@@ -75,7 +76,7 @@ export const updateHeroImage = mutation({
     await requireSession(ctx, args.token);
 
     const imageUrl = await ctx.storage.getUrl(args.storageId);
-    
+
     const existing = await ctx.db.query("siteSettings").first();
 
     if (existing) {
