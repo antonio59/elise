@@ -99,21 +99,19 @@ export default function Header() {
           {loading ? (
             <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-neutral-800 animate-pulse" />
           ) : user ? (
-            <div className="relative">
+            <div className="relative flex items-center">
               {/* Admin Mode Toggle */}
-              {user && (
-                <button
-                  onClick={() => setIsAdminMode(!isAdminMode)}
-                  className={`mr-2 p-2 rounded-full transition-all duration-200 ${
-                    isAdminMode
-                      ? "bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400"
-                      : "text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-neutral-800"
-                  }`}
-                  title={isAdminMode ? "Exit Admin Mode" : "Enter Admin Mode"}
-                >
-                  <Shield size={18} />
-                </button>
-              )}
+              <button
+                onClick={() => setIsAdminMode(!isAdminMode)}
+                className={`mr-2 p-2 rounded-full transition-all duration-200 ${
+                  isAdminMode
+                    ? "bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400"
+                    : "text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-neutral-800"
+                }`}
+                title={isAdminMode ? "Exit Admin Mode" : "Enter Admin Mode"}
+              >
+                <Shield size={18} />
+              </button>
 
               {/* User Avatar Button */}
               <button
@@ -134,7 +132,7 @@ export default function Header() {
                     className="fixed inset-0 z-40"
                     onClick={() => setUserMenuOpen(false)}
                   />
-                  <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-neutral-900 rounded-xl shadow-lg border border-gray-100 dark:border-neutral-800 py-2 z-50">
+                  <div className="absolute right-0 top-full mt-2 w-56 bg-white dark:bg-neutral-900 rounded-xl shadow-lg border border-gray-100 dark:border-neutral-800 py-2 z-50">
                     <div className="px-4 py-3 border-b border-gray-100 dark:border-neutral-800">
                       <p className="font-medium text-gray-900 dark:text-white truncate">
                         {user.username || "User"}
@@ -142,11 +140,6 @@ export default function Header() {
                       <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
                         {user.email}
                       </p>
-                      {user.role === "parent" && (
-                        <span className="inline-flex items-center gap-1 mt-1 text-xs text-purple-600 dark:text-purple-400">
-                          <Shield size={12} /> Parent Account
-                        </span>
-                      )}
                     </div>
 
                     <div className="py-1">
@@ -166,16 +159,14 @@ export default function Header() {
                         <LayoutDashboard size={16} />
                         <span>Dashboard</span>
                       </Link>
-                      {user.role === "parent" && (
-                        <Link
-                          href="/parent"
-                          onClick={() => setUserMenuOpen(false)}
-                          className="flex items-center gap-3 px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-neutral-800"
-                        >
-                          <Shield size={16} />
-                          <span>Parent Dashboard</span>
-                        </Link>
-                      )}
+                      <Link
+                        href="/admin"
+                        onClick={() => setUserMenuOpen(false)}
+                        className="flex items-center gap-3 px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-neutral-800"
+                      >
+                        <Settings size={16} />
+                        <span>Manage</span>
+                      </Link>
                     </div>
 
                     <div className="border-t border-gray-100 dark:border-neutral-800 py-1">

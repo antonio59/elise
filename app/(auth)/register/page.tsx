@@ -7,13 +7,13 @@ import { useRouter } from "next/navigation";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import Card from "@/components/ui/Card";
-import { Mail, Lock, Sparkles, BookOpen, Users } from "lucide-react";
+import { Mail, Lock, Sparkles, User } from "lucide-react";
 
 export default function RegisterPage() {
   const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [role, setRole] = useState<"child" | "parent">("child");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const { register } = useAuth();
@@ -32,7 +32,8 @@ export default function RegisterPage() {
     setLoading(true);
     setMessage("");
     try {
-      await register(email, password, role);
+      // Register as 'child' role - full access for this single-user app
+      await register(email, password, "child");
       router.push("/dashboard");
     } catch (error: any) {
       setMessage(error.message || "Registration failed");
@@ -58,61 +59,6 @@ export default function RegisterPage() {
 
         <Card padding="lg">
           <form onSubmit={onSubmit} className="space-y-5">
-            {/* Account Type Selection */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
-                Account Type
-              </label>
-              <div className="grid grid-cols-2 gap-3">
-                <button
-                  type="button"
-                  onClick={() => setRole("child")}
-                  className={`p-4 rounded-xl border-2 transition-all text-center ${
-                    role === "child"
-                      ? "border-pink-500 bg-pink-50 dark:bg-pink-900/20"
-                      : "border-gray-200 dark:border-neutral-700 hover:border-pink-300 dark:hover:border-pink-800"
-                  }`}
-                >
-                  <div className="w-12 h-12 mx-auto mb-2 rounded-xl bg-pink-100 dark:bg-pink-900/30 flex items-center justify-center">
-                    <BookOpen
-                      className={`w-6 h-6 ${role === "child" ? "text-pink-600" : "text-gray-400"}`}
-                    />
-                  </div>
-                  <div
-                    className={`font-semibold ${role === "child" ? "text-pink-600 dark:text-pink-400" : "text-gray-700 dark:text-gray-300"}`}
-                  >
-                    Reader
-                  </div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    For kids
-                  </div>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setRole("parent")}
-                  className={`p-4 rounded-xl border-2 transition-all text-center ${
-                    role === "parent"
-                      ? "border-purple-500 bg-purple-50 dark:bg-purple-900/20"
-                      : "border-gray-200 dark:border-neutral-700 hover:border-purple-300 dark:hover:border-purple-800"
-                  }`}
-                >
-                  <div className="w-12 h-12 mx-auto mb-2 rounded-xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
-                    <Users
-                      className={`w-6 h-6 ${role === "parent" ? "text-purple-600" : "text-gray-400"}`}
-                    />
-                  </div>
-                  <div
-                    className={`font-semibold ${role === "parent" ? "text-purple-600 dark:text-purple-400" : "text-gray-700 dark:text-gray-300"}`}
-                  >
-                    Parent
-                  </div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    Manage content
-                  </div>
-                </button>
-              </div>
-            </div>
-
             <Input
               label="Email"
               type="email"
