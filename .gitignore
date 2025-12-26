@@ -28,3 +28,6 @@ npm-debug.log*
 
 # Local Convex
 .local/
+
+# Local Netlify folder
+.netlify

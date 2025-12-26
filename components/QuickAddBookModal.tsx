@@ -5,7 +5,7 @@ import { useMutation } from "convex/react";
 import { api, useAuth } from "@/lib/convex";
 import { BookResult } from "@/lib/bookSearch";
 import { GENRES } from "@/lib/types";
-import { overlayVariants, modalVariants, scaleIn } from "@/lib/motion";
+import { overlayVariants, modalVariants } from "@/lib/motion";
 import {
   X,
   Book,
@@ -15,6 +15,10 @@ import {
   Check,
   Sparkles,
   Loader2,
+  Calendar,
+  FileText,
+  Tag,
+  Building2,
 } from "lucide-react";
 
 type QuickAddBookModalProps = {
@@ -31,26 +35,181 @@ const statusOptions: {
   label: string;
   icon: React.ReactNode;
   color: string;
+  bgColor: string;
 }[] = [
   {
     value: "reading",
-    label: "Currently Reading",
+    label: "Reading",
     icon: <BookOpen size={20} />,
-    color: "bg-sky-500",
+    color: "text-sky-600",
+    bgColor: "bg-sky-500",
   },
   {
     value: "read",
-    label: "Already Read",
+    label: "Finished",
     icon: <Check size={20} />,
-    color: "bg-emerald-500",
+    color: "text-emerald-600",
+    bgColor: "bg-emerald-500",
   },
   {
     value: "wishlist",
     label: "Want to Read",
     icon: <Heart size={20} />,
-    color: "bg-pink-500",
+    color: "text-pink-600",
+    bgColor: "bg-pink-500",
   },
 ];
+
+// Smart genre detection from book categories/subjects
+function detectGenre(book: BookResult): string {
+  const categories = book.categories || [];
+  const description = book.description?.toLowerCase() || "";
+  const title = book.title.toLowerCase();
+
+  // Build a string of all available metadata to search
+  const searchText = [...categories, description, title]
+    .join(" ")
+    .toLowerCase();
+
+  // Genre detection rules (ordered by specificity)
+  const genreRules: { genre: string; keywords: string[] }[] = [
+    {
+      genre: "Manga",
+      keywords: ["manga", "japanese comic", "shonen jump", "viz media"],
+    },
+    {
+      genre: "Manhwa",
+      keywords: ["manhwa", "korean comic", "webtoon", "line webtoon"],
+    },
+    { genre: "Manhua", keywords: ["manhua", "chinese comic"] },
+    { genre: "Webtoon", keywords: ["webtoon", "webcomic", "web comic"] },
+    { genre: "Light Novel", keywords: ["light novel", "ln", "ranobe"] },
+    {
+      genre: "Isekai",
+      keywords: [
+        "isekai",
+        "reincarnated",
+        "transported to another world",
+        "summoned to another world",
+      ],
+    },
+    {
+      genre: "Shounen",
+      keywords: ["shonen", "shounen", "young boys", "action adventure"],
+    },
+    {
+      genre: "Shoujo",
+      keywords: ["shojo", "shoujo", "young girls", "magical girl"],
+    },
+    { genre: "Seinen", keywords: ["seinen", "young men", "mature"] },
+    { genre: "Josei", keywords: ["josei", "young women"] },
+    {
+      genre: "Fantasy",
+      keywords: [
+        "fantasy",
+        "magic",
+        "wizard",
+        "dragon",
+        "sword",
+        "medieval",
+        "kingdom",
+        "elves",
+        "dwarves",
+      ],
+    },
+    {
+      genre: "Sci-Fi",
+      keywords: [
+        "science fiction",
+        "sci-fi",
+        "scifi",
+        "space",
+        "future",
+        "robot",
+        "cyberpunk",
+        "dystopian",
+      ],
+    },
+    {
+      genre: "Romance",
+      keywords: ["romance", "love story", "romantic", "love triangle"],
+    },
+    {
+      genre: "Mystery",
+      keywords: [
+        "mystery",
+        "detective",
+        "crime",
+        "thriller",
+        "suspense",
+        "whodunit",
+      ],
+    },
+    {
+      genre: "Horror",
+      keywords: [
+        "horror",
+        "scary",
+        "supernatural",
+        "ghost",
+        "haunted",
+        "creepy",
+      ],
+    },
+    {
+      genre: "Sports",
+      keywords: [
+        "sports",
+        "basketball",
+        "soccer",
+        "baseball",
+        "volleyball",
+        "tennis",
+        "swimming",
+      ],
+    },
+    {
+      genre: "Slice of Life",
+      keywords: ["slice of life", "daily life", "everyday", "coming of age"],
+    },
+    {
+      genre: "Adventure",
+      keywords: ["adventure", "quest", "journey", "exploration"],
+    },
+    {
+      genre: "Non-Fiction",
+      keywords: [
+        "non-fiction",
+        "nonfiction",
+        "biography",
+        "history",
+        "science",
+        "educational",
+      ],
+    },
+    {
+      genre: "Biography",
+      keywords: ["biography", "autobiography", "memoir", "life story"],
+    },
+  ];
+
+  for (const rule of genreRules) {
+    if (rule.keywords.some((keyword) => searchText.includes(keyword))) {
+      return rule.genre;
+    }
+  }
+
+  // Fallback: check if any GENRES match directly in categories
+  for (const genre of GENRES) {
+    if (
+      categories.some((cat) => cat.toLowerCase().includes(genre.toLowerCase()))
+    ) {
+      return genre;
+    }
+  }
+
+  return "";
+}
 
 export default function QuickAddBookModal({
   book,
@@ -70,19 +229,17 @@ export default function QuickAddBookModal({
 
   const createBook = useMutation(api.books.create);
 
-  // Auto-detect genre from book categories
+  // Auto-detect genre when book changes
   useEffect(() => {
-    if (book?.categories) {
-      const matchedGenre = GENRES.find((g) =>
-        book.categories?.some((c) => c.toLowerCase().includes(g.toLowerCase())),
-      );
-      if (matchedGenre) setGenre(matchedGenre);
+    if (book) {
+      const detectedGenre = detectGenre(book);
+      setGenre(detectedGenre);
     }
   }, [book]);
 
   // Reset state when modal opens/closes
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && book) {
       setStatus("reading");
       setRating(0);
       setIsFavorite(false);
@@ -90,8 +247,10 @@ export default function QuickAddBookModal({
       setError("");
       setSuccess(false);
       setAddedBookId(null);
+      // Re-detect genre on open
+      setGenre(detectGenre(book));
     }
-  }, [isOpen]);
+  }, [isOpen, book]);
 
   const handleSubmit = async () => {
     if (!token || !book) return;
@@ -142,42 +301,46 @@ export default function QuickAddBookModal({
           {/* Backdrop */}
           <motion.div
             variants={overlayVariants}
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
             onClick={onClose}
           />
 
           {/* Modal */}
           <motion.div
             variants={modalVariants}
-            className="relative bg-white dark:bg-neutral-900 rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-hidden"
+            className="relative bg-white dark:bg-neutral-900 rounded-3xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-hidden"
           >
             {/* Close Button */}
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 z-10 p-2 rounded-full bg-black/20 hover:bg-black/30 text-white transition-colors"
+              className="absolute top-4 right-4 z-10 p-2 rounded-full bg-white/80 dark:bg-neutral-800/80 hover:bg-white dark:hover:bg-neutral-700 text-neutral-600 dark:text-neutral-300 transition-colors shadow-sm"
             >
-              <X size={20} />
+              <X size={18} />
             </button>
 
-            {/* Book Cover Header */}
-            <div className="relative h-48 bg-gradient-to-br from-emerald-400 to-teal-500 overflow-hidden">
-              <div className="absolute inset-0 bg-[url('/pattern.svg')] opacity-10" />
-              <div className="absolute inset-0 flex items-center justify-center">
+            {/* Book Cover Header - Gradient Background */}
+            <div className="relative h-52 bg-gradient-to-br from-emerald-400 via-teal-400 to-cyan-500 overflow-hidden">
+              {/* Decorative circles */}
+              <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full" />
+              <div className="absolute -bottom-5 -left-5 w-24 h-24 bg-white/10 rounded-full" />
+
+              {/* Book Cover */}
+              <div className="absolute inset-0 flex items-center justify-center pt-4">
                 <motion.div
-                  initial={{ scale: 0.8, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ delay: 0.1 }}
+                  initial={{ scale: 0.8, opacity: 0, y: 20 }}
+                  animate={{ scale: 1, opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1, type: "spring", stiffness: 200 }}
                   className="relative"
                 >
                   {book.coverUrl ? (
                     <img
                       src={book.coverUrlLarge || book.coverUrl}
                       alt={book.title}
-                      className="h-40 w-auto rounded-lg shadow-2xl"
+                      className="h-44 w-auto rounded-xl shadow-2xl ring-4 ring-white/30"
                     />
                   ) : (
-                    <div className="h-40 w-28 bg-white/20 rounded-lg flex items-center justify-center">
-                      <Book size={40} className="text-white/60" />
+                    <div className="h-44 w-32 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center ring-4 ring-white/30">
+                      <Book size={48} className="text-white/60" />
                     </div>
                   )}
                 </motion.div>
@@ -195,23 +358,46 @@ export default function QuickAddBookModal({
                     exit={{ opacity: 0 }}
                   >
                     {/* Book Info */}
-                    <div className="text-center mb-6">
-                      <h2 className="text-xl font-bold text-neutral-900 dark:text-white mb-1">
+                    <div className="text-center mb-5">
+                      <h2 className="text-xl font-bold text-neutral-900 dark:text-white mb-1 line-clamp-2">
                         {book.title}
                       </h2>
-                      <p className="text-neutral-500 dark:text-neutral-400">
+                      <p className="text-neutral-500 dark:text-neutral-400 text-sm">
                         by {book.authors.join(", ")}
                       </p>
+                    </div>
+
+                    {/* Metadata Pills */}
+                    <div className="flex flex-wrap justify-center gap-2 mb-5">
+                      {book.publishedDate && (
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 text-xs">
+                          <Calendar size={12} />
+                          {book.publishedDate.split("-")[0]}
+                        </span>
+                      )}
                       {book.pageCount && (
-                        <p className="text-sm text-neutral-400 mt-1">
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 text-xs">
+                          <FileText size={12} />
                           {book.pageCount} pages
-                        </p>
+                        </span>
+                      )}
+                      {book.publisher && (
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 text-xs">
+                          <Building2 size={12} />
+                          {book.publisher}
+                        </span>
+                      )}
+                      {genre && (
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 text-xs font-medium">
+                          <Tag size={12} />
+                          {genre}
+                        </span>
                       )}
                     </div>
 
                     {/* Status Selection */}
-                    <div className="mb-6">
-                      <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-3 block">
+                    <div className="mb-5">
+                      <label className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wide mb-2 block">
                         Reading Status
                       </label>
                       <div className="grid grid-cols-3 gap-2">
@@ -220,19 +406,19 @@ export default function QuickAddBookModal({
                             key={option.value}
                             type="button"
                             onClick={() => setStatus(option.value)}
-                            className={`flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all ${
+                            className={`flex flex-col items-center gap-2 p-3 rounded-2xl border-2 transition-all ${
                               status === option.value
-                                ? `border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20`
-                                : "border-neutral-200 dark:border-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600"
+                                ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 shadow-sm"
+                                : "border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-600"
                             }`}
                           >
                             <span
-                              className={`p-2 rounded-full ${status === option.value ? option.color : "bg-neutral-100 dark:bg-neutral-800"} text-white`}
+                              className={`p-2 rounded-xl ${status === option.value ? option.bgColor : "bg-neutral-100 dark:bg-neutral-700"} text-white`}
                             >
                               {option.icon}
                             </span>
                             <span
-                              className={`text-xs font-medium ${status === option.value ? "text-emerald-600 dark:text-emerald-400" : "text-neutral-600 dark:text-neutral-400"}`}
+                              className={`text-xs font-medium ${status === option.value ? option.color + " dark:text-emerald-400" : "text-neutral-600 dark:text-neutral-400"}`}
                             >
                               {option.label}
                             </span>
@@ -242,88 +428,103 @@ export default function QuickAddBookModal({
                     </div>
 
                     {/* Rating (only for read books) */}
-                    {status === "read" && (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
-                        className="mb-6"
-                      >
-                        <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-3 block">
-                          Your Rating
+                    <AnimatePresence>
+                      {status === "read" && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          className="mb-5 overflow-hidden"
+                        >
+                          <label className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wide mb-2 block">
+                            Your Rating
+                          </label>
+                          <div className="flex justify-center gap-1 bg-neutral-50 dark:bg-neutral-800 rounded-2xl p-3">
+                            {[1, 2, 3, 4, 5].map((star) => (
+                              <motion.button
+                                key={star}
+                                type="button"
+                                onClick={() => setRating(star)}
+                                whileHover={{ scale: 1.15 }}
+                                whileTap={{ scale: 0.95 }}
+                                className="p-1"
+                              >
+                                <Star
+                                  size={28}
+                                  className={`transition-colors ${
+                                    star <= rating
+                                      ? "fill-amber-400 text-amber-400"
+                                      : "text-neutral-300 dark:text-neutral-600"
+                                  }`}
+                                />
+                              </motion.button>
+                            ))}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+
+                    {/* Genre Selection (if not auto-detected) */}
+                    {!genre && (
+                      <div className="mb-5">
+                        <label className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wide mb-2 block">
+                          Genre
                         </label>
-                        <div className="flex justify-center gap-2">
-                          {[1, 2, 3, 4, 5].map((star) => (
-                            <button
-                              key={star}
-                              type="button"
-                              onClick={() => setRating(star)}
-                              className="transition-transform hover:scale-110"
-                            >
-                              <Star
-                                size={32}
-                                className={`transition-colors ${
-                                  star <= rating
-                                    ? "fill-yellow-400 text-yellow-400"
-                                    : "text-neutral-300 dark:text-neutral-600"
-                                }`}
-                              />
-                            </button>
+                        <select
+                          value={genre}
+                          onChange={(e) => setGenre(e.target.value)}
+                          className="w-full px-4 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                        >
+                          <option value="">Select genre...</option>
+                          {GENRES.map((g) => (
+                            <option key={g} value={g}>
+                              {g}
+                            </option>
                           ))}
-                        </div>
-                      </motion.div>
+                        </select>
+                      </div>
                     )}
 
-                    {/* Genre Selection */}
-                    <div className="mb-6">
-                      <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2 block">
-                        Genre
-                      </label>
-                      <select
-                        value={genre}
-                        onChange={(e) => setGenre(e.target.value)}
-                        className="w-full px-3 py-2 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white"
-                      >
-                        <option value="">Select genre...</option>
-                        {GENRES.map((g) => (
-                          <option key={g} value={g}>
-                            {g}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-
                     {/* Favorite Toggle */}
-                    <label className="flex items-center gap-3 mb-6 cursor-pointer">
+                    <label className="flex items-center gap-3 mb-5 p-3 rounded-xl bg-neutral-50 dark:bg-neutral-800 cursor-pointer group">
                       <input
                         type="checkbox"
                         checked={isFavorite}
                         onChange={(e) => setIsFavorite(e.target.checked)}
-                        className="w-5 h-5 rounded border-neutral-300 text-pink-500 focus:ring-pink-500"
+                        className="sr-only"
                       />
-                      <span className="flex items-center gap-2 text-sm text-neutral-700 dark:text-neutral-300">
+                      <motion.div
+                        animate={isFavorite ? { scale: [1, 1.2, 1] } : {}}
+                        className={`p-2 rounded-xl transition-colors ${isFavorite ? "bg-pink-500" : "bg-neutral-200 dark:bg-neutral-700 group-hover:bg-neutral-300 dark:group-hover:bg-neutral-600"}`}
+                      >
                         <Heart
-                          size={16}
+                          size={18}
                           className={
-                            isFavorite ? "fill-pink-500 text-pink-500" : ""
+                            isFavorite
+                              ? "fill-white text-white"
+                              : "text-neutral-500"
                           }
                         />
-                        Mark as Favorite
+                      </motion.div>
+                      <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+                        Add to Favorites
                       </span>
                     </label>
 
                     {/* Error Message */}
                     {error && (
-                      <p className="text-red-500 text-sm text-center mb-4">
+                      <p className="text-red-500 text-sm text-center mb-4 p-2 bg-red-50 dark:bg-red-900/20 rounded-lg">
                         {error}
                       </p>
                     )}
 
                     {/* Submit Button */}
-                    <button
+                    <motion.button
                       onClick={handleSubmit}
                       disabled={loading}
-                      className="w-full py-3 px-4 bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-medium rounded-xl hover:from-emerald-600 hover:to-teal-600 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="w-full py-3.5 px-4 bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-semibold rounded-2xl hover:from-emerald-600 hover:to-teal-600 transition-all disabled:opacity-50 flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/25"
                     >
                       {loading ? (
                         <>
@@ -332,53 +533,63 @@ export default function QuickAddBookModal({
                         </>
                       ) : (
                         <>
-                          <Book size={20} />
+                          <Sparkles size={20} />
                           Add to My Bookshelf
                         </>
                       )}
-                    </button>
+                    </motion.button>
                   </motion.div>
                 ) : (
                   <motion.div
                     key="success"
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    className="text-center py-4"
+                    className="text-center py-6"
                   >
                     <motion.div
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
+                      initial={{ scale: 0, rotate: -180 }}
+                      animate={{ scale: 1, rotate: 0 }}
                       transition={{
                         type: "spring",
-                        stiffness: 400,
+                        stiffness: 300,
                         damping: 15,
                       }}
-                      className="w-20 h-20 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full flex items-center justify-center mx-auto mb-4"
+                      className="w-20 h-20 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-emerald-500/30"
                     >
                       <Sparkles size={36} className="text-white" />
                     </motion.div>
 
-                    <h3 className="text-xl font-bold text-neutral-900 dark:text-white mb-2">
-                      Added to Your Shelf!
-                    </h3>
-                    <p className="text-neutral-500 dark:text-neutral-400 mb-6">
-                      &ldquo;{book.title}&rdquo; is now in your collection
-                    </p>
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.2 }}
+                    >
+                      <h3 className="text-2xl font-bold text-neutral-900 dark:text-white mb-2">
+                        Added to Your Shelf!
+                      </h3>
+                      <p className="text-neutral-500 dark:text-neutral-400 mb-6">
+                        &ldquo;{book.title}&rdquo; is ready to read
+                      </p>
+                    </motion.div>
 
                     <div className="flex gap-3">
-                      <button
+                      <motion.button
                         onClick={() => handleAction("shelf")}
-                        className="flex-1 py-3 px-4 border-2 border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300 font-medium rounded-xl hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="flex-1 py-3 px-4 border-2 border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300 font-medium rounded-2xl hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
                       >
                         View Bookshelf
-                      </button>
-                      <button
+                      </motion.button>
+                      <motion.button
                         onClick={() => handleAction("review")}
-                        className="flex-1 py-3 px-4 bg-gradient-to-r from-pink-500 to-rose-500 text-white font-medium rounded-xl hover:from-pink-600 hover:to-rose-600 transition-all flex items-center justify-center gap-2"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="flex-1 py-3 px-4 bg-gradient-to-r from-pink-500 to-rose-500 text-white font-medium rounded-2xl hover:from-pink-600 hover:to-rose-600 transition-all flex items-center justify-center gap-2 shadow-lg shadow-pink-500/25"
                       >
                         <Star size={18} />
                         Write Review
-                      </button>
+                      </motion.button>
                     </div>
                   </motion.div>
                 )}
