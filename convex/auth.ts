@@ -1,4 +1,3 @@
-import bcrypt from "bcryptjs";
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 import {
@@ -12,26 +11,74 @@ const SESSION_TTL_MS = 30 * 24 * 60 * 60 * 1000;
 const RATE_LIMIT_WINDOW_MS = 5 * 60 * 1000;
 const RATE_LIMIT_MAX = 10;
 
-async function hashPassword(password: string): Promise<string> {
-  // Use cost factor 10 for Convex runtime compatibility (12 can timeout)
-  return await bcrypt.hash(password, 10);
-}
-
-async function legacySha256(password: string): Promise<string> {
+// Use Web Crypto API for password hashing (native to Convex runtime)
+async function hashPassword(password: string, salt?: string): Promise<string> {
+  const actualSalt = salt || generateSalt();
   const encoder = new TextEncoder();
-  const data = encoder.encode(password);
-  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+
+  // PBKDF2 with SHA-256, 100000 iterations
+  const keyMaterial = await crypto.subtle.importKey(
+    "raw",
+    encoder.encode(password),
+    "PBKDF2",
+    false,
+    ["deriveBits"],
+  );
+
+  const derivedBits = await crypto.subtle.deriveBits(
+    {
+      name: "PBKDF2",
+      salt: encoder.encode(actualSalt),
+      iterations: 100000,
+      hash: "SHA-256",
+    },
+    keyMaterial,
+    256,
+  );
+
+  const hashArray = Array.from(new Uint8Array(derivedBits));
+  const hashHex = hashArray
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+
+  // Return salt:hash format
+  return `pbkdf2:${actualSalt}:${hashHex}`;
 }
 
-async function verifyPassword(password: string, storedHash: string) {
-  // If stored hash looks like legacy SHA-256 (64 hex chars), verify and upgrade
+function generateSalt(): string {
+  const array = new Uint8Array(16);
+  crypto.getRandomValues(array);
+  return Array.from(array, (b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+async function verifyPassword(
+  password: string,
+  storedHash: string,
+): Promise<boolean> {
+  // Check for PBKDF2 format (pbkdf2:salt:hash)
+  if (storedHash.startsWith("pbkdf2:")) {
+    const parts = storedHash.split(":");
+    if (parts.length === 3) {
+      const salt = parts[1];
+      const computed = await hashPassword(password, salt);
+      return computed === storedHash;
+    }
+  }
+
+  // Legacy SHA-256 format (64 hex chars)
   if (/^[a-f0-9]{64}$/i.test(storedHash)) {
-    const legacy = await legacySha256(password);
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password);
+    const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const legacy = hashArray
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
     return legacy === storedHash;
   }
-  return await bcrypt.compare(password, storedHash);
+
+  // Unsupported format
+  return false;
 }
 
 function generateToken(): string {
@@ -153,7 +200,7 @@ export const login = mutation({
     }
 
     // Upgrade legacy hashes transparently
-    if (/^[a-f0-9]{64}$/i.test(user.passwordHash)) {
+    if (!user.passwordHash.startsWith("pbkdf2:")) {
       const newHash = await hashPassword(args.password);
       await ctx.db.patch(user._id, { passwordHash: newHash });
     }
