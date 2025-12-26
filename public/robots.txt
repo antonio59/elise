@@ -1,0 +1,12 @@
+# Elise Reads - Robots.txt
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://elise-reads.netlify.app/sitemap.xml
+
+# Disallow admin and API routes from indexing
+Disallow: /api/
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /manage

@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <linearGradient id="bookGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#10b981"/>
+      <stop offset="100%" style="stop-color:#059669"/>
+    </linearGradient>
+  </defs>
+  <!-- Background circle -->
+  <circle cx="256" cy="256" r="240" fill="url(#bookGrad)"/>
+  <!-- Open book -->
+  <g transform="translate(256, 280)">
+    <!-- Left page -->
+    <path d="M-120 -80 C-120 -100, -100 -120, -20 -120 L-20 80 C-100 80, -120 60, -120 40 Z" fill="white" opacity="0.95"/>
+    <!-- Right page -->
+    <path d="M120 -80 C120 -100, 100 -120, 20 -120 L20 80 C100 80, 120 60, 120 40 Z" fill="white" opacity="0.9"/>
+    <!-- Center spine -->
+    <path d="M-20 -120 L-20 80 L0 90 L20 80 L20 -120 L0 -130 Z" fill="white" opacity="0.85"/>
+    <!-- Page lines left -->
+    <line x1="-100" y1="-60" x2="-35" y2="-60" stroke="#10b981" stroke-width="6" stroke-linecap="round"/>
+    <line x1="-100" y1="-20" x2="-35" y2="-20" stroke="#10b981" stroke-width="6" stroke-linecap="round"/>
+    <line x1="-100" y1="20" x2="-35" y2="20" stroke="#10b981" stroke-width="6" stroke-linecap="round"/>
+    <!-- Page lines right -->
+    <line x1="100" y1="-60" x2="35" y2="-60" stroke="#10b981" stroke-width="6" stroke-linecap="round"/>
+    <line x1="100" y1="-20" x2="35" y2="-20" stroke="#10b981" stroke-width="6" stroke-linecap="round"/>
+    <line x1="100" y1="20" x2="35" y2="20" stroke="#10b981" stroke-width="6" stroke-linecap="round"/>
+  </g>
+  <!-- Sparkle stars -->
+  <circle cx="380" cy="120" r="12" fill="white" opacity="0.8"/>
+  <circle cx="140" cy="150" r="8" fill="white" opacity="0.6"/>
+  <circle cx="400" cy="200" r="6" fill="white" opacity="0.5"/>
+</svg>

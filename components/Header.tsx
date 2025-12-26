@@ -28,7 +28,7 @@ export default function Header() {
   const [isAdminMode, setIsAdminMode] = useState(false);
   const siteSettings = useQuery(api.siteSettings.get);
 
-  const siteName = siteSettings?.siteName || "Elise's World";
+  const siteName = siteSettings?.siteName || "Elise Reads";
 
   // Public navigation items
   const publicNavItems = [
