@@ -11,7 +11,13 @@ type Props = {
 
 export default function Providers({ children, initialToken }: Props) {
   return (
-    <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="light"
+      enableSystem={false}
+      forcedTheme="light"
+      disableTransitionOnChange
+    >
       <ConvexAuthProvider initialToken={initialToken}>
         {children}
       </ConvexAuthProvider>

@@ -100,7 +100,7 @@ export default async function RootLayout({
   const token = cookieStore.get("elise_session")?.value ?? null;
 
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className="light" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
