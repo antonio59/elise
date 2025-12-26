@@ -13,7 +13,7 @@ function getClient() {
 
 function getClientHash(req: NextRequest) {
   const forwarded = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
-  const ip = forwarded || req.headers.get("x-real-ip") || req.ip || "unknown";
+  const ip = forwarded || req.headers.get("x-real-ip") || "unknown";
   return createHash("sha256").update(ip).digest("hex");
 }
 

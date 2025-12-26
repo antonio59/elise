@@ -1,6 +1,197 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+/* ================================
+   Custom Theme Configuration
+   ================================ */
+@theme {
+  /* Manga-inspired color palette */
+  --color-sakura-50: #fff5f7;
+  --color-sakura-100: #ffe4ec;
+  --color-sakura-200: #ffccd9;
+  --color-sakura-300: #ffb3c6;
+  --color-sakura-400: #ff8fab;
+  --color-sakura-500: #ff6b95;
+  --color-sakura-600: #ff4778;
+  --color-sakura-700: #e6325f;
+  --color-sakura-800: #c22a4f;
+  --color-sakura-900: #9e2642;
+
+  /* Deep ink for text and accents */
+  --color-ink-50: #f8f9fa;
+  --color-ink-100: #e9ecef;
+  --color-ink-200: #dee2e6;
+  --color-ink-300: #ced4da;
+  --color-ink-400: #adb5bd;
+  --color-ink-500: #6c757d;
+  --color-ink-600: #495057;
+  --color-ink-700: #343a40;
+  --color-ink-800: #212529;
+  --color-ink-900: #0d1117;
+
+  /* Anime gold for stars and achievements */
+  --color-gold-50: #fffbeb;
+  --color-gold-100: #fef3c7;
+  --color-gold-200: #fde68a;
+  --color-gold-300: #fcd34d;
+  --color-gold-400: #fbbf24;
+  --color-gold-500: #f59e0b;
+  --color-gold-600: #d97706;
+  --color-gold-700: #b45309;
+  --color-gold-800: #92400e;
+  --color-gold-900: #78350f;
+
+  /* Kawaii purple */
+  --color-kawaii-50: #faf5ff;
+  --color-kawaii-100: #f3e8ff;
+  --color-kawaii-200: #e9d5ff;
+  --color-kawaii-300: #d8b4fe;
+  --color-kawaii-400: #c084fc;
+  --color-kawaii-500: #a855f7;
+  --color-kawaii-600: #9333ea;
+  --color-kawaii-700: #7e22ce;
+  --color-kawaii-800: #6b21a8;
+  --color-kawaii-900: #581c87;
+
+  /* Mint for success states */
+  --color-mint-50: #ecfdf5;
+  --color-mint-100: #d1fae5;
+  --color-mint-200: #a7f3d0;
+  --color-mint-300: #6ee7b7;
+  --color-mint-400: #34d399;
+  --color-mint-500: #10b981;
+  --color-mint-600: #059669;
+  --color-mint-700: #047857;
+  --color-mint-800: #065f46;
+  --color-mint-900: #064e3b;
+
+  /* Custom font families */
+  --font-display: var(--font-display), system-ui, sans-serif;
+  --font-manga: var(--font-manga), "Comic Sans MS", cursive;
+
+  /* Custom animations */
+  --animate-float: float 3s ease-in-out infinite;
+  --animate-sparkle: sparkle 1.5s ease-in-out infinite;
+  --animate-bounce-slow: bounce 2s infinite;
+  --animate-pulse-soft: pulse-soft 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-wiggle: wiggle 1s ease-in-out infinite;
+  --animate-slide-up: slide-up 0.5s ease-out;
+  --animate-slide-in-right: slide-in-right 0.3s ease-out;
+  --animate-fade-in: fade-in 0.3s ease-out;
+  --animate-scale-in: scale-in 0.2s ease-out;
+  --animate-petal-fall: petal-fall 10s linear infinite;
+
+  /* Custom box shadows */
+  --shadow-manga: 4px 4px 0px 0px rgba(0, 0, 0, 0.1);
+  --shadow-manga-lg: 8px 8px 0px 0px rgba(0, 0, 0, 0.1);
+  --shadow-manga-sakura: 4px 4px 0px 0px rgba(255, 107, 149, 0.3);
+  --shadow-glow-sakura: 0 0 20px rgba(255, 107, 149, 0.3);
+  --shadow-glow-kawaii: 0 0 20px rgba(168, 85, 247, 0.3);
+
+  /* Custom border radius */
+  --radius-manga: 1.5rem;
+  --radius-blob: 60% 40% 30% 70% / 60% 30% 70% 40%;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes sparkle {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(0.8);
+  }
+}
+
+@keyframes pulse-soft {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes wiggle {
+  0%,
+  100% {
+    transform: rotate(-3deg);
+  }
+  50% {
+    transform: rotate(3deg);
+  }
+}
+
+@keyframes slide-up {
+  0% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-in-right {
+  0% {
+    transform: translateX(20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes scale-in {
+  0% {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes petal-fall {
+  0% {
+    transform: translateY(-10px) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
 
 /* ================================
    CSS Custom Properties
@@ -167,16 +358,6 @@ body {
 }
 
 /* Skeleton Loading */
-@keyframes pulse-soft {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
-}
-
 .skeleton {
   animation: pulse-soft 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   @apply bg-gray-200 rounded;
@@ -261,30 +442,8 @@ body {
 }
 
 /* ================================
-   Animations
+   Animations (utility classes)
    ================================ */
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-@keyframes sparkle {
-  0%,
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.5;
-    transform: scale(0.8);
-  }
-}
-
 .animate-float {
   animation: float 3s ease-in-out infinite;
 }

@@ -1,21 +1,26 @@
-import './globals.css'
-import { ReactNode } from 'react'
-import { cookies } from 'next/headers'
-import Providers from './providers'
-import Header from '@/components/Header'
+import "./globals.css";
+import { ReactNode } from "react";
+import { cookies } from "next/headers";
+import Providers from "./providers";
+import Header from "@/components/Header";
 
 export const metadata = {
   title: "Niece's World | My Reading Adventures",
-  description: 'A magical space to collect books and art',
+  description: "A magical space to collect books and art",
   openGraph: {
     title: "Niece's World | My Reading Adventures",
-    description: 'A magical space to collect books and art',
-    type: 'website'
-  }
-}
+    description: "A magical space to collect books and art",
+    type: "website",
+  },
+};
 
-export default function RootLayout({ children }: { children: ReactNode }) {
-  const token = cookies().get('elise_session')?.value ?? null
+export default async function RootLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("elise_session")?.value ?? null;
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -26,5 +31,5 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         </Providers>
       </body>
     </html>
-  )
+  );
 }
