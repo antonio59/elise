@@ -2,18 +2,11 @@ import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 import { auth } from "./auth";
 
-// Get all books for the authenticated user
+// Get all books (site-wide, not user-specific)
 export const getMyBooks = query({
   args: {},
   handler: async (ctx) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) return [];
-
-    return await ctx.db
-      .query("books")
-      .withIndex("by_user", (q) => q.eq("userId", userId))
-      .order("desc")
-      .collect();
+    return await ctx.db.query("books").order("desc").collect();
   },
 });
 
@@ -27,16 +20,8 @@ export const getByStatus = query({
     ),
   },
   handler: async (ctx, args) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) return [];
-
-    return await ctx.db
-      .query("books")
-      .withIndex("by_user_status", (q) =>
-        q.eq("userId", userId).eq("status", args.status),
-      )
-      .order("desc")
-      .collect();
+    const allBooks = await ctx.db.query("books").order("desc").collect();
+    return allBooks.filter((b) => b.status === args.status);
   },
 });
 
@@ -53,19 +38,12 @@ export const getReadBooks = query({
 export const getFavorites = query({
   args: {},
   handler: async (ctx) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) return [];
-
-    return await ctx.db
-      .query("books")
-      .withIndex("by_user_favorite", (q) =>
-        q.eq("userId", userId).eq("isFavorite", true),
-      )
-      .collect();
+    const allBooks = await ctx.db.query("books").collect();
+    return allBooks.filter((b) => b.isFavorite);
   },
 });
 
-// Add a book
+// Add a book (requires auth)
 export const add = mutation({
   args: {
     title: v.string(),
@@ -93,7 +71,7 @@ export const add = mutation({
     const now = Date.now();
     return await ctx.db.insert("books", {
       ...args,
-      userId,
+      userId, // Track who added it, but don't filter by it
       isFavorite: args.isFavorite ?? false,
       startedAt: args.status === "reading" ? now : undefined,
       finishedAt: args.status === "read" ? now : undefined,
@@ -102,7 +80,7 @@ export const add = mutation({
   },
 });
 
-// Update a book
+// Update a book (requires auth)
 export const update = mutation({
   args: {
     id: v.id("books"),
@@ -127,7 +105,7 @@ export const update = mutation({
     if (!userId) throw new Error("Not authenticated");
 
     const book = await ctx.db.get(args.id);
-    if (!book || book.userId !== userId) throw new Error("Book not found");
+    if (!book) throw new Error("Book not found");
 
     const { id, ...updates } = args;
     const filteredUpdates = Object.fromEntries(
@@ -143,7 +121,7 @@ export const update = mutation({
   },
 });
 
-// Remove a book
+// Remove a book (requires auth)
 export const remove = mutation({
   args: { id: v.id("books") },
   handler: async (ctx, args) => {
@@ -151,13 +129,13 @@ export const remove = mutation({
     if (!userId) throw new Error("Not authenticated");
 
     const book = await ctx.db.get(args.id);
-    if (!book || book.userId !== userId) throw new Error("Book not found");
+    if (!book) throw new Error("Book not found");
 
     await ctx.db.delete(args.id);
   },
 });
 
-// Toggle favorite
+// Toggle favorite (requires auth)
 export const toggleFavorite = mutation({
   args: { id: v.id("books") },
   handler: async (ctx, args) => {
@@ -165,7 +143,7 @@ export const toggleFavorite = mutation({
     if (!userId) throw new Error("Not authenticated");
 
     const book = await ctx.db.get(args.id);
-    if (!book || book.userId !== userId) throw new Error("Book not found");
+    if (!book) throw new Error("Book not found");
 
     await ctx.db.patch(args.id, { isFavorite: !book.isFavorite });
   },

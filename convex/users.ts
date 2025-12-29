@@ -89,22 +89,13 @@ export const updateProfile = mutation({
   },
 });
 
-// Get reading stats for current user
+// Get site-wide reading stats (all books/artworks, not user-specific)
 export const getStats = query({
   args: {},
   handler: async (ctx) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) return null;
-
-    const books = await ctx.db
-      .query("books")
-      .withIndex("by_user", (q) => q.eq("userId", userId))
-      .collect();
-
-    const artworks = await ctx.db
-      .query("artworks")
-      .withIndex("by_user", (q) => q.eq("userId", userId))
-      .collect();
+    // Get ALL books and artworks for the site
+    const books = await ctx.db.query("books").collect();
+    const artworks = await ctx.db.query("artworks").collect();
 
     const booksRead = books.filter((b) => b.status === "read").length;
     const booksReading = books.filter((b) => b.status === "reading").length;

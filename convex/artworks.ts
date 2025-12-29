@@ -6,26 +6,17 @@ import { auth } from "./auth";
 export const getPublished = query({
   args: { limit: v.optional(v.number()) },
   handler: async (ctx, args) => {
-    return await ctx.db
-      .query("artworks")
-      .withIndex("by_published", (q) => q.eq("isPublished", true))
-      .order("desc")
-      .take(args.limit ?? 50);
+    const allArtworks = await ctx.db.query("artworks").order("desc").collect();
+    const published = allArtworks.filter((a) => a.isPublished);
+    return args.limit ? published.slice(0, args.limit) : published;
   },
 });
 
-// Get all artworks for the authenticated user
+// Get all artworks (site-wide, not user-specific)
 export const getMyArtworks = query({
   args: {},
   handler: async (ctx) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) return [];
-
-    return await ctx.db
-      .query("artworks")
-      .withIndex("by_user", (q) => q.eq("userId", userId))
-      .order("desc")
-      .collect();
+    return await ctx.db.query("artworks").order("desc").collect();
   },
 });
 
@@ -33,11 +24,8 @@ export const getMyArtworks = query({
 export const getBySeries = query({
   args: { seriesId: v.id("artSeries") },
   handler: async (ctx, args) => {
-    return await ctx.db
-      .query("artworks")
-      .withIndex("by_series", (q) => q.eq("seriesId", args.seriesId))
-      .order("desc")
-      .collect();
+    const allArtworks = await ctx.db.query("artworks").order("desc").collect();
+    return allArtworks.filter((a) => a.seriesId === args.seriesId);
   },
 });
 
@@ -49,7 +37,7 @@ export const getById = query({
   },
 });
 
-// Create artwork
+// Create artwork (requires auth)
 export const create = mutation({
   args: {
     title: v.string(),
@@ -68,14 +56,14 @@ export const create = mutation({
 
     return await ctx.db.insert("artworks", {
       ...args,
-      userId,
+      userId, // Track who added it
       likes: 0,
       createdAt: Date.now(),
     });
   },
 });
 
-// Update artwork
+// Update artwork (requires auth)
 export const update = mutation({
   args: {
     id: v.id("artworks"),
@@ -92,8 +80,7 @@ export const update = mutation({
     if (!userId) throw new Error("Not authenticated");
 
     const artwork = await ctx.db.get(args.id);
-    if (!artwork || artwork.userId !== userId)
-      throw new Error("Artwork not found");
+    if (!artwork) throw new Error("Artwork not found");
 
     const { id, ...updates } = args;
     const filteredUpdates = Object.fromEntries(
@@ -103,7 +90,7 @@ export const update = mutation({
   },
 });
 
-// Delete artwork
+// Delete artwork (requires auth)
 export const remove = mutation({
   args: { id: v.id("artworks") },
   handler: async (ctx, args) => {
@@ -111,8 +98,7 @@ export const remove = mutation({
     if (!userId) throw new Error("Not authenticated");
 
     const artwork = await ctx.db.get(args.id);
-    if (!artwork || artwork.userId !== userId)
-      throw new Error("Artwork not found");
+    if (!artwork) throw new Error("Artwork not found");
 
     // Delete from storage if exists
     if (artwork.storageId) {
@@ -134,22 +120,15 @@ export const like = mutation({
   },
 });
 
-// Get art series for authenticated user
+// Get art series (site-wide)
 export const getMySeries = query({
   args: {},
   handler: async (ctx) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) return [];
-
-    return await ctx.db
-      .query("artSeries")
-      .withIndex("by_user", (q) => q.eq("userId", userId))
-      .order("desc")
-      .collect();
+    return await ctx.db.query("artSeries").order("desc").collect();
   },
 });
 
-// Create art series
+// Create art series (requires auth)
 export const createSeries = mutation({
   args: {
     title: v.string(),
