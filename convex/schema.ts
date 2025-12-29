@@ -8,7 +8,7 @@ export default defineSchema({
 
   // User profiles (extends auth user)
   userProfiles: defineTable({
-    userId: v.id("users"),
+    userId: v.any(), // Allow any userId format for backward compatibility
     name: v.string(),
     username: v.optional(v.string()),
     avatarUrl: v.optional(v.string()),
@@ -23,7 +23,7 @@ export default defineSchema({
 
   // Books
   books: defineTable({
-    userId: v.id("users"),
+    userId: v.any(), // Allow any userId format for backward compatibility
     title: v.string(),
     author: v.string(),
     coverUrl: v.optional(v.string()),
@@ -33,6 +33,8 @@ export default defineSchema({
     series: v.optional(v.string()),
     pageCount: v.optional(v.number()),
     pagesRead: v.optional(v.number()),
+    pagesTotal: v.optional(v.number()), // Legacy field from old schema
+    published: v.optional(v.boolean()), // Legacy field from old schema
     description: v.optional(v.string()),
     status: v.union(
       v.literal("reading"),
@@ -53,7 +55,7 @@ export default defineSchema({
 
   // Artworks
   artworks: defineTable({
-    userId: v.id("users"),
+    userId: v.any(), // Allow any userId format for backward compatibility
     title: v.string(),
     description: v.optional(v.string()),
     imageUrl: v.string(),
@@ -72,7 +74,7 @@ export default defineSchema({
 
   // Art Series
   artSeries: defineTable({
-    userId: v.id("users"),
+    userId: v.any(), // Allow any userId format for backward compatibility
     title: v.string(),
     description: v.optional(v.string()),
     coverImageUrl: v.optional(v.string()),
@@ -102,7 +104,7 @@ export default defineSchema({
 
   // Reading goals
   readingGoals: defineTable({
-    userId: v.id("users"),
+    userId: v.any(), // Allow any userId format for backward compatibility
     year: v.number(),
     targetBooks: v.number(),
     targetPages: v.optional(v.number()),
