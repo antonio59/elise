@@ -1,0 +1,27 @@
+[build]
+  command = "bun install && bun run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Production branch context
+[context.production]
+  environment = { VITE_CONVEX_URL = "https://agile-shrimp-456.convex.cloud" }
+
+# Staging/main branch context  
+[context.main]
+  environment = { VITE_CONVEX_URL = "https://rare-blackbird-695.convex.cloud" }
+
+# Branch deploys (preview)
+[context.branch-deploy]
+  environment = { VITE_CONVEX_URL = "https://rare-blackbird-695.convex.cloud" }
+
+# Deploy previews (PRs)
+[context.deploy-preview]
+  environment = { VITE_CONVEX_URL = "https://rare-blackbird-695.convex.cloud" }
