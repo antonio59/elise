@@ -5,52 +5,53 @@
  * THIS CODE IS AUTOMATICALLY GENERATED.
  *
  * To regenerate, run `npx convex dev`.
+ * @module
  */
 
-import type { FilterApi, FunctionReference } from "convex/server";
+import type * as artworks from "../artworks.js";
+import type * as auth from "../auth.js";
+import type * as books from "../books.js";
+import type * as http from "../http.js";
+import type * as users from "../users.js";
 
-export declare const api: {
-  artworks: {
-    getPublished: FunctionReference<
-      "query",
-      "public",
-      { limit?: number },
-      any[]
-    >;
-    getMyArtworks: FunctionReference<"query", "public", {}, any[]>;
-    getBySeries: FunctionReference<"query", "public", { seriesId: any }, any[]>;
-    getById: FunctionReference<"query", "public", { id: any }, any>;
-    create: FunctionReference<"mutation", "public", any, any>;
-    update: FunctionReference<"mutation", "public", any, any>;
-    remove: FunctionReference<"mutation", "public", { id: any }, any>;
-    like: FunctionReference<"mutation", "public", { id: any }, any>;
-    getMySeries: FunctionReference<"query", "public", {}, any[]>;
-    createSeries: FunctionReference<"mutation", "public", any, any>;
-  };
-  books: {
-    getMyBooks: FunctionReference<"query", "public", {}, any[]>;
-    getByStatus: FunctionReference<
-      "query",
-      "public",
-      { status: "reading" | "read" | "wishlist" },
-      any[]
-    >;
-    getReadBooks: FunctionReference<"query", "public", {}, any[]>;
-    getFavorites: FunctionReference<"query", "public", {}, any[]>;
-    add: FunctionReference<"mutation", "public", any, any>;
-    update: FunctionReference<"mutation", "public", any, any>;
-    remove: FunctionReference<"mutation", "public", { id: any }, any>;
-    toggleFavorite: FunctionReference<"mutation", "public", { id: any }, any>;
-  };
-  users: {
-    getCurrentUser: FunctionReference<"query", "public", {}, any>;
-    getProfile: FunctionReference<"query", "public", {}, any>;
-    createProfile: FunctionReference<"mutation", "public", any, any>;
-    updateProfile: FunctionReference<"mutation", "public", any, any>;
-    getStats: FunctionReference<"query", "public", {}, any>;
-  };
-  auth: {
-    signIn: FunctionReference<"mutation", "public", any, any>;
-    signOut: FunctionReference<"mutation", "public", any, any>;
-  };
-};
+import type {
+  ApiFromModules,
+  FilterApi,
+  FunctionReference,
+} from "convex/server";
+
+declare const fullApi: ApiFromModules<{
+  artworks: typeof artworks;
+  auth: typeof auth;
+  books: typeof books;
+  http: typeof http;
+  users: typeof users;
+}>;
+
+/**
+ * A utility for referencing Convex functions in your app's public API.
+ *
+ * Usage:
+ * ```js
+ * const myFunctionReference = api.myModule.myFunction;
+ * ```
+ */
+export declare const api: FilterApi<
+  typeof fullApi,
+  FunctionReference<any, "public">
+>;
+
+/**
+ * A utility for referencing Convex functions in your app's internal API.
+ *
+ * Usage:
+ * ```js
+ * const myFunctionReference = internal.myModule.myFunction;
+ * ```
+ */
+export declare const internal: FilterApi<
+  typeof fullApi,
+  FunctionReference<any, "internal">
+>;
+
+export declare const components: {};
