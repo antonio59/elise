@@ -1,0 +1,321 @@
+/* Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&family=Fredoka:wght@400;500;600;700&display=swap");
+@import "./styles/tokens.css";
+
+@import "tailwindcss";
+
+/* Tell Tailwind where to find classes */
+@source "../index.html";
+@source "./**/*.{js,ts,jsx,tsx}";
+
+/* Theme configuration */
+@theme {
+  /* Font families */
+  --font-display: "Nunito", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-accent: "Fredoka", system-ui, sans-serif;
+
+  /* PRIMARY - Sakura Pink */
+  --color-primary-50: #fdf2f8;
+  --color-primary-100: #fce7f3;
+  --color-primary-200: #fbcfe8;
+  --color-primary-300: #f9a8d4;
+  --color-primary-400: #f472b6;
+  --color-primary-500: #ec4899;
+  --color-primary-600: #db2777;
+  --color-primary-700: #be185d;
+  --color-primary-800: #9d174d;
+  --color-primary-900: #831843;
+
+  /* ACCENT - Electric Teal */
+  --color-accent-50: #ecfeff;
+  --color-accent-100: #cffafe;
+  --color-accent-200: #a5f3fc;
+  --color-accent-300: #67e8f9;
+  --color-accent-400: #22d3ee;
+  --color-accent-500: #06b6d4;
+  --color-accent-600: #0891b2;
+  --color-accent-700: #0e7490;
+  --color-accent-800: #155e75;
+  --color-accent-900: #164e63;
+
+  /* VIOLET - Anime Purple */
+  --color-violet-50: #f5f3ff;
+  --color-violet-100: #ede9fe;
+  --color-violet-200: #ddd6fe;
+  --color-violet-300: #c4b5fd;
+  --color-violet-400: #a78bfa;
+  --color-violet-500: #8b5cf6;
+  --color-violet-600: #7c3aed;
+  --color-violet-700: #6d28d9;
+
+  /* STAR - Gold ratings */
+  --color-star: #fbbf24;
+  --color-star-light: #fef3c7;
+
+  /* SLATE - Neutrals */
+  --color-slate-50: #f8fafc;
+  --color-slate-100: #f1f5f9;
+  --color-slate-200: #e2e8f0;
+  --color-slate-300: #cbd5e1;
+  --color-slate-400: #94a3b8;
+  --color-slate-500: #64748b;
+  --color-slate-600: #475569;
+  --color-slate-700: #334155;
+  --color-slate-800: #1e293b;
+  --color-slate-900: #0f172a;
+
+  /* Shadows */
+  --shadow-soft: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-primary: 0 4px 14px rgba(236, 72, 153, 0.25);
+  --shadow-violet: 0 4px 14px rgba(139, 92, 246, 0.25);
+
+  /* Border radius */
+  --radius-4xl: 2rem;
+
+  /* Animations */
+  --animate-float: float 3s ease-in-out infinite;
+  --animate-sparkle: sparkle 1.5s ease-in-out infinite;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply m-0 min-h-screen antialiased;
+    font-family: var(--font-body);
+    background: linear-gradient(135deg, #fdf2f8 0%, #f5f3ff 50%, #ecfeff 100%);
+    color: var(--color-slate-800);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--color-slate-900);
+  }
+}
+
+@layer components {
+  /* Card */
+  .card {
+    @apply bg-white rounded-2xl;
+    border: 1px solid var(--color-slate-200);
+    box-shadow: var(--shadow-soft);
+    transition: all 200ms ease;
+  }
+
+  .card:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+  }
+
+  /* Manga-style card with gradient border */
+  .card-manga {
+    @apply bg-white rounded-2xl p-[2px];
+    background: linear-gradient(135deg, #ec4899, #8b5cf6, #06b6d4);
+  }
+
+  .card-manga-inner {
+    @apply bg-white rounded-2xl p-4;
+  }
+
+  /* Buttons */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 font-semibold rounded-xl;
+    font-family: var(--font-display);
+    transition: all 200ms ease;
+  }
+
+  .btn-primary {
+    @apply px-6 py-3 text-white;
+    background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
+    box-shadow: var(--shadow-primary);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(236, 72, 153, 0.35);
+  }
+
+  .btn-secondary {
+    @apply px-6 py-3 bg-white text-primary-600 border-2 border-primary-200;
+  }
+
+  .btn-secondary:hover {
+    @apply bg-primary-50 border-primary-300;
+  }
+
+  .btn-gradient {
+    @apply px-6 py-3 text-white;
+    background: linear-gradient(135deg, #ec4899, #8b5cf6);
+    box-shadow: var(--shadow-violet);
+  }
+
+  .btn-gradient:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(139, 92, 246, 0.35);
+  }
+
+  /* Input */
+  .input {
+    @apply w-full px-4 py-3 bg-white rounded-xl;
+    border: 2px solid var(--color-slate-200);
+    font-family: var(--font-body);
+    transition: all 200ms ease;
+  }
+
+  .input:focus {
+    @apply outline-none;
+    border-color: var(--color-primary-400);
+    box-shadow: 0 0 0 4px rgba(236, 72, 153, 0.1);
+  }
+
+  /* Badge */
+  .badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-bold;
+  }
+
+  .badge-primary {
+    @apply bg-primary-100 text-primary-700;
+  }
+
+  .badge-accent {
+    @apply bg-accent-100 text-accent-700;
+  }
+
+  .badge-violet {
+    @apply bg-violet-100 text-violet-700;
+  }
+
+  /* Progress XP bar */
+  .xp-bar {
+    @apply h-3 rounded-full overflow-hidden;
+    background: linear-gradient(
+      90deg,
+      var(--color-slate-100),
+      var(--color-slate-200)
+    );
+  }
+
+  .xp-bar-fill {
+    @apply h-full rounded-full;
+    background: linear-gradient(90deg, #ec4899, #8b5cf6, #06b6d4);
+    transition: width 500ms ease;
+  }
+
+  /* Stat card with anime style */
+  .stat-card {
+    @apply bg-white rounded-2xl p-6 relative overflow-hidden;
+    border: 1px solid var(--color-slate-200);
+  }
+
+  .stat-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(
+      135deg,
+      rgba(236, 72, 153, 0.1),
+      rgba(139, 92, 246, 0.1)
+    );
+    border-radius: 0 0 0 100%;
+  }
+
+  /* Gallery grid for manga panels */
+  .gallery-grid {
+    @apply grid gap-4;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+}
+
+/* Animations */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes sparkle {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-slate-100);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #ec4899, #8b5cf6);
+  border-radius: 9999px;
+}
+
+/* Focus styles */
+:focus-visible {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Hide scrollbar utility */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
