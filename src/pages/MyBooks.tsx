@@ -8,14 +8,13 @@ import {
   BookMarked,
   Heart,
   Star,
-  Edit,
   Trash2,
   X,
   Loader2,
 } from "lucide-react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
-import type { Id, Doc } from "../../convex/_generated/dataModel";
+import type { Doc } from "../../convex/_generated/dataModel";
 
 type TabType = "read" | "reading" | "wishlist";
 
@@ -43,7 +42,6 @@ const MyBooks: React.FC = () => {
   const books = useQuery(api.books.getMyBooks) ?? [];
 
   const addBook = useMutation(api.books.add);
-  const updateBook = useMutation(api.books.update);
   const removeBook = useMutation(api.books.remove);
 
   const [activeTab, setActiveTab] = useState<TabType>("read");

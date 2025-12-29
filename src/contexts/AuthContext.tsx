@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+/* eslint-disable react-refresh/only-export-components */
+import React, { createContext, useContext, useMemo, useCallback } from "react";
 import type { ReactNode } from "react";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { useConvexAuth, useMutation, useQuery } from "convex/react";
@@ -22,24 +23,21 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const useAuth = () => {
+export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {
     throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
-};
+}
 
 interface AuthProviderProps {
   children: ReactNode;
 }
 
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+export function AuthProvider({ children }: AuthProviderProps) {
   const { isAuthenticated, isLoading } = useConvexAuth();
   const { signIn: convexSignIn, signOut: convexSignOut } = useAuthActions();
-  const [user, setUser] = useState<AuthUser | null>(null);
-  const [convexUserId, setConvexUserId] = useState<Id<"users"> | null>(null);
-  const [initialCheckDone, setInitialCheckDone] = useState(false);
 
   const currentUser = useQuery(
     api.users.getCurrentUser,
@@ -48,120 +46,118 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const createUserProfile = useMutation(api.users.createProfile);
 
-  useEffect(() => {
-    if (!isLoading) {
-      setInitialCheckDone(true);
-    }
-  }, [isLoading]);
-
-  useEffect(() => {
+  // Derive user and convexUserId from currentUser (no useEffect needed)
+  const user = useMemo<AuthUser | null>(() => {
     if (currentUser) {
-      setUser({
+      return {
         id: currentUser._id,
         email: currentUser.email || "",
         name: currentUser.name,
-      });
-      setConvexUserId(currentUser._id);
-    } else if (!isAuthenticated && !isLoading) {
-      setUser(null);
-      setConvexUserId(null);
+      };
     }
-  }, [currentUser, isAuthenticated, isLoading]);
+    return null;
+  }, [currentUser]);
 
-  const signIn = async (email: string, password: string) => {
-    try {
-      const formData = new FormData();
-      formData.append("email", email);
-      formData.append("password", password);
-      formData.append("flow", "signIn");
+  const convexUserId = useMemo<Id<"users"> | null>(() => {
+    return currentUser?._id ?? null;
+  }, [currentUser]);
 
-      await convexSignIn("password", formData);
-    } catch (error: unknown) {
-      console.error("Sign in error:", error);
-      const errMessage = error instanceof Error ? error.message : "";
+  const signIn = useCallback(
+    async (email: string, password: string) => {
+      try {
+        const formData = new FormData();
+        formData.append("email", email);
+        formData.append("password", password);
+        formData.append("flow", "signIn");
 
-      if (
-        errMessage.includes("InvalidAccountId") ||
-        errMessage.includes("invalid")
-      ) {
-        throw new Error(
-          "No account found with this email. Please sign up first.",
-        );
-      }
-      if (
-        errMessage.includes("InvalidSecret") ||
-        errMessage.includes("password")
-      ) {
-        throw new Error("Incorrect password. Please try again.");
-      }
+        await convexSignIn("password", formData);
+      } catch (error: unknown) {
+        console.error("Sign in error:", error);
+        const errMessage = error instanceof Error ? error.message : "";
 
-      throw new Error("Unable to sign in. Please check your credentials.");
-    }
-  };
-
-  const signUp = async (email: string, password: string, name?: string) => {
-    try {
-      const formData = new FormData();
-      formData.append("email", email);
-      formData.append("password", password);
-      formData.append("flow", "signUp");
-      if (name) {
-        formData.append("name", name);
-      }
-
-      await convexSignIn("password", formData);
-
-      // Create user profile after successful signup
-      setTimeout(async () => {
-        try {
-          await createUserProfile({
-            name: name || email.split("@")[0],
-            isParent: false,
-            theme: "kawaii",
-            yearlyBookGoal: 24,
-            notifications: true,
-          });
-        } catch {
-          console.log("Profile may already exist");
+        if (
+          errMessage.includes("InvalidAccountId") ||
+          errMessage.includes("invalid")
+        ) {
+          throw new Error(
+            "No account found with this email. Please sign up first.",
+          );
         }
-      }, 500);
-    } catch (error: unknown) {
-      console.error("Sign up error:", error);
-      const errMessage = error instanceof Error ? error.message : "";
+        if (
+          errMessage.includes("InvalidSecret") ||
+          errMessage.includes("password")
+        ) {
+          throw new Error("Incorrect password. Please try again.");
+        }
 
-      if (
-        errMessage.includes("AccountAlreadyExists") ||
-        errMessage.includes("already exists")
-      ) {
-        throw new Error(
-          "An account with this email already exists. Please sign in instead.",
-        );
+        throw new Error("Unable to sign in. Please check your credentials.");
       }
-      if (errMessage.includes("weak") || errMessage.includes("password")) {
-        throw new Error(
-          "Password is too weak. Please use at least 8 characters.",
-        );
+    },
+    [convexSignIn],
+  );
+
+  const signUp = useCallback(
+    async (email: string, password: string, name?: string) => {
+      try {
+        const formData = new FormData();
+        formData.append("email", email);
+        formData.append("password", password);
+        formData.append("flow", "signUp");
+        if (name) {
+          formData.append("name", name);
+        }
+
+        await convexSignIn("password", formData);
+
+        // Create user profile after successful signup
+        setTimeout(async () => {
+          try {
+            await createUserProfile({
+              name: name || email.split("@")[0],
+              isParent: false,
+              theme: "kawaii",
+              yearlyBookGoal: 24,
+              notifications: true,
+            });
+          } catch {
+            console.log("Profile may already exist");
+          }
+        }, 500);
+      } catch (error: unknown) {
+        console.error("Sign up error:", error);
+        const errMessage = error instanceof Error ? error.message : "";
+
+        if (
+          errMessage.includes("AccountAlreadyExists") ||
+          errMessage.includes("already exists")
+        ) {
+          throw new Error(
+            "An account with this email already exists. Please sign in instead.",
+          );
+        }
+        if (errMessage.includes("weak") || errMessage.includes("password")) {
+          throw new Error(
+            "Password is too weak. Please use at least 8 characters.",
+          );
+        }
+
+        throw new Error("Unable to create account. Please try again.");
       }
+    },
+    [convexSignIn, createUserProfile],
+  );
 
-      throw new Error("Unable to create account. Please try again.");
-    }
-  };
-
-  const signOut = async () => {
+  const signOut = useCallback(async () => {
     try {
       await convexSignOut();
-      setUser(null);
-      setConvexUserId(null);
     } catch (error) {
       console.error("Sign out error:", error);
       throw error;
     }
-  };
+  }, [convexSignOut]);
 
-  const loading =
-    !initialCheckDone ||
-    isLoading ||
-    (isAuthenticated && currentUser === undefined);
+  // Derive loading state
+  const loading = isLoading || (isAuthenticated && currentUser === undefined);
 
   const value = {
     user,
@@ -173,4 +169,4 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-};
+}
