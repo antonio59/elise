@@ -89,3 +89,4 @@ bun run lint     # Run ESLint
 ## License
 
 Private project for Elise.
+
