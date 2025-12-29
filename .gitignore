@@ -29,4 +29,6 @@ dist-ssr
 
 # Typescript
 *.tsbuildinfo
-.netlify/
+
+# Local Netlify folder
+.netlify
