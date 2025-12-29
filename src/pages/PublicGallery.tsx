@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Heart, X, Palette, Sparkles } from "lucide-react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
+import type { Id } from "../../convex/_generated/dataModel";
 
 const PublicGallery: React.FC = () => {
   const artworks = useQuery(api.artworks.getPublished, { limit: 50 }) ?? [];
@@ -12,7 +13,7 @@ const PublicGallery: React.FC = () => {
   );
   const [likedIds, setLikedIds] = useState<Set<string>>(new Set());
 
-  const handleLike = async (id: string) => {
+  const handleLike = async (id: Id<"artworks">) => {
     if (likedIds.has(id)) return;
 
     try {
