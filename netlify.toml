@@ -6,12 +6,6 @@
   NODE_VERSION = "20"
   NETLIFY_NEXT_PLUGIN_SKIP = "true"
 
-# Disable Next.js plugin (this is a Vite app)
-[[plugins]]
-  package = "@netlify/plugin-nextjs"
-  [plugins.inputs]
-    enable = false
-
 [[redirects]]
   from = "/*"
   to = "/index.html"
