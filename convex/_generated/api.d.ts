@@ -12,6 +12,7 @@ import type * as artworks from "../artworks.js";
 import type * as auth from "../auth.js";
 import type * as books from "../books.js";
 import type * as http from "../http.js";
+import type * as siteSettings from "../siteSettings.js";
 import type * as users from "../users.js";
 
 import type {
@@ -25,6 +26,7 @@ declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   books: typeof books;
   http: typeof http;
+  siteSettings: typeof siteSettings;
   users: typeof users;
 }>;
 
