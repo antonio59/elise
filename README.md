@@ -1,73 +1,91 @@
-# React + TypeScript + Vite
+# Elise Reads
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A manga/anime-inspired book tracking and art sharing site for Elise.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Book Tracking** - Track books you're reading, have read, or want to read
+- **Art Gallery** - Upload and share your artwork with visitors
+- **Public Gallery** - Visitors can browse published artwork and suggest books
+- **Anime/Manga Design** - Sakura pink, violet, and teal color scheme with manga-inspired layouts
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Frontend**: React 19, TypeScript, Vite, Tailwind CSS 4
+- **Backend**: Convex (real-time database + serverless functions)
+- **Auth**: Convex Auth (Password provider)
+- **Animations**: Framer Motion
+- **Hosting**: Netlify
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Prerequisites
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- [Bun](https://bun.sh/) (or Node.js 20+)
+- [Convex CLI](https://docs.convex.dev/quickstart)
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Installation
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+# Install dependencies
+bun install
+
+# Start development server (Vite + Convex)
+bun run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Environment Variables
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Copy `.env.example` to `.env.local` and configure:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+VITE_CONVEX_URL=your_convex_deployment_url
 ```
+
+## Project Structure
+
+```
+elise/
+├── convex/              # Convex backend
+│   ├── schema.ts        # Database schema
+│   ├── auth.ts          # Authentication setup
+│   ├── books.ts         # Book CRUD operations
+│   ├── artworks.ts      # Artwork CRUD operations
+│   └── users.ts         # User profiles
+├── src/
+│   ├── components/      # Reusable components
+│   ├── contexts/        # React contexts (Auth)
+│   ├── pages/           # Page components
+│   ├── styles/          # CSS tokens and styles
+│   └── App.tsx          # Main app with routing
+└── netlify.toml         # Netlify configuration
+```
+
+## Deployment
+
+### Branch Strategy
+
+| Branch       | Environment | Convex Project     |
+| ------------ | ----------- | ------------------ |
+| `main`       | Staging     | rare-blackbird-695 |
+| `production` | Production  | agile-shrimp-456   |
+
+### Deploy Process
+
+1. Push to `main` for staging deployment
+2. Merge `main` to `production` for production deployment
+3. Netlify automatically builds and deploys on push
+4. Deploy Convex schema: `bunx convex deploy`
+
+## Scripts
+
+```bash
+bun run dev      # Start dev server + Convex
+bun run build    # Build for production
+bun run preview  # Preview production build
+bun run lint     # Run ESLint
+```
+
+## License
+
+Private project for Elise.
