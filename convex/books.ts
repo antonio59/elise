@@ -34,12 +34,50 @@ export const getReadBooks = query({
   },
 });
 
+// Get wishlist books (for public display)
+export const getWishlist = query({
+  args: {},
+  handler: async (ctx) => {
+    const allBooks = await ctx.db.query("books").order("desc").collect();
+    return allBooks.filter((b) => b.status === "wishlist");
+  },
+});
+
 // Get favorites
 export const getFavorites = query({
   args: {},
   handler: async (ctx) => {
     const allBooks = await ctx.db.query("books").collect();
     return allBooks.filter((b) => b.isFavorite);
+  },
+});
+
+// Check if a book already exists
+export const checkDuplicate = query({
+  args: {
+    title: v.string(),
+    author: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const normalizedTitle = args.title.toLowerCase().trim();
+    const normalizedAuthor = args.author.toLowerCase().trim();
+
+    const allBooks = await ctx.db.query("books").collect();
+    const existingBook = allBooks.find(
+      (b) =>
+        b.title.toLowerCase().trim() === normalizedTitle &&
+        b.author.toLowerCase().trim() === normalizedAuthor,
+    );
+
+    if (existingBook) {
+      return {
+        exists: true,
+        status: existingBook.status,
+        book: existingBook,
+      };
+    }
+
+    return { exists: false };
   },
 });
 
@@ -67,6 +105,32 @@ export const add = mutation({
   handler: async (ctx, args) => {
     const userId = await auth.getUserId(ctx);
     if (!userId) throw new Error("Not authenticated");
+
+    // Check for duplicates
+    const normalizedTitle = args.title.toLowerCase().trim();
+    const normalizedAuthor = args.author.toLowerCase().trim();
+
+    const allBooks = await ctx.db.query("books").collect();
+    const existingBook = allBooks.find(
+      (b) =>
+        b.title.toLowerCase().trim() === normalizedTitle &&
+        b.author.toLowerCase().trim() === normalizedAuthor,
+    );
+
+    if (existingBook) {
+      // If trying to add to same status, it's a true duplicate
+      if (existingBook.status === args.status) {
+        const statusMessage =
+          existingBook.status === "read"
+            ? "You've already read this book!"
+            : existingBook.status === "reading"
+              ? "You're already reading this book!"
+              : "This book is already on your wishlist!";
+        throw new Error(statusMessage);
+      }
+      // Otherwise, throw a special error that frontend can catch to offer status change
+      throw new Error(`DUPLICATE:${existingBook._id}:${existingBook.status}`);
+    }
 
     const now = Date.now();
     return await ctx.db.insert("books", {

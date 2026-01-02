@@ -11,6 +11,7 @@ import {
   Trash2,
   Heart,
   Image as ImageIcon,
+  Pencil,
 } from "lucide-react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
@@ -41,6 +42,7 @@ const MyArt: React.FC = () => {
   const removeArtwork = useMutation(api.artworks.remove);
 
   const [showAddModal, setShowAddModal] = useState(false);
+  const [editingArtwork, setEditingArtwork] = useState<Artwork | null>(null);
   const [filter, setFilter] = useState<"all" | "published" | "drafts">("all");
 
   const filteredArtworks = artworks.filter((art: Artwork) => {
@@ -156,6 +158,13 @@ const MyArt: React.FC = () => {
                 {/* Actions overlay */}
                 <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                   <button
+                    onClick={() => setEditingArtwork(art)}
+                    className="p-3 bg-blue-500 hover:bg-blue-600 text-white rounded-xl"
+                    title="Edit artwork"
+                  >
+                    <Pencil className="w-5 h-5" />
+                  </button>
+                  <button
                     onClick={() =>
                       updateArtwork({
                         id: art._id,
@@ -182,6 +191,7 @@ const MyArt: React.FC = () => {
                       }
                     }}
                     className="p-3 bg-red-500 hover:bg-red-600 text-white rounded-xl"
+                    title="Delete artwork"
                   >
                     <Trash2 className="w-5 h-5" />
                   </button>
@@ -216,7 +226,251 @@ const MyArt: React.FC = () => {
           setShowAddModal(false);
         }}
       />
+
+      {/* Edit Artwork Modal */}
+      <EditArtworkModal
+        artwork={editingArtwork}
+        onClose={() => setEditingArtwork(null)}
+        onSave={async (updates) => {
+          if (!editingArtwork) return;
+          await updateArtwork({
+            id: editingArtwork._id,
+            ...updates,
+          });
+          setEditingArtwork(null);
+        }}
+      />
     </div>
+  );
+};
+
+// Edit Artwork Modal
+interface EditArtworkModalProps {
+  artwork: Artwork | null;
+  onClose: () => void;
+  onSave: (updates: {
+    title?: string;
+    description?: string;
+    style?: string;
+    medium?: string;
+    tags?: string[];
+    isPublished?: boolean;
+  }) => Promise<void>;
+}
+
+const EditArtworkModal: React.FC<EditArtworkModalProps> = ({
+  artwork,
+  onClose,
+  onSave,
+}) => {
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [style, setStyle] = useState("");
+  const [medium, setMedium] = useState("");
+  const [tags, setTags] = useState("");
+  const [isPublished, setIsPublished] = useState(true);
+  const [saving, setSaving] = useState(false);
+
+  // Update form when artwork changes
+  React.useEffect(() => {
+    if (artwork) {
+      setTitle(artwork.title);
+      setDescription(artwork.description || "");
+      setStyle(artwork.style || "");
+      setMedium(artwork.medium || "");
+      setTags(artwork.tags?.join(", ") || "");
+      setIsPublished(artwork.isPublished);
+    }
+  }, [artwork]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!title.trim()) return;
+
+    setSaving(true);
+    try {
+      await onSave({
+        title: title.trim(),
+        description: description.trim() || undefined,
+        style: style || undefined,
+        medium: medium || undefined,
+        tags: tags
+          .split(",")
+          .map((t) => t.trim())
+          .filter(Boolean),
+        isPublished,
+      });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (!artwork) return null;
+
+  return (
+    <AnimatePresence>
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <motion.div
+          className="absolute inset-0 bg-black/50"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={onClose}
+        />
+
+        <motion.div
+          className="relative bg-white rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-auto"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.95 }}
+        >
+          {/* Header */}
+          <div className="p-6 border-b border-slate-200">
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-bold text-slate-800">Edit Artwork</h2>
+              <button
+                onClick={onClose}
+                className="p-2 hover:bg-slate-100 rounded-lg"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="p-6 space-y-4">
+            {/* Current Image Preview */}
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-2">
+                Current Image
+              </label>
+              <img
+                src={artwork.imageUrl}
+                alt={artwork.title}
+                className="w-full h-48 object-contain bg-slate-100 rounded-xl"
+              />
+              <p className="text-xs text-slate-500 mt-1">
+                Image cannot be changed. Delete and re-upload to use a different
+                image.
+              </p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">
+                Title *
+              </label>
+              <input
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="input"
+                placeholder="Artwork title"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">
+                Description
+              </label>
+              <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                className="input"
+                rows={3}
+                placeholder="Tell us about this artwork..."
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1">
+                  Style
+                </label>
+                <select
+                  value={style}
+                  onChange={(e) => setStyle(e.target.value)}
+                  className="input"
+                >
+                  <option value="">Select style</option>
+                  {STYLES.map((s) => (
+                    <option key={s} value={s}>
+                      {s}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1">
+                  Medium
+                </label>
+                <input
+                  type="text"
+                  value={medium}
+                  onChange={(e) => setMedium(e.target.value)}
+                  className="input"
+                  placeholder="e.g., Procreate, Pencil"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">
+                Tags
+              </label>
+              <input
+                type="text"
+                value={tags}
+                onChange={(e) => setTags(e.target.value)}
+                className="input"
+                placeholder="Comma separated: fantasy, character, etc."
+              />
+            </div>
+
+            {/* Publish toggle */}
+            <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
+              <div>
+                <p className="font-medium text-slate-800">Published</p>
+                <p className="text-sm text-slate-500">
+                  Make this artwork visible in your public gallery
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsPublished(!isPublished)}
+                className={`w-12 h-7 rounded-full transition-colors ${
+                  isPublished ? "bg-green-500" : "bg-slate-300"
+                }`}
+              >
+                <div
+                  className={`w-5 h-5 bg-white rounded-full shadow transition-transform ${
+                    isPublished ? "translate-x-6" : "translate-x-1"
+                  }`}
+                />
+              </button>
+            </div>
+
+            <button
+              type="submit"
+              disabled={saving || !title.trim()}
+              className="btn btn-gradient w-full"
+            >
+              {saving ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Saving...
+                </>
+              ) : (
+                <>
+                  <Pencil className="w-5 h-5" />
+                  Save Changes
+                </>
+              )}
+            </button>
+          </form>
+        </motion.div>
+      </div>
+    </AnimatePresence>
   );
 };
 

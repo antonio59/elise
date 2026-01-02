@@ -46,7 +46,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const createUserProfile = useMutation(api.users.createProfile);
 
-  // Derive user and convexUserId from currentUser (no useEffect needed)
+  // Derive user and convexUserId from currentUser or isAuthenticated
   const user = useMemo<AuthUser | null>(() => {
     if (currentUser) {
       return {
@@ -55,8 +55,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
         name: currentUser.name,
       };
     }
+    // If authenticated but no currentUser yet, return a placeholder
+    if (isAuthenticated) {
+      return {
+        id: "loading",
+        email: "",
+        name: "User",
+      };
+    }
     return null;
-  }, [currentUser]);
+  }, [currentUser, isAuthenticated]);
 
   const convexUserId = useMemo<Id<"users"> | null>(() => {
     return currentUser?._id ?? null;
@@ -110,6 +118,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         await convexSignIn("password", formData);
 
         // Create user profile after successful signup
+        // Create user profile after successful signup
         setTimeout(async () => {
           try {
             await createUserProfile({
@@ -120,7 +129,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
               notifications: true,
             });
           } catch {
-            console.log("Profile may already exist");
+            // Profile may already exist - ignore silently
           }
         }, 500);
       } catch (error: unknown) {
@@ -156,8 +165,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }, [convexSignOut]);
 
-  // Derive loading state
-  const loading = isLoading || (isAuthenticated && currentUser === undefined);
+  // Derive loading state - only loading during initial auth check
+  // Once isLoading is false, we're done loading regardless of currentUser
+  const loading = isLoading;
 
   const value = {
     user,
