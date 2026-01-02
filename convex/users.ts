@@ -6,23 +6,25 @@ import { auth } from "./auth";
 export const getCurrentUser = query({
   args: {},
   handler: async (ctx) => {
-    try {
-      const userId = await auth.getUserId(ctx);
-      if (!userId) return null;
+    const userId = await auth.getUserId(ctx);
+    if (!userId) return null;
 
-      const user = await ctx.db.get(userId);
-      if (!user) return null;
-
-      // Return a normalized user object
+    const user = await ctx.db.get(userId);
+    if (!user) {
+      // User ID exists but no user record - return minimal info
       return {
-        _id: user._id,
-        email: user.email,
-        name: user.name,
+        _id: userId,
+        email: "",
+        name: "User",
       };
-    } catch (error) {
-      console.error("Error getting current user:", error);
-      return null;
     }
+
+    // Return a normalized user object
+    return {
+      _id: user._id,
+      email: (user as { email?: string }).email || "",
+      name: (user as { name?: string }).name || "User",
+    };
   },
 });
 
@@ -54,7 +56,7 @@ export const createProfile = mutation({
   },
   handler: async (ctx, args) => {
     const userId = await auth.getUserId(ctx);
-    if (!userId) throw new Error("Not authenticated");
+    if (!userId) return null;
 
     // Check if profile already exists
     const existing = await ctx.db
