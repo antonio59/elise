@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
-import type { Doc } from "../../convex/_generated/dataModel";
+import type { Doc, Id } from "../../convex/_generated/dataModel";
 
 type TabType = "read" | "reading" | "wishlist";
 
@@ -612,7 +612,7 @@ const AddBookModal: React.FC<AddBookModalProps> = ({
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [duplicateInfo, setDuplicateInfo] = useState<{
-    id: string;
+    id: Id<"books">;
     currentStatus: string;
   } | null>(null);
 
@@ -666,7 +666,7 @@ const AddBookModal: React.FC<AddBookModalProps> = ({
         const parts = message.split(":");
         const bookId = parts[1];
         const currentStatus = parts[2];
-        setDuplicateInfo({ id: bookId, currentStatus });
+        setDuplicateInfo({ id: bookId as Id<"books">, currentStatus });
       } else {
         setError(message);
       }
@@ -681,7 +681,7 @@ const AddBookModal: React.FC<AddBookModalProps> = ({
     setSaving(true);
     try {
       await updateBook({
-        id: duplicateInfo.id as any,
+        id: duplicateInfo.id,
         status: destination,
         rating: destination === "read" && rating > 0 ? rating : undefined,
       });
