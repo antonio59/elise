@@ -77,7 +77,7 @@ const MyArt: React.FC = () => {
           onClick={() => setFilter("all")}
           className={`px-4 py-2 rounded-lg font-medium transition-all ${
             filter === "all"
-              ? "bg-violet-100 text-violet-700"
+              ? "bg-accent-100 text-accent-700"
               : "text-slate-600 hover:bg-slate-100"
           }`}
         >
@@ -626,7 +626,7 @@ const AddArtworkModal: React.FC<AddArtworkModalProps> = ({
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="w-full h-48 border-2 border-dashed border-slate-300 hover:border-violet-400 rounded-xl flex flex-col items-center justify-center gap-2 transition-colors"
+                  className="w-full h-48 border-2 border-dashed border-slate-300 hover:border-accent-400 rounded-xl flex flex-col items-center justify-center gap-2 transition-colors"
                 >
                   <ImageIcon className="w-10 h-10 text-slate-400" />
                   <span className="text-slate-500">Click to upload image</span>

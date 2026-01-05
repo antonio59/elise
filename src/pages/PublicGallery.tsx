@@ -34,13 +34,13 @@ const PublicGallery: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
           >
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-white rounded-full shadow-sm mb-4">
-              <Palette className="w-4 h-4 text-violet-500" />
+              <Palette className="w-4 h-4 text-accent-500" />
               <span className="text-sm font-medium text-slate-600">
                 Art Gallery
               </span>
             </div>
             <h1 className="text-4xl md:text-5xl font-black mb-4">
-              <span className="bg-gradient-to-r from-violet-500 via-primary-500 to-accent-500 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-primary-500 to-accent-500 bg-clip-text text-transparent">
                 My Creations
               </span>
             </h1>

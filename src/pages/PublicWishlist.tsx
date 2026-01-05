@@ -71,7 +71,7 @@ const PublicWishlist: React.FC = () => {
             className="flex flex-col md:flex-row items-center justify-between gap-6"
           >
             <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-pink-500 to-violet-500 shadow-lg flex items-center justify-center">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary-500 to-accent-500 shadow-lg flex items-center justify-center">
                 <Gift className="w-7 h-7 text-white" />
               </div>
               <div>
@@ -86,7 +86,7 @@ const PublicWishlist: React.FC = () => {
 
             <div className="flex items-center gap-3 flex-wrap justify-center">
               <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm border border-slate-200">
-                <span className="text-2xl font-bold bg-gradient-to-r from-primary-500 to-violet-500 bg-clip-text text-transparent">
+                <span className="text-2xl font-bold bg-gradient-to-r from-primary-500 to-accent-500 bg-clip-text text-transparent">
                   {wishlistBooks.length}
                 </span>
                 <span className="text-sm text-slate-500">books</span>
@@ -210,7 +210,7 @@ const PublicWishlist: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               className="text-center py-20 px-4"
             >
-              <div className="w-32 h-32 bg-gradient-to-br from-pink-100 to-violet-100 rounded-full flex items-center justify-center mx-auto mb-8">
+              <div className="w-32 h-32 bg-gradient-to-br from-primary-100 to-accent-100 rounded-full flex items-center justify-center mx-auto mb-8">
                 <span className="text-6xl">🎁</span>
               </div>
               <h3 className="text-2xl font-bold text-slate-800 mb-3">
@@ -295,7 +295,7 @@ const PublicWishlist: React.FC = () => {
 
                 <div className="flex flex-wrap gap-2 mb-6">
                   {selectedBook.genre && (
-                    <span className="px-4 py-2 rounded-full text-sm font-medium bg-violet-100 text-violet-600">
+                    <span className="px-4 py-2 rounded-full text-sm font-medium bg-accent-100 text-accent-600">
                       {selectedBook.genre}
                     </span>
                   )}
