@@ -64,7 +64,7 @@ const Settings: React.FC = () => {
     {
       value: "kawaii" as const,
       label: "Kawaii",
-      color: "from-pink-400 to-violet-400",
+      color: "from-pink-400 to-cyan-400",
     },
     {
       value: "light" as const,
@@ -96,7 +96,7 @@ const Settings: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
         >
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-violet-500 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center">
               <User className="w-5 h-5 text-white" />
             </div>
             <div>
@@ -170,7 +170,7 @@ const Settings: React.FC = () => {
           transition={{ delay: 0.1 }}
         >
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-accent-500 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent-500 to-primary-500 flex items-center justify-center">
               <Palette className="w-5 h-5 text-white" />
             </div>
             <div>

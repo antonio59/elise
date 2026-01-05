@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -13,6 +13,7 @@ import {
   Send,
   CheckCircle,
   AlertCircle,
+  Search,
 } from "lucide-react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
@@ -43,7 +44,7 @@ const PublicHome: React.FC = () => {
             </div>
 
             <h1 className="text-5xl md:text-7xl font-black mb-6">
-              <span className="bg-gradient-to-r from-primary-500 via-violet-500 to-accent-500 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-primary-500 to-accent-500 bg-clip-text text-transparent">
                 Elise's Reading
               </span>
               <br />
@@ -79,7 +80,7 @@ const PublicHome: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <div className="text-4xl font-black bg-gradient-to-r from-primary-500 to-violet-500 bg-clip-text text-transparent">
+              <div className="text-4xl font-black bg-gradient-to-r from-primary-500 to-accent-500 bg-clip-text text-transparent">
                 {totalBooks}
               </div>
               <div className="text-sm text-slate-500 mt-1">Books Read</div>
@@ -92,7 +93,7 @@ const PublicHome: React.FC = () => {
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
             >
-              <div className="text-4xl font-black bg-gradient-to-r from-violet-500 to-accent-500 bg-clip-text text-transparent">
+              <div className="text-4xl font-black bg-gradient-to-r from-accent-500 to-primary-500 bg-clip-text text-transparent">
                 {totalPages.toLocaleString()}
               </div>
               <div className="text-sm text-slate-500 mt-1">Pages Read</div>
@@ -161,7 +162,7 @@ const PublicHome: React.FC = () => {
                         className="w-full h-full object-cover"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-100 to-violet-100">
+                      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-100 to-accent-100">
                         <BookOpen className="w-8 h-8 text-primary-400" />
                       </div>
                     )}
@@ -289,6 +290,14 @@ interface SuggestBookModalProps {
   onClose: () => void;
 }
 
+interface BookSearchResult {
+  title: string;
+  author: string;
+  coverUrl?: string;
+  genre?: string;
+  pageCount?: number;
+}
+
 const GENRES = [
   "Manga",
   "Manhwa",
@@ -312,15 +321,90 @@ const SuggestBookModal: React.FC<SuggestBookModalProps> = ({
 }) => {
   const submitSuggestion = useMutation(api.bookSuggestions.submit);
 
+  // Search state
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<BookSearchResult[]>([]);
+  const [searching, setSearching] = useState(false);
+  const [showResults, setShowResults] = useState(false);
+  const [selectedBook, setSelectedBook] = useState<BookSearchResult | null>(
+    null,
+  );
+
+  // Form state
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
+  const [coverUrl, setCoverUrl] = useState("");
   const [genre, setGenre] = useState("");
   const [suggestedBy, setSuggestedBy] = useState("");
-  const [email, setEmail] = useState("");
   const [reason, setReason] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Debounced search using Open Library API
+  useEffect(() => {
+    if (searchQuery.length < 2) {
+      setSearchResults([]);
+      setShowResults(false);
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      setSearching(true);
+      try {
+        const response = await fetch(
+          `https://openlibrary.org/search.json?q=${encodeURIComponent(searchQuery)}&limit=5&fields=title,author_name,cover_i,subject,number_of_pages_median`,
+        );
+        const data = await response.json();
+
+        const results: BookSearchResult[] = (data.docs || []).map(
+          (doc: {
+            title?: string;
+            author_name?: string[];
+            cover_i?: number;
+            subject?: string[];
+            number_of_pages_median?: number;
+          }) => ({
+            title: doc.title || "Unknown Title",
+            author: doc.author_name?.[0] || "Unknown Author",
+            coverUrl: doc.cover_i
+              ? `https://covers.openlibrary.org/b/id/${doc.cover_i}-M.jpg`
+              : undefined,
+            genre: doc.subject?.[0] || undefined,
+            pageCount: doc.number_of_pages_median || undefined,
+          }),
+        );
+
+        setSearchResults(results);
+        setShowResults(results.length > 0);
+      } catch {
+        console.error("Search failed");
+        setSearchResults([]);
+      } finally {
+        setSearching(false);
+      }
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  const selectBook = (book: BookSearchResult) => {
+    setSelectedBook(book);
+    setTitle(book.title);
+    setAuthor(book.author);
+    setCoverUrl(book.coverUrl || "");
+    setGenre(book.genre || "");
+    setSearchQuery("");
+    setShowResults(false);
+  };
+
+  const clearSelection = () => {
+    setSelectedBook(null);
+    setTitle("");
+    setAuthor("");
+    setCoverUrl("");
+    setGenre("");
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -332,9 +416,9 @@ const SuggestBookModal: React.FC<SuggestBookModalProps> = ({
       await submitSuggestion({
         title: title.trim(),
         author: author.trim(),
+        coverUrl: coverUrl.trim() || undefined,
         genre: genre || undefined,
         suggestedBy: suggestedBy.trim(),
-        suggestedByEmail: email.trim() || undefined,
         reason: reason.trim() || undefined,
       });
       setSubmitted(true);
@@ -349,13 +433,15 @@ const SuggestBookModal: React.FC<SuggestBookModalProps> = ({
 
   const handleClose = () => {
     onClose();
-    // Reset form after close animation
     setTimeout(() => {
+      setSearchQuery("");
+      setSearchResults([]);
+      setSelectedBook(null);
       setTitle("");
       setAuthor("");
+      setCoverUrl("");
       setGenre("");
       setSuggestedBy("");
-      setEmail("");
       setReason("");
       setSubmitted(false);
       setError(null);
@@ -403,8 +489,8 @@ const SuggestBookModal: React.FC<SuggestBookModalProps> = ({
                 animate={{ scale: 1 }}
                 transition={{ type: "spring", duration: 0.5 }}
               >
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <CheckCircle className="w-8 h-8 text-green-600" />
+                <div className="w-16 h-16 bg-accent-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <CheckCircle className="w-8 h-8 text-accent-600" />
                 </div>
               </motion.div>
               <h3 className="text-xl font-bold text-slate-800 mb-2">
@@ -419,51 +505,154 @@ const SuggestBookModal: React.FC<SuggestBookModalProps> = ({
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="p-6 space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
-                  Book Title *
-                </label>
-                <input
-                  type="text"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  className="input"
-                  placeholder="The name of the book"
-                  required
-                />
-              </div>
+              {/* Book Search */}
+              {!selectedBook && (
+                <div className="relative">
+                  <label className="block text-sm font-medium text-slate-700 mb-1">
+                    Search for a book
+                  </label>
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="input pl-10"
+                      placeholder="Type a book title to search..."
+                      autoFocus
+                    />
+                    {searching && (
+                      <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-primary-500 animate-spin" />
+                    )}
+                  </div>
 
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
-                  Author *
-                </label>
-                <input
-                  type="text"
-                  value={author}
-                  onChange={(e) => setAuthor(e.target.value)}
-                  className="input"
-                  placeholder="Who wrote it?"
-                  required
-                />
-              </div>
+                  {/* Search Results Dropdown */}
+                  {showResults && (
+                    <div className="absolute z-10 w-full mt-1 bg-white border border-slate-200 rounded-xl shadow-lg max-h-64 overflow-auto">
+                      {searchResults.map((book, index) => (
+                        <button
+                          key={index}
+                          type="button"
+                          onClick={() => selectBook(book)}
+                          className="w-full flex items-center gap-3 p-3 hover:bg-primary-50 transition-colors text-left border-b border-slate-100 last:border-0"
+                        >
+                          {book.coverUrl ? (
+                            <img
+                              src={book.coverUrl}
+                              alt={book.title}
+                              className="w-10 h-14 object-cover rounded"
+                            />
+                          ) : (
+                            <div className="w-10 h-14 bg-slate-100 rounded flex items-center justify-center">
+                              <BookOpen className="w-5 h-5 text-slate-400" />
+                            </div>
+                          )}
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium text-slate-800 truncate">
+                              {book.title}
+                            </p>
+                            <p className="text-sm text-slate-500 truncate">
+                              {book.author}
+                            </p>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  )}
 
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
-                  Genre
-                </label>
-                <select
-                  value={genre}
-                  onChange={(e) => setGenre(e.target.value)}
-                  className="input"
-                >
-                  <option value="">Select genre</option>
-                  {GENRES.map((g) => (
-                    <option key={g} value={g}>
-                      {g}
-                    </option>
-                  ))}
-                </select>
-              </div>
+                  <p className="text-xs text-slate-400 mt-2">
+                    Can't find your book? Fill in the details below manually.
+                  </p>
+                </div>
+              )}
+
+              {/* Selected Book Preview */}
+              {selectedBook && (
+                <div className="flex items-start gap-4 p-4 bg-primary-50 rounded-xl border-2 border-primary-200">
+                  {selectedBook.coverUrl ? (
+                    <img
+                      src={selectedBook.coverUrl}
+                      alt={selectedBook.title}
+                      className="w-16 h-24 object-cover rounded-lg shadow"
+                    />
+                  ) : (
+                    <div className="w-16 h-24 bg-slate-200 rounded-lg flex items-center justify-center">
+                      <BookOpen className="w-6 h-6 text-slate-400" />
+                    </div>
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-bold text-slate-800 truncate">
+                      {selectedBook.title}
+                    </h3>
+                    <p className="text-sm text-slate-600">
+                      by {selectedBook.author}
+                    </p>
+                    {selectedBook.genre && (
+                      <span className="inline-block mt-2 px-2 py-1 bg-white text-xs font-medium text-primary-600 rounded-full">
+                        {selectedBook.genre}
+                      </span>
+                    )}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={clearSelection}
+                    className="p-1 hover:bg-primary-100 rounded-lg transition-colors"
+                  >
+                    <X className="w-4 h-4 text-slate-500" />
+                  </button>
+                </div>
+              )}
+
+              {/* Manual Entry Fields (collapsed if book selected) */}
+              {!selectedBook && (
+                <>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">
+                      Book Title *
+                    </label>
+                    <input
+                      type="text"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                      className="input"
+                      placeholder="The name of the book"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">
+                      Author *
+                    </label>
+                    <input
+                      type="text"
+                      value={author}
+                      onChange={(e) => setAuthor(e.target.value)}
+                      className="input"
+                      placeholder="Who wrote it?"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">
+                      Genre
+                    </label>
+                    <select
+                      value={genre}
+                      onChange={(e) => setGenre(e.target.value)}
+                      className="input"
+                    >
+                      <option value="">Select genre</option>
+                      {GENRES.map((g) => (
+                        <option key={g} value={g}>
+                          {g}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </>
+              )}
 
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">
@@ -481,26 +670,13 @@ const SuggestBookModal: React.FC<SuggestBookModalProps> = ({
 
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">
-                  Your Email (optional)
-                </label>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="input"
-                  placeholder="If you want me to let you know if I read it!"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
                   Why should I read it? (optional)
                 </label>
                 <textarea
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
                   className="input"
-                  rows={3}
+                  rows={2}
                   placeholder="Tell me why you think I'd like this book!"
                 />
               </div>
@@ -521,7 +697,7 @@ const SuggestBookModal: React.FC<SuggestBookModalProps> = ({
                   !author.trim() ||
                   !suggestedBy.trim()
                 }
-                className="btn btn-gradient w-full"
+                className="btn btn-primary w-full"
               >
                 {submitting ? (
                   <>

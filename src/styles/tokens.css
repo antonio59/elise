@@ -85,10 +85,10 @@
   --bg-muted: #f5f3ff;
 
   /* ===== GRADIENTS ===== */
-  --gradient-primary: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
-  --gradient-secondary: linear-gradient(135deg, #06b6d4 0%, #8b5cf6 100%);
+  --gradient-primary: linear-gradient(135deg, #ec4899 0%, #06b6d4 100%);
+  --gradient-secondary: linear-gradient(135deg, #06b6d4 0%, #ec4899 100%);
   --gradient-sunset: linear-gradient(135deg, #f472b6 0%, #fbbf24 100%);
-  --gradient-ocean: linear-gradient(135deg, #22d3ee 0%, #6366f1 100%);
+  --gradient-ocean: linear-gradient(135deg, #22d3ee 0%, #ec4899 100%);
 
   /* ===== TYPOGRAPHY ===== */
   --font-display: "Nunito", system-ui, sans-serif;

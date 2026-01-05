@@ -132,7 +132,7 @@ const MyBooks: React.FC = () => {
               onClick={() => setActiveTab(tab.key)}
               className={`flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium transition-all ${
                 activeTab === tab.key
-                  ? "bg-gradient-to-r from-primary-500 to-violet-500 text-white shadow-sm"
+                  ? "bg-gradient-to-r from-primary-500 to-accent-500 text-white shadow-sm"
                   : "text-slate-600 hover:bg-slate-50"
               }`}
             >
@@ -182,7 +182,7 @@ const MyBooks: React.FC = () => {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-100 to-violet-100">
+                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-100 to-accent-100">
                   <BookOpen className="w-8 h-8 text-primary-400" />
                 </div>
               )}

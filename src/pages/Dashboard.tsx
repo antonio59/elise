@@ -36,7 +36,7 @@ const Dashboard: React.FC = () => {
         <div>
           <h1 className="text-3xl font-bold text-slate-800">
             Welcome back,{" "}
-            <span className="bg-gradient-to-r from-primary-500 to-violet-500 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-primary-500 to-accent-500 bg-clip-text text-transparent">
               {user?.name || "Elise"}
             </span>
             !
@@ -75,7 +75,7 @@ const Dashboard: React.FC = () => {
           transition={{ delay: 0.1 }}
         >
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500 to-violet-600 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-accent-500 to-accent-600 flex items-center justify-center">
               <TrendingUp className="w-6 h-6 text-white" />
             </div>
             <div>
@@ -169,7 +169,7 @@ const Dashboard: React.FC = () => {
               </div>
               <div className="h-3 bg-slate-100 rounded-full overflow-hidden">
                 <motion.div
-                  className="h-full bg-gradient-to-r from-primary-500 to-violet-500 rounded-full"
+                  className="h-full bg-gradient-to-r from-primary-500 to-accent-500 rounded-full"
                   initial={{ width: 0 }}
                   animate={{ width: `${goalProgress.bookProgress}%` }}
                   transition={{ duration: 1, ease: "easeOut" }}
@@ -229,11 +229,11 @@ const Dashboard: React.FC = () => {
 
         <Link
           to="/art"
-          className="card p-6 hover:border-violet-300 transition-colors group"
+          className="card p-6 hover:border-accent-300 transition-colors group"
         >
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-100 to-violet-200 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <Palette className="w-7 h-7 text-violet-600" />
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-accent-100 to-accent-200 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <Palette className="w-7 h-7 text-accent-600" />
             </div>
             <div className="flex-1">
               <h3 className="text-lg font-bold text-slate-800">My Art</h3>
@@ -241,7 +241,7 @@ const Dashboard: React.FC = () => {
                 {stats?.publishedArtworks ?? 0} published
               </p>
             </div>
-            <Plus className="w-5 h-5 text-slate-400 group-hover:text-violet-500 transition-colors" />
+            <Plus className="w-5 h-5 text-slate-400 group-hover:text-accent-500 transition-colors" />
           </div>
         </Link>
       </div>
@@ -288,7 +288,7 @@ const Dashboard: React.FC = () => {
                         className="w-full h-full object-cover"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-100 to-violet-100">
+                      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-100 to-accent-100">
                         <BookOpen className="w-8 h-8 text-primary-400" />
                       </div>
                     )}
@@ -312,7 +312,7 @@ const Dashboard: React.FC = () => {
           <h2 className="text-xl font-bold text-slate-800">Recent Art</h2>
           <Link
             to="/art"
-            className="text-violet-600 hover:text-violet-700 text-sm font-medium"
+            className="text-accent-600 hover:text-accent-700 text-sm font-medium"
           >
             View all
           </Link>
