@@ -23,7 +23,7 @@ jobs:
         run: bun install
 
       - name: Generate Convex types
-        run: bunx convex codegen --once
+        run: bunx convex codegen
         env:
           CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY_PRODUCTION }}
 
