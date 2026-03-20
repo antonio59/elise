@@ -16,6 +16,7 @@ import type * as http from "../http.js";
 import type * as readingGoals from "../readingGoals.js";
 import type * as siteSettings from "../siteSettings.js";
 import type * as users from "../users.js";
+import type * as writings from "../writings.js";
 
 import type {
   ApiFromModules,
@@ -32,6 +33,7 @@ declare const fullApi: ApiFromModules<{
   readingGoals: typeof readingGoals;
   siteSettings: typeof siteSettings;
   users: typeof users;
+  writings: typeof writings;
 }>;
 
 /**
