@@ -50,7 +50,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const createUserProfile = useMutation(api.users.createProfile);
 
-  // Fix #1: Properly gate loading — wait for currentUser to resolve after auth
+  // Fix #1: Properly gate loading — wait for currentUser to resolve after auth.
+  // We check !currentUser (not === undefined) because auth.getUserId can return
+  // null briefly right after sign-in before the session propagates, causing
+  // getCurrentUser to return null even though isAuthenticated is true.
+  // Treating that null as "still loading" prevents the redirect loop.
   const loading = isLoading || (isAuthenticated && !currentUser);
 
   // Fix #3: Replace setTimeout with an effect that fires once auth + user ID are ready
@@ -101,13 +105,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
         const errMessage = error instanceof Error ? error.message : "";
 
         if (errMessage.includes("InvalidAccountId")) {
-          throw new Error("No account found with this email. Please sign up first.");
+          throw new Error("No account found with this email. Please sign up first.", { cause: error });
         }
         if (errMessage.includes("InvalidSecret")) {
-          throw new Error("Incorrect password. Please try again.");
+          throw new Error("Incorrect password. Please try again.", { cause: error });
         }
 
-        throw new Error("Unable to sign in. Please check your credentials.");
+        throw new Error("Unable to sign in. Please check your credentials.", { cause: error });
       }
     },
     [convexSignIn],
@@ -136,13 +140,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
         const errMessage = error instanceof Error ? error.message : "";
 
         if (errMessage.includes("AccountAlreadyExists")) {
-          throw new Error("An account with this email already exists. Please sign in instead.");
+          throw new Error("An account with this email already exists. Please sign in instead.", { cause: error });
         }
         if (errMessage.includes("WeakPassword")) {
-          throw new Error("Password is too weak. Please use at least 8 characters.");
+          throw new Error("Password is too weak. Please use at least 8 characters.", { cause: error });
         }
 
-        throw new Error("Unable to create account. Please try again.");
+        throw new Error("Unable to create account. Please try again.", { cause: error });
       }
     },
     [convexSignIn],
