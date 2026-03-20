@@ -27,7 +27,10 @@
     "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
+    "@esbuild/darwin-arm64": "^0.27.4",
     "@eslint/js": "^9.39.2",
+    "@rollup/rollup-darwin-arm64": "^4.59.0",
+    "@tailwindcss/oxide-darwin-arm64": "^4.2.2",
     "@tailwindcss/vite": "^4.1.18",
     "@types/node": "^25.0.3",
     "@types/react": "^19.2.7",
@@ -39,6 +42,7 @@
     "eslint-plugin-react-refresh": "^0.4.26",
     "globals": "^16.5.0",
     "lightningcss": "^1.30.2",
+    "lightningcss-darwin-arm64": "^1.32.0",
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.18",
     "typescript": "~5.9.3",
