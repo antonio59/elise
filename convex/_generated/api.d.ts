@@ -10,8 +10,8 @@
 
 import type * as artworks from "../artworks.js";
 import type * as auth from "../auth.js";
-import type * as books from "../books.js";
 import type * as bookSuggestions from "../bookSuggestions.js";
+import type * as books from "../books.js";
 import type * as http from "../http.js";
 import type * as readingGoals from "../readingGoals.js";
 import type * as siteSettings from "../siteSettings.js";
@@ -26,8 +26,8 @@ import type {
 declare const fullApi: ApiFromModules<{
   artworks: typeof artworks;
   auth: typeof auth;
-  books: typeof books;
   bookSuggestions: typeof bookSuggestions;
+  books: typeof books;
   http: typeof http;
   readingGoals: typeof readingGoals;
   siteSettings: typeof siteSettings;
