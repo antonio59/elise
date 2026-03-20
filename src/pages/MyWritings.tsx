@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   PenTool,
@@ -11,7 +11,6 @@ import {
   X,
   Loader2,
   Pencil,
-  AlertCircle,
   Heart,
   Eye,
   EyeOff,
