@@ -1,10 +1,9 @@
 [build]
-  command = "npm install -g bun && bun install && bun run build"
+  command = "npm ci && npm run build"
   publish = "dist"
 
 [build.environment]
   NODE_VERSION = "20"
-  NETLIFY_NEXT_PLUGIN_SKIP = "true"
   VITE_CONVEX_URL = "https://agile-shrimp-456.convex.cloud"
 
 [[redirects]]
