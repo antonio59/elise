@@ -730,7 +730,6 @@ export default PublicHome;
 // ===== PUBLIC WRITINGS SECTION =====
 const PublicWritings: React.FC = () => {
   const writings = useQuery(api.writings.getPublished, { limit: 6 }) ?? [];
-  if (writings.length === 0) return null;
 
   const typeConfig: Record<string, { icon: typeof Feather; color: string; label: string }> = {
     poetry: { icon: Feather, color: "text-violet-500", label: "Poetry" },
@@ -745,8 +744,19 @@ const PublicWritings: React.FC = () => {
           <h2 className="text-3xl font-bold text-slate-800">My Writing ✍️</h2>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {writings.map((writing, index) => {
+        {writings.length === 0 ? (
+          <div className="card p-8 text-center">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-violet-100 to-primary-100 flex items-center justify-center">
+              <Feather className="w-8 h-8 text-violet-500" />
+            </div>
+            <h3 className="text-lg font-bold text-slate-800 mb-2">Coming Soon!</h3>
+            <p className="text-slate-500 max-w-md mx-auto">
+              Poetry, short stories, and journal entries will be published here. Stay tuned!
+            </p>
+          </div>
+        ) : (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {writings.map((writing, index) => {
             const config = typeConfig[writing.type] || typeConfig.story;
             const Icon = config.icon;
             const preview = writing.content.slice(0, 120) + "...";
@@ -778,7 +788,8 @@ const PublicWritings: React.FC = () => {
               </motion.div>
             );
           })}
-        </div>
+          </div>
+        )}
       </div>
     </section>
   );
