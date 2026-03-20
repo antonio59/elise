@@ -24,9 +24,11 @@ const Login: React.FC = () => {
     setLoading(true);
 
     try {
-      await signIn(email, password);
+      const signInResult = await signIn(email, password);
+      console.log("signIn result:", signInResult);
       navigate(from, { replace: true });
     } catch (err) {
+      console.error("signIn error:", err);
       setError(err instanceof Error ? err.message : "Failed to sign in");
     } finally {
       setLoading(false);

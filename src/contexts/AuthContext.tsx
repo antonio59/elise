@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import React, { createContext, useContext, useMemo, useCallback } from "react";
+import React, { createContext, useContext, useMemo, useCallback, useEffect } from "react";
 import type { ReactNode } from "react";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { useConvexAuth, useMutation, useQuery } from "convex/react";
@@ -33,7 +33,11 @@ export function useAuth() {
 
 interface AuthProviderProps {
   children: ReactNode;
+  // Store pending signup name so we can create the profile once auth is ready
 }
+
+// Store signup name outside of state to avoid re-render loops
+let pendingSignupName: string | undefined;
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const { isAuthenticated, isLoading } = useConvexAuth();
@@ -46,7 +50,28 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const createUserProfile = useMutation(api.users.createProfile);
 
-  // Derive user and convexUserId from currentUser or isAuthenticated
+  // Fix #1: Properly gate loading — wait for currentUser to resolve after auth
+  const loading = isLoading || (isAuthenticated && !currentUser);
+
+  // Fix #3: Replace setTimeout with an effect that fires once auth + user ID are ready
+  useEffect(() => {
+    if (isAuthenticated && currentUser && pendingSignupName !== undefined) {
+      const nameToUse = pendingSignupName || currentUser.email?.split("@")[0] || "User";
+      pendingSignupName = undefined; // Clear immediately to prevent double-calls
+
+      createUserProfile({
+        name: nameToUse,
+        isParent: false,
+        theme: "kawaii",
+        yearlyBookGoal: 24,
+        notifications: true,
+      }).catch(() => {
+        // Profile may already exist — ignore silently
+      });
+    }
+  }, [isAuthenticated, currentUser, createUserProfile]);
+
+  // Fix #2: No more placeholder user — return null while data is still loading
   const user = useMemo<AuthUser | null>(() => {
     if (currentUser) {
       return {
@@ -55,16 +80,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
         name: currentUser.name,
       };
     }
-    // If authenticated but no currentUser yet, return a placeholder
-    if (isAuthenticated) {
-      return {
-        id: "loading",
-        email: "",
-        name: "User",
-      };
-    }
     return null;
-  }, [currentUser, isAuthenticated]);
+  }, [currentUser]);
 
   const convexUserId = useMemo<Id<"users"> | null>(() => {
     return currentUser?._id ?? null;
@@ -80,21 +97,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
         await convexSignIn("password", formData);
       } catch (error: unknown) {
-        console.error("Sign in error:", error);
+        // Fix #5: More specific error matching to avoid false positives
         const errMessage = error instanceof Error ? error.message : "";
 
-        if (
-          errMessage.includes("InvalidAccountId") ||
-          errMessage.includes("invalid")
-        ) {
-          throw new Error(
-            "No account found with this email. Please sign up first.",
-          );
+        if (errMessage.includes("InvalidAccountId")) {
+          throw new Error("No account found with this email. Please sign up first.");
         }
-        if (
-          errMessage.includes("InvalidSecret") ||
-          errMessage.includes("password")
-        ) {
+        if (errMessage.includes("InvalidSecret")) {
           throw new Error("Incorrect password. Please try again.");
         }
 
@@ -115,45 +124,28 @@ export function AuthProvider({ children }: AuthProviderProps) {
           formData.append("name", name);
         }
 
-        await convexSignIn("password", formData);
+        // Fix #3: Store name so the useEffect above can create the profile
+        // once the Convex session is fully established
+        pendingSignupName = name || email.split("@")[0];
 
-        // Create user profile after successful signup
-        // Create user profile after successful signup
-        setTimeout(async () => {
-          try {
-            await createUserProfile({
-              name: name || email.split("@")[0],
-              isParent: false,
-              theme: "kawaii",
-              yearlyBookGoal: 24,
-              notifications: true,
-            });
-          } catch {
-            // Profile may already exist - ignore silently
-          }
-        }, 500);
+        await convexSignIn("password", formData);
       } catch (error: unknown) {
-        console.error("Sign up error:", error);
+        pendingSignupName = undefined; // Clear on failure
+
+        // Fix #5: More specific error matching
         const errMessage = error instanceof Error ? error.message : "";
 
-        if (
-          errMessage.includes("AccountAlreadyExists") ||
-          errMessage.includes("already exists")
-        ) {
-          throw new Error(
-            "An account with this email already exists. Please sign in instead.",
-          );
+        if (errMessage.includes("AccountAlreadyExists")) {
+          throw new Error("An account with this email already exists. Please sign in instead.");
         }
-        if (errMessage.includes("weak") || errMessage.includes("password")) {
-          throw new Error(
-            "Password is too weak. Please use at least 8 characters.",
-          );
+        if (errMessage.includes("WeakPassword")) {
+          throw new Error("Password is too weak. Please use at least 8 characters.");
         }
 
         throw new Error("Unable to create account. Please try again.");
       }
     },
-    [convexSignIn, createUserProfile],
+    [convexSignIn],
   );
 
   const signOut = useCallback(async () => {
@@ -165,10 +157,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }, [convexSignOut]);
 
-  // Derive loading state - only loading during initial auth check
-  // Once isLoading is false, we're done loading regardless of currentUser
-  const loading = isLoading;
-
   const value = {
     user,
     convexUserId,
@@ -177,6 +165,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
     signUp,
     signOut,
   };
+
+  // Fix #4: Removed stray console.log
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
