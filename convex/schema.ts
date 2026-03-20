@@ -83,6 +83,31 @@ export default defineSchema(
       createdAt: v.number(),
     }).index("by_user", ["userId"]),
 
+    // Writings (poems, stories, journal entries)
+    writings: defineTable({
+      userId: v.any(),
+      title: v.string(),
+      content: v.string(),
+      type: v.union(
+        v.literal("poetry"),
+        v.literal("story"),
+        v.literal("journal"),
+      ),
+      genre: v.optional(v.string()),
+      tags: v.optional(v.array(v.string())),
+      wordCount: v.number(),
+      chapterCount: v.optional(v.number()),
+      isFavorite: v.boolean(),
+      isPublished: v.boolean(),
+      coverUrl: v.optional(v.string()),
+      coverStorageId: v.optional(v.id("_storage")),
+      createdAt: v.number(),
+      updatedAt: v.number(),
+    })
+      .index("by_user", ["userId"])
+      .index("by_user_type", ["userId", "type"])
+      .index("by_published", ["isPublished"]),
+
     // Book suggestions from visitors
     bookSuggestions: defineTable({
       title: v.string(),
