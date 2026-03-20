@@ -14,7 +14,6 @@ import {
   CheckCircle,
   AlertCircle,
   Search,
-  PenTool,
   Feather,
   BookHeart,
   BookOpenText,
