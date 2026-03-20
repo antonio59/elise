@@ -14,6 +14,10 @@ import {
   CheckCircle,
   AlertCircle,
   Search,
+  PenTool,
+  Feather,
+  BookHeart,
+  BookOpenText,
 } from "lucide-react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
@@ -240,6 +244,9 @@ const PublicHome: React.FC = () => {
           </div>
         </section>
       )}
+
+      {/* Writings Preview */}
+      <PublicWritings />
 
       {/* Suggest a Book Section */}
       <section className="py-16 px-4">
@@ -720,3 +727,60 @@ const SuggestBookModal: React.FC<SuggestBookModalProps> = ({
 };
 
 export default PublicHome;
+
+// ===== PUBLIC WRITINGS SECTION =====
+const PublicWritings: React.FC = () => {
+  const writings = useQuery(api.writings.getPublished, { limit: 6 }) ?? [];
+  if (writings.length === 0) return null;
+
+  const typeConfig: Record<string, { icon: typeof Feather; color: string; label: string }> = {
+    poetry: { icon: Feather, color: "text-violet-500", label: "Poetry" },
+    story: { icon: BookHeart, color: "text-primary-500", label: "Story" },
+    journal: { icon: BookOpenText, color: "text-accent-500", label: "Journal" },
+  };
+
+  return (
+    <section className="py-16 px-4">
+      <div className="max-w-6xl mx-auto">
+        <div className="flex items-center justify-between mb-8">
+          <h2 className="text-3xl font-bold text-slate-800">My Writing ✍️</h2>
+        </div>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {writings.map((writing, index) => {
+            const config = typeConfig[writing.type] || typeConfig.story;
+            const Icon = config.icon;
+            const preview = writing.content.slice(0, 120) + "...";
+
+            return (
+              <motion.div
+                key={writing._id}
+                className="card p-5 hover:border-violet-200 transition-colors"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+              >
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-100 to-primary-100 flex items-center justify-center">
+                    <Icon className={`w-4 h-4 ${config.color}`} />
+                  </div>
+                  <span className="text-xs font-medium text-slate-500 capitalize">
+                    {config.label}
+                  </span>
+                </div>
+                <h3 className="font-bold text-slate-800 mb-2">{writing.title}</h3>
+                <p className="text-sm text-slate-600 italic line-clamp-3 leading-relaxed">
+                  {preview}
+                </p>
+                <p className="text-xs text-slate-400 mt-3">
+                  {writing.wordCount} words · {new Date(writing.createdAt).toLocaleDateString()}
+                </p>
+              </motion.div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+};

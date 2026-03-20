@@ -23,6 +23,7 @@ const Signup = lazy(() => import("./pages/Signup"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const MyBooks = lazy(() => import("./pages/MyBooks"));
 const MyArt = lazy(() => import("./pages/MyArt"));
+const MyWritings = lazy(() => import("./pages/MyWritings"));
 const Suggestions = lazy(() => import("./pages/Suggestions"));
 const Settings = lazy(() => import("./pages/Settings"));
 const ProtectedRoute = lazy(() => import("./components/ProtectedRoute"));
@@ -121,6 +122,18 @@ function App() {
                   <ProtectedRoute>
                     <Layout>
                       <MyArt />
+                    </Layout>
+                  </ProtectedRoute>
+                </Suspense>
+              }
+            />
+            <Route
+              path="/writing"
+              element={
+                <Suspense fallback={<PageLoader />}>
+                  <ProtectedRoute>
+                    <Layout>
+                      <MyWritings />
                     </Layout>
                   </ProtectedRoute>
                 </Suspense>

@@ -11,6 +11,7 @@ import {
   Target,
   X,
   Loader2,
+  PenTool,
 } from "lucide-react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
@@ -22,6 +23,7 @@ const Dashboard: React.FC = () => {
   const books = useQuery(api.books.getMyBooks) ?? [];
   const artworks = useQuery(api.artworks.getMyArtworks) ?? [];
   const goalProgress = useQuery(api.readingGoals.getGoalProgress);
+  const writingStats = useQuery(api.writings.getStats);
   const setGoal = useMutation(api.readingGoals.setGoal);
 
   const [showGoalModal, setShowGoalModal] = useState(false);
@@ -92,6 +94,25 @@ const Dashboard: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
+              <PenTool className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <p className="text-3xl font-bold text-slate-800">
+                {writingStats?.total ?? 0}
+              </p>
+              <p className="text-sm text-slate-500">Written</p>
+            </div>
+          </div>
+        </motion.div>
+
+        <motion.div
+          className="stat-card"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.25 }}
         >
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-accent-500 to-accent-600 flex items-center justify-center">
@@ -208,7 +229,7 @@ const Dashboard: React.FC = () => {
       </motion.div>
 
       {/* Quick Actions */}
-      <div className="grid md:grid-cols-2 gap-4">
+      <div className="grid md:grid-cols-3 gap-4">
         <Link
           to="/books"
           className="card p-6 hover:border-primary-300 transition-colors group"
@@ -224,6 +245,24 @@ const Dashboard: React.FC = () => {
               </p>
             </div>
             <Plus className="w-5 h-5 text-slate-400 group-hover:text-primary-500 transition-colors" />
+          </div>
+        </Link>
+
+        <Link
+          to="/writing"
+          className="card p-6 hover:border-violet-300 transition-colors group"
+        >
+          <div className="flex items-center gap-4">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-100 to-violet-200 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <PenTool className="w-7 h-7 text-violet-600" />
+            </div>
+            <div className="flex-1">
+              <h3 className="text-lg font-bold text-slate-800">My Writing</h3>
+              <p className="text-slate-500 text-sm">
+                {writingStats?.total ?? 0} pieces · {(writingStats?.totalWords ?? 0).toLocaleString()} words
+              </p>
+            </div>
+            <Plus className="w-5 h-5 text-slate-400 group-hover:text-violet-500 transition-colors" />
           </div>
         </Link>
 

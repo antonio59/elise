@@ -319,3 +319,194 @@
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+/* ===== MANGA DESIGN FLAIR ===== */
+
+/* Halftone dots background pattern */
+.bg-halftone {
+  background-image: radial-gradient(circle, #ec4899 1px, transparent 1px);
+  background-size: 8px 8px;
+}
+
+/* Speed lines effect */
+.speed-lines {
+  position: relative;
+  overflow: hidden;
+}
+
+.speed-lines::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 10px,
+    rgba(236, 72, 153, 0.03) 10px,
+    rgba(236, 72, 153, 0.03) 12px
+  );
+  pointer-events: none;
+}
+
+/* Speech bubble styling */
+.speech-bubble {
+  position: relative;
+  background: white;
+  border: 3px solid #ec4899;
+  border-radius: 20px;
+  padding: 1rem;
+  box-shadow: 4px 4px 0 rgba(236, 72, 153, 0.2);
+}
+
+.speech-bubble::after {
+  content: "";
+  position: absolute;
+  bottom: -15px;
+  left: 30px;
+  border-width: 15px 15px 0;
+  border-style: solid;
+  border-color: #ec4899 transparent transparent;
+}
+
+/* Manga panel frame */
+.manga-panel {
+  border: 3px solid #1e293b;
+  background: white;
+  box-shadow: 4px 4px 0 #ec4899;
+  position: relative;
+}
+
+.manga-panel::before {
+  content: "";
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  right: -3px;
+  bottom: -3px;
+  background: linear-gradient(135deg, #ec4899, #06b6d4);
+  z-index: -1;
+  opacity: 0.3;
+}
+
+/* Sparkle accent */
+.sparkle-accent {
+  position: relative;
+}
+
+.sparkle-accent::before,
+.sparkle-accent::after {
+  content: "✨";
+  position: absolute;
+  font-size: 1.5rem;
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+.sparkle-accent::before {
+  top: -10px;
+  left: -20px;
+  animation-delay: 0s;
+}
+
+.sparkle-accent::after {
+  bottom: -10px;
+  right: -20px;
+  animation-delay: 1s;
+}
+
+/* Writing page specific styles */
+.writing-editor {
+  background: linear-gradient(135deg, #fdf2f8 0%, #f5f3ff 50%, #ecfeff 100%);
+}
+
+.writing-textarea {
+  background: white;
+  background-image: linear-gradient(#f1f5f9 1px, transparent 1px);
+  background-size: 100% 2rem;
+  line-height: 2rem;
+  padding-top: 0.5rem;
+}
+
+/* Chibi mascot placeholder - could be an actual image */
+.chibi-corner {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #ec4899, #06b6d4);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  box-shadow: 0 4px 20px rgba(236, 72, 153, 0.3);
+  animation: float 3s ease-in-out infinite;
+  z-index: 50;
+}
+
+/* Genre tag manga style */
+.genre-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, #ec4899, #f472b6);
+  color: white;
+  border: 2px solid white;
+  box-shadow: 2px 2px 0 rgba(236, 72, 153, 0.3);
+}
+
+/* Focus mode for writing */
+.focus-mode {
+  background: #1e1b4b;
+  color: #e0e7ff;
+}
+
+.focus-mode .writing-textarea {
+  background: #1e1b4b;
+  background-image: linear-gradient(#312e81 1px, transparent 1px);
+  color: #e0e7ff;
+}
+
+/* Action lines for emphasis */
+.action-lines {
+  position: relative;
+}
+
+.action-lines::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 120%;
+  height: 120%;
+  transform: translate(-50%, -50%);
+  background: repeating-conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    transparent 10deg,
+    rgba(236, 72, 153, 0.1) 10deg,
+    rgba(236, 72, 153, 0.1) 12deg
+  );
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Book spine manga style */
+.book-spine {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  background: linear-gradient(180deg, #ec4899, #db2777);
+  color: white;
+  padding: 1rem 0.5rem;
+  border-radius: 4px 12px 12px 4px;
+  font-weight: bold;
+  box-shadow: 2px 0 10px rgba(236, 72, 153, 0.3);
+}
+
