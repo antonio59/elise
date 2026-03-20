@@ -22,6 +22,11 @@ jobs:
       - name: Install dependencies
         run: bun install
 
+      - name: Generate Convex types
+        run: bunx convex codegen --once
+        env:
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY_PRODUCTION }}
+
       - name: Lint
         run: bun run lint
 
