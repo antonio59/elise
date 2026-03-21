@@ -36,7 +36,7 @@ const Dashboard: React.FC = () => {
       {/* Welcome Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-slate-800">
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-800">
             Welcome back,{" "}
             <span className="bg-gradient-to-r from-primary-500 to-accent-500 bg-clip-text text-transparent">
               {user?.name || "Elise"}
@@ -62,7 +62,7 @@ const Dashboard: React.FC = () => {
               <BookOpen className="w-6 h-6 text-white" />
             </div>
             <div>
-              <p className="text-3xl font-bold text-slate-800">
+              <p className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-800">
                 {stats?.booksRead ?? 0}
               </p>
               <p className="text-sm text-slate-500">Books Read</p>
@@ -81,7 +81,7 @@ const Dashboard: React.FC = () => {
               <TrendingUp className="w-6 h-6 text-white" />
             </div>
             <div>
-              <p className="text-3xl font-bold text-slate-800">
+              <p className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-800">
                 {(stats?.totalPages ?? 0).toLocaleString()}
               </p>
               <p className="text-sm text-slate-500">Pages</p>
@@ -100,7 +100,7 @@ const Dashboard: React.FC = () => {
               <PenTool className="w-6 h-6 text-white" />
             </div>
             <div>
-              <p className="text-3xl font-bold text-slate-800">
+              <p className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-800">
                 {writingStats?.total ?? 0}
               </p>
               <p className="text-sm text-slate-500">Written</p>
@@ -119,7 +119,7 @@ const Dashboard: React.FC = () => {
               <Palette className="w-6 h-6 text-white" />
             </div>
             <div>
-              <p className="text-3xl font-bold text-slate-800">
+              <p className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-800">
                 {stats?.totalArtworks ?? 0}
               </p>
               <p className="text-sm text-slate-500">Artworks</p>
@@ -138,7 +138,7 @@ const Dashboard: React.FC = () => {
               <Heart className="w-6 h-6 text-white" />
             </div>
             <div>
-              <p className="text-3xl font-bold text-slate-800">
+              <p className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-800">
                 {stats?.favorites ?? 0}
               </p>
               <p className="text-sm text-slate-500">Favorites</p>
