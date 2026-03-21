@@ -762,6 +762,7 @@ const AddBookModal: React.FC<AddBookModalProps> = ({
   >("read");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [manualMode, setManualMode] = useState(false);
   const [duplicateInfo, setDuplicateInfo] = useState<{
     id: Id<"books">;
     currentStatus: string;
@@ -908,213 +909,386 @@ const AddBookModal: React.FC<AddBookModalProps> = ({
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="p-6 space-y-4">
-            {/* Google Books Search */}
-            <GoogleBookSearch
-              onSelect={(book) => {
-                setTitle(book.title);
-                setAuthor(book.author);
-                setCoverUrl(book.coverUrl);
-                setGenre(book.genre);
-                if (book.pageCount > 0) setPageCount(book.pageCount.toString());
-              }}
-            />
-
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-slate-200" />
-              </div>
-              <div className="relative flex justify-center text-xs">
-                <span className="bg-white px-2 text-slate-400 uppercase tracking-wider">or add manually</span>
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
-                Title *
-              </label>
-              <input
-                type="text"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                className="input"
-                placeholder="Book title"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
-                Author *
-              </label>
-              <input
-                type="text"
-                value={author}
-                onChange={(e) => setAuthor(e.target.value)}
-                className="input"
-                placeholder="Author name"
-                required
-              />
-            </div>
-
-            <CoverUpload value={coverUrl} onChange={setCoverUrl} />
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
-                  Genre
-                </label>
-                <select
-                  value={genre}
-                  onChange={(e) => setGenre(e.target.value)}
-                  className="input"
-                >
-                  {GENRES.map((g) => (
-                    <option key={g} value={g}>
-                      {g}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
-                  Pages
-                </label>
-                <input
-                  type="number"
-                  value={pageCount}
-                  onChange={(e) => setPageCount(e.target.value)}
-                  className="input"
-                  placeholder="Optional"
-                />
-              </div>
-            </div>
-
-            {/* Destination */}
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
-                Add to:
-              </label>
-              <div className="grid grid-cols-3 gap-2">
-                {destinations.map((dest) => {
-                  const Icon = dest.icon;
-                  return (
-                    <button
-                      key={dest.key}
-                      type="button"
-                      onClick={() => setDestination(dest.key)}
-                      className={`p-3 rounded-xl border-2 transition-all flex flex-col items-center gap-1 ${
-                        destination === dest.key
-                          ? "border-primary-500 bg-primary-50"
-                          : "border-slate-200 hover:border-slate-300"
-                      }`}
-                    >
-                      <Icon
-                        className={`w-5 h-5 ${destination === dest.key ? "text-primary-600" : "text-slate-400"}`}
-                      />
-                      <span
-                        className={`text-sm font-medium ${destination === dest.key ? "text-primary-600" : "text-slate-600"}`}
-                      >
-                        {dest.label}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Rating (only for finished books) */}
-            {destination === "read" && (
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
-                  Rating
-                </label>
-                <div className="flex gap-1">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <button
-                      key={star}
-                      type="button"
-                      onClick={() => setRating(star)}
-                      className="p-1"
-                    >
-                      <Star
-                        className={`w-8 h-8 transition-colors ${
-                          star <= rating
-                            ? "text-yellow-400 fill-yellow-400"
-                            : "text-slate-200"
-                        }`}
-                      />
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Error message */}
-            {error && (
-              <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-xl text-red-700">
-                <AlertCircle className="w-5 h-5 flex-shrink-0" />
-                <p className="text-sm">{error}</p>
-              </div>
-            )}
-
-            {/* Duplicate found - offer to move */}
-            {duplicateInfo && (
-              <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl">
-                <div className="flex items-start gap-3">
-                  <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
-                  <div className="flex-1">
-                    <p className="text-sm text-amber-800 font-medium">
-                      This book is {getStatusLabel(duplicateInfo.currentStatus)}
-                    </p>
-                    <p className="text-sm text-amber-700 mt-1">
-                      Would you like to move it to {getStatusLabel(destination)}{" "}
-                      instead?
-                    </p>
-                    <div className="flex gap-2 mt-3">
-                      <button
-                        type="button"
-                        onClick={handleMoveBook}
-                        disabled={saving}
-                        className="btn btn-primary text-sm py-2"
-                      >
-                        {saving ? (
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                        ) : (
-                          <>Yes, move it</>
-                        )}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setDuplicateInfo(null)}
-                        className="btn btn-secondary text-sm py-2"
-                      >
-                        Cancel
-                      </button>
+            {title && !manualMode ? (
+              /* === Book Selected View === */
+              <>
+                {/* Book Preview Card */}
+                <div className="flex gap-4 p-4 bg-slate-50 rounded-xl">
+                  <div className="w-16 h-24 rounded-lg overflow-hidden bg-slate-200 flex-shrink-0">
+                    {coverUrl ? (
+                      <img src={coverUrl} alt={title} className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <BookOpen className="w-6 h-6 text-slate-300" />
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-bold text-slate-800 line-clamp-2">{title}</h3>
+                    <p className="text-sm text-slate-500 mt-0.5">{author}</p>
+                    <div className="flex items-center gap-2 mt-1.5">
+                      <span className="text-xs px-2 py-0.5 bg-primary-100 text-primary-700 rounded-full">{genre}</span>
+                      {pageCount && <span className="text-xs text-slate-400">{pageCount} pages</span>}
                     </div>
                   </div>
                 </div>
-              </div>
-            )}
 
-            <button
-              type="submit"
-              disabled={
-                saving || !title.trim() || !author.trim() || !!duplicateInfo
-              }
-              className="btn btn-primary w-full"
-            >
-              {saving ? (
-                <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                  Adding...
-                </>
-              ) : (
-                <>
-                  <Plus className="w-5 h-5" />
-                  Add Book
-                </>
-              )}
-            </button>
+                {/* Destination */}
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                    Where does this go?
+                  </label>
+                  <div className="grid grid-cols-3 gap-2">
+                    {destinations.map((dest) => {
+                      const Icon = dest.icon;
+                      return (
+                        <button
+                          key={dest.key}
+                          type="button"
+                          onClick={() => setDestination(dest.key)}
+                          className={`p-3 rounded-xl border-2 transition-all flex flex-col items-center gap-1 ${
+                            destination === dest.key
+                              ? "border-primary-500 bg-primary-50"
+                              : "border-slate-200 hover:border-slate-300"
+                          }`}
+                        >
+                          <Icon
+                            className={`w-5 h-5 ${destination === dest.key ? "text-primary-600" : "text-slate-400"}`}
+                          />
+                          <span
+                            className={`text-sm font-medium ${destination === dest.key ? "text-primary-600" : "text-slate-600"}`}
+                          >
+                            {dest.label}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Rating (only for finished) */}
+                {destination === "read" && (
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                      Rating
+                    </label>
+                    <div className="flex gap-1">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <button
+                          key={star}
+                          type="button"
+                          onClick={() => setRating(star)}
+                          className="p-1"
+                        >
+                          <Star
+                            className={`w-8 h-8 transition-colors ${
+                              star <= rating
+                                ? "text-yellow-400 fill-yellow-400"
+                                : "text-slate-200"
+                            }`}
+                          />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Error message */}
+                {error && (
+                  <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-xl text-red-700">
+                    <AlertCircle className="w-5 h-5 flex-shrink-0" />
+                    <p className="text-sm">{error}</p>
+                  </div>
+                )}
+
+                {/* Duplicate found */}
+                {duplicateInfo && (
+                  <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl">
+                    <div className="flex items-start gap-3">
+                      <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                      <div className="flex-1">
+                        <p className="text-sm text-amber-800 font-medium">
+                          This book is {getStatusLabel(duplicateInfo.currentStatus)}
+                        </p>
+                        <p className="text-sm text-amber-700 mt-1">
+                          Would you like to move it to {getStatusLabel(destination)}{" "}
+                          instead?
+                        </p>
+                        <div className="flex gap-2 mt-3">
+                          <button
+                            type="button"
+                            onClick={handleMoveBook}
+                            disabled={saving}
+                            className="btn btn-primary text-sm py-2"
+                          >
+                            {saving ? (
+                              <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : (
+                              <>Yes, move it</>
+                            )}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setDuplicateInfo(null)}
+                            className="btn btn-secondary text-sm py-2"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={saving || !title.trim() || !author.trim() || !!duplicateInfo}
+                  className="btn btn-primary w-full"
+                >
+                  {saving ? (
+                    <>
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      Adding...
+                    </>
+                  ) : (
+                    <>
+                      <Plus className="w-5 h-5" />
+                      Add Book
+                    </>
+                  )}
+                </button>
+
+                <p className="text-center text-xs text-slate-400">
+                  Not the right book?{" "}
+                  <button
+                    type="button"
+                    onClick={() => { setTitle(""); setAuthor(""); setCoverUrl(""); setGenre("Other"); setPageCount(""); setManualMode(true); }}
+                    className="text-primary-500 hover:underline"
+                  >
+                    Clear &amp; add manually
+                  </button>
+                </p>
+              </>
+            ) : (
+              /* === Search + Manual Entry View === */
+              <>
+                <GoogleBookSearch
+                  onSelect={(book) => {
+                    setTitle(book.title);
+                    setAuthor(book.author);
+                    setCoverUrl(book.coverUrl);
+                    setGenre(book.genre);
+                    if (book.pageCount > 0) setPageCount(book.pageCount.toString());
+                    setManualMode(false);
+                  }}
+                />
+
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-slate-200" />
+                  </div>
+                  <div className="relative flex justify-center text-xs">
+                    <button
+                      type="button"
+                      onClick={() => setManualMode(!manualMode)}
+                      className="bg-white px-2 text-slate-400 uppercase tracking-wider hover:text-slate-600"
+                    >
+                      {manualMode ? "back to search" : "can't find your book? add manually"}
+                    </button>
+                  </div>
+                </div>
+
+                {manualMode && (
+                  <>
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 mb-1">
+                        Title *
+                      </label>
+                      <input
+                        type="text"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                        className="input"
+                        placeholder="Book title"
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 mb-1">
+                        Author *
+                      </label>
+                      <input
+                        type="text"
+                        value={author}
+                        onChange={(e) => setAuthor(e.target.value)}
+                        className="input"
+                        placeholder="Author name"
+                        required
+                      />
+                    </div>
+
+                    <CoverUpload value={coverUrl} onChange={setCoverUrl} />
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-1">
+                          Genre
+                        </label>
+                        <select
+                          value={genre}
+                          onChange={(e) => setGenre(e.target.value)}
+                          className="input"
+                        >
+                          {GENRES.map((g) => (
+                            <option key={g} value={g}>
+                              {g}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-1">
+                          Pages
+                        </label>
+                        <input
+                          type="number"
+                          value={pageCount}
+                          onChange={(e) => setPageCount(e.target.value)}
+                          className="input"
+                          placeholder="Optional"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Destination */}
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 mb-2">
+                        Add to:
+                      </label>
+                      <div className="grid grid-cols-3 gap-2">
+                        {destinations.map((dest) => {
+                          const Icon = dest.icon;
+                          return (
+                            <button
+                              key={dest.key}
+                              type="button"
+                              onClick={() => setDestination(dest.key)}
+                              className={`p-3 rounded-xl border-2 transition-all flex flex-col items-center gap-1 ${
+                                destination === dest.key
+                                  ? "border-primary-500 bg-primary-50"
+                                  : "border-slate-200 hover:border-slate-300"
+                              }`}
+                            >
+                              <Icon
+                                className={`w-5 h-5 ${destination === dest.key ? "text-primary-600" : "text-slate-400"}`}
+                              />
+                              <span
+                                className={`text-sm font-medium ${destination === dest.key ? "text-primary-600" : "text-slate-600"}`}
+                              >
+                                {dest.label}
+                              </span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* Rating (only for finished) */}
+                    {destination === "read" && (
+                      <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-2">
+                          Rating
+                        </label>
+                        <div className="flex gap-1">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <button
+                              key={star}
+                              type="button"
+                              onClick={() => setRating(star)}
+                              className="p-1"
+                            >
+                              <Star
+                                className={`w-8 h-8 transition-colors ${
+                                  star <= rating
+                                    ? "text-yellow-400 fill-yellow-400"
+                                    : "text-slate-200"
+                                }`}
+                              />
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Error message */}
+                    {error && (
+                      <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-xl text-red-700">
+                        <AlertCircle className="w-5 h-5 flex-shrink-0" />
+                        <p className="text-sm">{error}</p>
+                      </div>
+                    )}
+
+                    {/* Duplicate found */}
+                    {duplicateInfo && (
+                      <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl">
+                        <div className="flex items-start gap-3">
+                          <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                          <div className="flex-1">
+                            <p className="text-sm text-amber-800 font-medium">
+                              This book is {getStatusLabel(duplicateInfo.currentStatus)}
+                            </p>
+                            <p className="text-sm text-amber-700 mt-1">
+                              Would you like to move it to {getStatusLabel(destination)}{" "}
+                              instead?
+                            </p>
+                            <div className="flex gap-2 mt-3">
+                              <button
+                                type="button"
+                                onClick={handleMoveBook}
+                                disabled={saving}
+                                className="btn btn-primary text-sm py-2"
+                              >
+                                {saving ? (
+                                  <Loader2 className="w-4 h-4 animate-spin" />
+                                ) : (
+                                  <>Yes, move it</>
+                                )}
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => setDuplicateInfo(null)}
+                                className="btn btn-secondary text-sm py-2"
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    <button
+                      type="submit"
+                      disabled={saving || !title.trim() || !author.trim() || !!duplicateInfo}
+                      className="btn btn-primary w-full"
+                    >
+                      {saving ? (
+                        <>
+                          <Loader2 className="w-5 h-5 animate-spin" />
+                          Adding...
+                        </>
+                      ) : (
+                        <>
+                          <Plus className="w-5 h-5" />
+                          Add Book
+                        </>
+                      )}
+                    </button>
+                  </>
+                )}
+              </>
+            )}
           </form>
         </motion.div>
       </div>
