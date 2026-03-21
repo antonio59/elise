@@ -78,13 +78,13 @@ const PublicHome: React.FC = () => {
       {books.filter((b) => b.rating === 5).length > 0 && (
         <section className="py-8 px-4">
           <div className="max-w-6xl mx-auto">
-            <div><h2 className="text-xl font-bold text-slate-800 mb-4">5-Star Shelf</h2><div className="w-10 h-0.5 bg-primary-400 mt-1 rounded-full"></div></div>
+            <div><div><h2 className="text-xl font-bold text-slate-800 mb-4">5-Star Shelf</h2><div className="w-10 h-0.5 bg-primary-400 mt-1 rounded-full"></div></div><div className="w-10 h-0.5 bg-primary-400 mt-1 rounded-full"></div></div>
             <div className="shelf-scroll">
               {books
                 .filter((b) => b.rating === 5)
                 .map((book) => (
                   <div key={book._id} className="w-28 sm:w-32">
-                    <div className="aspect-[2/3] rounded-lg overflow-hidden bg-slate-100 shadow-sm">
+                    <div className="aspect-[2/3] rounded-lg overflow-hidden bg-slate-100 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg">
                       {book.coverUrl ? (
                         <img
                           src={getCoverUrl(book)}
@@ -102,6 +102,14 @@ const PublicHome: React.FC = () => {
                     </p>
                   </div>
                 ))}
+              {/* Placeholder slots */}
+              {Array.from({ length: Math.max(0, 4 - books.filter((b) => b.rating === 5).length) }).map((_, i) => (
+                <div key={`ph-${i}`} className="w-28 sm:w-32">
+                  <div className="aspect-[2/3] rounded-lg border-2 border-dashed border-slate-200 bg-slate-50 flex items-center justify-center">
+                    <Star className="w-5 h-5 text-slate-200" />
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </section>
@@ -112,7 +120,7 @@ const PublicHome: React.FC = () => {
         <div className="max-w-6xl mx-auto">
           <div className="flex items-end justify-between mb-8">
             <div>
-              <div><h2 className="text-2xl sm:text-3xl font-bold text-slate-800">Books</h2><div className="w-12 h-0.5 bg-primary-400 mt-2 rounded-full"></div></div>
+              <div><div><h2 className="text-2xl sm:text-3xl font-bold text-slate-800">Books</h2><div className="w-12 h-0.5 bg-primary-400 mt-2 rounded-full"></div></div><div className="w-12 h-0.5 bg-primary-400 mt-2 rounded-full"></div></div>
               <p className="text-slate-500 mt-1">
                 everything I've been reading
               </p>
@@ -131,7 +139,7 @@ const PublicHome: React.FC = () => {
               <div className="flex gap-4 overflow-x-auto pb-2">
                 {currentlyReading.map((book) => (
                   <div key={book._id} className="flex-shrink-0 w-28">
-                    <div className="relative aspect-[2/3] rounded-lg overflow-hidden bg-slate-100 shadow-sm">
+                    <div className="relative aspect-[2/3] rounded-lg overflow-hidden bg-slate-100 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg">
                       {getCoverUrl(book) ? (
                         <img src={getCoverUrl(book)} alt={book.title} className="w-full h-full object-cover" />
                       ) : (
@@ -155,7 +163,7 @@ const PublicHome: React.FC = () => {
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-              {books.map((book, index) => (
+              {books.filter((b) => b.status !== "reading").map((book, index) => (
                 <motion.div
                   key={book._id}
                   className="group book-card"
@@ -164,7 +172,7 @@ const PublicHome: React.FC = () => {
                   viewport={{ once: true }}
                   transition={{ delay: Math.min(index * 0.05, 0.3) }}
                 >
-                  <div className="aspect-[2/3] rounded-xl overflow-hidden bg-slate-100 shadow-md book-spine">
+                  <div className="aspect-[2/3] rounded-xl overflow-hidden bg-slate-100 shadow-md book-spine transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
                     {getCoverUrl(book) ? (
                       <img
                         src={getCoverUrl(book)}
@@ -229,7 +237,7 @@ const PublicHome: React.FC = () => {
       <section className="py-16 px-4 bg-white">
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center justify-between mb-8">
-            <div><h2 className="text-2xl sm:text-3xl font-bold text-slate-800">Reviews</h2><div className="w-12 h-0.5 bg-primary-400 mt-2 rounded-full"></div></div>
+            <div><div><h2 className="text-2xl sm:text-3xl font-bold text-slate-800">Reviews</h2><div className="w-12 h-0.5 bg-primary-400 mt-2 rounded-full"></div></div><div className="w-12 h-0.5 bg-primary-400 mt-2 rounded-full"></div></div>
             <Link to="/reviews" className="text-sm text-primary-500 hover:text-primary-700 font-medium">
               See all →
             </Link>
@@ -245,7 +253,7 @@ const PublicHome: React.FC = () => {
       <section className="py-16 px-4 bg-white">
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center justify-between mb-8">
-            <div><h2 className="text-2xl sm:text-3xl font-bold text-slate-800">Art</h2><div className="w-12 h-0.5 bg-primary-400 mt-2 rounded-full"></div></div>
+            <div><div><h2 className="text-2xl sm:text-3xl font-bold text-slate-800">Art</h2><div className="w-12 h-0.5 bg-primary-400 mt-2 rounded-full"></div></div><div className="w-12 h-0.5 bg-primary-400 mt-2 rounded-full"></div></div>
             <Link
               to="/art"
               className="text-primary-500 hover:text-primary-600 text-sm font-medium"
@@ -299,7 +307,7 @@ const PublicHome: React.FC = () => {
         <div className="max-w-6xl mx-auto">
           <div className="flex items-end justify-between mb-8">
             <div>
-              <div><h2 className="text-2xl sm:text-3xl font-bold text-slate-800">Wishlist</h2><div className="w-12 h-0.5 bg-primary-400 mt-2 rounded-full"></div></div>
+              <div><div><h2 className="text-2xl sm:text-3xl font-bold text-slate-800">Wishlist</h2><div className="w-12 h-0.5 bg-primary-400 mt-2 rounded-full"></div></div><div className="w-12 h-0.5 bg-primary-400 mt-2 rounded-full"></div></div>
               <p className="text-slate-500 mt-1">books I'd love to read next ✨</p>
             </div>
             {wishlist.length > 0 && (
@@ -852,7 +860,7 @@ const PublicWritings: React.FC = () => {
     <section id="writing" className="py-16 px-4">
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center justify-between mb-8">
-          <div><h2 className="text-2xl sm:text-3xl font-bold text-slate-800">Writing</h2><div className="w-12 h-0.5 bg-primary-400 mt-2 rounded-full"></div></div>
+          <div><div><h2 className="text-2xl sm:text-3xl font-bold text-slate-800">Writing</h2><div className="w-12 h-0.5 bg-primary-400 mt-2 rounded-full"></div></div><div className="w-12 h-0.5 bg-primary-400 mt-2 rounded-full"></div></div>
           {writings.length > 0 && (
             <Link to="/writing" className="text-sm text-primary-500 hover:text-primary-700 font-medium">
               See all →
