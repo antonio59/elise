@@ -1,6 +1,59 @@
 import React, { useState, useCallback } from "react";
 import { Search, Loader2, BookOpen, Plus } from "lucide-react";
 
+// Google Books categories → our genres
+const CATEGORY_MAP: Record<string, string> = {
+  "fiction": "Other",
+  "juvenile fiction": "Other",
+  "young adult fiction": "Other",
+  "fantasy": "Fantasy",
+  "science fiction": "Sci-Fi",
+  "romance": "Romance",
+  "mystery": "Mystery",
+  "horror": "Horror",
+  "action": "Action",
+  "adventure": "Action",
+  "comedy": "Comedy",
+  "humor": "Comedy",
+  "humour": "Comedy",
+  "drama": "Drama",
+  "slice of life": "Slice of Life",
+  "coming of age": "Slice of Life",
+  "manga": "Manga",
+  "manhwa": "Manhwa",
+  "webtoon": "Webtoon",
+  "light novel": "Light Novel",
+  "graphic novel": "Manga",
+  "comic": "Manga",
+  "cozy": "Slice of Life",
+  "dark fantasy": "Fantasy",
+  "urban fantasy": "Fantasy",
+  "paranormal romance": "Romance",
+  "romantic comedy": "Romance",
+  "romantasy": "Romance",
+  "thriller": "Mystery",
+  "suspense": "Mystery",
+  "psychological": "Drama",
+  "literary fiction": "Drama",
+  "contemporary": "Slice of Life",
+  "realistic fiction": "Slice of Life",
+};
+
+function mapCategoryToGenre(categories: string[] | undefined): string {
+  if (!categories || categories.length === 0) return "Other";
+  
+  for (const cat of categories) {
+    const lower = cat.toLowerCase().trim();
+    // Direct match
+    if (CATEGORY_MAP[lower]) return CATEGORY_MAP[lower];
+    // Partial match — check if any mapped key is contained in the category
+    for (const [key, genre] of Object.entries(CATEGORY_MAP)) {
+      if (lower.includes(key)) return genre;
+    }
+  }
+  return "Other";
+}
+
 interface BookResult {
   id: string;
   title: string;
@@ -8,6 +61,7 @@ interface BookResult {
   coverUrl: string;
   pageCount: number;
   description: string;
+  genre: string;
 }
 
 interface GoogleBookSearchProps {
@@ -17,6 +71,7 @@ interface GoogleBookSearchProps {
     coverUrl: string;
     pageCount: number;
     description: string;
+    genre: string;
   }) => void;
 }
 
@@ -46,6 +101,7 @@ const GoogleBookSearch: React.FC<GoogleBookSearchProps> = ({ onSelect }) => {
             imageLinks?: { thumbnail?: string; smallThumbnail?: string };
             pageCount?: number;
             description?: string;
+            categories?: string[];
           };
         }) => ({
           id: item.id,
@@ -57,6 +113,7 @@ const GoogleBookSearch: React.FC<GoogleBookSearchProps> = ({ onSelect }) => {
             "",
           pageCount: item.volumeInfo.pageCount || 0,
           description: item.volumeInfo.description || "",
+          genre: mapCategoryToGenre(item.volumeInfo.categories),
         }),
       );
 
@@ -116,6 +173,7 @@ const GoogleBookSearch: React.FC<GoogleBookSearchProps> = ({ onSelect }) => {
                   coverUrl: book.coverUrl,
                   pageCount: book.pageCount,
                   description: book.description,
+                  genre: book.genre,
                 });
                 setResults([]);
                 setQuery(book.title);
@@ -142,9 +200,14 @@ const GoogleBookSearch: React.FC<GoogleBookSearchProps> = ({ onSelect }) => {
                 <p className="text-xs text-slate-500 truncate">
                   {book.authors.join(", ") || "Unknown author"}
                 </p>
-                {book.pageCount > 0 && (
-                  <p className="text-xs text-slate-400">{book.pageCount} pages</p>
-                )}
+                <div className="flex items-center gap-2 mt-0.5">
+                  {book.genre !== "Other" && (
+                    <span className="text-xs text-primary-500 font-medium">{book.genre}</span>
+                  )}
+                  {book.pageCount > 0 && (
+                    <span className="text-xs text-slate-400">{book.pageCount} pages</span>
+                  )}
+                </div>
               </div>
               <Plus className="w-4 h-4 text-slate-400 flex-shrink-0" />
             </button>
