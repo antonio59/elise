@@ -204,11 +204,18 @@ const PublicHome: React.FC = () => {
       {/* Books Section */}
       <section id="books" className="py-16 px-4">
         <div className="max-w-6xl mx-auto">
-          <div className="mb-8">
-            <h2 className="text-2xl sm:text-3xl font-bold text-slate-800">Books</h2>
-            <p className="text-slate-500 mt-1">
-              everything I've been reading
-            </p>
+          <div className="flex items-end justify-between mb-8">
+            <div>
+              <h2 className="text-2xl sm:text-3xl font-bold text-slate-800">Books</h2>
+              <p className="text-slate-500 mt-1">
+                everything I've been reading
+              </p>
+            </div>
+            {books.length > 0 && (
+              <Link to="/read/books" className="text-sm text-primary-500 hover:text-primary-700 font-medium">
+                See all →
+              </Link>
+            )}
           </div>
 
           {books.length === 0 ? (
@@ -290,9 +297,16 @@ const PublicHome: React.FC = () => {
       {/* Wishlist Section */}
       <section id="wishlist" className="py-16 px-4 bg-white">
         <div className="max-w-6xl mx-auto">
-          <div className="mb-8">
-            <h2 className="text-2xl sm:text-3xl font-bold text-slate-800">Wishlist</h2>
-            <p className="text-slate-500 mt-1">books I'd love to read next ✨</p>
+          <div className="flex items-end justify-between mb-8">
+            <div>
+              <h2 className="text-2xl sm:text-3xl font-bold text-slate-800">Wishlist</h2>
+              <p className="text-slate-500 mt-1">books I'd love to read next ✨</p>
+            </div>
+            {wishlist.length > 0 && (
+              <Link to="/wishlist" className="text-sm text-primary-500 hover:text-primary-700 font-medium">
+                See all →
+              </Link>
+            )}
           </div>
 
           {wishlist.length === 0 ? (
@@ -402,6 +416,9 @@ const PublicHome: React.FC = () => {
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-2xl sm:text-3xl font-bold text-slate-800">Reviews</h2>
+            <Link to="/read/reviews" className="text-sm text-primary-500 hover:text-primary-700 font-medium">
+              See all →
+            </Link>
           </div>
           <ReviewStrip books={books} />
         </div>
@@ -901,6 +918,11 @@ const PublicWritings: React.FC = () => {
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-2xl sm:text-3xl font-bold text-slate-800">Writing</h2>
+          {writings.length > 0 && (
+            <Link to="/read/writing" className="text-sm text-primary-500 hover:text-primary-700 font-medium">
+              See all →
+            </Link>
+          )}
         </div>
 
         {writings.length === 0 ? (

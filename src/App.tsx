@@ -13,6 +13,9 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import PublicHome from "./pages/PublicHome";
 import PublicGallery from "./pages/PublicGallery";
 import PublicWishlist from "./pages/PublicWishlist";
+import PublicBooks from "./pages/PublicBooks";
+import PublicReviews from "./pages/PublicReviews";
+import PublicWritings from "./pages/PublicWritings";
 import About from "./pages/About";
 import NotFound from "./pages/NotFound";
 import { Layout, PublicLayout, AuthLayout } from "./components/Layout";
@@ -70,6 +73,30 @@ function App() {
               element={
                 <PublicLayout>
                   <PublicWishlist />
+                </PublicLayout>
+              }
+            />
+            <Route
+              path="/read/books"
+              element={
+                <PublicLayout>
+                  <PublicBooks />
+                </PublicLayout>
+              }
+            />
+            <Route
+              path="/read/reviews"
+              element={
+                <PublicLayout>
+                  <PublicReviews />
+                </PublicLayout>
+              }
+            />
+            <Route
+              path="/read/writing"
+              element={
+                <PublicLayout>
+                  <PublicWritings />
                 </PublicLayout>
               }
             />
