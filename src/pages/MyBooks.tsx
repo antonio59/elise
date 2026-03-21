@@ -307,6 +307,7 @@ interface EditBookModalProps {
     status?: "read" | "reading" | "wishlist";
     rating?: number;
     isFavorite?: boolean;
+    moodTags?: string[];
   }) => Promise<void>;
 }
 
@@ -323,6 +324,7 @@ const EditBookModal: React.FC<EditBookModalProps> = ({
   const [status, setStatus] = useState<"read" | "reading" | "wishlist">("read");
   const [rating, setRating] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [moodTags, setMoodTags] = useState<string[]>([]);
   const [saving, setSaving] = useState(false);
 
   // Update form when book changes
@@ -336,6 +338,7 @@ const EditBookModal: React.FC<EditBookModalProps> = ({
       setStatus(book.status);
       setRating(book.rating || 0);
       setIsFavorite(book.isFavorite);
+      setMoodTags(book.moodTags || []);
     }
   }, [book]);
 
@@ -354,6 +357,7 @@ const EditBookModal: React.FC<EditBookModalProps> = ({
         status,
         rating: status === "read" && rating > 0 ? rating : undefined,
         isFavorite,
+        moodTags: moodTags.length > 0 ? moodTags : undefined,
       });
     } finally {
       setSaving(false);
@@ -544,6 +548,45 @@ const EditBookModal: React.FC<EditBookModalProps> = ({
                     </button>
                   ))}
                 </div>
+                {rating > 0 && (
+                  <p className="text-sm font-medium text-primary-500 mt-2">
+                    {["not it", "meh", "solid read", "obsessed", "all-time fav"][rating - 1]}
+                  </p>
+                )}
+              </div>
+            )}
+
+            {/* Mood Tags */}
+            {status === "read" && (
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-2">
+                  Mood Tags
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  {["dark academia", "cottagecore", "main character energy", "slow burn", "found family", "enemies to lovers", "plot twist", "cozy vibes", "spicy", "soft", "wholesome", "gripping", "emotional damage", "healing", "magical", "realistic"].map((tag) => (
+                    <button
+                      key={tag}
+                      type="button"
+                      onClick={() => {
+                        setMoodTags((prev) =>
+                          prev.includes(tag)
+                            ? prev.filter((t) => t !== tag)
+                            : [...prev, tag]
+                        );
+                      }}
+                      className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                        moodTags.includes(tag)
+                          ? "bg-primary-100 text-primary-700 border border-primary-300"
+                          : "bg-slate-100 text-slate-600 border border-slate-200 hover:bg-slate-200"
+                      }`}
+                    >
+                      {tag}
+                    </button>
+                  ))}
+                </div>
+                <p className="text-xs text-slate-500 mt-2">
+                  Click to tag the vibes of this book
+                </p>
               </div>
             )}
 

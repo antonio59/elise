@@ -56,7 +56,7 @@ const Settings: React.FC = () => {
         name: name.trim() || undefined,
         username: username.trim() || undefined,
         bio: bio.trim() || undefined,
-        theme: theme as "editorial" | "sakura" | "lavender" | "midnight" | "sunset" | "botanical" | "berry" | "light" | "dark" | "kawaii",
+        theme: theme as any, // Regenerate Convex types with: npx convex dev
         yearlyBookGoal: yearlyBookGoal ? parseInt(yearlyBookGoal) : undefined,
         notifications,
       });
