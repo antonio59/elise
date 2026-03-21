@@ -1,11 +1,10 @@
 import { getCoverUrl } from "../utils/cover";
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Star, BookOpen, ArrowLeft } from "lucide-react";
+import { Star, BookOpen, ArrowLeft, MessageCircle } from "lucide-react";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Link } from "react-router-dom";
-
 
 interface Book {
   _id: string;
@@ -29,13 +28,19 @@ const RATING_LABELS: Record<number, string> = {
 const PublicReviews: React.FC = () => {
   const books = useQuery(api.books.getReadBooks) ?? [];
   const [flippedId, setFlippedId] = useState<string | null>(null);
+  const [ratingFilter, setRatingFilter] = useState<number | null>(null);
 
   const reviewedBooks = books.filter(
     (b: Book) => (b.rating && b.rating > 0) || (b.review && b.review.length > 0)
   );
 
+  const filteredBooks = reviewedBooks.filter((b) => {
+    if (!ratingFilter) return true;
+    return b.rating === ratingFilter;
+  });
+
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className="max-w-6xl mx-auto px-4">
       <div className="mb-8">
         <Link
           to="/"
@@ -45,75 +50,110 @@ const PublicReviews: React.FC = () => {
           Back
         </Link>
         <span className="inline-block px-3 py-1 bg-violet-100 text-violet-600 rounded-full text-xs font-semibold uppercase tracking-wider mb-3">Book Reviews</span>
-            <h1 className="text-3xl sm:text-4xl font-bold">
-              <span className="bg-gradient-to-r from-primary-600 to-violet-500 bg-clip-text text-transparent">My Reviews</span>
-            </h1>
-        <p className="text-slate-500 mt-1">what I thought about these books</p>
+        <h1 className="text-3xl sm:text-4xl font-bold">
+          <span className="bg-gradient-to-r from-primary-600 to-violet-500 bg-clip-text text-transparent">What I Thought...</span>
+        </h1>
+        <p className="text-slate-500 mt-1">honest thoughts on books I've read</p>
       </div>
 
-      {reviewedBooks.length === 0 ? (
-        <div className="text-center py-12 bg-white rounded-2xl">
-          <BookOpen className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-          <p className="text-slate-500">no reviews yet</p>
+      {/* Rating Filter */}
+      <div className="flex flex-wrap gap-2 mb-8">
+        <button
+          onClick={() => setRatingFilter(null)}
+          className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+            !ratingFilter ? "bg-primary-500 text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+          }`}
+        >
+          All ({reviewedBooks.length})
+        </button>
+        {[5, 4, 3, 2, 1].map((r) => {
+          const count = reviewedBooks.filter((b) => b.rating === r).length;
+          if (count === 0) return null;
+          return (
+            <button
+              key={r}
+              onClick={() => setRatingFilter(ratingFilter === r ? null : r)}
+              className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors flex items-center gap-1 ${
+                ratingFilter === r ? "bg-primary-500 text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+              }`}
+            >
+              {Array.from({ length: r }).map((_, i) => (
+                <Star key={i} className="w-3 h-3 text-yellow-400 fill-yellow-400" />
+              ))}
+              <span className="ml-0.5">({count})</span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Empty State */}
+      {filteredBooks.length === 0 ? (
+        <div className="text-center py-16 bg-gradient-to-br from-violet-50 to-primary-50 rounded-2xl">
+          <div className="text-4xl mb-3">📝</div>
+          <p className="text-slate-600 font-medium">
+            {ratingFilter ? `No ${ratingFilter}-star reviews yet` : "No reviews yet"}
+          </p>
+          {ratingFilter && (
+            <button onClick={() => setRatingFilter(null)} className="text-sm text-primary-500 mt-2 underline">
+              Show all
+            </button>
+          )}
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {reviewedBooks.map((book, index) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {filteredBooks.map((book, index) => (
             <motion.div
               key={book._id}
               className="cursor-pointer"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
+              transition={{ delay: index * 0.05 }}
               onClick={() => setFlippedId(flippedId === book._id ? null : book._id)}
             >
               <AnimatePresence mode="wait">
                 {flippedId !== book._id ? (
-                  /* Front: Book Info + Rating */
+                  /* Front: Editorial Card */
                   <motion.div
                     key="front"
-                    className="card p-5 h-[220px]"
+                    className="card overflow-hidden flex h-[180px] hover:shadow-lg transition-shadow"
                     initial={{ rotateY: -90 }}
                     animate={{ rotateY: 0 }}
                     exit={{ rotateY: 90 }}
                     transition={{ duration: 0.3 }}
                   >
-                    <div className="flex gap-4">
-                      <div className="w-16 h-24 rounded-lg overflow-hidden bg-slate-100 flex-shrink-0">
-                        {getCoverUrl(book) ? (
-                          <img
-                            src={getCoverUrl(book)}
-                            alt={book.title}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-100 to-accent-100">
-                            <BookOpen className="w-5 h-5 text-primary-300" />
-                          </div>
-                        )}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-bold text-slate-800 line-clamp-1">{book.title}</h3>
+                    {/* Cover */}
+                    <div className="w-28 flex-shrink-0 bg-slate-100">
+                      {getCoverUrl(book) ? (
+                        <img src={getCoverUrl(book)} alt={book.title} className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-100 to-violet-100">
+                          <BookOpen className="w-8 h-8 text-primary-300" />
+                        </div>
+                      )}
+                    </div>
+                    {/* Info */}
+                    <div className="p-5 flex-1 flex flex-col justify-between">
+                      <div>
+                        <h3 className="font-bold text-slate-800 text-lg line-clamp-1">{book.title}</h3>
                         <p className="text-sm text-slate-500 mb-2">{book.author}</p>
-                        <div className="flex items-center gap-0.5 mb-2">
+                        <div className="flex items-center gap-1">
                           {Array.from({ length: 5 }).map((_, i) => (
-                            <Star
-                              key={i}
-                              className={`w-4 h-4 ${
-                                i < (book.rating ?? 0)
-                                  ? "text-yellow-400 fill-yellow-400"
-                                  : "text-slate-200"
-                              }`}
-                            />
+                            <Star key={i} className={`w-4 h-4 ${i < (book.rating ?? 0) ? "text-yellow-400 fill-yellow-400" : "text-slate-200"}`} />
                           ))}
                           {book.rating && book.rating > 0 && (
-                            <span className="ml-2 text-xs text-primary-500 font-medium">
-                              {RATING_LABELS[book.rating]}
-                            </span>
+                            <span className="ml-2 text-xs text-primary-500 font-medium">{RATING_LABELS[book.rating]}</span>
                           )}
                         </div>
-                        <p className="text-xs text-slate-400">tap to see review →</p>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        {book.genre && book.genre !== "Other" && (
+                          <span className="text-[10px] px-2 py-0.5 bg-violet-50 text-violet-600 rounded-full border border-violet-200">{book.genre}</span>
+                        )}
+                        <span className="text-xs text-slate-400 flex items-center gap-1">
+                          <MessageCircle className="w-3 h-3" />
+                          tap for review
+                        </span>
                       </div>
                     </div>
                   </motion.div>
@@ -121,40 +161,33 @@ const PublicReviews: React.FC = () => {
                   /* Back: Full Review */
                   <motion.div
                     key="back"
-                    className="card p-5 bg-gradient-to-br from-primary-50 to-white h-[220px]"
+                    className="card p-6 bg-gradient-to-br from-violet-50 to-white h-[180px] flex flex-col"
                     initial={{ rotateY: 90 }}
                     animate={{ rotateY: 0 }}
                     exit={{ rotateY: -90 }}
                     transition={{ duration: 0.3 }}
                   >
                     <div className="flex items-start justify-between mb-3">
-                      <h3 className="font-bold text-slate-800">{book.title}</h3>
-                      <span className="text-xs text-slate-400">tap to flip</span>
+                      <div>
+                        <h3 className="font-bold text-slate-800">{book.title}</h3>
+                        <p className="text-xs text-slate-400">by {book.author}</p>
+                      </div>
+                      <span className="text-xs text-slate-400 flex-shrink-0">tap to flip</span>
                     </div>
                     {book.review ? (
-                      <blockquote className="text-slate-600 text-sm leading-relaxed border-l-3 border-primary-300 pl-4">
+                      <blockquote className="text-slate-600 text-sm leading-relaxed border-l-3 border-primary-300 pl-4 flex-1 line-clamp-4">
                         "{book.review}"
                       </blockquote>
                     ) : (
-                      <p className="text-sm text-slate-400 italic">
-                        No written review — just a rating.
-                      </p>
+                      <p className="text-sm text-slate-400 italic flex-1">No written review — just a rating.</p>
                     )}
-                    <div className="mt-4 flex items-center gap-3 text-xs text-slate-400">
-                      <div className="flex items-center gap-0.5">
-                        {Array.from({ length: 5 }).map((_, i) => (
-                          <Star
-                            key={i}
-                            className={`w-3 h-3 ${
-                              i < (book.rating ?? 0)
-                                ? "text-yellow-400 fill-yellow-400"
-                                : "text-slate-200"
-                            }`}
-                          />
+                    {book.moodTags && book.moodTags.length > 0 && (
+                      <div className="flex flex-wrap gap-1 mt-3">
+                        {book.moodTags.map((tag) => (
+                          <span key={tag} className="text-[10px] px-1.5 py-0.5 bg-slate-100 text-slate-500 rounded-full">#{tag}</span>
                         ))}
                       </div>
-                      {book.author && <span>by {book.author}</span>}
-                    </div>
+                    )}
                   </motion.div>
                 )}
               </AnimatePresence>

@@ -276,9 +276,16 @@ export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
       <main className="flex-1">{children}</main>
 
       {/* Footer */}
-      <footer className="bg-white border-t border-slate-200 py-8">
-        <div className="max-w-6xl mx-auto px-4 text-center text-slate-500 text-sm">
-          <p>Made with love for Elise</p>
+      <footer className="bg-gradient-to-br from-primary-50 to-violet-50 border-t border-slate-200 py-10">
+        <div className="max-w-6xl mx-auto px-4 text-center">
+          <Link to="/" className="inline-flex items-center gap-2 mb-3">
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-primary-500 to-violet-500 flex items-center justify-center">
+              <BookOpen className="w-4 h-4 text-white" />
+            </div>
+            <span className="text-lg font-bold bg-gradient-to-r from-primary-600 to-violet-500 bg-clip-text text-transparent">Elise Reads</span>
+          </Link>
+          <p className="text-sm text-slate-400 italic">books I've read, art I make, and words I write</p>
+          <p className="text-xs text-slate-300 mt-3">Made with love for Elise 💜</p>
         </div>
       </footer>
     </div>

@@ -1,6 +1,8 @@
-import { query } from "./_generated/server";
+import { query, mutation } from "./_generated/server";
+import { v } from "convex/values";
+import { auth } from "./auth";
 
-// Get site settings (for backward compatibility with old frontend)
+// Get site settings (public)
 export const get = query({
   args: {},
   handler: async (ctx) => {
@@ -8,11 +10,38 @@ export const get = query({
     return (
       settings ?? {
         siteName: "Elise Reads",
-        heroTitle: "Welcome to My Reading World",
-        heroSubtitle: "Books & Art",
-        heroDescription:
-          "A place to track my reading adventures and share my artwork",
+        heroTitle: "Elise Reads",
+        heroSubtitle: "books I've read, art I make, and words I write",
+        heroDescription: "",
       }
     );
+  },
+});
+
+// Update site settings (admin only)
+export const update = mutation({
+  args: {
+    siteName: v.optional(v.string()),
+    heroTitle: v.optional(v.string()),
+    heroSubtitle: v.optional(v.string()),
+    heroDescription: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const userId = await auth.getUserId(ctx);
+    if (!userId) throw new Error("Not authenticated");
+
+    const existing = await ctx.db.query("siteSettings").first();
+
+    if (existing) {
+      await ctx.db.patch(existing._id, {
+        ...args,
+        updatedAt: Date.now(),
+      });
+    } else {
+      await ctx.db.insert("siteSettings", {
+        ...args,
+        updatedAt: Date.now(),
+      });
+    }
   },
 });
