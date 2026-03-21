@@ -148,7 +148,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       </AnimatePresence>
 
       {/* Desktop Sidebar */}
-      <aside className="hidden md:flex w-64 bg-white border-r border-slate-200 p-6 flex-col min-h-screen sticky top-0">
+      <aside className="hidden md:flex w-64 bg-white border-r border-slate-200 p-6 flex-col h-screen sticky top-0 overflow-y-auto scrollbar-hide">
         {renderNavContent()}
       </aside>
 
