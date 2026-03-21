@@ -30,7 +30,7 @@ const PublicHome: React.FC = () => {
     <div className="min-h-screen">
 
       {/* Hero Section */}
-      <section className="py-12 sm:py-16 px-4">
+      <section className="py-8 sm:py-12 px-4">
         <div className="max-w-3xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -41,7 +41,7 @@ const PublicHome: React.FC = () => {
               Elise Reads
             </h1>
 
-            <p className="text-lg md:text-xl text-slate-500 max-w-lg mx-auto mb-10 font-light italic">
+            <p className="text-xl md:text-2xl text-slate-500/80 max-w-lg mx-auto mb-8 font-medium italic">
               books I've read, art I make, and words I write
             </p>
 
@@ -209,8 +209,9 @@ const PublicHome: React.FC = () => {
               {/* Placeholder slots */}
               {Array.from({ length: Math.max(0, 4 - books.filter((b) => b.rating === 5).length) }).map((_, i) => (
                 <div key={`ph-${i}`} className="w-28 sm:w-32">
-                  <div className="aspect-[2/3] rounded-lg border-2 border-dashed border-slate-200 bg-slate-50 flex items-center justify-center">
-                    <Star className="w-5 h-5 text-slate-200" />
+                  <div className="aspect-[2/3] rounded-lg border-2 border-dashed border-primary-200 bg-primary-50/50 flex flex-col items-center justify-center gap-1">
+                    <Star className="w-5 h-5 text-primary-300" />
+                    <span className="text-[10px] text-primary-400 italic">more soon...</span>
                   </div>
                 </div>
               ))}
@@ -222,16 +223,20 @@ const PublicHome: React.FC = () => {
       {/* Writing & Art Teasers */}
       <section className="py-16 px-4">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-6">
-          <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-100 text-center">
-            <Feather className="w-8 h-8 text-primary-400 mx-auto mb-3" />
-            <h3 className="text-lg font-bold text-slate-800 mb-2">Writing</h3>
-            <p className="text-sm text-slate-500 italic">stories, poems, and thoughts — coming soon</p>
+          <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-100 text-center hover:shadow-md transition-shadow">
+            <div className="w-16 h-16 bg-violet-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <Feather className="w-8 h-8 text-violet-400" />
+            </div>
+            <h3 className="text-xl font-bold text-slate-800 mb-2">Writing</h3>
+            <p className="text-sm text-slate-400 italic">stories dropping soon... ✍️</p>
             <Link to="/writing" className="inline-block mt-4 text-sm text-primary-500 hover:text-primary-600 font-medium">See all →</Link>
           </div>
-          <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-100 text-center">
-            <Palette className="w-8 h-8 text-primary-400 mx-auto mb-3" />
-            <h3 className="text-lg font-bold text-slate-800 mb-2">Art</h3>
-            <p className="text-sm text-slate-500 italic">drawings, doodles, and digital art — coming soon</p>
+          <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-100 text-center hover:shadow-md transition-shadow">
+            <div className="w-16 h-16 bg-primary-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <Palette className="w-8 h-8 text-primary-400" />
+            </div>
+            <h3 className="text-xl font-bold text-slate-800 mb-2">Art</h3>
+            <p className="text-sm text-slate-400 italic">doodles incoming... 🎨</p>
             <Link to="/art" className="inline-block mt-4 text-sm text-primary-500 hover:text-primary-600 font-medium">See all →</Link>
           </div>
         </div>
@@ -253,9 +258,13 @@ const PublicHome: React.FC = () => {
           </div>
 
           {wishlist.length === 0 ? (
-            <div className="text-center py-12 bg-slate-50 rounded-2xl">
-              <BookOpen className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-              <p className="text-slate-500">no books on the wishlist yet</p>
+            <div className="text-center py-12 bg-gradient-to-br from-primary-50 to-violet-50 rounded-2xl">
+              <div className="text-4xl mb-3">🎁</div>
+              <p className="text-slate-600 font-medium">Nothing here yet!</p>
+              <p className="text-sm text-slate-400 mt-1">Got a suggestion?</p>
+              <button onClick={() => setShowSuggestModal(true)} className="mt-3 text-sm text-primary-500 hover:text-primary-600 font-medium underline underline-offset-2">
+                Suggest a book →
+              </button>
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
