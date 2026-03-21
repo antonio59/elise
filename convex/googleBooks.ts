@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { query } from "./_generated/server";
+import { action } from "./_generated/server";
 import { v } from "convex/values";
 
-// Search Google Books API (server-side, keeps API key private)
-export const search = query({
+// Search Google Books API (action — can use fetch)
+export const search = action({
   args: { query: v.string() },
-  handler: async (ctx, args) => {
+  handler: async (_, args) => {
     const apiKey = process.env.GOOGLE_BOOKS_API_KEY;
     const keyParam = apiKey ? `&key=${apiKey}` : "";
 
