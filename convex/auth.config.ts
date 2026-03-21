@@ -1,8 +1,13 @@
 export default {
   providers: [
     {
-      domain: process.env.CONVEX_SITE_URL,
-      applicationID: "convex",
+      id: "password",
+      type: "credentials",
+      name: "Password",
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
+      },
     },
   ],
 };
