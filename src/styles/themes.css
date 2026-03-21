@@ -1,0 +1,314 @@
+/* ===== Theme System =====
+ * Themes applied via data-theme attribute on <html>
+ * Each theme defines the full color palette
+ */
+
+/* Default — Editorial (warm beige + dusty rose + navy) */
+@theme {
+  --font-display: "Playfair Display", Georgia, serif;
+  --font-body: "Inter", system-ui, sans-serif;
+  --color-primary-50: #fdf8f6;
+  --color-primary-100: #f5ebe6;
+  --color-primary-200: #edd5cd;
+  --color-primary-300: #e0b8a8;
+  --color-primary-400: #c4856c;
+  --color-primary-500: #b06b50;
+  --color-primary-600: #9a5640;
+  --color-primary-700: #7d4232;
+  --color-primary-800: #633427;
+  --color-primary-900: #4a271d;
+  --color-accent-50: #f0f4f8;
+  --color-accent-100: #d9e2ec;
+  --color-accent-200: #bcccdc;
+  --color-accent-300: #9fb3c8;
+  --color-accent-400: #829ab1;
+  --color-accent-500: #627d98;
+  --color-accent-600: #486581;
+  --color-accent-700: #334e68;
+  --color-accent-800: #243b53;
+  --color-accent-900: #102a43;
+  --color-violet-50: #f7f5f9;
+  --color-violet-100: #ebe5f0;
+  --color-violet-200: #d5c7e0;
+  --color-violet-300: #b9a0cc;
+  --color-violet-400: #9d7bb5;
+  --color-violet-500: #825b9e;
+  --color-violet-600: #6a4585;
+  --color-violet-700: #523469;
+  --color-star: #d4a853;
+  --color-star-light: #f5e6c8;
+  --color-slate-50: #faf8f5;
+  --color-slate-100: #f0ece5;
+  --color-slate-200: #e0d9cf;
+  --color-slate-300: #c7bfb2;
+  --color-slate-400: #a89f90;
+  --color-slate-500: #8a7f6f;
+  --color-slate-600: #6b6256;
+  --color-slate-700: #504a42;
+  --color-slate-800: #383531;
+  --color-slate-900: #1f1d1b;
+}
+
+/* ===== Sakura (kawaii pink + teal) ===== */
+[data-theme="sakura"] {
+  --color-primary-50: #fdf2f8;
+  --color-primary-100: #fce7f3;
+  --color-primary-200: #fbcfe8;
+  --color-primary-300: #f9a8d4;
+  --color-primary-400: #f472b6;
+  --color-primary-500: #ec4899;
+  --color-primary-600: #db2777;
+  --color-primary-700: #be185d;
+  --color-primary-800: #9d174d;
+  --color-primary-900: #831843;
+  --color-accent-50: #ecfeff;
+  --color-accent-100: #cffafe;
+  --color-accent-200: #a5f3fc;
+  --color-accent-300: #67e8f9;
+  --color-accent-400: #22d3ee;
+  --color-accent-500: #06b6d4;
+  --color-accent-600: #0891b2;
+  --color-accent-700: #0e7490;
+  --color-accent-800: #155e75;
+  --color-accent-900: #164e63;
+  --color-violet-50: #f5f3ff;
+  --color-violet-100: #ede9fe;
+  --color-violet-200: #ddd6fe;
+  --color-violet-300: #c4b5fd;
+  --color-violet-400: #a78bfa;
+  --color-violet-500: #8b5cf6;
+  --color-violet-600: #7c3aed;
+  --color-violet-700: #6d28d9;
+  --color-star: #fbbf24;
+  --color-star-light: #fef3c7;
+  --color-slate-50: #fafafa;
+  --color-slate-100: #f5f5f5;
+  --color-slate-200: #e5e5e5;
+  --color-slate-300: #d4d4d4;
+  --color-slate-400: #a3a3a3;
+  --color-slate-500: #737373;
+  --color-slate-600: #525252;
+  --color-slate-700: #404040;
+  --color-slate-800: #262626;
+  --color-slate-900: #171717;
+}
+
+/* ===== Lavender Dream (soft purple + mint) ===== */
+[data-theme="lavender"] {
+  --color-primary-50: #faf5ff;
+  --color-primary-100: #f3e8ff;
+  --color-primary-200: #e9d5ff;
+  --color-primary-300: #d8b4fe;
+  --color-primary-400: #c084fc;
+  --color-primary-500: #a855f7;
+  --color-primary-600: #9333ea;
+  --color-primary-700: #7e22ce;
+  --color-primary-800: #6b21a8;
+  --color-primary-900: #581c87;
+  --color-accent-50: #f0fdfa;
+  --color-accent-100: #ccfbf1;
+  --color-accent-200: #99f6e4;
+  --color-accent-300: #5eead4;
+  --color-accent-400: #2dd4bf;
+  --color-accent-500: #14b8a6;
+  --color-accent-600: #0d9488;
+  --color-accent-700: #0f766e;
+  --color-accent-800: #115e59;
+  --color-accent-900: #134e4a;
+  --color-violet-50: #fdf4ff;
+  --color-violet-100: #fae8ff;
+  --color-violet-200: #f5d0fe;
+  --color-violet-300: #f0abfc;
+  --color-violet-400: #e879f9;
+  --color-violet-500: #d946ef;
+  --color-violet-600: #c026d3;
+  --color-violet-700: #a21caf;
+  --color-star: #eab308;
+  --color-star-light: #fef9c3;
+  --color-slate-50: #fafafa;
+  --color-slate-100: #f4f4f5;
+  --color-slate-200: #e4e4e7;
+  --color-slate-300: #d4d4d8;
+  --color-slate-400: #a1a1aa;
+  --color-slate-500: #71717a;
+  --color-slate-600: #52525b;
+  --color-slate-700: #3f3f46;
+  --color-slate-800: #27272a;
+  --color-slate-900: #18181b;
+}
+
+/* ===== Midnight (dark navy + gold) ===== */
+[data-theme="midnight"] {
+  --color-primary-50: #fefce8;
+  --color-primary-100: #fef9c3;
+  --color-primary-200: #fef08a;
+  --color-primary-300: #fde047;
+  --color-primary-400: #facc15;
+  --color-primary-500: #eab308;
+  --color-primary-600: #ca8a04;
+  --color-primary-700: #a16207;
+  --color-primary-800: #854d0e;
+  --color-primary-900: #713f12;
+  --color-accent-50: #f0f4f8;
+  --color-accent-100: #d9e2ec;
+  --color-accent-200: #bcccdc;
+  --color-accent-300: #9fb3c8;
+  --color-accent-400: #829ab1;
+  --color-accent-500: #627d98;
+  --color-accent-600: #486581;
+  --color-accent-700: #334e68;
+  --color-accent-800: #243b53;
+  --color-accent-900: #102a43;
+  --color-violet-50: #f0f4f8;
+  --color-violet-100: #d9e2ec;
+  --color-violet-200: #bcccdc;
+  --color-violet-300: #9fb3c8;
+  --color-violet-400: #829ab1;
+  --color-violet-500: #627d98;
+  --color-violet-600: #486581;
+  --color-violet-700: #334e68;
+  --color-star: #fbbf24;
+  --color-star-light: #fef3c7;
+  --color-slate-50: #1a1f2e;
+  --color-slate-100: #242938;
+  --color-slate-200: #2d3348;
+  --color-slate-300: #3d4460;
+  --color-slate-400: #5a6180;
+  --color-slate-500: #7b82a0;
+  --color-slate-600: #9ca2b8;
+  --color-slate-700: #bcc1d0;
+  --color-slate-800: #dce0e8;
+  --color-slate-900: #f0f2f7;
+}
+
+/* ===== Sunset (warm coral + gold + cream) ===== */
+[data-theme="sunset"] {
+  --color-primary-50: #fff7ed;
+  --color-primary-100: #ffedd5;
+  --color-primary-200: #fed7aa;
+  --color-primary-300: #fdba74;
+  --color-primary-400: #fb923c;
+  --color-primary-500: #f97316;
+  --color-primary-600: #ea580c;
+  --color-primary-700: #c2410c;
+  --color-primary-800: #9a3412;
+  --color-primary-900: #7c2d12;
+  --color-accent-50: #fef2f2;
+  --color-accent-100: #fee2e2;
+  --color-accent-200: #fecaca;
+  --color-accent-300: #fca5a5;
+  --color-accent-400: #f87171;
+  --color-accent-500: #ef4444;
+  --color-accent-600: #dc2626;
+  --color-accent-700: #b91c1c;
+  --color-accent-800: #991b1b;
+  --color-accent-900: #7f1d1d;
+  --color-violet-50: #fdf4ff;
+  --color-violet-100: #fae8ff;
+  --color-violet-200: #f5d0fe;
+  --color-violet-300: #f0abfc;
+  --color-violet-400: #e879f9;
+  --color-violet-500: #d946ef;
+  --color-violet-600: #c026d3;
+  --color-violet-700: #a21caf;
+  --color-star: #eab308;
+  --color-star-light: #fef9c3;
+  --color-slate-50: #fffbf5;
+  --color-slate-100: #fff3e0;
+  --color-slate-200: #ffe4c4;
+  --color-slate-300: #ffd1a3;
+  --color-slate-400: #d4a574;
+  --color-slate-500: #b08050;
+  --color-slate-600: #8c6040;
+  --color-slate-700: #6b4a32;
+  --color-slate-800: #4a3324;
+  --color-slate-900: #2d1f16;
+}
+
+/* ===== Botanical (sage green + earth tones) ===== */
+[data-theme="botanical"] {
+  --color-primary-50: #f0fdf4;
+  --color-primary-100: #dcfce7;
+  --color-primary-200: #bbf7d0;
+  --color-primary-300: #86efac;
+  --color-primary-400: #4ade80;
+  --color-primary-500: #22c55e;
+  --color-primary-600: #16a34a;
+  --color-primary-700: #15803d;
+  --color-primary-800: #166534;
+  --color-primary-900: #14532d;
+  --color-accent-50: #fefce8;
+  --color-accent-100: #fef9c3;
+  --color-accent-200: #fef08a;
+  --color-accent-300: #fde047;
+  --color-accent-400: #facc15;
+  --color-accent-500: #eab308;
+  --color-accent-600: #ca8a04;
+  --color-accent-700: #a16207;
+  --color-accent-800: #854d0e;
+  --color-accent-900: #713f12;
+  --color-violet-50: #faf5ff;
+  --color-violet-100: #f3e8ff;
+  --color-violet-200: #e9d5ff;
+  --color-violet-300: #d8b4fe;
+  --color-violet-400: #c084fc;
+  --color-violet-500: #a855f7;
+  --color-violet-600: #9333ea;
+  --color-violet-700: #7e22ce;
+  --color-star: #d97706;
+  --color-star-light: #fef3c7;
+  --color-slate-50: #faf9f7;
+  --color-slate-100: #f0efeb;
+  --color-slate-200: #dddad3;
+  --color-slate-300: #c4c1b8;
+  --color-slate-400: #a5a297;
+  --color-slate-500: #88857a;
+  --color-slate-600: #6b6860;
+  --color-slate-700: #504e48;
+  --color-slate-800: #383632;
+  --color-slate-900: #1f1e1c;
+}
+
+/* ===== Berry (raspberry + plum) ===== */
+[data-theme="berry"] {
+  --color-primary-50: #fdf2f8;
+  --color-primary-100: #fce7f3;
+  --color-primary-200: #fbcfe8;
+  --color-primary-300: #f9a8d4;
+  --color-primary-400: #f472b6;
+  --color-primary-500: #ec4899;
+  --color-primary-600: #db2777;
+  --color-primary-700: #be185d;
+  --color-primary-800: #9d174d;
+  --color-primary-900: #831843;
+  --color-accent-50: #faf5ff;
+  --color-accent-100: #f3e8ff;
+  --color-accent-200: #e9d5ff;
+  --color-accent-300: #d8b4fe;
+  --color-accent-400: #c084fc;
+  --color-accent-500: #a855f7;
+  --color-accent-600: #9333ea;
+  --color-accent-700: #7e22ce;
+  --color-accent-800: #6b21a8;
+  --color-accent-900: #581c87;
+  --color-violet-50: #fff1f2;
+  --color-violet-100: #ffe4e6;
+  --color-violet-200: #fecdd3;
+  --color-violet-300: #fda4af;
+  --color-violet-400: #fb7185;
+  --color-violet-500: #f43f5e;
+  --color-violet-600: #e11d48;
+  --color-violet-700: #be123c;
+  --color-star: #eab308;
+  --color-star-light: #fef9c3;
+  --color-slate-50: #fafafa;
+  --color-slate-100: #f5f5f5;
+  --color-slate-200: #e5e5e5;
+  --color-slate-300: #d4d4d4;
+  --color-slate-400: #a3a3a3;
+  --color-slate-500: #737373;
+  --color-slate-600: #525252;
+  --color-slate-700: #404040;
+  --color-slate-800: #262626;
+  --color-slate-900: #171717;
+}
