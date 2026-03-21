@@ -552,11 +552,12 @@ const EditBookModal: React.FC<EditBookModalProps> = ({
               </label>
               <GoogleBookSearch
                 onSelect={(book) => {
-                  setTitle(book.title);
-                  setAuthor(book.author);
-                  setCoverUrl(book.coverUrl);
-                  setGenre(book.genre);
-                  if (book.pageCount > 0) setPageCount(book.pageCount.toString());
+                  // Fill in missing metadata — keep Elise's personal data (rating, review, mood, fav)
+                  if (!title.trim()) setTitle(book.title);
+                  if (!author.trim()) setAuthor(book.author);
+                  if (!coverUrl.trim()) setCoverUrl(book.coverUrl);
+                  if (!genre || genre === "Other") setGenre(book.genre);
+                  if (!pageCount && book.pageCount > 0) setPageCount(book.pageCount.toString());
                 }}
               />
               <div className="mt-3">
