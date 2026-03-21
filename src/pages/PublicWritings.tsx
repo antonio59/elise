@@ -31,7 +31,7 @@ const PublicWritings: React.FC = () => {
       {writings.length === 0 ? (
         <div className="text-center py-12 bg-white rounded-2xl">
           <Feather className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-          <p className="text-slate-500">nothing published yet</p>
+          <p className="text-slate-500">Stories, poems & random thoughts — dropping soon. Watch this space! ✍️</p>
         </div>
       ) : (
         <div className="space-y-4">
