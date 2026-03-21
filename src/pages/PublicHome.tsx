@@ -55,12 +55,16 @@ const PublicHome: React.FC = () => {
                 <Palette className="w-4 h-4" />
                 Art
               </Link>
+              <a href="#writing" className="btn btn-secondary">
+                <Feather className="w-4 h-4" />
+                Writing
+              </a>
               <button
                 onClick={() => setShowSuggestModal(true)}
                 className="btn btn-secondary"
               >
                 <MessageSquarePlus className="w-4 h-4" />
-                Suggest a Book
+                Suggest
               </button>
             </div>
           </motion.div>
@@ -249,6 +253,11 @@ const PublicHome: React.FC = () => {
                       ))}
                     </div>
                   )}
+                  {book.review && (
+                    <p className="text-xs text-slate-400 mt-1 line-clamp-2 italic">
+                      "{book.review}"
+                    </p>
+                  )}
                 </motion.div>
               ))}
             </div>
@@ -257,24 +266,24 @@ const PublicHome: React.FC = () => {
       </section>
 
       {/* Art Gallery Preview */}
-      {artworks.length > 0 && (
-        <section className="py-16 px-4 bg-white">
-          <div className="max-w-6xl mx-auto">
-            <div className="flex items-center justify-between mb-8">
-              <h2 className="text-2xl sm:text-3xl font-bold text-slate-800">Art</h2>
-              <Link
-                to="/gallery"
-                className="text-primary-600 hover:text-primary-700 font-medium"
-              >
-                View gallery
-              </Link>
-            </div>
+      <section className="py-16 px-4 bg-white">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-2xl sm:text-3xl font-bold text-slate-800">Art</h2>
+            <Link
+              to="/gallery"
+              className="text-primary-500 hover:text-primary-600 text-sm font-medium"
+            >
+              View gallery →
+            </Link>
+          </div>
 
+          {artworks.length > 0 ? (
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               {artworks.slice(0, 6).map((art, index) => (
                 <motion.div
                   key={art._id}
-                  className="group relative aspect-square rounded-2xl overflow-hidden"
+                  className="group relative aspect-square rounded-xl overflow-hidden"
                   initial={{ opacity: 0, scale: 0.9 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
@@ -283,13 +292,13 @@ const PublicHome: React.FC = () => {
                   <img
                     src={art.imageUrl}
                     alt={art.title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
                     <div>
-                      <h3 className="text-white font-bold">{art.title}</h3>
+                      <h3 className="text-white font-bold text-sm">{art.title}</h3>
                       {art.likes && art.likes > 0 && (
-                        <div className="flex items-center gap-1 text-white/80 text-sm">
+                        <div className="flex items-center gap-1 text-white/80 text-xs">
                           <Heart className="w-3 h-3" />
                           {art.likes}
                         </div>
@@ -299,9 +308,14 @@ const PublicHome: React.FC = () => {
                 </motion.div>
               ))}
             </div>
-          </div>
-        </section>
-      )}
+          ) : (
+            <div className="card p-8 text-center">
+              <Palette className="w-8 h-8 text-slate-300 mx-auto mb-3" />
+              <p className="text-sm text-slate-500">Artwork coming soon.</p>
+            </div>
+          )}
+        </div>
+      </section>
 
       {/* Writings Preview */}
       <PublicWritings />
