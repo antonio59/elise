@@ -107,6 +107,11 @@ export const updateProfile = mutation({
     ),
     yearlyBookGoal: v.optional(v.number()),
     notifications: v.optional(v.boolean()),
+    favoriteBook: v.optional(v.string()),
+    rereads: v.optional(v.array(v.string())),
+    favoriteQuote: v.optional(v.string()),
+    funFact: v.optional(v.string()),
+    currentlyReading: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const userId = await auth.getUserId(ctx);

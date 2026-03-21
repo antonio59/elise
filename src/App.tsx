@@ -32,6 +32,7 @@ const MyWritings = lazy(() => import("./pages/MyWritings"));
 const Suggestions = lazy(() => import("./pages/Suggestions"));
 const Settings = lazy(() => import("./pages/Settings"));
 const Reviews = lazy(() => import("./pages/Reviews"));
+const DashboardAbout = lazy(() => import("./pages/DashboardAbout"));
 const ProtectedRoute = lazy(() => import("./components/ProtectedRoute"));
 
 // Loading spinner
@@ -69,6 +70,7 @@ function App() {
             <Route path="/dashboard/art" element={<Suspense fallback={<PageLoader />}><ProtectedRoute><Layout><MyArt /></Layout></ProtectedRoute></Suspense>} />
             <Route path="/dashboard/writing" element={<Suspense fallback={<PageLoader />}><ProtectedRoute><Layout><MyWritings /></Layout></ProtectedRoute></Suspense>} />
             <Route path="/dashboard/suggestions" element={<Suspense fallback={<PageLoader />}><ProtectedRoute><Layout><Suggestions /></Layout></ProtectedRoute></Suspense>} />
+            <Route path="/dashboard/about" element={<Suspense fallback={<PageLoader />}><ProtectedRoute><Layout><DashboardAbout /></Layout></ProtectedRoute></Suspense>} />
             <Route path="/dashboard/settings" element={<Suspense fallback={<PageLoader />}><ProtectedRoute><Layout><Settings /></Layout></ProtectedRoute></Suspense>} />
 
             {/* Legacy redirects */}
