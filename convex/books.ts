@@ -269,21 +269,3 @@ export const seedBooks = mutation({
   },
 });
 
-// Get book by ID (for cross-module calls)
-export const getById = query({
-  args: { id: v.id("books") },
-  handler: async (ctx, args) => {
-    return await ctx.db.get(args.id);
-  },
-});
-
-// Update book cover storage ID (for cross-module calls)
-export const updateCoverStorage = mutation({
-  args: {
-    bookId: v.id("books"),
-    coverStorageId: v.id("_storage"),
-  },
-  handler: async (ctx, args) => {
-    await ctx.db.patch(args.bookId, { coverStorageId: args.coverStorageId });
-  },
-});
