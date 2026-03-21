@@ -1,7 +1,6 @@
-import { query, mutation, action } from "./_generated/server";
+import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 import { auth } from "./auth";
-import { api } from "./_generated/api";
 
 // Get all books (for authenticated user)
 export const getMyBooks = query({
@@ -270,45 +269,7 @@ export const seedBooks = mutation({
   },
 });
 
-// Download and store a book cover permanently in Convex storage
-export const storeCoverFromUrl = action({
-  args: { bookId: v.id("books") },
-  handler: async (ctx, args) => {
-    const book = await ctx.runQuery(api.books.getById, { id: args.bookId });
-    if (!book) throw new Error("Book not found");
-    if (book.coverStorageId) return "Already stored";
-    if (!book.coverUrl) return "No cover URL";
-
-    // Fix HTML entities
-    const url = book.coverUrl.replace(/&amp;/g, "&");
-
-    const response = await fetch(url);
-    if (!response.ok) throw new Error(`Failed to fetch cover: ${response.status}`);
-
-    const blob = await response.blob();
-    const storageId = await ctx.storage.store(blob);
-
-    await ctx.runMutation(api.books.updateCoverStorage, {
-      bookId: args.bookId,
-      coverStorageId: storageId,
-    });
-
-    return `Cover stored: ${storageId}`;
-  },
-});
-
-// Update book with cover storage ID
-export const updateCoverStorage = mutation({
-  args: {
-    bookId: v.id("books"),
-    coverStorageId: v.id("_storage"),
-  },
-  handler: async (ctx, args) => {
-    await ctx.db.patch(args.bookId, { coverStorageId: args.coverStorageId });
-  },
-});
-
-// Get book by ID (for actions to call)
+// Get book by ID (for cross-module calls)
 export const getById = query({
   args: { id: v.id("books") },
   handler: async (ctx, args) => {
@@ -316,41 +277,13 @@ export const getById = query({
   },
 });
 
-// Batch store covers for all books that have URLs but no storage
-export const storeAllCovers = action({
-  args: {},
-  handler: async (ctx) => {
-    const books = await ctx.runQuery(api.books.getAllForCovers);
-    let stored = 0;
-    let skipped = 0;
-    for (const book of books) {
-      if (book.coverStorageId || !book.coverUrl) {
-        skipped++;
-        continue;
-      }
-      try {
-        const url = book.coverUrl.replace(/&amp;/g, "&");
-        const response = await fetch(url);
-        if (!response.ok) { skipped++; continue; }
-        const blob = await response.blob();
-        const storageId = await ctx.storage.store(blob);
-        await ctx.runMutation(api.books.updateCoverStorage, {
-          bookId: book._id,
-          coverStorageId: storageId,
-        });
-        stored++;
-      } catch {
-        skipped++;
-      }
-    }
-    return `Stored ${stored} covers, skipped ${skipped}`;
+// Update book cover storage ID (for cross-module calls)
+export const updateCoverStorage = mutation({
+  args: {
+    bookId: v.id("books"),
+    coverStorageId: v.id("_storage"),
   },
-});
-
-// Get all books with cover URLs (for batch operations)
-export const getAllForCovers = query({
-  args: {},
-  handler: async (ctx) => {
-    return await ctx.db.query("books").collect();
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args.bookId, { coverStorageId: args.coverStorageId });
   },
 });
