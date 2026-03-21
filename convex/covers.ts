@@ -6,7 +6,7 @@ import { api } from "./_generated/api";
 export const storeFromUrl = action({
   args: { bookId: v.id("books") },
   handler: async (ctx, args) => {
-    const book = await ctx.runQuery(api.books.getById, { id: args.bookId });
+    const book = await ctx.runQuery(api.covers.getById, { id: args.bookId });
     if (!book) throw new Error("Book not found");
     if (book.coverStorageId) return "Already stored";
     if (!book.coverUrl) return "No cover URL";
@@ -18,7 +18,7 @@ export const storeFromUrl = action({
     const blob = await response.blob();
     const storageId = await ctx.storage.store(blob);
 
-    await ctx.runMutation(api.books.updateCoverStorage, {
+    await ctx.runMutation(api.covers.updateCoverStorage, {
       bookId: args.bookId,
       coverStorageId: storageId,
     });
