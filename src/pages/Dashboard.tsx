@@ -16,7 +16,6 @@ import {
 } from "lucide-react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
-import { useAuth } from "../contexts/AuthContext";
 
 // Fix HTML-encoded URLs (Google Books stores &amp; instead of &)
 function fixCoverUrl(url: string | undefined): string | undefined {
@@ -24,7 +23,6 @@ function fixCoverUrl(url: string | undefined): string | undefined {
 }
 
 const Dashboard: React.FC = () => {
-  const { user } = useAuth();
   const stats = useQuery(api.users.getStats) ?? null;
   const books = useQuery(api.books.getMyBooks) ?? [];
   const artworks = useQuery(api.artworks.getMyArtworks) ?? [];
