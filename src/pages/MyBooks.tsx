@@ -13,6 +13,7 @@ import {
   Loader2,
   Pencil,
   AlertCircle,
+  Smile,
 } from "lucide-react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
@@ -670,12 +671,28 @@ const EditBookModal: React.FC<EditBookModalProps> = ({
                 <label className="block text-sm font-medium text-slate-700 mb-2">
                   Review
                 </label>
-                <textarea
-                  value={review}
-                  onChange={(e) => setReview(e.target.value)}
-                  className="w-full h-28 p-3 border border-slate-200 rounded-xl text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent"
-                  placeholder="What did you think about this book? Did it make you feel something?"
-                />
+                <div className="relative">
+                  <textarea
+                    value={review}
+                    onChange={(e) => setReview(e.target.value)}
+                    className="w-full h-28 p-3 border border-slate-200 rounded-xl text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent"
+                    placeholder="What did you think about this book? Did it make you feel something?"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowEmojiGiphy(!showEmojiGiphy)}
+                    className="absolute bottom-2 right-2 p-1.5 text-slate-400 hover:text-primary-500 hover:bg-slate-100 rounded-lg transition-colors"
+                    title="Emoji & GIF"
+                  >
+                    <Smile className="w-4 h-4" />
+                  </button>
+                  {showEmojiGiphy && (
+                    <GiphyPicker
+                      onSelect={(value) => setReview((prev) => prev + value)}
+                      onClose={() => setShowEmojiGiphy(false)}
+                    />
+                  )}
+                </div>
               </div>
             )}
 
