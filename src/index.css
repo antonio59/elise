@@ -81,6 +81,7 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    overflow-x: hidden;
   }
 
   body {
@@ -88,6 +89,7 @@
     font-family: var(--font-body);
     background: linear-gradient(135deg, #fdf2f8 0%, #f5f3ff 50%, #ecfeff 100%);
     color: var(--color-slate-800);
+    overflow-x: hidden;
   }
 
   h1,
