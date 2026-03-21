@@ -99,9 +99,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
         formData.append("password", password);
         formData.append("flow", "signIn");
 
-        await convexSignIn("password", formData);
+        console.log("[AUTH DEBUG] convexSignIn type:", typeof convexSignIn);
+        console.log("[AUTH DEBUG] isAuthenticated before:", isAuthenticated);
+        const result = await convexSignIn("password", formData);
+        console.log("[AUTH DEBUG] convexSignIn result:", result);
+        console.log("[AUTH DEBUG] isAuthenticated after:", isAuthenticated);
       } catch (error: unknown) {
-        // Fix #5: More specific error matching to avoid false positives
+        console.error("[AUTH DEBUG] convexSignIn threw:", error);
         const errMessage = error instanceof Error ? error.message : "";
 
         if (errMessage.includes("InvalidAccountId")) {
