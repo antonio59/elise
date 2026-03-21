@@ -147,7 +147,7 @@ const GoogleBookSearch: React.FC<GoogleBookSearchProps> = ({ onSelect }) => {
     setSearched(true);
     try {
       const res = await fetch(
-        `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&maxResults=8&orderBy=relevance`,
+        `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&maxResults=8&orderBy=relevance${import.meta.env.VITE_GOOGLE_BOOKS_API_KEY ? `&key=${import.meta.env.VITE_GOOGLE_BOOKS_API_KEY}` : ""}`,
       );
       const data = await res.json();
 
