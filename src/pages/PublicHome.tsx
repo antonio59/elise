@@ -28,6 +28,7 @@ function fixCoverUrl(url: string | undefined): string | undefined {
 
 const PublicHome: React.FC = () => {
   const books = useQuery(api.books.getReadBooks) ?? [];
+  const wishlist = useQuery(api.books.getWishlist) ?? [];
   const artworks = useQuery(api.artworks.getPublished, { limit: 6 }) ?? [];
   const [showSuggestModal, setShowSuggestModal] = useState(false);
 
@@ -278,6 +279,61 @@ const PublicHome: React.FC = () => {
                         <span className="text-xs text-slate-400">+{book.moodTags.length - 3}</span>
                       )}
                     </div>
+                  )}
+                </motion.div>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Wishlist Section */}
+      <section id="wishlist" className="py-16 px-4 bg-white">
+        <div className="max-w-6xl mx-auto">
+          <div className="mb-8">
+            <h2 className="text-2xl sm:text-3xl font-bold text-slate-800">Wishlist</h2>
+            <p className="text-slate-500 mt-1">books I'd love to read next ✨</p>
+          </div>
+
+          {wishlist.length === 0 ? (
+            <div className="text-center py-12 bg-slate-50 rounded-2xl">
+              <BookOpen className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+              <p className="text-slate-500">no books on the wishlist yet</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+              {wishlist.map((book) => (
+                <motion.div
+                  key={book._id}
+                  className="group relative"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                >
+                  <div className="relative aspect-[2/3] rounded-xl overflow-hidden bg-slate-100 shadow-sm group-hover:shadow-xl transition-all">
+                    {fixCoverUrl(book.coverUrl) ? (
+                      <img
+                        src={fixCoverUrl(book.coverUrl)}
+                        alt={book.title}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-pink-100 to-amber-100">
+                        <BookOpen className="w-8 h-8 text-slate-300" />
+                      </div>
+                    )}
+                    {book.giftedBy && (
+                      <div className="absolute top-2 left-2 px-2 py-1 bg-green-500 text-white text-xs rounded-full font-medium">
+                        🎁 Gifted by {book.giftedBy}
+                      </div>
+                    )}
+                  </div>
+                  <h3 className="mt-2 text-sm font-medium text-slate-800 line-clamp-1">
+                    {book.title}
+                  </h3>
+                  <p className="text-xs text-slate-500 line-clamp-1">{book.author}</p>
+                  {book.genre && book.genre !== "Other" && (
+                    <span className="inline-block mt-1 text-xs px-2 py-0.5 bg-primary-50 text-primary-600 rounded-full">{book.genre}</span>
                   )}
                 </motion.div>
               ))}
