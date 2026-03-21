@@ -20,6 +20,7 @@ import { api } from "../../convex/_generated/api";
 import type { Doc, Id } from "../../convex/_generated/dataModel";
 import GoogleBookSearch from "../components/GoogleBookSearch";
 import GiphyPicker from "../components/GiphyPicker";
+import CoverUpload from "../components/CoverUpload";
 
 type TabType = "read" | "reading" | "wishlist";
 
@@ -913,6 +914,7 @@ const AddBookModal: React.FC<AddBookModalProps> = ({
                 setTitle(book.title);
                 setAuthor(book.author);
                 setCoverUrl(book.coverUrl);
+                setGenre(book.genre);
                 if (book.pageCount > 0) setPageCount(book.pageCount.toString());
               }}
             />
@@ -954,18 +956,7 @@ const AddBookModal: React.FC<AddBookModalProps> = ({
               />
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
-                Cover URL
-              </label>
-              <input
-                type="url"
-                value={coverUrl}
-                onChange={(e) => setCoverUrl(e.target.value)}
-                className="input"
-                placeholder="https://..."
-              />
-            </div>
+            <CoverUpload value={coverUrl} onChange={setCoverUrl} />
 
             <div className="grid grid-cols-2 gap-4">
               <div>
