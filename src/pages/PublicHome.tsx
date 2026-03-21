@@ -29,14 +29,13 @@ function fixCoverUrl(url: string | undefined): string | undefined {
 const PublicHome: React.FC = () => {
   const books = useQuery(api.books.getReadBooks) ?? [];
   const wishlist = useQuery(api.books.getWishlist) ?? [];
+  const currentlyReading = books.filter((b) => b.status === "reading");
   const artworks = useQuery(api.artworks.getPublished, { limit: 6 }) ?? [];
   const [showSuggestModal, setShowSuggestModal] = useState(false);
 
-  const totalBooks = books.length;
-  const totalPages = books.reduce((sum, b) => sum + (b.pageCount || 0), 0);
-
   return (
     <div className="min-h-screen">
+
       {/* Hero Section */}
       <section className="py-24 px-4">
         <div className="max-w-3xl mx-auto text-center">
@@ -78,95 +77,6 @@ const PublicHome: React.FC = () => {
         </div>
       </section>
 
-      {/* Currently Reading + Bio */}
-      <section className="py-8 px-4">
-        <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-6">
-          {/* Currently Reading */}
-          <div className="card p-6">
-            <h2 className="text-sm font-medium text-slate-500 uppercase tracking-wider mb-3">Currently Reading</h2>
-            <div className="flex gap-4">
-              <div className="w-16 h-24 rounded-lg bg-primary-50 flex items-center justify-center flex-shrink-0">
-                <BookOpen className="w-6 h-6 text-primary-300" />
-              </div>
-              <div>
-                <p className="font-bold text-slate-800">Add your current book</p>
-                <p className="text-sm text-slate-500 mt-1">
-                  Mark a book as "reading" from your dashboard to show it here.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Bio */}
-          <div className="card p-6">
-            <h2 className="text-sm font-medium text-slate-500 uppercase tracking-wider mb-3">About</h2>
-            <p className="text-sm text-slate-600 leading-relaxed">
-              Hi, I'm Elise. I'm 13 and I love reading manga, fantasy, and anything with a plot twist I don't see coming. 
-              I also draw and write when I'm not buried in a book.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Stats — only show when there are books */}
-      {totalBooks > 0 && (
-        <section className="py-8 px-4">
-          <div className="max-w-4xl mx-auto">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <motion.div
-                className="stat-card text-center"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-              >
-                <div className="text-2xl sm:text-3xl font-bold text-slate-900">
-                  {totalBooks}
-                </div>
-                <div className="text-xs text-slate-500 mt-1 uppercase tracking-wider">Books Read</div>
-              </motion.div>
-
-              <motion.div
-                className="stat-card text-center"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.1 }}
-              >
-                <div className="text-2xl sm:text-3xl font-bold text-slate-900">
-                  {totalPages.toLocaleString()}
-                </div>
-                <div className="text-xs text-slate-500 mt-1 uppercase tracking-wider">Pages</div>
-              </motion.div>
-
-              <motion.div
-                className="stat-card text-center"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.2 }}
-              >
-                <div className="text-2xl sm:text-3xl font-bold text-slate-900">
-                  {artworks.length}
-                </div>
-                <div className="text-xs text-slate-500 mt-1 uppercase tracking-wider">Artworks</div>
-              </motion.div>
-
-              <motion.div
-                className="stat-card text-center"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.3 }}
-              >
-                <div className="text-2xl sm:text-3xl font-bold text-slate-900">
-                  {books.filter((b) => b.rating && b.rating >= 4).length}
-                </div>
-                <div className="text-xs text-slate-500 mt-1 uppercase tracking-wider">Favourites</div>
-              </motion.div>
-            </div>
-          </div>
-        </section>
-      )}
 
       {/* 5-Star Shelf — horizontal scroll of top-rated books */}
       {books.filter((b) => b.rating === 5).length > 0 && (
@@ -217,6 +127,30 @@ const PublicHome: React.FC = () => {
               </Link>
             )}
           </div>
+
+          {/* Currently Reading */}
+          {currentlyReading.length > 0 && (
+            <div className="mb-8">
+              <h3 className="text-lg font-bold text-slate-800 mb-4">📖 Currently Reading</h3>
+              <div className="flex gap-4 overflow-x-auto pb-2">
+                {currentlyReading.map((book) => (
+                  <div key={book._id} className="flex-shrink-0 w-28">
+                    <div className="relative aspect-[2/3] rounded-lg overflow-hidden bg-slate-100 shadow-sm">
+                      {fixCoverUrl(book.coverUrl) ? (
+                        <img src={fixCoverUrl(book.coverUrl)} alt={book.title} className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-primary-50">
+                          <BookOpen className="w-6 h-6 text-primary-300" />
+                        </div>
+                      )}
+                    </div>
+                    <p className="mt-1.5 text-xs font-medium text-slate-700 line-clamp-1">{book.title}</p>
+                    <p className="text-xs text-slate-400 line-clamp-1">{book.author}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {books.length === 0 ? (
             <div className="text-center py-12 bg-white rounded-2xl">
@@ -294,6 +228,76 @@ const PublicHome: React.FC = () => {
         </div>
       </section>
 
+
+      {/* Reviews Preview */}
+      <section className="py-16 px-4 bg-white">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-2xl sm:text-3xl font-bold text-slate-800">Reviews</h2>
+            <Link to="/reviews" className="text-sm text-primary-500 hover:text-primary-700 font-medium">
+              See all →
+            </Link>
+          </div>
+          <ReviewStrip books={books} />
+        </div>
+      </section>
+
+      {/* Writings Preview */}
+      <PublicWritings />
+
+      {/* Art Gallery Preview */}
+      <section className="py-16 px-4 bg-white">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-2xl sm:text-3xl font-bold text-slate-800">Art</h2>
+            <Link
+              to="/art"
+              className="text-primary-500 hover:text-primary-600 text-sm font-medium"
+            >
+              View gallery →
+            </Link>
+          </div>
+
+          {artworks.length > 0 ? (
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {artworks.slice(0, 6).map((art, index) => (
+                <motion.div
+                  key={art._id}
+                  className="group relative aspect-square rounded-xl overflow-hidden"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <img
+                    src={art.imageUrl}
+                    alt={art.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                    <div>
+                      <h3 className="text-white font-bold text-sm">{art.title}</h3>
+                      {art.likes && art.likes > 0 && (
+                        <div className="flex items-center gap-1 text-white/80 text-xs">
+                          <Heart className="w-3 h-3" />
+                          {art.likes}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          ) : (
+            <div className="card p-8 text-center">
+              <Palette className="w-8 h-8 text-slate-300 mx-auto mb-3" />
+              <p className="text-sm text-slate-500">Artwork coming soon.</p>
+            </div>
+          )}
+        </div>
+      </section>
+
+
       {/* Wishlist Section */}
       <section id="wishlist" className="py-16 px-4 bg-white">
         <div className="max-w-6xl mx-auto">
@@ -356,73 +360,6 @@ const PublicHome: React.FC = () => {
         </div>
       </section>
 
-      {/* Art Gallery Preview */}
-      <section className="py-16 px-4 bg-white">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-2xl sm:text-3xl font-bold text-slate-800">Art</h2>
-            <Link
-              to="/art"
-              className="text-primary-500 hover:text-primary-600 text-sm font-medium"
-            >
-              View gallery →
-            </Link>
-          </div>
-
-          {artworks.length > 0 ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {artworks.slice(0, 6).map((art, index) => (
-                <motion.div
-                  key={art._id}
-                  className="group relative aspect-square rounded-xl overflow-hidden"
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  <img
-                    src={art.imageUrl}
-                    alt={art.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
-                    <div>
-                      <h3 className="text-white font-bold text-sm">{art.title}</h3>
-                      {art.likes && art.likes > 0 && (
-                        <div className="flex items-center gap-1 text-white/80 text-xs">
-                          <Heart className="w-3 h-3" />
-                          {art.likes}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          ) : (
-            <div className="card p-8 text-center">
-              <Palette className="w-8 h-8 text-slate-300 mx-auto mb-3" />
-              <p className="text-sm text-slate-500">Artwork coming soon.</p>
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* Writings Preview */}
-      <PublicWritings />
-
-      {/* Reviews Preview */}
-      <section className="py-16 px-4 bg-white">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-2xl sm:text-3xl font-bold text-slate-800">Reviews</h2>
-            <Link to="/reviews" className="text-sm text-primary-500 hover:text-primary-700 font-medium">
-              See all →
-            </Link>
-          </div>
-          <ReviewStrip books={books} />
-        </div>
-      </section>
 
       {/* Suggest a Book Section */}
       <section className="py-16 px-4">
@@ -456,6 +393,8 @@ const PublicHome: React.FC = () => {
           </motion.div>
         </div>
       </section>
+
+
 
       {/* Suggest Book Modal */}
       <SuggestBookModal
