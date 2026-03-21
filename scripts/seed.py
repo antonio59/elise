@@ -9,7 +9,7 @@ import json, subprocess, sys
 
 if len(sys.argv) < 2:
     print("Usage: python3 scripts/seed.py <userId>")
-    print("Get userId with: npx convex run users:getProfile")
+    print("Get userId with: npx convex run --prod users:getProfile")
     sys.exit(1)
 
 user_id = sys.argv[1]
@@ -21,11 +21,9 @@ payload = json.dumps({"userId": user_id, "books": books})
 print(f"📚 Seeding {len(books)} books for user {user_id}...")
 
 result = subprocess.run(
-    ["npx", "convex", "run", "--prod", "seed:seedBooks"],
-    input=payload,
+    ["npx", "convex", "run", "--prod", "seed:seedBooks", payload],
     capture_output=True,
     text=True,
-    cwd=".",
 )
 
 print(result.stdout)
