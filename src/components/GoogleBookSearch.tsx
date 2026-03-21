@@ -1,4 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useCallback } from "react";
+import { useConvex } from "convex/react";
+import { api } from "../../convex/_generated/api";
 import { Search, Loader2, BookOpen, Plus } from "lucide-react";
 
 // Google Books categories → our genres
@@ -139,6 +142,7 @@ const GoogleBookSearch: React.FC<GoogleBookSearchProps> = ({ onSelect }) => {
   const [results, setResults] = useState<BookResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
+  const convex = useConvex();
 
   const searchBooks = useCallback(async () => {
     if (!query.trim()) return;
@@ -146,33 +150,17 @@ const GoogleBookSearch: React.FC<GoogleBookSearchProps> = ({ onSelect }) => {
     setLoading(true);
     setSearched(true);
     try {
-      const res = await fetch(
-        `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&maxResults=8&orderBy=relevance${import.meta.env.VITE_GOOGLE_BOOKS_API_KEY ? `&key=${import.meta.env.VITE_GOOGLE_BOOKS_API_KEY}` : ""}`,
-      );
-      const data = await res.json();
+      const items = await convex.query((api as any).googleBooks.search, { query });
 
-      const books: BookResult[] = (data.items || []).map(
-        (item: {
-          id: string;
-          volumeInfo: {
-            title?: string;
-            authors?: string[];
-            imageLinks?: { thumbnail?: string; smallThumbnail?: string };
-            pageCount?: number;
-            description?: string;
-            categories?: string[];
-          };
-        }) => ({
+      const books: BookResult[] = (items || []).map(
+        (item: { id: string; title: string; authors: string[]; coverUrl: string; pageCount: number; description: string; categories: string[] }) => ({
           id: item.id,
-          title: item.volumeInfo.title || "Unknown Title",
-          authors: item.volumeInfo.authors || [],
-          coverUrl:
-            item.volumeInfo.imageLinks?.thumbnail?.replace("http://", "https://") ||
-            item.volumeInfo.imageLinks?.smallThumbnail?.replace("http://", "https://") ||
-            "",
-          pageCount: item.volumeInfo.pageCount || 0,
-          description: item.volumeInfo.description || "",
-          genre: mapCategoryToGenre(item.volumeInfo.categories, item.volumeInfo.description),
+          title: item.title,
+          authors: item.authors,
+          coverUrl: item.coverUrl,
+          pageCount: item.pageCount,
+          description: item.description,
+          genre: mapCategoryToGenre(item.categories, item.description),
         }),
       );
 
@@ -183,7 +171,7 @@ const GoogleBookSearch: React.FC<GoogleBookSearchProps> = ({ onSelect }) => {
     } finally {
       setLoading(false);
     }
-  }, [query]);
+  }, [query, convex]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
