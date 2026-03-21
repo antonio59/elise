@@ -67,6 +67,36 @@ const PublicHome: React.FC = () => {
         </div>
       </section>
 
+      {/* Currently Reading + Bio */}
+      <section className="py-8 px-4">
+        <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-6">
+          {/* Currently Reading */}
+          <div className="card p-6">
+            <h2 className="text-sm font-medium text-slate-500 uppercase tracking-wider mb-3">Currently Reading</h2>
+            <div className="flex gap-4">
+              <div className="w-16 h-24 rounded-lg bg-primary-50 flex items-center justify-center flex-shrink-0">
+                <BookOpen className="w-6 h-6 text-primary-300" />
+              </div>
+              <div>
+                <p className="font-bold text-slate-800">Add your current book</p>
+                <p className="text-sm text-slate-500 mt-1">
+                  Mark a book as "reading" from your dashboard to show it here.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Bio */}
+          <div className="card p-6">
+            <h2 className="text-sm font-medium text-slate-500 uppercase tracking-wider mb-3">About</h2>
+            <p className="text-sm text-slate-600 leading-relaxed">
+              Hi, I'm Elise. I'm 13 and I love reading manga, fantasy, and anything with a plot twist I don't see coming. 
+              I also draw and write when I'm not buried in a book.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Stats — only show when there are books */}
       {totalBooks > 0 && (
         <section className="py-8 px-4">
@@ -766,7 +796,7 @@ const PublicWritings: React.FC = () => {
   };
 
   return (
-    <section className="py-16 px-4">
+    <section id="writing" className="py-16 px-4">
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-2xl sm:text-3xl font-bold text-slate-800">Writing</h2>
