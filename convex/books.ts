@@ -220,7 +220,7 @@ export const toggleFavorite = mutation({
 // Seed books for a specific user (admin use)
 export const seedBooks = mutation({
   args: {
-    email: v.string(),
+    userId: v.any(),
     books: v.array(
       v.object({
         title: v.string(),
@@ -239,13 +239,6 @@ export const seedBooks = mutation({
     ),
   },
   handler: async (ctx, args) => {
-    // Find user by email
-    const allProfiles = await ctx.db.query("userProfiles").collect();
-    const profile = allProfiles.find(
-      (p) => p.email?.toLowerCase() === args.email.toLowerCase(),
-    );
-    if (!profile) throw new Error(`User not found for email: ${args.email}`);
-
     let count = 0;
     for (const book of args.books) {
       // Check for duplicates
@@ -266,10 +259,12 @@ export const seedBooks = mutation({
         genre: book.genre || "Other",
         pageCount: book.pageCount,
         status: book.status || "read",
-        userId: profile.userId,
+        userId: args.userId,
+        isFavorite: false,
+        createdAt: Date.now(),
       });
       count++;
     }
-    return `Added ${count} book(s) for ${args.email}`;
+    return `Added ${count} book(s)`;
   },
 });

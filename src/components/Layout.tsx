@@ -14,6 +14,7 @@ import {
   X,
   PenTool,
   Star,
+  User,
 } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 
@@ -28,6 +29,7 @@ const NAV_ITEMS = [
   { path: "/dashboard/writing", label: "My Writing", icon: PenTool },
   { path: "/dashboard/art", label: "My Art", icon: Palette },
   { path: "/dashboard/suggestions", label: "Suggestions", icon: MessageSquare },
+  { path: "/dashboard/about", label: "About Me", icon: User },
   { path: "/dashboard/settings", label: "Settings", icon: Settings },
 ];
 

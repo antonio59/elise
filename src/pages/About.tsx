@@ -42,6 +42,11 @@ const About: React.FC = () => {
   const [bio, setBio] = useState("");
   const [genres, setGenres] = useState<string[]>([]);
   const [goal, setGoal] = useState("");
+  const [favoriteBook, setFavoriteBook] = useState("");
+  const [rereads, setRereads] = useState("");
+  const [favoriteQuote, setFavoriteQuote] = useState("");
+  const [funFact, setFunFact] = useState("");
+  const [currentlyReading, setCurrentlyReading] = useState("");
   const [uploading, setUploading] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -52,6 +57,11 @@ const About: React.FC = () => {
       setBio(ownProfile.bio || "");
       setGenres(ownProfile.favoriteGenres || []);
       setGoal(ownProfile.readingGoal || "");
+      setFavoriteBook(ownProfile.favoriteBook || "");
+      setRereads((ownProfile.rereads || []).join(", "));
+      setFavoriteQuote(ownProfile.favoriteQuote || "");
+      setFunFact(ownProfile.funFact || "");
+      setCurrentlyReading(ownProfile.currentlyReading || "");
     }
   }, [ownProfile, editing]);
 
@@ -84,6 +94,11 @@ const About: React.FC = () => {
         bio,
         favoriteGenres: genres,
         readingGoal: goal || undefined,
+        favoriteBook: favoriteBook || undefined,
+        rereads: rereads ? rereads.split(",").map(s => s.trim()).filter(Boolean) : undefined,
+        favoriteQuote: favoriteQuote || undefined,
+        funFact: funFact || undefined,
+        currentlyReading: currentlyReading || undefined,
       });
       setEditing(false);
     } catch (err) {
@@ -119,7 +134,11 @@ const About: React.FC = () => {
   const displayBio: string | null = (display && 'bio' in display && display.bio) ? display.bio : null;
   const displayGenres: string[] = (display && 'favoriteGenres' in display && display.favoriteGenres) ? display.favoriteGenres : [];
   const displayGoal: string | null = (display && 'readingGoal' in display && display.readingGoal) ? display.readingGoal : null;
-  const currentlyReading = !editing && profile?.currentlyReading ? profile.currentlyReading : null;
+  const displayFavoriteBook: string | null = (display && 'favoriteBook' in display && display.favoriteBook) ? display.favoriteBook : null;
+  const displayRereads: string[] = (display && 'rereads' in display && display.rereads) ? display.rereads : [];
+  const displayFavoriteQuote: string | null = (display && 'favoriteQuote' in display && display.favoriteQuote) ? display.favoriteQuote : null;
+  const displayFunFact: string | null = (display && 'funFact' in display && display.funFact) ? display.funFact : null;
+  const currentBook = !editing && profile?.currentlyReading ? profile.currentlyReading : null;
 
   return (
     <div className="min-h-screen py-12 px-4">
@@ -217,6 +236,55 @@ const About: React.FC = () => {
                         placeholder="e.g. Read 50 books this year"
                       />
                     </div>
+                    <div>
+                      <label className="block text-sm font-medium text-slate-600 mb-1">Currently Reading</label>
+                      <input
+                        type="text"
+                        value={currentlyReading}
+                        onChange={(e) => setCurrentlyReading(e.target.value)}
+                        className="input"
+                        placeholder="e.g. Harry Potter"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-slate-600 mb-1">Favourite Book of All Time</label>
+                      <input
+                        type="text"
+                        value={favoriteBook}
+                        onChange={(e) => setFavoriteBook(e.target.value)}
+                        className="input"
+                        placeholder="e.g. The Hunger Games"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-slate-600 mb-1">Books I've Read More Than Once</label>
+                      <input
+                        type="text"
+                        value={rereads}
+                        onChange={(e) => setRereads(e.target.value)}
+                        className="input"
+                        placeholder="e.g. Harry Potter, Matilda, The Hobbit"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-slate-600 mb-1">Favourite Quote</label>
+                      <textarea
+                        value={favoriteQuote}
+                        onChange={(e) => setFavoriteQuote(e.target.value)}
+                        className="input min-h-[60px] resize-y"
+                        placeholder="A quote that means something to you..."
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-slate-600 mb-1">Fun Fact About Me</label>
+                      <input
+                        type="text"
+                        value={funFact}
+                        onChange={(e) => setFunFact(e.target.value)}
+                        className="input"
+                        placeholder="e.g. I once read 5 books in one week!"
+                      />
+                    </div>
                   </div>
                 ) : (
                   <>
@@ -277,17 +345,17 @@ const About: React.FC = () => {
           </div>
 
           {/* Currently Reading */}
-          {currentlyReading && (
+          {currentBook && (
             <div className="card p-6 mb-6">
               <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wider mb-3">
                 Currently Reading
               </h3>
               <div className="flex gap-4">
                 <div className="w-16 h-24 rounded-lg overflow-hidden bg-primary-50 flex-shrink-0">
-                  {currentlyReading.coverUrl ? (
+                  {currentBook.coverUrl ? (
                     <img
-                      src={currentlyReading.coverUrl}
-                      alt={currentlyReading.title}
+                      src={currentBook.coverUrl}
+                      alt={currentBook.title}
                       className="w-full h-full object-cover"
                     />
                   ) : (
@@ -297,27 +365,82 @@ const About: React.FC = () => {
                   )}
                 </div>
                 <div>
-                  <p className="font-bold text-slate-800">{currentlyReading.title}</p>
-                  <p className="text-sm text-slate-500">{currentlyReading.author}</p>
-                  {currentlyReading.pageCount && currentlyReading.pagesRead != null && (
+                  <p className="font-bold text-slate-800">{currentBook.title}</p>
+                  <p className="text-sm text-slate-500">{currentBook.author}</p>
+                  {currentBook.pageCount && currentBook.pagesRead != null && (
                     <div className="mt-2">
                       <div className="xp-bar">
                         <div
                           className="xp-bar-fill"
                           style={{
                             width: `${Math.round(
-                              (currentlyReading.pagesRead / currentlyReading.pageCount) * 100,
+                              (currentBook.pagesRead / currentBook.pageCount) * 100,
                             )}%`,
                           }}
                         />
                       </div>
                       <p className="text-xs text-slate-400 mt-1">
-                        {currentlyReading.pagesRead} / {currentlyReading.pageCount} pages
+                        {currentBook.pagesRead} / {currentBook.pageCount} pages
                       </p>
                     </div>
                   )}
                 </div>
               </div>
+            </div>
+          )}
+
+          {/* Favourite Book of All Time */}
+          {displayFavoriteBook && (
+            <div className="card p-6 mb-6">
+              <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wider mb-2">
+                Favourite Book of All Time
+              </h3>
+              <p className="text-lg font-bold text-slate-800 flex items-center gap-2">
+                📖 {displayFavoriteBook}
+              </p>
+            </div>
+          )}
+
+          {/* Books I've Read More Than Once */}
+          {displayRereads.length > 0 && (
+            <div className="card p-6 mb-6">
+              <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wider mb-2">
+                Books I've Read More Than Once
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {displayRereads.map((book, i) => (
+                  <span
+                    key={i}
+                    className="px-3 py-1.5 bg-primary-50 text-primary-700 rounded-full text-sm font-medium"
+                  >
+                    🔄 {book}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Favourite Quote */}
+          {displayFavoriteQuote && (
+            <div className="card p-6 mb-6">
+              <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wider mb-2">
+                Favourite Quote
+              </h3>
+              <blockquote className="text-lg text-slate-700 italic leading-relaxed border-l-3 border-primary-300 pl-4">
+                "{displayFavoriteQuote}"
+              </blockquote>
+            </div>
+          )}
+
+          {/* Fun Fact */}
+          {displayFunFact && (
+            <div className="card p-6 mb-6">
+              <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wider mb-2">
+                Fun Fact
+              </h3>
+              <p className="text-lg font-bold text-slate-800 flex items-center gap-2">
+                ✨ {displayFunFact}
+              </p>
             </div>
           )}
 
