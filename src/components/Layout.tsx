@@ -15,6 +15,7 @@ import {
   PenTool,
   Star,
   User,
+  Gift,
 } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 
@@ -176,12 +177,12 @@ export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
 
   const navLinks = [
-    { label: "Books", to: "/books", type: "link" as const },
-    { label: "Reviews", to: "/reviews", type: "link" as const },
-    { label: "Writing", to: "/writing", type: "link" as const },
-    { label: "Art", to: "/art", type: "link" as const },
-    { label: "Wishlist", to: "/wishlist", type: "link" as const },
-    { label: "About", to: "/about", type: "link" as const },
+    { label: "Books", to: "/books", icon: BookOpen },
+    { label: "Reviews", to: "/reviews", icon: Star },
+    { label: "Writing", to: "/writing", icon: PenTool },
+    { label: "Art", to: "/art", icon: Palette },
+    { label: "Wishlist", to: "/wishlist", icon: Gift },
+    { label: "About", to: "/about", icon: User },
   ];
 
   return (
@@ -200,11 +201,25 @@ export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
 
           {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-6">
-            {navLinks.map((link) => (
-              <Link key={link.label} to={link.to} className="text-slate-600 hover:text-primary-600 font-medium transition-colors">
-                {link.label}
-              </Link>
-            ))}
+            {navLinks.map((link) => {
+              const isActive = location.pathname === link.to;
+              const Icon = link.icon;
+              return (
+                <Link
+                  key={link.label}
+                  to={link.to}
+                  className={`flex items-center gap-1.5 font-medium transition-colors ${
+                    isActive
+                      ? "text-violet-500"
+                      : "text-slate-500 hover:text-primary-600"
+                  }`}
+                >
+                  <Icon className="w-4 h-4" />
+                  {link.label}
+                  {isActive && <span className="w-1.5 h-1.5 rounded-full bg-violet-400"></span>}
+                </Link>
+              );
+            })}
             {user && (
               <Link to="/dashboard" className="btn btn-secondary text-sm">
                 Dashboard
