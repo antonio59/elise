@@ -27,7 +27,13 @@ const Login: React.FC = () => {
       await signIn(email, password);
       navigate(from, { replace: true });
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to sign in");
+      const msg = err instanceof Error ? err.message : "Failed to sign in";
+      try {
+        const parsed = JSON.parse(msg);
+        setError(parsed.error || msg);
+      } catch {
+        setError(msg);
+      }
     } finally {
       setLoading(false);
     }

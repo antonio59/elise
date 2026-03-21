@@ -18,6 +18,7 @@ export default defineSchema(
       favoriteGenres: v.optional(v.array(v.string())),
       readingGoal: v.optional(v.string()),
       isParent: v.boolean(),
+      role: v.optional(v.union(v.literal("admin"), v.literal("viewer"))),
       theme: v.optional(
         v.union(
           v.literal("editorial"),
