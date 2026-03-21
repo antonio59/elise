@@ -12,6 +12,7 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import PublicHome from "./pages/PublicHome";
 import PublicGallery from "./pages/PublicGallery";
 import PublicWishlist from "./pages/PublicWishlist";
+import About from "./pages/About";
 import NotFound from "./pages/NotFound";
 import { Layout, PublicLayout, AuthLayout } from "./components/Layout";
 
@@ -66,6 +67,14 @@ function App() {
               element={
                 <PublicLayout>
                   <PublicWishlist />
+                </PublicLayout>
+              }
+            />
+            <Route
+              path="/about"
+              element={
+                <PublicLayout>
+                  <About />
                 </PublicLayout>
               }
             />

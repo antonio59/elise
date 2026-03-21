@@ -176,6 +176,7 @@ export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
     { label: "Gallery", to: "/gallery", type: "link" as const },
     { label: "Writing", href: "/#writing", type: "href" as const },
     { label: "Wishlist", to: "/wishlist", type: "link" as const },
+    { label: "About", to: "/about", type: "link" as const },
   ];
 
   return (

@@ -79,7 +79,10 @@ export const updateProfile = mutation({
     name: v.optional(v.string()),
     username: v.optional(v.string()),
     avatarUrl: v.optional(v.string()),
+    avatarStorageId: v.optional(v.id("_storage")),
     bio: v.optional(v.string()),
+    favoriteGenres: v.optional(v.array(v.string())),
+    readingGoal: v.optional(v.string()),
     theme: v.optional(
       v.union(v.literal("light"), v.literal("dark"), v.literal("kawaii")),
     ),
@@ -129,6 +132,56 @@ export const getStats = query({
       favorites,
       totalArtworks,
       publishedArtworks,
+    };
+  },
+});
+
+// Generate upload URL for avatar
+export const generateAvatarUploadUrl = mutation({
+  handler: async (ctx) => {
+    const userId = await auth.getUserId(ctx);
+    if (!userId) throw new Error("Not authenticated");
+    return await ctx.storage.generateUploadUrl();
+  },
+});
+
+// Get public profile (for About page — no auth required)
+export const getPublicProfile = query({
+  handler: async (ctx) => {
+    // Get the first user profile (since this is a single-user site)
+    const profile = await ctx.db.query("userProfiles").first();
+    if (!profile) return null;
+
+    const avatarUrl = profile.avatarStorageId
+      ? await ctx.storage.getUrl(profile.avatarStorageId)
+      : profile.avatarUrl ?? null;
+
+    // Get currently reading book
+    const currentlyReading = await ctx.db
+      .query("books")
+      .withIndex("by_user_status", (q) =>
+        q.eq("userId", profile.userId).eq("status", "reading"),
+      )
+      .first();
+
+    return {
+      name: profile.name,
+      username: profile.username,
+      avatarUrl,
+      bio: profile.bio,
+      favoriteGenres: profile.favoriteGenres,
+      readingGoal: profile.readingGoal,
+      yearlyBookGoal: profile.yearlyBookGoal,
+      currentlyReading: currentlyReading
+        ? {
+            title: currentlyReading.title,
+            author: currentlyReading.author,
+            coverUrl: currentlyReading.coverUrl,
+            coverStorageId: currentlyReading.coverStorageId,
+            pagesRead: currentlyReading.pagesRead,
+            pageCount: currentlyReading.pageCount,
+          }
+        : null,
     };
   },
 });

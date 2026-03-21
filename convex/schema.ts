@@ -13,7 +13,10 @@ export default defineSchema(
       name: v.string(),
       username: v.optional(v.string()),
       avatarUrl: v.optional(v.string()),
+      avatarStorageId: v.optional(v.id("_storage")),
       bio: v.optional(v.string()),
+      favoriteGenres: v.optional(v.array(v.string())),
+      readingGoal: v.optional(v.string()),
       isParent: v.boolean(),
       theme: v.optional(
         v.union(v.literal("light"), v.literal("dark"), v.literal("kawaii")),
