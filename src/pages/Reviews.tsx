@@ -7,9 +7,10 @@ import {
   Heart,
   ArrowLeft,
 } from "lucide-react";
-import { useQuery } from "convex/react";
+import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Link } from "react-router-dom";
+import type { Id } from "../../convex/_generated/dataModel";
 
 interface Book {
   _id: string;
@@ -40,9 +41,14 @@ const RATING_LABELS: Record<number, string> = {
 
 const ReviewsPage: React.FC = () => {
   const books = useQuery(api.books.getMyBooks) ?? [];
+  const updateBook = useMutation(api.books.update);
   const [filter, setFilter] = useState<"all" | "favorites" | "5star" | "4star">("all");
   const [sortBy, setSortBy] = useState<"recent" | "rating" | "title">("recent");
   const [flippedId, setFlippedId] = useState<string | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editRating, setEditRating] = useState(0);
+  const [editReview, setEditReview] = useState("");
+  const [saving, setSaving] = useState(false);
 
   // Books with reviews or ratings
   const reviewedBooks = books.filter(
@@ -266,6 +272,80 @@ const ReviewsPage: React.FC = () => {
                       </div>
                     </div>
                   </motion.div>
+                ) : editingId === book._id ? (
+                  /* Back: Edit Mode */
+                  <motion.div
+                    key="edit"
+                    className="card p-5 bg-gradient-to-br from-amber-50 to-white min-h-[200px]"
+                    initial={{ rotateY: 90 }}
+                    animate={{ rotateY: 0 }}
+                    exit={{ rotateY: -90 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <div className="flex items-start justify-between mb-3">
+                      <h3 className="font-bold text-slate-800">{book.title}</h3>
+                      <button
+                        onClick={() => setEditingId(null)}
+                        className="text-xs text-slate-400 hover:text-slate-600"
+                      >
+                        cancel
+                      </button>
+                    </div>
+
+                    {/* Rating */}
+                    <div className="mb-3">
+                      <label className="text-xs text-slate-500 mb-1 block">Rating</label>
+                      <div className="flex gap-1">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <button
+                            key={star}
+                            onClick={() => setEditRating(star)}
+                            className="p-0.5"
+                          >
+                            <Star
+                              className={`w-6 h-6 transition-colors ${
+                                star <= editRating
+                                  ? "text-yellow-400 fill-yellow-400"
+                                  : "text-slate-200"
+                              }`}
+                            />
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Review */}
+                    <div className="mb-3">
+                      <label className="text-xs text-slate-500 mb-1 block">Review</label>
+                      <textarea
+                        value={editReview}
+                        onChange={(e) => setEditReview(e.target.value)}
+                        className="w-full h-20 p-2 text-sm border border-slate-200 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-primary-400"
+                        placeholder="Write your review..."
+                      />
+                    </div>
+
+                    {/* Save */}
+                    <button
+                      onClick={async () => {
+                        setSaving(true);
+                        try {
+                          await updateBook({
+                            id: book._id as Id<"books">,
+                            rating: editRating > 0 ? editRating : undefined,
+                            review: editReview.trim() || undefined,
+                          });
+                          setEditingId(null);
+                        } finally {
+                          setSaving(false);
+                        }
+                      }}
+                      disabled={saving}
+                      className="btn btn-primary text-sm w-full"
+                    >
+                      {saving ? "Saving..." : "Save Changes"}
+                    </button>
+                  </motion.div>
                 ) : (
                   /* Back: Full Review */
                   <motion.div
@@ -278,7 +358,20 @@ const ReviewsPage: React.FC = () => {
                   >
                     <div className="flex items-start justify-between mb-3">
                       <h3 className="font-bold text-slate-800">{book.title}</h3>
-                      <span className="text-xs text-slate-400">tap to flip</span>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setEditingId(book._id);
+                            setEditRating(book.rating || 0);
+                            setEditReview(book.review || "");
+                          }}
+                          className="text-xs text-primary-500 hover:text-primary-700"
+                        >
+                          edit
+                        </button>
+                        <span className="text-xs text-slate-400">tap to flip</span>
+                      </div>
                     </div>
                     {book.review ? (
                       <blockquote className="text-slate-600 text-sm leading-relaxed border-l-3 border-primary-300 pl-4">
