@@ -1,3 +1,4 @@
+import { getCoverUrl } from "../utils/cover";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -17,10 +18,6 @@ import {
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 
-// Fix HTML-encoded URLs (Google Books stores &amp; instead of &)
-function fixCoverUrl(url: string | undefined): string | undefined {
-  return url?.replace(/&amp;/g, "&");
-}
 
 const Dashboard: React.FC = () => {
   const stats = useQuery(api.users.getStats) ?? null;
@@ -201,8 +198,8 @@ const Dashboard: React.FC = () => {
               {currentlyReading.map((book) => (
                 <div key={book._id} className="flex gap-3 p-3 bg-slate-50 rounded-xl group relative">
                   <div className="w-16 h-24 rounded-lg overflow-hidden bg-slate-200 flex-shrink-0">
-                    {fixCoverUrl(book.coverUrl) ? (
-                      <img src={fixCoverUrl(book.coverUrl)} alt={book.title} className="w-full h-full object-cover" />
+                    {getCoverUrl(book) ? (
+                      <img src={getCoverUrl(book)} alt={book.title} className="w-full h-full object-cover" />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-100 to-accent-100">
                         <BookOpen className="w-6 h-6 text-primary-300" />
@@ -411,9 +408,9 @@ const Dashboard: React.FC = () => {
               }) => (
                 <div key={book._id} className="group">
                   <div className="aspect-[2/3] rounded-xl overflow-hidden bg-slate-100 shadow-sm group-hover:shadow-lg transition-all">
-                    {fixCoverUrl(book.coverUrl) ? (
+                    {getCoverUrl(book) ? (
                       <img
-                        src={fixCoverUrl(book.coverUrl)}
+                        src={getCoverUrl(book)}
                         alt={book.title}
                         className="w-full h-full object-cover"
                       />

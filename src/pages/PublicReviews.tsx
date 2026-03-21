@@ -1,3 +1,4 @@
+import { getCoverUrl } from "../utils/cover";
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Star, BookOpen, ArrowLeft } from "lucide-react";
@@ -5,9 +6,6 @@ import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Link } from "react-router-dom";
 
-function fixCoverUrl(url: string | undefined): string | undefined {
-  return url?.replace(/&amp;/g, "&");
-}
 
 interface Book {
   _id: string;
@@ -80,9 +78,9 @@ const PublicReviews: React.FC = () => {
                   >
                     <div className="flex gap-4">
                       <div className="w-16 h-24 rounded-lg overflow-hidden bg-slate-100 flex-shrink-0">
-                        {fixCoverUrl(book.coverUrl) ? (
+                        {getCoverUrl(book) ? (
                           <img
-                            src={fixCoverUrl(book.coverUrl)}
+                            src={getCoverUrl(book)}
                             alt={book.title}
                             className="w-full h-full object-cover"
                           />
