@@ -30,7 +30,7 @@ export const getReadBooks = query({
   args: {},
   handler: async (ctx) => {
     const allBooks = await ctx.db.query("books").collect();
-    return allBooks.filter((b) => b.status === "read");
+    return allBooks.filter((b) => b.status === "read" || b.status === "reading");
   },
 });
 
