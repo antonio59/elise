@@ -23,7 +23,13 @@ const Signup: React.FC = () => {
       await signUp(email, password, name);
       navigate("/dashboard", { replace: true });
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to create account");
+      const msg = err instanceof Error ? err.message : "Failed to create account";
+      try {
+        const parsed = JSON.parse(msg);
+        setError(parsed.error || msg);
+      } catch {
+        setError(msg);
+      }
     } finally {
       setLoading(false);
     }

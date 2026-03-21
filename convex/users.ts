@@ -48,9 +48,7 @@ export const createProfile = mutation({
     name: v.string(),
     username: v.optional(v.string()),
     isParent: v.boolean(),
-    theme: v.optional(
-      v.union(v.literal("light"), v.literal("dark"), v.literal("kawaii")),
-    ),
+    theme: v.optional(v.string()),
     yearlyBookGoal: v.optional(v.number()),
     notifications: v.optional(v.boolean()),
   },
@@ -66,10 +64,15 @@ export const createProfile = mutation({
 
     if (existing) return existing._id;
 
+    // Auto-assign admin role to the first user
+    const existingProfiles = await ctx.db.query("userProfiles").collect();
+    const role = existingProfiles.length === 0 ? "admin" : "viewer";
+
     return await ctx.db.insert("userProfiles", {
       userId,
       ...args,
-    });
+      role,
+    } as any);
   },
 });
 
@@ -84,7 +87,18 @@ export const updateProfile = mutation({
     favoriteGenres: v.optional(v.array(v.string())),
     readingGoal: v.optional(v.string()),
     theme: v.optional(
-      v.union(v.literal("light"), v.literal("dark"), v.literal("kawaii")),
+      v.union(
+        v.literal("editorial"),
+        v.literal("sakura"),
+        v.literal("lavender"),
+        v.literal("midnight"),
+        v.literal("sunset"),
+        v.literal("botanical"),
+        v.literal("berry"),
+        v.literal("light"),
+        v.literal("dark"),
+        v.literal("kawaii"),
+      ),
     ),
     yearlyBookGoal: v.optional(v.number()),
     notifications: v.optional(v.boolean()),

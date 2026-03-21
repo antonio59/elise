@@ -2,10 +2,12 @@ import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 import { auth } from "./auth";
 
-// Get all books (site-wide, not user-specific)
+// Get all books (for authenticated user)
 export const getMyBooks = query({
   args: {},
   handler: async (ctx) => {
+    const userId = await auth.getUserId(ctx);
+    if (!userId) return [];
     return await ctx.db.query("books").order("desc").collect();
   },
 });
