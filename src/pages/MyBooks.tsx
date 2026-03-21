@@ -768,6 +768,24 @@ const AddBookModal: React.FC<AddBookModalProps> = ({
     currentStatus: string;
   } | null>(null);
 
+  const resetForm = () => {
+    setTitle("");
+    setAuthor("");
+    setCoverUrl("");
+    setGenre("Manga");
+    setPageCount("");
+    setRating(0);
+    setDestination("read");
+    setError(null);
+    setManualMode(false);
+    setDuplicateInfo(null);
+  };
+
+  const handleClose = () => {
+    resetForm();
+    onClose();
+  };
+
   const getStatusLabel = (status: string) => {
     switch (status) {
       case "read":
@@ -809,6 +827,7 @@ const AddBookModal: React.FC<AddBookModalProps> = ({
       setPageCount("");
       setRating(0);
       setDestination("read");
+      handleClose();
     } catch (err) {
       const message =
         err instanceof Error ? err.message : "Something went wrong";
@@ -885,7 +904,7 @@ const AddBookModal: React.FC<AddBookModalProps> = ({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          onClick={onClose}
+          onClick={handleClose}
         />
 
         <motion.div
@@ -899,7 +918,7 @@ const AddBookModal: React.FC<AddBookModalProps> = ({
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-bold text-slate-800">Add Book</h2>
               <button
-                onClick={onClose}
+                onClick={handleClose}
                 className="p-2 hover:bg-slate-100 rounded-lg"
               >
                 <X className="w-5 h-5" />

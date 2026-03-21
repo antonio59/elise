@@ -3,11 +3,10 @@ import { Search, Loader2, BookOpen, Plus } from "lucide-react";
 
 // Google Books categories → our genres
 const CATEGORY_MAP: Record<string, string> = {
-  "fiction": "Other",
-  "juvenile fiction": "Other",
-  "young adult fiction": "Other",
+  // Fiction subgenres
   "fantasy": "Fantasy",
   "science fiction": "Sci-Fi",
+  "sci-fi": "Sci-Fi",
   "romance": "Romance",
   "mystery": "Mystery",
   "horror": "Horror",
@@ -15,41 +14,101 @@ const CATEGORY_MAP: Record<string, string> = {
   "adventure": "Action",
   "comedy": "Comedy",
   "humor": "Comedy",
-  "humour": "Comedy",
   "drama": "Drama",
   "slice of life": "Slice of Life",
-  "coming of age": "Slice of Life",
   "manga": "Manga",
   "manhwa": "Manhwa",
   "webtoon": "Webtoon",
   "light novel": "Light Novel",
   "graphic novel": "Manga",
   "comic": "Manga",
+  // Broad → specific
+  "young adult fiction": "Drama",
+  "young adult romance": "Romance",
+  "young adult fantasy": "Fantasy",
+  "juvenile fiction": "Drama",
+  "juvenile fantasy": "Fantasy",
+  "paranormal": "Horror",
+  "thriller": "Mystery",
+  "suspense": "Mystery",
+  "detective": "Mystery",
+  "crime": "Mystery",
   "cozy": "Slice of Life",
+  "coming of age": "Drama",
+  "contemporary": "Slice of Life",
+  "literary fiction": "Drama",
+  "historical": "Drama",
   "dark fantasy": "Fantasy",
   "urban fantasy": "Fantasy",
   "paranormal romance": "Romance",
   "romantic comedy": "Romance",
   "romantasy": "Romance",
-  "thriller": "Mystery",
-  "suspense": "Mystery",
   "psychological": "Drama",
-  "literary fiction": "Drama",
-  "contemporary": "Slice of Life",
   "realistic fiction": "Slice of Life",
 };
 
-function mapCategoryToGenre(categories: string[] | undefined): string {
-  if (!categories || categories.length === 0) return "Other";
-  
-  for (const cat of categories) {
-    const lower = cat.toLowerCase().trim();
-    // Direct match
-    if (CATEGORY_MAP[lower]) return CATEGORY_MAP[lower];
-    // Partial match — check if any mapped key is contained in the category
-    for (const [key, genre] of Object.entries(CATEGORY_MAP)) {
-      if (lower.includes(key)) return genre;
+// Keyword-based genre detection from description
+function detectGenreFromText(text: string): string {
+  const lower = text.toLowerCase();
+  const checks: [string, string][] = [
+    ["manga", "Manga"],
+    ["manhwa", "Manhwa"],
+    ["webtoon", "Webtoon"],
+    ["light novel", "Light Novel"],
+    ["graphic novel", "Manga"],
+    ["enemies to lovers", "Romance"],
+    ["love story", "Romance"],
+    ["romantic", "Romance"],
+    ["romance", "Romance"],
+    ["fantasy world", "Fantasy"],
+    ["magical", "Fantasy"],
+    ["wizard", "Fantasy"],
+    ["witch", "Fantasy"],
+    ["dragon", "Fantasy"],
+    ["fantasy", "Fantasy"],
+    ["science fiction", "Sci-Fi"],
+    ["dystopian", "Sci-Fi"],
+    ["space", "Sci-Fi"],
+    ["alien", "Sci-Fi"],
+    ["futuristic", "Sci-Fi"],
+    ["murder mystery", "Mystery"],
+    ["detective", "Mystery"],
+    ["thriller", "Mystery"],
+    ["whodunit", "Mystery"],
+    ["mystery", "Mystery"],
+    ["haunted", "Horror"],
+    ["horror", "Horror"],
+    ["scary", "Horror"],
+    ["fighting", "Action"],
+    ["battle", "Action"],
+    ["war", "Action"],
+    ["cozy", "Slice of Life"],
+    ["coming of age", "Drama"],
+    ["slice of life", "Slice of Life"],
+    ["funny", "Comedy"],
+    ["humor", "Comedy"],
+    ["humour", "Comedy"],
+  ];
+  for (const [keyword, genre] of checks) {
+    if (lower.includes(keyword)) return genre;
+  }
+  return "Other";
+}
+
+function mapCategoryToGenre(categories: string[] | undefined, description?: string): string {
+  // First try exact category match
+  if (categories) {
+    for (const cat of categories) {
+      const lower = cat.toLowerCase().trim();
+      if (CATEGORY_MAP[lower]) return CATEGORY_MAP[lower];
+      for (const [key, genre] of Object.entries(CATEGORY_MAP)) {
+        if (lower.includes(key)) return genre;
+      }
     }
+  }
+  // Fall back to description keyword detection
+  if (description) {
+    return detectGenreFromText(description);
   }
   return "Other";
 }
@@ -113,7 +172,7 @@ const GoogleBookSearch: React.FC<GoogleBookSearchProps> = ({ onSelect }) => {
             "",
           pageCount: item.volumeInfo.pageCount || 0,
           description: item.volumeInfo.description || "",
-          genre: mapCategoryToGenre(item.volumeInfo.categories),
+          genre: mapCategoryToGenre(item.volumeInfo.categories, item.volumeInfo.description),
         }),
       );
 
