@@ -46,7 +46,7 @@ const PublicHome: React.FC = () => {
               </span>
             </div>
 
-            <h1 className="text-5xl md:text-7xl font-black mb-6">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-black mb-6">
               <span className="bg-gradient-to-r from-primary-500 to-accent-500 bg-clip-text text-transparent">
                 Elise's Reading
               </span>
@@ -83,7 +83,7 @@ const PublicHome: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <div className="text-4xl font-black bg-gradient-to-r from-primary-500 to-accent-500 bg-clip-text text-transparent">
+              <div className="text-2xl sm:text-3xl md:text-4xl font-black bg-gradient-to-r from-primary-500 to-accent-500 bg-clip-text text-transparent">
                 {totalBooks}
               </div>
               <div className="text-sm text-slate-500 mt-1">Books Read</div>
@@ -96,7 +96,7 @@ const PublicHome: React.FC = () => {
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
             >
-              <div className="text-4xl font-black bg-gradient-to-r from-accent-500 to-primary-500 bg-clip-text text-transparent">
+              <div className="text-2xl sm:text-3xl md:text-4xl font-black bg-gradient-to-r from-accent-500 to-primary-500 bg-clip-text text-transparent">
                 {totalPages.toLocaleString()}
               </div>
               <div className="text-sm text-slate-500 mt-1">Pages Read</div>
@@ -109,7 +109,7 @@ const PublicHome: React.FC = () => {
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
             >
-              <div className="text-4xl font-black bg-gradient-to-r from-accent-500 to-primary-500 bg-clip-text text-transparent">
+              <div className="text-2xl sm:text-3xl md:text-4xl font-black bg-gradient-to-r from-accent-500 to-primary-500 bg-clip-text text-transparent">
                 {artworks.length}
               </div>
               <div className="text-sm text-slate-500 mt-1">Artworks</div>
@@ -122,7 +122,7 @@ const PublicHome: React.FC = () => {
               viewport={{ once: true }}
               transition={{ delay: 0.3 }}
             >
-              <div className="text-4xl font-black bg-gradient-to-r from-primary-500 to-accent-500 bg-clip-text text-transparent">
+              <div className="text-2xl sm:text-3xl md:text-4xl font-black bg-gradient-to-r from-primary-500 to-accent-500 bg-clip-text text-transparent">
                 {books.filter((b) => b.rating && b.rating >= 4).length}
               </div>
               <div className="text-sm text-slate-500 mt-1">Favorites</div>
@@ -135,7 +135,7 @@ const PublicHome: React.FC = () => {
       <section id="books" className="py-16 px-4">
         <div className="max-w-6xl mx-auto">
           <div className="mb-8">
-            <h2 className="text-3xl font-bold text-slate-800">My Books</h2>
+            <h2 className="text-2xl sm:text-3xl font-bold text-slate-800">My Books</h2>
             <p className="text-slate-500 mt-1">
               All the books I've read and loved
             </p>
@@ -202,7 +202,7 @@ const PublicHome: React.FC = () => {
         <section className="py-16 px-4 bg-white">
           <div className="max-w-6xl mx-auto">
             <div className="flex items-center justify-between mb-8">
-              <h2 className="text-3xl font-bold text-slate-800">My Art</h2>
+              <h2 className="text-2xl sm:text-3xl font-bold text-slate-800">My Art</h2>
               <Link
                 to="/gallery"
                 className="text-primary-600 hover:text-primary-700 font-medium"
@@ -262,7 +262,7 @@ const PublicHome: React.FC = () => {
               </span>
             </div>
 
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-4">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-800 mb-4">
               Suggest a Book for Me!
             </h2>
             <p className="text-lg text-slate-600 max-w-xl mx-auto mb-8">
@@ -741,7 +741,7 @@ const PublicWritings: React.FC = () => {
     <section className="py-16 px-4">
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center justify-between mb-8">
-          <h2 className="text-3xl font-bold text-slate-800">My Writing ✍️</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-slate-800">My Writing ✍️</h2>
         </div>
 
         {writings.length === 0 ? (

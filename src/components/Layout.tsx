@@ -169,6 +169,13 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
 // Public layout (with header/footer)
 export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
   const { user } = useAuth();
+  const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+
+  const navLinks = [
+    { label: "Books", href: "/#books", type: "href" as const },
+    { label: "Wishlist", to: "/wishlist", type: "link" as const },
+    { label: "Gallery", to: "/gallery", type: "link" as const },
+  ];
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -184,25 +191,19 @@ export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
             </span>
           </Link>
 
-          <nav className="flex items-center gap-4 md:gap-6">
-            <a
-              href="/#books"
-              className="text-slate-600 hover:text-primary-600 font-medium transition-colors"
-            >
-              Books
-            </a>
-            <Link
-              to="/wishlist"
-              className="text-slate-600 hover:text-primary-600 font-medium transition-colors"
-            >
-              Wishlist
-            </Link>
-            <Link
-              to="/gallery"
-              className="text-slate-600 hover:text-primary-600 font-medium transition-colors"
-            >
-              Gallery
-            </Link>
+          {/* Desktop nav */}
+          <nav className="hidden md:flex items-center gap-6">
+            {navLinks.map((link) =>
+              link.type === "href" ? (
+                <a key={link.label} href={link.href} className="text-slate-600 hover:text-primary-600 font-medium transition-colors">
+                  {link.label}
+                </a>
+              ) : (
+                <Link key={link.label} to={link.to!} className="text-slate-600 hover:text-primary-600 font-medium transition-colors">
+                  {link.label}
+                </Link>
+              )
+            )}
             {user ? (
               <Link to="/dashboard" className="btn btn-gradient text-sm">
                 Dashboard
@@ -213,7 +214,61 @@ export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
               </Link>
             )}
           </nav>
+
+          {/* Mobile hamburger */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden p-2 hover:bg-slate-100 rounded-lg"
+          >
+            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
         </div>
+
+        {/* Mobile dropdown menu */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.nav
+              className="md:hidden border-t border-slate-100 bg-white px-4 py-4 space-y-1"
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              {navLinks.map((link) =>
+                link.type === "href" ? (
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    className="block px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 font-medium"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {link.label}
+                  </a>
+                ) : (
+                  <Link
+                    key={link.label}
+                    to={link.to!}
+                    className="block px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 font-medium"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {link.label}
+                  </Link>
+                )
+              )}
+              <div className="pt-2">
+                {user ? (
+                  <Link to="/dashboard" className="btn btn-gradient w-full justify-center" onClick={() => setMobileMenuOpen(false)}>
+                    Dashboard
+                  </Link>
+                ) : (
+                  <Link to="/login" className="btn btn-primary w-full justify-center" onClick={() => setMobileMenuOpen(false)}>
+                    Sign In
+                  </Link>
+                )}
+              </div>
+            </motion.nav>
+          )}
+        </AnimatePresence>
       </header>
 
       {/* Main content */}
