@@ -220,14 +220,14 @@ const PublicHome: React.FC = () => {
               {books.map((book, index) => (
                 <motion.div
                   key={book._id}
-                  className="group"
+                  className="group book-card"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: Math.min(index * 0.05, 0.3) }}
                 >
-                  <div className="aspect-[2/3] rounded-xl overflow-hidden bg-slate-100 shadow-md group-hover:shadow-xl transition-all group-hover:scale-105">
-                    {book.coverUrl ? (
+                  <div className="aspect-[2/3] rounded-xl overflow-hidden bg-slate-100 shadow-md book-spine">
+                    {fixCoverUrl(book.coverUrl) ? (
                       <img
                         src={fixCoverUrl(book.coverUrl)}
                         alt={book.title}
@@ -257,12 +257,27 @@ const PublicHome: React.FC = () => {
                           }`}
                         />
                       ))}
+                      <span className="text-xs text-primary-500 ml-1">
+                        {["not it", "meh", "solid read", "obsessed", "all-time fav"][book.rating - 1]}
+                      </span>
                     </div>
                   )}
                   {book.review && (
                     <p className="text-xs text-slate-400 mt-1 line-clamp-2 italic">
                       "{book.review}"
                     </p>
+                  )}
+                  {book.moodTags && book.moodTags.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mt-2">
+                      {book.moodTags.slice(0, 3).map((tag) => (
+                        <span key={tag} className="mood-tag">
+                          {tag}
+                        </span>
+                      ))}
+                      {book.moodTags.length > 3 && (
+                        <span className="text-xs text-slate-400">+{book.moodTags.length - 3}</span>
+                      )}
+                    </div>
                   )}
                 </motion.div>
               ))}
