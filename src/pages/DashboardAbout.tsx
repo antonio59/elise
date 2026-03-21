@@ -10,6 +10,7 @@ import {
   Sparkles,
   BookMarked,
   User,
+  Shuffle,
 } from "lucide-react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
@@ -98,6 +99,30 @@ const DashboardAbout: React.FC = () => {
     }
   };
 
+  // Generate a random DiceBear avatar
+  const generateAvatar = async () => {
+    setUploading(true);
+    try {
+      const seed = Math.random().toString(36).substring(2, 10);
+      const response = await fetch(`https://api.dicebear.com/9.x/fun-emoji/svg?seed=${seed}`);
+      const svg = await response.text();
+      const blob = new Blob([svg], { type: "image/svg+xml" });
+      const file = new File([blob], "avatar.svg", { type: "image/svg+xml" });
+      const uploadUrl = await generateUploadUrl();
+      const result = await fetch(uploadUrl, {
+        method: "POST",
+        headers: { "Content-Type": file.type },
+        body: file,
+      });
+      const { storageId } = await result.json();
+      await updateProfile({ avatarStorageId: storageId });
+    } catch (err) {
+      console.error("Avatar generation failed:", err);
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const avatarUrl = profile?.avatarStorageId
     ? `https://agile-shrimp-456.convex.cloud/api/storage/${profile.avatarStorageId}`
     : profile?.avatarUrl || undefined;
@@ -138,12 +163,21 @@ const DashboardAbout: React.FC = () => {
                 onClick={() => fileRef.current?.click()}
                 disabled={uploading}
                 className="absolute -bottom-2 -right-2 w-8 h-8 bg-white rounded-full shadow-md flex items-center justify-center hover:bg-slate-50"
+                title="Upload photo"
               >
                 {uploading ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
                 ) : (
                   <Camera className="w-4 h-4 text-slate-500" />
                 )}
+              </button>
+              <button
+                onClick={generateAvatar}
+                disabled={uploading}
+                className="absolute -bottom-2 right-6 w-8 h-8 bg-white rounded-full shadow-md flex items-center justify-center hover:bg-slate-50"
+                title="Generate random avatar"
+              >
+                <Shuffle className="w-4 h-4 text-primary-500" />
               </button>
               <input
                 ref={fileRef}
