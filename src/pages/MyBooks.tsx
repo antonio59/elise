@@ -26,6 +26,11 @@ type TabType = "read" | "reading" | "wishlist";
 
 type Book = Doc<"books">;
 
+// Fix HTML-encoded URLs (Google Books stores &amp; instead of &)
+function fixCoverUrl(url: string | undefined): string | undefined {
+  return url?.replace(/&amp;/g, "&");
+}
+
 const GENRES = [
   "Manga",
   "Manhwa",
@@ -182,9 +187,9 @@ const MyBooks: React.FC = () => {
             transition={{ delay: index * 0.05 }}
           >
             <div className="relative aspect-[2/3] rounded-xl overflow-hidden bg-slate-100 shadow-sm group-hover:shadow-xl transition-all">
-              {book.coverUrl ? (
+              {fixCoverUrl(book.coverUrl) ? (
                 <img
-                  src={book.coverUrl}
+                  src={fixCoverUrl(book.coverUrl)}
                   alt={book.title}
                   className="w-full h-full object-cover"
                 />
@@ -230,6 +235,9 @@ const MyBooks: React.FC = () => {
               {book.title}
             </h3>
             <p className="text-xs text-slate-500 line-clamp-1">{book.author}</p>
+            {book.genre && book.genre !== "Other" && (
+              <span className="inline-block mt-1 text-xs px-2 py-0.5 bg-primary-50 text-primary-600 rounded-full">{book.genre}</span>
+            )}
           </motion.div>
         ))}
 
