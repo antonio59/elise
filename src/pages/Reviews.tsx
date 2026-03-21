@@ -1,3 +1,4 @@
+import { getCoverUrl } from "../utils/cover";
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -27,9 +28,6 @@ interface Book {
 }
 
 // Fix Google Books HTML-encoded URLs
-function fixUrl(url?: string): string | undefined {
-  return url?.replace(/&amp;/g, "&");
-}
 
 const RATING_LABELS: Record<number, string> = {
   1: "not it",
@@ -212,9 +210,9 @@ const ReviewsPage: React.FC = () => {
                   >
                     <div className="flex gap-4">
                       <div className="w-20 h-28 rounded-lg overflow-hidden bg-slate-100 flex-shrink-0">
-                        {fixUrl(book.coverUrl) ? (
+                        {getCoverUrl(book) ? (
                           <img
-                            src={fixUrl(book.coverUrl)}
+                            src={getCoverUrl(book)}
                             alt={book.title}
                             className="w-full h-full object-cover"
                           />

@@ -1,3 +1,4 @@
+import { getCoverUrl } from "../utils/cover";
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -26,10 +27,6 @@ type TabType = "read" | "reading" | "wishlist";
 
 type Book = Doc<"books">;
 
-// Fix HTML-encoded URLs (Google Books stores &amp; instead of &)
-function fixCoverUrl(url: string | undefined): string | undefined {
-  return url?.replace(/&amp;/g, "&");
-}
 
 const GENRES = [
   "Manga",
@@ -187,9 +184,9 @@ const MyBooks: React.FC = () => {
             transition={{ delay: index * 0.05 }}
           >
             <div className="relative aspect-[2/3] rounded-xl overflow-hidden bg-slate-100 shadow-sm group-hover:shadow-xl transition-all">
-              {fixCoverUrl(book.coverUrl) ? (
+              {getCoverUrl(book) ? (
                 <img
-                  src={fixCoverUrl(book.coverUrl)}
+                  src={getCoverUrl(book)}
                   alt={book.title}
                   className="w-full h-full object-cover"
                 />
