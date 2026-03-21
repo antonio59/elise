@@ -1,14 +1,7 @@
-import React, { useState, useCallback } from "react";
-import { Search, Loader2, Smile, Image as ImageIcon } from "lucide-react";
-
-// Giphy public beta key (rate-limited, fine for a personal site)
-const GIPHY_API_KEY = "GlVGYHkr3WSBnERsL0MhJTJHhNVm2MCs";
-
-interface GiphyResult {
-  id: string;
-  url: string;
-  preview: string;
-}
+import React, { useState } from "react";
+import { useQuery } from "convex/react";
+import { api } from "../../convex/_generated/api";
+import { Search, Smile, Image as ImageIcon, X } from "lucide-react";
 
 interface GiphyPickerProps {
   onSelect: (url: string) => void;
@@ -19,52 +12,24 @@ const EMOJIS = [
   "❤️", "🔥", "✨", "💯", "😭", "🥺", "😍", "🤯",
   "📚", "📖", "✍️", "🎨", "🌸", "🦋", "🌙", "⭐",
   "💫", "🎀", "🧸", "🐱", "🌊", "🍵", "🎵", "💜",
-  "👏", "🎉", "🙌", "💀", "😂", "🤩", "😭", "🫠",
+  "👏", "🎉", "🙌", "💀", "😂", "🤩", "🫠", "🥳",
 ];
 
 const GiphyPicker: React.FC<GiphyPickerProps> = ({ onSelect, onClose }) => {
   const [tab, setTab] = useState<"emoji" | "gif">("emoji");
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<GiphyResult[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
-  const searchGiphy = useCallback(async () => {
-    if (!query.trim()) return;
-
-    setLoading(true);
-    try {
-      const res = await fetch(
-        `https://api.giphy.com/v1/gifs/search?api_key=${GIPHY_API_KEY}&q=${encodeURIComponent(query)}&limit=12&rating=g`,
-      );
-      const data = await res.json();
-
-      setResults(
-        (data.data || []).map(
-          (gif: {
-            id: string;
-            images: {
-              original: { url: string };
-              fixed_height_small: { url: string };
-            };
-          }) => ({
-            id: gif.id,
-            url: gif.images.original.url,
-            preview: gif.images.fixed_height_small.url,
-          }),
-        ),
-      );
-    } catch (err) {
-      console.error("Giphy search failed:", err);
-      setResults([]);
-    } finally {
-      setLoading(false);
-    }
-  }, [query]);
+  // Only query Giphy via Convex when user searches
+  const giphyResults = useQuery(
+    api.giphy.search,
+    searchTerm ? { query: searchTerm } : "skip",
+  );
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      searchGiphy();
+      setSearchTerm(query);
     }
   };
 
@@ -101,7 +66,7 @@ const GiphyPicker: React.FC<GiphyPickerProps> = ({ onSelect, onClose }) => {
           onClick={onClose}
           className="px-3 text-slate-400 hover:text-slate-600"
         >
-          ×
+          <X className="w-4 h-4" />
         </button>
       </div>
 
@@ -137,37 +102,46 @@ const GiphyPicker: React.FC<GiphyPickerProps> = ({ onSelect, onClose }) => {
             </div>
             <button
               type="button"
-              onClick={searchGiphy}
-              disabled={loading || !query.trim()}
+              onClick={() => setSearchTerm(query)}
+              disabled={!query.trim()}
               className="px-3 py-2 text-sm bg-slate-100 rounded-lg hover:bg-slate-200 disabled:opacity-50"
             >
-              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Go"}
+              Go
             </button>
           </div>
           <div className="p-3 grid grid-cols-3 gap-1.5 max-h-48 overflow-y-auto">
-            {results.map((gif) => (
-              <button
-                key={gif.id}
-                type="button"
-                onClick={() => {
-                  onSelect(gif.url);
-                  onClose();
-                }}
-                className="aspect-square rounded-lg overflow-hidden hover:ring-2 ring-primary-400 transition-all"
-              >
-                <img
-                  src={gif.preview}
-                  alt="GIF"
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
-              </button>
-            ))}
-            {!loading && results.length === 0 && query && (
+            {giphyResults ? (
+              giphyResults.length > 0 ? (
+                giphyResults.map((gif: { id: string; preview: string; url: string }) => (
+                  <button
+                    key={gif.id}
+                    type="button"
+                    onClick={() => {
+                      onSelect(gif.url);
+                      onClose();
+                    }}
+                    className="aspect-square rounded-lg overflow-hidden hover:ring-2 ring-primary-400 transition-all"
+                  >
+                    <img
+                      src={gif.preview}
+                      alt="GIF"
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                  </button>
+                ))
+              ) : (
+                searchTerm && (
+                  <p className="col-span-3 text-center text-sm text-slate-400 py-4">
+                    No GIFs found
+                  </p>
+                )
+              )
+            ) : searchTerm ? (
               <p className="col-span-3 text-center text-sm text-slate-400 py-4">
-                No GIFs found
+                Searching...
               </p>
-            )}
+            ) : null}
           </div>
         </div>
       )}
