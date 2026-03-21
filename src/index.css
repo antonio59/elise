@@ -11,7 +11,7 @@
 /* Theme configuration — DEFAULT values (Editorial) */
 @theme {
   /* Font families */
-  --font-display: "Playfair Display", Georgia, serif;
+  --font-display: "Fredoka", "Nunito", system-ui, sans-serif;
   --font-body: "Inter", system-ui, sans-serif;
 
   /* PRIMARY - Dusty Rose */
@@ -26,26 +26,26 @@
   --color-primary-800: #633427;
   --color-primary-900: #4a271d;
 
-  /* ACCENT - Deep Navy */
+  /* ACCENT - Splatoon Teal */
   --color-accent-50: #f0f4f8;
   --color-accent-100: #d9e2ec;
   --color-accent-200: #bcccdc;
   --color-accent-300: #9fb3c8;
-  --color-accent-400: #829ab1;
-  --color-accent-500: #627d98;
-  --color-accent-600: #486581;
+  --color-accent-400: #22d3ee;
+  --color-accent-500: #06b6d4;
+  --color-accent-600: #0891b2;
   --color-accent-700: #334e68;
   --color-accent-800: #243b53;
   --color-accent-900: #102a43;
 
-  /* VIOLET - Muted Lavender */
+  /* INK - Splatoon Ink Blue */
   --color-violet-50: #f7f5f9;
   --color-violet-100: #ebe5f0;
   --color-violet-200: #d5c7e0;
   --color-violet-300: #b9a0cc;
-  --color-violet-400: #9d7bb5;
-  --color-violet-500: #825b9e;
-  --color-violet-600: #6a4585;
+  --color-violet-400: #4361ee;
+  --color-violet-500: #3a56d4;
+  --color-violet-600: #2f46b8;
   --color-violet-700: #523469;
 
   /* STAR - Warm Gold */
@@ -463,4 +463,72 @@
 }
 .progress-ring-circle {
   transition: stroke-dashoffset 0.6s ease;
+}
+
+
+/* ===== MANGA-INSPIRED DECORATIVES ===== */
+
+/* Halftone dot pattern overlay */
+.halftone-bg {
+  background-image: radial-gradient(circle, var(--color-primary-200) 1px, transparent 1px);
+  background-size: 16px 16px;
+  opacity: 0.3;
+}
+
+/* Ink splatter divider */
+.ink-divider {
+  position: relative;
+  height: 2px;
+  background: transparent;
+}
+.ink-divider::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80px;
+  height: 8px;
+  background: var(--color-violet-400);
+  border-radius: 50%;
+  opacity: 0.5;
+}
+
+/* Sparkle animation */
+@keyframes sparkle {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.8); }
+}
+.sparkle {
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+/* Active nav pill */
+.nav-active {
+  position: relative;
+}
+.nav-active::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-violet-400);
+}
+
+/* Star burst badge */
+.star-burst {
+  position: relative;
+}
+.star-burst::before {
+  content: "✦";
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  font-size: 12px;
+  color: var(--color-violet-400);
+  animation: sparkle 1.5s ease-in-out infinite;
 }
