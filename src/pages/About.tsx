@@ -22,7 +22,10 @@ const About: React.FC = () => {
         >
           {/* Header */}
           <div className="flex items-center justify-between mb-8">
-            <h1 className="text-2xl sm:text-3xl font-bold text-slate-800">About</h1>
+            <span className="inline-block px-3 py-1 bg-primary-100 text-primary-600 rounded-full text-xs font-semibold uppercase tracking-wider mb-3">About Me</span>
+            <h1 className="text-3xl sm:text-4xl font-bold">
+              <span className="bg-gradient-to-r from-primary-600 to-violet-500 bg-clip-text text-transparent">Hi, I'm Elise</span>
+            </h1>
             {user && (
               <a href="/dashboard/about" className="btn btn-secondary text-sm">
                 Edit profile →
@@ -145,9 +148,10 @@ const About: React.FC = () => {
 
           {/* Empty state */}
           {!display?.name && !display?.bio && (
-            <div className="text-center py-12">
-              <User className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-              <p className="text-slate-500">This page is still being set up. Check back soon!</p>
+            <div className="text-center py-16 bg-gradient-to-br from-primary-50 to-violet-50 rounded-2xl">
+              <div className="text-5xl mb-4">📚✨</div>
+              <p className="text-lg font-medium text-slate-700">Profile incoming!</p>
+              <p className="text-sm text-slate-500 mt-1">Elise is still setting up her about page</p>
             </div>
           )}
         </motion.div>
