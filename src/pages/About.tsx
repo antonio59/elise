@@ -4,10 +4,8 @@ import { motion } from "framer-motion";
 import { BookOpen, User, Target } from "lucide-react";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
-import { useAuth } from "../contexts/AuthContext";
 
 const About: React.FC = () => {
-  const { user } = useAuth();
   const profile = useQuery(api.users.getPublicProfile);
 
   const display = profile;
@@ -26,11 +24,6 @@ const About: React.FC = () => {
             <h1 className="text-3xl sm:text-4xl font-bold">
               <span className="bg-gradient-to-r from-primary-600 to-violet-500 bg-clip-text text-transparent">Hi, I'm Elise</span>
             </h1>
-            {user && (
-              <a href="/dashboard/about" className="btn btn-secondary text-sm">
-                Edit profile →
-              </a>
-            )}
           </div>
 
           {/* Profile Card */}
