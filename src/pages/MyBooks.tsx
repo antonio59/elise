@@ -18,6 +18,7 @@ import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import type { Doc, Id } from "../../convex/_generated/dataModel";
 import GoogleBookSearch from "../components/GoogleBookSearch";
+import GiphyPicker from "../components/GiphyPicker";
 
 type TabType = "read" | "reading" | "wishlist";
 
@@ -396,6 +397,7 @@ const EditBookModal: React.FC<EditBookModalProps> = ({
   const [isFavorite, setIsFavorite] = useState(false);
   const [moodTags, setMoodTags] = useState<string[]>([]);
   const [saving, setSaving] = useState(false);
+  const [showEmojiGiphy, setShowEmojiGiphy] = useState(false);
 
   // Update form when book changes
   React.useEffect(() => {
