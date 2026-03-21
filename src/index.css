@@ -1,5 +1,4 @@
 /* Fonts */
-@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&family=Fredoka:wght@400;500;600;700&display=swap");
 @import "./styles/tokens.css";
 
 @import "tailwindcss";
@@ -11,64 +10,63 @@
 /* Theme configuration */
 @theme {
   /* Font families */
-  --font-display: "Nunito", system-ui, sans-serif;
+  --font-display: "Playfair Display", Georgia, serif;
   --font-body: "Inter", system-ui, sans-serif;
-  --font-accent: "Fredoka", system-ui, sans-serif;
 
-  /* PRIMARY - Sakura Pink */
-  --color-primary-50: #fdf2f8;
-  --color-primary-100: #fce7f3;
-  --color-primary-200: #fbcfe8;
-  --color-primary-300: #f9a8d4;
-  --color-primary-400: #f472b6;
-  --color-primary-500: #ec4899;
-  --color-primary-600: #db2777;
-  --color-primary-700: #be185d;
-  --color-primary-800: #9d174d;
-  --color-primary-900: #831843;
+  /* PRIMARY - Dusty Rose */
+  --color-primary-50: #fdf8f6;
+  --color-primary-100: #f5ebe6;
+  --color-primary-200: #edd5cd;
+  --color-primary-300: #e0b8a8;
+  --color-primary-400: #c4856c;
+  --color-primary-500: #b06b50;
+  --color-primary-600: #9a5640;
+  --color-primary-700: #7d4232;
+  --color-primary-800: #633427;
+  --color-primary-900: #4a271d;
 
-  /* ACCENT - Electric Teal */
-  --color-accent-50: #ecfeff;
-  --color-accent-100: #cffafe;
-  --color-accent-200: #a5f3fc;
-  --color-accent-300: #67e8f9;
-  --color-accent-400: #22d3ee;
-  --color-accent-500: #06b6d4;
-  --color-accent-600: #0891b2;
-  --color-accent-700: #0e7490;
-  --color-accent-800: #155e75;
-  --color-accent-900: #164e63;
+  /* ACCENT - Deep Navy */
+  --color-accent-50: #f0f4f8;
+  --color-accent-100: #d9e2ec;
+  --color-accent-200: #bcccdc;
+  --color-accent-300: #9fb3c8;
+  --color-accent-400: #829ab1;
+  --color-accent-500: #627d98;
+  --color-accent-600: #486581;
+  --color-accent-700: #334e68;
+  --color-accent-800: #243b53;
+  --color-accent-900: #102a43;
 
-  /* VIOLET - Anime Purple */
-  --color-violet-50: #f5f3ff;
-  --color-violet-100: #ede9fe;
-  --color-violet-200: #ddd6fe;
-  --color-violet-300: #c4b5fd;
-  --color-violet-400: #a78bfa;
-  --color-violet-500: #8b5cf6;
-  --color-violet-600: #7c3aed;
-  --color-violet-700: #6d28d9;
+  /* VIOLET - Muted Lavender */
+  --color-violet-50: #f7f5f9;
+  --color-violet-100: #ebe5f0;
+  --color-violet-200: #d5c7e0;
+  --color-violet-300: #b9a0cc;
+  --color-violet-400: #9d7bb5;
+  --color-violet-500: #825b9e;
+  --color-violet-600: #6a4585;
+  --color-violet-700: #523469;
 
-  /* STAR - Gold ratings */
-  --color-star: #fbbf24;
-  --color-star-light: #fef3c7;
+  /* STAR - Warm Gold */
+  --color-star: #d4a853;
+  --color-star-light: #f5e6c8;
 
   /* SLATE - Neutrals */
-  --color-slate-50: #f8fafc;
-  --color-slate-100: #f1f5f9;
-  --color-slate-200: #e2e8f0;
-  --color-slate-300: #cbd5e1;
-  --color-slate-400: #94a3b8;
-  --color-slate-500: #64748b;
-  --color-slate-600: #475569;
-  --color-slate-700: #334155;
-  --color-slate-800: #1e293b;
-  --color-slate-900: #0f172a;
+  --color-slate-50: #faf8f5;
+  --color-slate-100: #f0ece5;
+  --color-slate-200: #e0d9cf;
+  --color-slate-300: #c7bfb2;
+  --color-slate-400: #a89f90;
+  --color-slate-500: #8a7f6f;
+  --color-slate-600: #6b6254;
+  --color-slate-700: #504838;
+  --color-slate-800: #3a342a;
+  --color-slate-900: #252119;
 
   /* Shadows */
-  --shadow-soft: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
-  --shadow-primary: 0 4px 14px rgba(236, 72, 153, 0.25);
-  --shadow-violet: 0 4px 14px rgba(139, 92, 246, 0.25);
+  --shadow-soft: 0 1px 3px rgba(37, 33, 25, 0.08), 0 1px 2px rgba(37, 33, 25, 0.04);
+  --shadow-primary: 0 4px 14px rgba(176, 107, 80, 0.15);
+  --shadow-violet: 0 4px 14px rgba(130, 91, 158, 0.12);
 
   /* Border radius */
   --radius-4xl: 2rem;
@@ -87,7 +85,8 @@
   body {
     @apply m-0 min-h-screen antialiased;
     font-family: var(--font-body);
-    background: linear-gradient(135deg, #fdf2f8 0%, #f5f3ff 50%, #ecfeff 100%);
+    background-color: #faf8f5;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c7bfb2' fill-opacity='0.08'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
     color: var(--color-slate-800);
     overflow-x: hidden;
   }
@@ -108,81 +107,76 @@
 @layer components {
   /* Card */
   .card {
-    @apply bg-white rounded-2xl;
+    @apply bg-white rounded-xl;
     border: 1px solid var(--color-slate-200);
     box-shadow: var(--shadow-soft);
     transition: all 200ms ease;
   }
 
   .card:hover {
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 20px rgba(37, 33, 25, 0.08);
     transform: translateY(-2px);
-  }
-
-  /* Manga-style card with gradient border */
-  .card-manga {
-    @apply bg-white rounded-2xl p-[2px];
-    background: linear-gradient(135deg, #ec4899, #06b6d4);
-  }
-
-  .card-manga-inner {
-    @apply bg-white rounded-2xl p-4;
   }
 
   /* Buttons */
   .btn {
-    @apply inline-flex items-center justify-center gap-2 font-semibold rounded-xl;
-    font-family: var(--font-display);
+    @apply inline-flex items-center justify-center gap-2 font-medium rounded-lg;
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    letter-spacing: 0.02em;
     transition: all 200ms ease;
   }
 
   .btn-primary {
-    @apply px-6 py-3 text-white;
-    background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
+    @apply px-5 py-2.5 text-white;
+    background-color: var(--color-primary-400);
     box-shadow: var(--shadow-primary);
   }
 
   .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(236, 72, 153, 0.35);
+    background-color: var(--color-primary-500);
+    transform: translateY(-1px);
   }
 
   .btn-secondary {
-    @apply px-6 py-3 bg-white text-primary-600 border-2 border-primary-200;
+    @apply px-5 py-2.5 bg-white;
+    color: var(--color-slate-700);
+    border: 1.5px solid var(--color-slate-300);
   }
 
   .btn-secondary:hover {
-    @apply bg-primary-50 border-primary-300;
+    border-color: var(--color-primary-400);
+    color: var(--color-primary-500);
   }
 
   .btn-gradient {
-    @apply px-6 py-3 text-white;
-    background: linear-gradient(135deg, #ec4899, #06b6d4);
-    box-shadow: 0 4px 14px rgba(236, 72, 153, 0.3);
+    @apply px-5 py-2.5 text-white;
+    background-color: var(--color-accent-800);
   }
 
   .btn-gradient:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(6, 182, 212, 0.4);
+    background-color: var(--color-accent-900);
+    transform: translateY(-1px);
   }
 
   /* Input */
   .input {
-    @apply w-full px-4 py-3 bg-white rounded-xl;
-    border: 2px solid var(--color-slate-200);
+    @apply w-full px-4 py-3 bg-white rounded-lg;
+    border: 1.5px solid var(--color-slate-200);
     font-family: var(--font-body);
+    font-size: 0.875rem;
     transition: all 200ms ease;
   }
 
   .input:focus {
     @apply outline-none;
     border-color: var(--color-primary-400);
-    box-shadow: 0 0 0 4px rgba(236, 72, 153, 0.1);
+    box-shadow: 0 0 0 3px rgba(196, 133, 108, 0.12);
   }
 
   /* Badge */
   .badge {
-    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-bold;
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium;
   }
 
   .badge-primary {
@@ -197,25 +191,21 @@
     @apply bg-violet-100 text-violet-700;
   }
 
-  /* Progress XP bar */
+  /* Progress bar */
   .xp-bar {
-    @apply h-3 rounded-full overflow-hidden;
-    background: linear-gradient(
-      90deg,
-      var(--color-slate-100),
-      var(--color-slate-200)
-    );
+    @apply h-2 rounded-full overflow-hidden;
+    background: var(--color-slate-100);
   }
 
   .xp-bar-fill {
     @apply h-full rounded-full;
-    background: linear-gradient(90deg, #ec4899, #06b6d4);
+    background-color: var(--color-primary-400);
     transition: width 500ms ease;
   }
 
-  /* Stat card with anime style */
+  /* Stat card */
   .stat-card {
-    @apply bg-white rounded-2xl p-6 relative overflow-hidden;
+    @apply bg-white rounded-xl p-5 relative overflow-hidden;
     border: 1px solid var(--color-slate-200);
   }
 
@@ -224,17 +214,17 @@
     position: absolute;
     top: 0;
     right: 0;
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
     background: linear-gradient(
       135deg,
-      rgba(236, 72, 153, 0.1),
-      rgba(6, 182, 212, 0.1)
+      rgba(196, 133, 108, 0.06),
+      rgba(98, 125, 152, 0.06)
     );
-    border-radius: 0 0 0 100%;
+    border-radius: 0 0 0 80px;
   }
 
-  /* Gallery grid for manga panels */
+  /* Gallery grid */
   .gallery-grid {
     @apply grid gap-4;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -264,18 +254,6 @@
   }
 }
 
-@keyframes gradient-shift {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
 /* Accessibility */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -289,8 +267,8 @@
 
 /* Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -298,13 +276,17 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #ec4899, #06b6d4);
+  background: var(--color-slate-300);
   border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-slate-400);
 }
 
 /* Focus styles */
 :focus-visible {
-  outline: 2px solid var(--color-primary-500);
+  outline: 2px solid var(--color-primary-400);
   outline-offset: 2px;
 }
 
@@ -322,193 +304,56 @@
   display: none;
 }
 
-/* ===== MANGA DESIGN FLAIR ===== */
-
-/* Halftone dots background pattern */
-.bg-halftone {
-  background-image: radial-gradient(circle, #ec4899 1px, transparent 1px);
-  background-size: 8px 8px;
-}
-
-/* Speed lines effect */
-.speed-lines {
-  position: relative;
-  overflow: hidden;
-}
-
-.speed-lines::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: repeating-linear-gradient(
-    90deg,
-    transparent,
-    transparent 10px,
-    rgba(236, 72, 153, 0.03) 10px,
-    rgba(236, 72, 153, 0.03) 12px
-  );
-  pointer-events: none;
-}
-
-/* Speech bubble styling */
-.speech-bubble {
-  position: relative;
-  background: white;
-  border: 3px solid #ec4899;
-  border-radius: 20px;
-  padding: 1rem;
-  box-shadow: 4px 4px 0 rgba(236, 72, 153, 0.2);
-}
-
-.speech-bubble::after {
-  content: "";
-  position: absolute;
-  bottom: -15px;
-  left: 30px;
-  border-width: 15px 15px 0;
-  border-style: solid;
-  border-color: #ec4899 transparent transparent;
-}
-
-/* Manga panel frame */
-.manga-panel {
-  border: 3px solid #1e293b;
-  background: white;
-  box-shadow: 4px 4px 0 #ec4899;
-  position: relative;
-}
-
-.manga-panel::before {
-  content: "";
-  position: absolute;
-  top: -3px;
-  left: -3px;
-  right: -3px;
-  bottom: -3px;
-  background: linear-gradient(135deg, #ec4899, #06b6d4);
-  z-index: -1;
-  opacity: 0.3;
-}
-
-/* Sparkle accent */
-.sparkle-accent {
-  position: relative;
-}
-
-.sparkle-accent::before,
-.sparkle-accent::after {
-  content: "✨";
-  position: absolute;
-  font-size: 1.5rem;
-  animation: sparkle 2s ease-in-out infinite;
-}
-
-.sparkle-accent::before {
-  top: -10px;
-  left: -20px;
-  animation-delay: 0s;
-}
-
-.sparkle-accent::after {
-  bottom: -10px;
-  right: -20px;
-  animation-delay: 1s;
-}
-
-/* Writing page specific styles */
+/* Writing page */
 .writing-editor {
-  background: linear-gradient(135deg, #fdf2f8 0%, #f5f3ff 50%, #ecfeff 100%);
+  background-color: var(--color-slate-50);
 }
 
 .writing-textarea {
   background: white;
-  background-image: linear-gradient(#f1f5f9 1px, transparent 1px);
+  background-image: linear-gradient(var(--color-slate-100) 1px, transparent 1px);
   background-size: 100% 2rem;
   line-height: 2rem;
   padding-top: 0.5rem;
 }
 
-/* Chibi mascot placeholder - could be an actual image */
-.chibi-corner {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  width: 80px;
-  height: 80px;
-  background: linear-gradient(135deg, #ec4899, #06b6d4);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 2rem;
-  box-shadow: 0 4px 20px rgba(236, 72, 153, 0.3);
-  animation: float 3s ease-in-out infinite;
-  z-index: 50;
+/* Focus mode for writing */
+.focus-mode {
+  background: var(--color-accent-900);
+  color: var(--color-accent-100);
 }
 
-/* Genre tag manga style */
+.focus-mode .writing-textarea {
+  background: var(--color-accent-900);
+  background-image: linear-gradient(var(--color-accent-800) 1px, transparent 1px);
+  color: var(--color-accent-100);
+}
+
+/* Genre tag */
 .genre-tag {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 4px 12px;
-  border-radius: 9999px;
-  font-size: 0.75rem;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 0.7rem;
   font-weight: 600;
-  background: linear-gradient(135deg, #ec4899, #f472b6);
-  color: white;
-  border: 2px solid white;
-  box-shadow: 2px 2px 0 rgba(236, 72, 153, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background-color: var(--color-primary-100);
+  color: var(--color-primary-700);
 }
 
-/* Focus mode for writing */
-.focus-mode {
-  background: #1e1b4b;
-  color: #e0e7ff;
+/* Horizontal scroll shelf */
+.shelf-scroll {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+  scroll-snap-type: x mandatory;
 }
 
-.focus-mode .writing-textarea {
-  background: #1e1b4b;
-  background-image: linear-gradient(#312e81 1px, transparent 1px);
-  color: #e0e7ff;
+.shelf-scroll > * {
+  scroll-snap-align: start;
+  flex-shrink: 0;
 }
-
-/* Action lines for emphasis */
-.action-lines {
-  position: relative;
-}
-
-.action-lines::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 120%;
-  height: 120%;
-  transform: translate(-50%, -50%);
-  background: repeating-conic-gradient(
-    from 0deg,
-    transparent 0deg,
-    transparent 10deg,
-    rgba(236, 72, 153, 0.1) 10deg,
-    rgba(236, 72, 153, 0.1) 12deg
-  );
-  pointer-events: none;
-  z-index: -1;
-}
-
-/* Book spine manga style */
-.book-spine {
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
-  background: linear-gradient(180deg, #ec4899, #db2777);
-  color: white;
-  padding: 1rem 0.5rem;
-  border-radius: 4px 12px 12px 4px;
-  font-weight: bold;
-  box-shadow: 2px 0 10px rgba(236, 72, 153, 0.3);
-}
-
