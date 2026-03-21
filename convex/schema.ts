@@ -167,6 +167,8 @@ export default defineSchema(
       heroTitle: v.optional(v.string()),
       heroSubtitle: v.optional(v.string()),
       heroDescription: v.optional(v.string()),
+      footerTagline: v.optional(v.string()),
+      footerNote: v.optional(v.string()),
       heroImageUrl: v.optional(v.string()),
       heroImageStorageId: v.optional(v.id("_storage")),
       updatedAt: v.number(),
