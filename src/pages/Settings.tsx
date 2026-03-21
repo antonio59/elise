@@ -56,7 +56,8 @@ const Settings: React.FC = () => {
         name: name.trim() || undefined,
         username: username.trim() || undefined,
         bio: bio.trim() || undefined,
-        theme: theme as any, // Regenerate Convex types with: npx convex dev
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        theme: theme as any,
         yearlyBookGoal: yearlyBookGoal ? parseInt(yearlyBookGoal) : undefined,
         notifications,
       });
