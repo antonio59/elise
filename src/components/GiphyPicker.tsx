@@ -1,11 +1,16 @@
 import React, { useState } from "react";
-import { useQuery } from "convex/react";
-import { api } from "../../convex/_generated/api";
-import { Search, Smile, Image as ImageIcon, X } from "lucide-react";
+import { useConvex } from "convex/react";
+import { Search, Smile, Image as ImageIcon, X, Loader2 } from "lucide-react";
 
 interface GiphyPickerProps {
   onSelect: (url: string) => void;
   onClose: () => void;
+}
+
+interface GifResult {
+  id: string;
+  url: string;
+  preview: string;
 }
 
 const EMOJIS = [
@@ -18,18 +23,27 @@ const EMOJIS = [
 const GiphyPicker: React.FC<GiphyPickerProps> = ({ onSelect, onClose }) => {
   const [tab, setTab] = useState<"emoji" | "gif">("emoji");
   const [query, setQuery] = useState("");
-  const [searchTerm, setSearchTerm] = useState("");
+  const [results, setResults] = useState<GifResult[]>([]);
+  const [loading, setLoading] = useState(false);
+  const client = useConvex();
 
-  // Only query Giphy via Convex when user searches
-  const giphyResults = useQuery(
-    api.giphy.search,
-    searchTerm ? { query: searchTerm } : "skip",
-  );
+  const searchGiphy = async (searchTerm: string) => {
+    if (!searchTerm.trim()) return;
+    setLoading(true);
+    try {
+      const data = await client.query("giphy:search" as string as any, { query: searchTerm }); // eslint-disable-line @typescript-eslint/no-explicit-any
+      setResults((data as GifResult[]) || []);
+    } catch {
+      setResults([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      setSearchTerm(query);
+      searchGiphy(query);
     }
   };
 
@@ -102,46 +116,40 @@ const GiphyPicker: React.FC<GiphyPickerProps> = ({ onSelect, onClose }) => {
             </div>
             <button
               type="button"
-              onClick={() => setSearchTerm(query)}
-              disabled={!query.trim()}
+              onClick={() => searchGiphy(query)}
+              disabled={loading || !query.trim()}
               className="px-3 py-2 text-sm bg-slate-100 rounded-lg hover:bg-slate-200 disabled:opacity-50"
             >
-              Go
+              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Go"}
             </button>
           </div>
           <div className="p-3 grid grid-cols-3 gap-1.5 max-h-48 overflow-y-auto">
-            {giphyResults ? (
-              giphyResults.length > 0 ? (
-                giphyResults.map((gif: { id: string; preview: string; url: string }) => (
-                  <button
-                    key={gif.id}
-                    type="button"
-                    onClick={() => {
-                      onSelect(gif.url);
-                      onClose();
-                    }}
-                    className="aspect-square rounded-lg overflow-hidden hover:ring-2 ring-primary-400 transition-all"
-                  >
-                    <img
-                      src={gif.preview}
-                      alt="GIF"
-                      className="w-full h-full object-cover"
-                      loading="lazy"
-                    />
-                  </button>
-                ))
-              ) : (
-                searchTerm && (
-                  <p className="col-span-3 text-center text-sm text-slate-400 py-4">
-                    No GIFs found
-                  </p>
-                )
+            {results.length > 0 ? (
+              results.map((gif) => (
+                <button
+                  key={gif.id}
+                  type="button"
+                  onClick={() => {
+                    onSelect(gif.url);
+                    onClose();
+                  }}
+                  className="aspect-square rounded-lg overflow-hidden hover:ring-2 ring-primary-400 transition-all"
+                >
+                  <img
+                    src={gif.preview}
+                    alt="GIF"
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                </button>
+              ))
+            ) : loading ? null : (
+              query && (
+                <p className="col-span-3 text-center text-sm text-slate-400 py-4">
+                  Search for GIFs to add to your review
+                </p>
               )
-            ) : searchTerm ? (
-              <p className="col-span-3 text-center text-sm text-slate-400 py-4">
-                Searching...
-              </p>
-            ) : null}
+            )}
           </div>
         </div>
       )}
