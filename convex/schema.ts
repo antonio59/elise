@@ -19,7 +19,19 @@ export default defineSchema(
       readingGoal: v.optional(v.string()),
       isParent: v.boolean(),
       theme: v.optional(
-        v.union(v.literal("light"), v.literal("dark"), v.literal("kawaii")),
+        v.union(
+          v.literal("editorial"),
+          v.literal("sakura"),
+          v.literal("lavender"),
+          v.literal("midnight"),
+          v.literal("sunset"),
+          v.literal("botanical"),
+          v.literal("berry"),
+          // Legacy values
+          v.literal("light"),
+          v.literal("dark"),
+          v.literal("kawaii"),
+        ),
       ),
       yearlyBookGoal: v.optional(v.number()),
       notifications: v.optional(v.boolean()),
@@ -49,6 +61,7 @@ export default defineSchema(
       review: v.optional(v.string()),
       isFavorite: v.boolean(),
       giftedBy: v.optional(v.string()),
+      moodTags: v.optional(v.array(v.string())),
       startedAt: v.optional(v.number()),
       finishedAt: v.optional(v.number()),
       createdAt: v.number(),

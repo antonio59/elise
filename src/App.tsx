@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import { AuthProvider } from "./contexts/AuthContext";
+import ThemeProvider from "./components/ThemeProvider";
 import ErrorBoundary from "./components/ErrorBoundary";
 
 // Eager load public pages
@@ -44,7 +45,8 @@ function App() {
   return (
     <ErrorBoundary>
       <AuthProvider>
-        <Router>
+        <ThemeProvider>
+          <Router>
           <Routes>
             {/* Public Routes */}
             <Route
@@ -196,6 +198,7 @@ function App() {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Router>
+        </ThemeProvider>
       </AuthProvider>
     </ErrorBoundary>
   );

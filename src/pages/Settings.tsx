@@ -8,6 +8,13 @@ import {
   Bell,
   Target,
   CheckCircle,
+  Sparkles,
+  Moon,
+  Sun,
+  Leaf,
+  Sunset,
+  Cherry,
+  Droplets,
 } from "lucide-react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
@@ -21,7 +28,7 @@ const Settings: React.FC = () => {
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [bio, setBio] = useState("");
-  const [theme, setTheme] = useState<"light" | "dark" | "kawaii">("kawaii");
+  const [theme, setTheme] = useState<string>("editorial");
   const [yearlyBookGoal, setYearlyBookGoal] = useState("");
   const [notifications, setNotifications] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -49,7 +56,7 @@ const Settings: React.FC = () => {
         name: name.trim() || undefined,
         username: username.trim() || undefined,
         bio: bio.trim() || undefined,
-        theme,
+        theme: theme as "editorial" | "sakura" | "lavender" | "midnight" | "sunset" | "botanical" | "berry" | "light" | "dark" | "kawaii",
         yearlyBookGoal: yearlyBookGoal ? parseInt(yearlyBookGoal) : undefined,
         notifications,
       });
@@ -62,19 +69,53 @@ const Settings: React.FC = () => {
 
   const themes = [
     {
-      value: "kawaii" as const,
-      label: "Kawaii",
-      color: "from-pink-400 to-cyan-400",
+      value: "editorial",
+      label: "Editorial",
+      icon: Sun,
+      colors: ["#c4856c", "#102a43", "#faf8f5"],
+      desc: "Warm beige & dusty rose",
     },
     {
-      value: "light" as const,
-      label: "Light",
-      color: "from-slate-200 to-slate-300",
+      value: "sakura",
+      label: "Sakura",
+      icon: Cherry,
+      colors: ["#f472b6", "#22d3ee", "#fafafa"],
+      desc: "Pink & teal kawaii",
     },
     {
-      value: "dark" as const,
-      label: "Dark",
-      color: "from-slate-700 to-slate-800",
+      value: "lavender",
+      label: "Lavender",
+      icon: Droplets,
+      colors: ["#c084fc", "#2dd4bf", "#fafafa"],
+      desc: "Soft purple & mint",
+    },
+    {
+      value: "midnight",
+      label: "Midnight",
+      icon: Moon,
+      colors: ["#facc15", "#627d98", "#1a1f2e"],
+      desc: "Dark navy & gold",
+    },
+    {
+      value: "sunset",
+      label: "Sunset",
+      icon: Sunset,
+      colors: ["#fb923c", "#f87171", "#fffbf5"],
+      desc: "Warm coral & gold",
+    },
+    {
+      value: "botanical",
+      label: "Botanical",
+      icon: Leaf,
+      colors: ["#4ade80", "#facc15", "#faf9f7"],
+      desc: "Sage green & earth",
+    },
+    {
+      value: "berry",
+      label: "Berry",
+      icon: Sparkles,
+      colors: ["#f472b6", "#c084fc", "#fafafa"],
+      desc: "Raspberry & plum",
     },
   ];
 
@@ -185,31 +226,35 @@ const Settings: React.FC = () => {
             <label className="block text-sm font-medium text-slate-700 mb-3">
               Theme
             </label>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
               {themes.map((t) => (
                 <button
                   key={t.value}
                   type="button"
                   onClick={() => setTheme(t.value)}
-                  className={`p-4 rounded-xl border-2 transition-all ${
+                  className={`p-3 rounded-xl border-2 transition-all text-left ${
                     theme === t.value
-                      ? "border-primary-500 bg-primary-50"
+                      ? "border-primary-400 bg-primary-50 shadow-sm"
                       : "border-slate-200 hover:border-slate-300"
                   }`}
                 >
-                  <div
-                    className={`w-full h-8 rounded-lg bg-gradient-to-r ${t.color} mb-2`}
-                  />
-                  <span
-                    className={`text-sm font-medium ${
-                      theme === t.value ? "text-primary-600" : "text-slate-600"
-                    }`}
-                  >
-                    {t.label}
-                  </span>
+                  <div className="flex gap-1.5 mb-2">
+                    {t.colors.map((c, i) => (
+                      <div
+                        key={i}
+                        className="w-6 h-6 rounded-full border border-slate-200"
+                        style={{ backgroundColor: c }}
+                      />
+                    ))}
+                  </div>
+                  <div className="font-medium text-sm text-slate-800">{t.label}</div>
+                  <div className="text-xs text-slate-500">{t.desc}</div>
                 </button>
               ))}
             </div>
+            <p className="text-xs text-slate-500 mt-2">
+              Theme applies to the public homepage and your dashboard
+            </p>
           </div>
         </motion.div>
 

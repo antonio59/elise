@@ -1,13 +1,14 @@
 /* Fonts */
-@import "./styles/tokens.css";
-
 @import "tailwindcss";
 
 /* Tell Tailwind where to find classes */
 @source "../index.html";
 @source "./**/*.{js,ts,jsx,tsx}";
 
-/* Theme configuration */
+/* Theme system — alternative palettes */
+@import "./styles/themes.css";
+
+/* Theme configuration — DEFAULT values (Editorial) */
 @theme {
   /* Font families */
   --font-display: "Playfair Display", Georgia, serif;
@@ -85,8 +86,8 @@
   body {
     @apply m-0 min-h-screen antialiased;
     font-family: var(--font-body);
-    background-color: #faf8f5;
-    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c7bfb2' fill-opacity='0.08'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    background-color: var(--color-slate-50);
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c7bfb2' fill-opacity='0.06'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
     color: var(--color-slate-800);
     overflow-x: hidden;
   }
@@ -356,4 +357,110 @@
 .shelf-scroll > * {
   scroll-snap-align: start;
   flex-shrink: 0;
+}
+
+/* ===== Theme Override via data-theme ===== */
+[data-theme="sakura"] body,
+[data-theme="lavender"] body,
+[data-theme="midnight"] body,
+[data-theme="sunset"] body,
+[data-theme="botanical"] body,
+[data-theme="berry"] body {
+  background-color: var(--color-slate-50);
+}
+
+/* Midnight theme: dark mode adjustments */
+[data-theme="midnight"] body {
+  color: var(--color-slate-800);
+}
+[data-theme="midnight"] .card {
+  background-color: var(--color-slate-100);
+  border-color: var(--color-slate-200);
+}
+[data-theme="midnight"] .bg-white {
+  background-color: var(--color-slate-100);
+}
+
+/* ===== Book Card Animations ===== */
+.book-card {
+  transform-style: preserve-3d;
+  transition: transform 0.4s ease, box-shadow 0.3s ease;
+}
+
+.book-card:hover {
+  transform: perspective(800px) rotateY(-5deg) rotateX(2deg) translateY(-8px) scale(1.03);
+  box-shadow: 12px 12px 24px rgba(0, 0, 0, 0.12), -4px -4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.book-card:active {
+  transform: perspective(800px) rotateY(-2deg) scale(0.98);
+  transition: transform 0.1s ease;
+}
+
+/* Book spine effect */
+.book-spine {
+  position: relative;
+}
+.book-spine::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 5%;
+  bottom: 5%;
+  width: 4px;
+  background: linear-gradient(to right, rgba(0,0,0,0.15), transparent);
+  border-radius: 2px 0 0 2px;
+}
+
+/* ===== Mood Tag Styles ===== */
+.mood-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  border: 1px solid currentColor;
+  opacity: 0.85;
+  transition: opacity 0.2s ease;
+}
+.mood-tag:hover {
+  opacity: 1;
+}
+
+/* ===== Rating Label ===== */
+.rating-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-primary-500);
+}
+
+/* ===== Flip Card ===== */
+.flip-card {
+  perspective: 1000px;
+}
+.flip-card-inner {
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+.flip-card.flipped .flip-card-inner {
+  transform: rotateY(180deg);
+}
+.flip-card-front, .flip-card-back {
+  backface-visibility: hidden;
+}
+.flip-card-back {
+  transform: rotateY(180deg);
+}
+
+/* ===== Reading Progress Ring ===== */
+.progress-ring {
+  transform: rotate(-90deg);
+}
+.progress-ring-circle {
+  transition: stroke-dashoffset 0.6s ease;
 }

@@ -101,6 +101,7 @@ export const add = mutation({
     review: v.optional(v.string()),
     isFavorite: v.optional(v.boolean()),
     giftedBy: v.optional(v.string()),
+    moodTags: v.optional(v.array(v.string())),
   },
   handler: async (ctx, args) => {
     const userId = await auth.getUserId(ctx);
@@ -163,6 +164,7 @@ export const update = mutation({
     review: v.optional(v.string()),
     isFavorite: v.optional(v.boolean()),
     giftedBy: v.optional(v.string()),
+    moodTags: v.optional(v.array(v.string())),
   },
   handler: async (ctx, args) => {
     const userId = await auth.getUserId(ctx);
