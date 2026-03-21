@@ -58,7 +58,7 @@ const PublicHome: React.FC = () => {
                 <BookOpen className="w-4 h-4" />
                 Books
               </a>
-              <Link to="/gallery" className="btn btn-secondary">
+              <Link to="/art" className="btn btn-secondary">
                 <Palette className="w-4 h-4" />
                 Art
               </Link>
@@ -212,7 +212,7 @@ const PublicHome: React.FC = () => {
               </p>
             </div>
             {books.length > 0 && (
-              <Link to="/read/books" className="text-sm text-primary-500 hover:text-primary-700 font-medium">
+              <Link to="/books" className="text-sm text-primary-500 hover:text-primary-700 font-medium">
                 See all →
               </Link>
             )}
@@ -362,7 +362,7 @@ const PublicHome: React.FC = () => {
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-2xl sm:text-3xl font-bold text-slate-800">Art</h2>
             <Link
-              to="/gallery"
+              to="/art"
               className="text-primary-500 hover:text-primary-600 text-sm font-medium"
             >
               View gallery →
@@ -416,7 +416,7 @@ const PublicHome: React.FC = () => {
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-2xl sm:text-3xl font-bold text-slate-800">Reviews</h2>
-            <Link to="/read/reviews" className="text-sm text-primary-500 hover:text-primary-700 font-medium">
+            <Link to="/reviews" className="text-sm text-primary-500 hover:text-primary-700 font-medium">
               See all →
             </Link>
           </div>
@@ -919,7 +919,7 @@ const PublicWritings: React.FC = () => {
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-2xl sm:text-3xl font-bold text-slate-800">Writing</h2>
           {writings.length > 0 && (
-            <Link to="/read/writing" className="text-sm text-primary-500 hover:text-primary-700 font-medium">
+            <Link to="/writing" className="text-sm text-primary-500 hover:text-primary-700 font-medium">
               See all →
             </Link>
           )}

@@ -181,7 +181,7 @@ const ReviewsPage: React.FC = () => {
             <p className="text-sm text-slate-400 mb-4">
               Add ratings and reviews to your books in the Dashboard to see them here.
             </p>
-            <Link to="/books" className="btn btn-primary text-sm">
+            <Link to="/dashboard/books" className="btn btn-primary text-sm">
               <BookOpen className="w-4 h-4" />
               Go to My Books
             </Link>
