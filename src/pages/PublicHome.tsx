@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   BookOpen,
   Palette,
-  Sparkles,
   Heart,
   Star,
   MessageSquarePlus,
@@ -32,112 +31,142 @@ const PublicHome: React.FC = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="py-20 px-4">
-        <div className="max-w-4xl mx-auto text-center">
+      <section className="py-24 px-4">
+        <div className="max-w-3xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-white rounded-full shadow-sm mb-6">
-              <Sparkles className="w-4 h-4 text-primary-500" />
-              <span className="text-sm font-medium text-slate-600">
-                Welcome to my world!
-              </span>
-            </div>
-
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-black mb-6">
-              <span className="bg-gradient-to-r from-primary-500 to-accent-500 bg-clip-text text-transparent">
-                Elise's Reading
-              </span>
-              <br />
-              <span className="text-slate-800">Adventures</span>
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 text-slate-900">
+              Elise Reads
             </h1>
 
-            <p className="text-xl text-slate-600 max-w-2xl mx-auto mb-8">
-              Books I love, art I create, and adventures I go on through the
-              pages of amazing stories!
+            <p className="text-lg md:text-xl text-slate-500 max-w-lg mx-auto mb-10 font-light italic">
+              books I've read, art I make, and words I write
             </p>
 
-            <div className="flex flex-wrap justify-center gap-4">
-              <Link to="/gallery" className="btn btn-gradient">
-                <Palette className="w-5 h-5" />
-                View My Art
-              </Link>
-              <a href="#books" className="btn btn-secondary">
-                <BookOpen className="w-5 h-5" />
-                See My Books
+            <div className="flex flex-wrap justify-center gap-3">
+              <a href="#books" className="btn btn-primary">
+                <BookOpen className="w-4 h-4" />
+                Books
               </a>
+              <Link to="/gallery" className="btn btn-secondary">
+                <Palette className="w-4 h-4" />
+                Art
+              </Link>
+              <button
+                onClick={() => setShowSuggestModal(true)}
+                className="btn btn-secondary"
+              >
+                <MessageSquarePlus className="w-4 h-4" />
+                Suggest a Book
+              </button>
             </div>
           </motion.div>
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="py-12 px-4">
-        <div className="max-w-4xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <motion.div
-              className="stat-card text-center"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              <div className="text-2xl sm:text-3xl md:text-4xl font-black bg-gradient-to-r from-primary-500 to-accent-500 bg-clip-text text-transparent">
-                {totalBooks}
-              </div>
-              <div className="text-sm text-slate-500 mt-1">Books Read</div>
-            </motion.div>
+      {/* Stats — only show when there are books */}
+      {totalBooks > 0 && (
+        <section className="py-8 px-4">
+          <div className="max-w-4xl mx-auto">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <motion.div
+                className="stat-card text-center"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+              >
+                <div className="text-2xl sm:text-3xl font-bold text-slate-900">
+                  {totalBooks}
+                </div>
+                <div className="text-xs text-slate-500 mt-1 uppercase tracking-wider">Books Read</div>
+              </motion.div>
 
-            <motion.div
-              className="stat-card text-center"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-            >
-              <div className="text-2xl sm:text-3xl md:text-4xl font-black bg-gradient-to-r from-accent-500 to-primary-500 bg-clip-text text-transparent">
-                {totalPages.toLocaleString()}
-              </div>
-              <div className="text-sm text-slate-500 mt-1">Pages Read</div>
-            </motion.div>
+              <motion.div
+                className="stat-card text-center"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.1 }}
+              >
+                <div className="text-2xl sm:text-3xl font-bold text-slate-900">
+                  {totalPages.toLocaleString()}
+                </div>
+                <div className="text-xs text-slate-500 mt-1 uppercase tracking-wider">Pages</div>
+              </motion.div>
 
-            <motion.div
-              className="stat-card text-center"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-            >
-              <div className="text-2xl sm:text-3xl md:text-4xl font-black bg-gradient-to-r from-accent-500 to-primary-500 bg-clip-text text-transparent">
-                {artworks.length}
-              </div>
-              <div className="text-sm text-slate-500 mt-1">Artworks</div>
-            </motion.div>
+              <motion.div
+                className="stat-card text-center"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2 }}
+              >
+                <div className="text-2xl sm:text-3xl font-bold text-slate-900">
+                  {artworks.length}
+                </div>
+                <div className="text-xs text-slate-500 mt-1 uppercase tracking-wider">Artworks</div>
+              </motion.div>
 
-            <motion.div
-              className="stat-card text-center"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.3 }}
-            >
-              <div className="text-2xl sm:text-3xl md:text-4xl font-black bg-gradient-to-r from-primary-500 to-accent-500 bg-clip-text text-transparent">
-                {books.filter((b) => b.rating && b.rating >= 4).length}
-              </div>
-              <div className="text-sm text-slate-500 mt-1">Favorites</div>
-            </motion.div>
+              <motion.div
+                className="stat-card text-center"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.3 }}
+              >
+                <div className="text-2xl sm:text-3xl font-bold text-slate-900">
+                  {books.filter((b) => b.rating && b.rating >= 4).length}
+                </div>
+                <div className="text-xs text-slate-500 mt-1 uppercase tracking-wider">Favourites</div>
+              </motion.div>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
+
+      {/* 5-Star Shelf — horizontal scroll of top-rated books */}
+      {books.filter((b) => b.rating === 5).length > 0 && (
+        <section className="py-8 px-4">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-xl font-bold text-slate-800 mb-4">5-Star Shelf</h2>
+            <div className="shelf-scroll">
+              {books
+                .filter((b) => b.rating === 5)
+                .map((book) => (
+                  <div key={book._id} className="w-28 sm:w-32">
+                    <div className="aspect-[2/3] rounded-lg overflow-hidden bg-slate-100 shadow-sm">
+                      {book.coverUrl ? (
+                        <img
+                          src={book.coverUrl}
+                          alt={book.title}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-primary-50">
+                          <BookHeart className="w-6 h-6 text-primary-300" />
+                        </div>
+                      )}
+                    </div>
+                    <p className="mt-1.5 text-xs font-medium text-slate-700 line-clamp-1">
+                      {book.title}
+                    </p>
+                  </div>
+                ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Books Section */}
       <section id="books" className="py-16 px-4">
         <div className="max-w-6xl mx-auto">
           <div className="mb-8">
-            <h2 className="text-2xl sm:text-3xl font-bold text-slate-800">My Books</h2>
+            <h2 className="text-2xl sm:text-3xl font-bold text-slate-800">Books</h2>
             <p className="text-slate-500 mt-1">
-              All the books I've read and loved
+              everything I've been reading
             </p>
           </div>
 
@@ -202,7 +231,7 @@ const PublicHome: React.FC = () => {
         <section className="py-16 px-4 bg-white">
           <div className="max-w-6xl mx-auto">
             <div className="flex items-center justify-between mb-8">
-              <h2 className="text-2xl sm:text-3xl font-bold text-slate-800">My Art</h2>
+              <h2 className="text-2xl sm:text-3xl font-bold text-slate-800">Art</h2>
               <Link
                 to="/gallery"
                 className="text-primary-600 hover:text-primary-700 font-medium"
@@ -263,11 +292,10 @@ const PublicHome: React.FC = () => {
             </div>
 
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-800 mb-4">
-              Suggest a Book for Me!
+              Got a recommendation?
             </h2>
-            <p className="text-lg text-slate-600 max-w-xl mx-auto mb-8">
-              Know a great book I should read? I'd love to hear your
-              recommendations!
+            <p className="text-lg text-slate-500 max-w-xl mx-auto mb-8">
+              Read something good lately? Drop it here.
             </p>
 
             <button
@@ -741,18 +769,17 @@ const PublicWritings: React.FC = () => {
     <section className="py-16 px-4">
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center justify-between mb-8">
-          <h2 className="text-2xl sm:text-3xl font-bold text-slate-800">My Writing ✍️</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-slate-800">Writing</h2>
         </div>
 
         {writings.length === 0 ? (
-          <div className="card p-8 text-center">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-violet-100 to-primary-100 flex items-center justify-center">
-              <Feather className="w-8 h-8 text-violet-500" />
-            </div>
-            <h3 className="text-lg font-bold text-slate-800 mb-2">Coming Soon!</h3>
-            <p className="text-slate-500 max-w-md mx-auto">
-              Poetry, short stories, and journal entries will be published here. Stay tuned!
+          <div className="card p-10 text-center max-w-lg mx-auto">
+            <Feather className="w-8 h-8 text-slate-300 mx-auto mb-4" />
+            <h3 className="text-lg font-bold text-slate-700 mb-2">Coming soon</h3>
+            <p className="text-sm text-slate-500 leading-relaxed italic">
+              "The more that you read, the more things you will know. The more that you learn, the more places you'll go."
             </p>
+            <p className="text-xs text-slate-400 mt-3">— Dr. Seuss</p>
           </div>
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
