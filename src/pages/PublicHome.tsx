@@ -16,7 +16,6 @@ import {
   Search,
   Feather,
   BookHeart,
-  BookOpenText,
 } from "lucide-react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
@@ -25,8 +24,6 @@ import { api } from "../../convex/_generated/api";
 const PublicHome: React.FC = () => {
   const books = useQuery(api.books.getReadBooks) ?? [];
   const wishlist = useQuery(api.books.getWishlist) ?? [];
-  const currentlyReading = books.filter((b) => b.status === "reading");
-  const artworks = useQuery(api.artworks.getPublished, { limit: 6 }) ?? [];
   const [showSuggestModal, setShowSuggestModal] = useState(false);
 
   return (
@@ -74,47 +71,6 @@ const PublicHome: React.FC = () => {
       </section>
 
 
-      {/* 5-Star Shelf — horizontal scroll of top-rated books */}
-      {books.filter((b) => b.rating === 5).length > 0 && (
-        <section className="py-8 px-4">
-          <div className="max-w-6xl mx-auto">
-            <div><div><h2 className="text-xl font-bold text-slate-800 mb-4">5-Star Shelf</h2><div className="w-10 h-0.5 bg-primary-400 mt-1 rounded-full"></div></div><div className="w-10 h-0.5 bg-primary-400 mt-1 rounded-full"></div></div>
-            <div className="shelf-scroll">
-              {books
-                .filter((b) => b.rating === 5)
-                .map((book) => (
-                  <div key={book._id} className="w-28 sm:w-32">
-                    <div className="aspect-[2/3] rounded-lg overflow-hidden bg-slate-100 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg">
-                      {book.coverUrl ? (
-                        <img
-                          src={getCoverUrl(book)}
-                          alt={book.title}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-primary-50">
-                          <BookHeart className="w-6 h-6 text-primary-300" />
-                        </div>
-                      )}
-                    </div>
-                    <p className="mt-1.5 text-xs font-medium text-slate-700 line-clamp-1">
-                      {book.title}
-                    </p>
-                  </div>
-                ))}
-              {/* Placeholder slots */}
-              {Array.from({ length: Math.max(0, 4 - books.filter((b) => b.rating === 5).length) }).map((_, i) => (
-                <div key={`ph-${i}`} className="w-28 sm:w-32">
-                  <div className="aspect-[2/3] rounded-lg border-2 border-dashed border-slate-200 bg-slate-50 flex items-center justify-center">
-                    <Star className="w-5 h-5 text-slate-200" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
       {/* Books Section */}
       <section id="books" className="py-16 px-4">
         <div className="max-w-6xl mx-auto">
@@ -131,30 +87,6 @@ const PublicHome: React.FC = () => {
               </Link>
             )}
           </div>
-
-          {/* Currently Reading */}
-          {currentlyReading.length > 0 && (
-            <div className="mb-8">
-              <h3 className="text-lg font-bold text-slate-800 mb-4">📖 Currently Reading</h3>
-              <div className="flex gap-4 overflow-x-auto pb-2">
-                {currentlyReading.map((book) => (
-                  <div key={book._id} className="flex-shrink-0 w-28">
-                    <div className="relative aspect-[2/3] rounded-lg overflow-hidden bg-slate-100 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg">
-                      {getCoverUrl(book) ? (
-                        <img src={getCoverUrl(book)} alt={book.title} className="w-full h-full object-cover" />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-primary-50">
-                          <BookOpen className="w-6 h-6 text-primary-300" />
-                        </div>
-                      )}
-                    </div>
-                    <p className="mt-1.5 text-xs font-medium text-slate-700 line-clamp-1">{book.title}</p>
-                    <p className="text-xs text-slate-400 line-clamp-1">{book.author}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
 
           {books.length === 0 ? (
             <div className="text-center py-12 bg-white rounded-2xl">
@@ -246,68 +178,71 @@ const PublicHome: React.FC = () => {
         </div>
       </section>
 
-      {/* Writings Preview */}
-      <PublicWritings />
-
-      {/* Art Gallery Preview */}
-      <section className="py-16 px-4 bg-white">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex items-center justify-between mb-8">
-            <div><div><h2 className="text-2xl sm:text-3xl font-bold text-slate-800">Art</h2><div className="w-12 h-0.5 bg-primary-400 mt-2 rounded-full"></div></div><div className="w-12 h-0.5 bg-primary-400 mt-2 rounded-full"></div></div>
-            <Link
-              to="/art"
-              className="text-primary-500 hover:text-primary-600 text-sm font-medium"
-            >
-              View gallery →
-            </Link>
-          </div>
-
-          {artworks.length > 0 ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {artworks.slice(0, 6).map((art, index) => (
-                <motion.div
-                  key={art._id}
-                  className="group relative aspect-square rounded-xl overflow-hidden"
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  <img
-                    src={art.imageUrl}
-                    alt={art.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
-                    <div>
-                      <h3 className="text-white font-bold text-sm">{art.title}</h3>
-                      {art.likes && art.likes > 0 && (
-                        <div className="flex items-center gap-1 text-white/80 text-xs">
-                          <Heart className="w-3 h-3" />
-                          {art.likes}
+      {/* 5-Star Shelf — horizontal scroll of top-rated books */}
+      {books.filter((b) => b.rating === 5).length > 0 && (
+        <section className="py-8 px-4">
+          <div className="max-w-6xl mx-auto">
+            <div><div><h2 className="text-xl font-bold text-slate-800 mb-4">5-Star Shelf</h2><div className="w-10 h-0.5 bg-primary-400 mt-1 rounded-full"></div></div><div className="w-10 h-0.5 bg-primary-400 mt-1 rounded-full"></div></div>
+            <div className="shelf-scroll">
+              {books
+                .filter((b) => b.rating === 5)
+                .map((book) => (
+                  <div key={book._id} className="w-28 sm:w-32">
+                    <div className="aspect-[2/3] rounded-lg overflow-hidden bg-slate-100 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg">
+                      {book.coverUrl ? (
+                        <img
+                          src={getCoverUrl(book)}
+                          alt={book.title}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-primary-50">
+                          <BookHeart className="w-6 h-6 text-primary-300" />
                         </div>
                       )}
                     </div>
+                    <p className="mt-1.5 text-xs font-medium text-slate-700 line-clamp-1">
+                      {book.title}
+                    </p>
                   </div>
-                </motion.div>
+                ))}
+              {/* Placeholder slots */}
+              {Array.from({ length: Math.max(0, 4 - books.filter((b) => b.rating === 5).length) }).map((_, i) => (
+                <div key={`ph-${i}`} className="w-28 sm:w-32">
+                  <div className="aspect-[2/3] rounded-lg border-2 border-dashed border-slate-200 bg-slate-50 flex items-center justify-center">
+                    <Star className="w-5 h-5 text-slate-200" />
+                  </div>
+                </div>
               ))}
             </div>
-          ) : (
-            <div className="card p-8 text-center">
-              <Palette className="w-8 h-8 text-slate-300 mx-auto mb-3" />
-              <p className="text-sm text-slate-500">Artwork coming soon.</p>
-            </div>
-          )}
+          </div>
+        </section>
+      )}
+
+      {/* Writing & Art Teasers */}
+      <section className="py-16 px-4">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-6">
+          <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-100 text-center">
+            <Feather className="w-8 h-8 text-primary-400 mx-auto mb-3" />
+            <h3 className="text-lg font-bold text-slate-800 mb-2">Writing</h3>
+            <p className="text-sm text-slate-500 italic">stories, poems, and thoughts — coming soon</p>
+            <Link to="/writing" className="inline-block mt-4 text-sm text-primary-500 hover:text-primary-600 font-medium">See all →</Link>
+          </div>
+          <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-100 text-center">
+            <Palette className="w-8 h-8 text-primary-400 mx-auto mb-3" />
+            <h3 className="text-lg font-bold text-slate-800 mb-2">Art</h3>
+            <p className="text-sm text-slate-500 italic">drawings, doodles, and digital art — coming soon</p>
+            <Link to="/art" className="inline-block mt-4 text-sm text-primary-500 hover:text-primary-600 font-medium">See all →</Link>
+          </div>
         </div>
       </section>
-
 
       {/* Wishlist Section */}
       <section id="wishlist" className="py-16 px-4 bg-white">
         <div className="max-w-6xl mx-auto">
           <div className="flex items-end justify-between mb-8">
             <div>
-              <div><div><h2 className="text-2xl sm:text-3xl font-bold text-slate-800">Wishlist</h2><div className="w-12 h-0.5 bg-primary-400 mt-2 rounded-full"></div></div><div className="w-12 h-0.5 bg-primary-400 mt-2 rounded-full"></div></div>
+              <div><h2 className="text-2xl sm:text-3xl font-bold text-slate-800">Wishlist</h2><div className="w-12 h-0.5 bg-primary-400 mt-2 rounded-full"></div></div>
               <p className="text-slate-500 mt-1">books I'd love to read next ✨</p>
             </div>
             {wishlist.length > 0 && (
@@ -847,77 +782,6 @@ const SuggestBookModal: React.FC<SuggestBookModalProps> = ({
 export default PublicHome;
 
 // ===== PUBLIC WRITINGS SECTION =====
-const PublicWritings: React.FC = () => {
-  const writings = useQuery(api.writings.getPublished, { limit: 6 }) ?? [];
-
-  const typeConfig: Record<string, { icon: typeof Feather; color: string; label: string }> = {
-    poetry: { icon: Feather, color: "text-violet-500", label: "Poetry" },
-    story: { icon: BookHeart, color: "text-primary-500", label: "Story" },
-    journal: { icon: BookOpenText, color: "text-accent-500", label: "Journal" },
-  };
-
-  return (
-    <section id="writing" className="py-16 px-4">
-      <div className="max-w-6xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
-          <div><div><h2 className="text-2xl sm:text-3xl font-bold text-slate-800">Writing</h2><div className="w-12 h-0.5 bg-primary-400 mt-2 rounded-full"></div></div><div className="w-12 h-0.5 bg-primary-400 mt-2 rounded-full"></div></div>
-          {writings.length > 0 && (
-            <Link to="/writing" className="text-sm text-primary-500 hover:text-primary-700 font-medium">
-              See all →
-            </Link>
-          )}
-        </div>
-
-        {writings.length === 0 ? (
-          <div className="card p-10 text-center max-w-lg mx-auto">
-            <Feather className="w-8 h-8 text-slate-300 mx-auto mb-4" />
-            <h3 className="text-lg font-bold text-slate-700 mb-2">Coming soon</h3>
-            <p className="text-sm text-slate-500 leading-relaxed italic">
-              "The more that you read, the more things you will know. The more that you learn, the more places you'll go."
-            </p>
-            <p className="text-xs text-slate-400 mt-3">— Dr. Seuss</p>
-          </div>
-        ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {writings.map((writing, index) => {
-            const config = typeConfig[writing.type] || typeConfig.story;
-            const Icon = config.icon;
-            const preview = writing.content.slice(0, 120) + "...";
-
-            return (
-              <motion.div
-                key={writing._id}
-                className="card p-5 hover:border-violet-200 transition-colors"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-              >
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-100 to-primary-100 flex items-center justify-center">
-                    <Icon className={`w-4 h-4 ${config.color}`} />
-                  </div>
-                  <span className="text-xs font-medium text-slate-500 capitalize">
-                    {config.label}
-                  </span>
-                </div>
-                <h3 className="font-bold text-slate-800 mb-2">{writing.title}</h3>
-                <p className="text-sm text-slate-600 italic line-clamp-3 leading-relaxed">
-                  {preview}
-                </p>
-                <p className="text-xs text-slate-400 mt-3">
-                  {writing.wordCount} words · {new Date(writing.createdAt).toLocaleDateString()}
-                </p>
-              </motion.div>
-            );
-          })}
-          </div>
-        )}
-      </div>
-    </section>
-  );
-};
-
 const ReviewStrip: React.FC<{ books: Array<{ _id: string; title: string; author: string; coverUrl?: string; rating?: number; review?: string; isFavorite?: boolean }> }> = ({ books }) => {
   const reviewed = books.filter((b) => b.rating && b.rating > 0);
 
