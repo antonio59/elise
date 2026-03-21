@@ -50,6 +50,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const createUserProfile = useMutation(api.users.createProfile);
 
+  // Temporary debug — remove after fixing prod auth loop
+  console.log("Auth debug:", {
+    isAuthenticated,
+    isLoading,
+    currentUser,
+    loading: isLoading || (isAuthenticated && !currentUser),
+  });
+
   // Fix #1: Properly gate loading — wait for currentUser to resolve after auth.
   // We check !currentUser (not === undefined) because auth.getUserId can return
   // null briefly right after sign-in before the session propagates, causing
