@@ -117,11 +117,29 @@ export const submit = mutation({
       throw new Error("This book has already been suggested!");
     }
 
-    return await ctx.db.insert("bookSuggestions", {
+    const suggestionId = await ctx.db.insert("bookSuggestions", {
       ...args,
       status: "pending",
       createdAt: Date.now(),
     });
+
+    // Send email notification (fire-and-forget)
+    try {
+      const { internal } = await import("./_generated/api");
+      await ctx.scheduler.runAfter(0, (internal as any).emails.sendSuggestionNotification, {
+        title: args.title,
+        author: args.author,
+        suggestedBy: args.suggestedBy,
+        suggestedByEmail: args.suggestedByEmail,
+        reason: args.reason,
+        genre: args.genre,
+        coverUrl: args.coverUrl,
+      });
+    } catch (e) {
+      console.warn("Email notification failed:", e);
+    }
+
+    return suggestionId;
   },
 });
 
