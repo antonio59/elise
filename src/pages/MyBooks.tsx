@@ -17,6 +17,7 @@ import {
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import type { Doc, Id } from "../../convex/_generated/dataModel";
+import GoogleBookSearch from "../components/GoogleBookSearch";
 
 type TabType = "read" | "reading" | "wishlist";
 
@@ -757,6 +758,25 @@ const AddBookModal: React.FC<AddBookModalProps> = ({
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="p-6 space-y-4">
+            {/* Google Books Search */}
+            <GoogleBookSearch
+              onSelect={(book) => {
+                setTitle(book.title);
+                setAuthor(book.author);
+                setCoverUrl(book.coverUrl);
+                if (book.pageCount > 0) setPageCount(book.pageCount.toString());
+              }}
+            />
+
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-slate-200" />
+              </div>
+              <div className="relative flex justify-center text-xs">
+                <span className="bg-white px-2 text-slate-400 uppercase tracking-wider">or add manually</span>
+              </div>
+            </div>
+
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">
                 Title *
