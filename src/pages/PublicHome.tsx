@@ -23,6 +23,7 @@ import { api } from "../../convex/_generated/api";
 
 const PublicHome: React.FC = () => {
   const books = useQuery(api.books.getReadBooks) ?? [];
+  const siteSettings = useQuery(api.siteSettings.get);
   const wishlist = useQuery(api.books.getWishlist) ?? [];
   const [showSuggestModal, setShowSuggestModal] = useState(false);
 
@@ -38,11 +39,11 @@ const PublicHome: React.FC = () => {
             transition={{ duration: 0.6 }}
           >
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 text-slate-900">
-              Elise Reads
+              {siteSettings?.heroTitle || "Elise Reads"}
             </h1>
 
             <p className="text-xl md:text-2xl text-slate-500/80 max-w-lg mx-auto mb-8 font-medium italic">
-              books I've read, art I make, and words I write
+              {siteSettings?.heroSubtitle || "books I've read, art I make, and words I write"}
             </p>
 
             <div className="flex flex-wrap justify-center gap-3">

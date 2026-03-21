@@ -22,6 +22,8 @@ import { useAuth } from "../contexts/AuthContext";
 
 const Settings: React.FC = () => {
   const { user } = useAuth();
+  const siteSettings = useQuery(api.siteSettings.get);
+  const updateSiteSettings = useMutation(api.siteSettings.update);
   const profile = useQuery(api.users.getProfile);
   const updateProfile = useMutation(api.users.updateProfile);
 
@@ -31,6 +33,8 @@ const Settings: React.FC = () => {
   const [theme, setTheme] = useState<string>("editorial");
   const [yearlyBookGoal, setYearlyBookGoal] = useState("");
   const [notifications, setNotifications] = useState(true);
+  const [heroTitle, setHeroTitle] = useState("");
+  const [heroSubtitle, setHeroSubtitle] = useState("");
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
@@ -46,6 +50,13 @@ const Settings: React.FC = () => {
     }
   }, [profile]);
 
+  useEffect(() => {
+    if (siteSettings) {
+      setHeroTitle(siteSettings.heroTitle || "");
+      setHeroSubtitle(siteSettings.heroSubtitle || "");
+    }
+  }, [siteSettings]);
+
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
@@ -60,6 +71,10 @@ const Settings: React.FC = () => {
         theme: theme as any,
         yearlyBookGoal: yearlyBookGoal ? parseInt(yearlyBookGoal) : undefined,
         notifications,
+      });
+      await updateSiteSettings({
+        heroTitle: heroTitle.trim() || undefined,
+        heroSubtitle: heroSubtitle.trim() || undefined,
       });
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
@@ -256,6 +271,60 @@ const Settings: React.FC = () => {
             <p className="text-xs text-slate-500 mt-2">
               Theme applies to the public homepage and your dashboard
             </p>
+          </div>
+        </motion.div>
+
+        {/* Hero Settings Section */}
+        <motion.div
+          className="card p-6"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15 }}
+        >
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-primary-500 flex items-center justify-center">
+              <Sparkles className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <h2 className="font-bold text-slate-800">Homepage Hero</h2>
+              <p className="text-sm text-slate-500">Customize what visitors see first</p>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Site Title</label>
+              <input
+                type="text"
+                value={heroTitle}
+                onChange={(e) => setHeroTitle(e.target.value)}
+                className="input"
+                placeholder="Elise Reads"
+              />
+              <p className="text-xs text-slate-500 mt-1">The big heading on your homepage</p>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Tagline</label>
+              <input
+                type="text"
+                value={heroSubtitle}
+                onChange={(e) => setHeroSubtitle(e.target.value)}
+                className="input"
+                placeholder="books I've read, art I make, and words I write"
+              />
+              <p className="text-xs text-slate-500 mt-1">The italic subtitle under your title</p>
+            </div>
+            <div className="p-4 bg-gradient-to-br from-primary-50 to-violet-50 rounded-xl">
+              <p className="text-xs text-slate-500 font-medium mb-2">Preview:</p>
+              <h2 className="text-2xl font-bold">
+                <span className="bg-gradient-to-r from-primary-600 to-violet-500 bg-clip-text text-transparent">
+                  {heroTitle || "Elise Reads"}
+                </span>
+              </h2>
+              <p className="text-base text-slate-500 italic mt-1">
+                {heroSubtitle || "books I've read, art I make, and words I write"}
+              </p>
+            </div>
           </div>
         </motion.div>
 
