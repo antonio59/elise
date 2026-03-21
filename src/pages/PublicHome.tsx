@@ -20,6 +20,12 @@ import {
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 
+// Fix HTML-encoded URLs (Google Books stores &amp; instead of &)
+function fixCoverUrl(url: string | undefined): string | undefined {
+  if (!url) return undefined;
+  return url.replace(/&amp;/g, "&");
+}
+
 const PublicHome: React.FC = () => {
   const books = useQuery(api.books.getReadBooks) ?? [];
   const artworks = useQuery(api.artworks.getPublished, { limit: 6 }) ?? [];
@@ -174,7 +180,7 @@ const PublicHome: React.FC = () => {
                     <div className="aspect-[2/3] rounded-lg overflow-hidden bg-slate-100 shadow-sm">
                       {book.coverUrl ? (
                         <img
-                          src={book.coverUrl}
+                          src={fixCoverUrl(book.coverUrl)}
                           alt={book.title}
                           className="w-full h-full object-cover"
                         />
@@ -223,7 +229,7 @@ const PublicHome: React.FC = () => {
                   <div className="aspect-[2/3] rounded-xl overflow-hidden bg-slate-100 shadow-md group-hover:shadow-xl transition-all group-hover:scale-105">
                     {book.coverUrl ? (
                       <img
-                        src={book.coverUrl}
+                        src={fixCoverUrl(book.coverUrl)}
                         alt={book.title}
                         className="w-full h-full object-cover"
                       />
@@ -616,7 +622,7 @@ const SuggestBookModal: React.FC<SuggestBookModalProps> = ({
                         >
                           {book.coverUrl ? (
                             <img
-                              src={book.coverUrl}
+                              src={fixCoverUrl(book.coverUrl)}
                               alt={book.title}
                               className="w-10 h-14 object-cover rounded"
                             />
