@@ -52,168 +52,24 @@ function App() {
           <Router>
           <Routes>
             {/* Public Routes */}
-            <Route
-              path="/"
-              element={
-                <PublicLayout>
-                  <PublicHome />
-                </PublicLayout>
-              }
-            />
-            <Route
-              path="/gallery"
-              element={
-                <PublicLayout>
-                  <PublicGallery />
-                </PublicLayout>
-              }
-            />
-            <Route
-              path="/wishlist"
-              element={
-                <PublicLayout>
-                  <PublicWishlist />
-                </PublicLayout>
-              }
-            />
-            <Route
-              path="/read/books"
-              element={
-                <PublicLayout>
-                  <PublicBooks />
-                </PublicLayout>
-              }
-            />
-            <Route
-              path="/read/reviews"
-              element={
-                <PublicLayout>
-                  <PublicReviews />
-                </PublicLayout>
-              }
-            />
-            <Route
-              path="/read/writing"
-              element={
-                <PublicLayout>
-                  <PublicWritings />
-                </PublicLayout>
-              }
-            />
-            <Route
-              path="/about"
-              element={
-                <PublicLayout>
-                  <About />
-                </PublicLayout>
-              }
-            />
-            <Route
-              path="/login"
-              element={
-                <AuthLayout>
-                  <Suspense fallback={<PageLoader />}>
-                    <Login />
-                  </Suspense>
-                </AuthLayout>
-              }
-            />
-            <Route
-              path="/signup"
-              element={
-                <AuthLayout>
-                  <Suspense fallback={<PageLoader />}>
-                    <Signup />
-                  </Suspense>
-                </AuthLayout>
-              }
-            />
+            <Route path="/" element={<PublicLayout><PublicHome /></PublicLayout>} />
+            <Route path="/books" element={<PublicLayout><PublicBooks /></PublicLayout>} />
+            <Route path="/reviews" element={<PublicLayout><PublicReviews /></PublicLayout>} />
+            <Route path="/writing" element={<PublicLayout><PublicWritings /></PublicLayout>} />
+            <Route path="/art" element={<PublicLayout><PublicGallery /></PublicLayout>} />
+            <Route path="/wishlist" element={<PublicLayout><PublicWishlist /></PublicLayout>} />
+            <Route path="/about" element={<PublicLayout><About /></PublicLayout>} />
+            <Route path="/login" element={<AuthLayout><Suspense fallback={<PageLoader />}><Login /></Suspense></AuthLayout>} />
+            <Route path="/signup" element={<AuthLayout><Suspense fallback={<PageLoader />}><Signup /></Suspense></AuthLayout>} />
 
-            {/* Protected Routes */}
-            <Route
-              path="/dashboard"
-              element={
-                <Suspense fallback={<PageLoader />}>
-                  <ProtectedRoute>
-                    <Layout>
-                      <Dashboard />
-                    </Layout>
-                  </ProtectedRoute>
-                </Suspense>
-              }
-            />
-            <Route
-              path="/books"
-              element={
-                <Suspense fallback={<PageLoader />}>
-                  <ProtectedRoute>
-                    <Layout>
-                      <MyBooks />
-                    </Layout>
-                  </ProtectedRoute>
-                </Suspense>
-              }
-            />
-            <Route
-              path="/reviews"
-              element={
-                <Suspense fallback={<PageLoader />}>
-                  <ProtectedRoute>
-                    <Layout>
-                      <Reviews />
-                    </Layout>
-                  </ProtectedRoute>
-                </Suspense>
-              }
-            />
-            <Route
-              path="/art"
-              element={
-                <Suspense fallback={<PageLoader />}>
-                  <ProtectedRoute>
-                    <Layout>
-                      <MyArt />
-                    </Layout>
-                  </ProtectedRoute>
-                </Suspense>
-              }
-            />
-            <Route
-              path="/writing"
-              element={
-                <Suspense fallback={<PageLoader />}>
-                  <ProtectedRoute>
-                    <Layout>
-                      <MyWritings />
-                    </Layout>
-                  </ProtectedRoute>
-                </Suspense>
-              }
-            />
-            <Route
-              path="/suggestions"
-              element={
-                <Suspense fallback={<PageLoader />}>
-                  <ProtectedRoute>
-                    <Layout>
-                      <Suggestions />
-                    </Layout>
-                  </ProtectedRoute>
-                </Suspense>
-              }
-            />
-            <Route
-              path="/settings"
-              element={
-                <Suspense fallback={<PageLoader />}>
-                  <ProtectedRoute>
-                    <Layout>
-                      <Settings />
-                    </Layout>
-                  </ProtectedRoute>
-                </Suspense>
-              }
-            />
+            {/* Dashboard Routes */}
+            <Route path="/dashboard" element={<Suspense fallback={<PageLoader />}><ProtectedRoute><Layout><Dashboard /></Layout></ProtectedRoute></Suspense>} />
+            <Route path="/dashboard/books" element={<Suspense fallback={<PageLoader />}><ProtectedRoute><Layout><MyBooks /></Layout></ProtectedRoute></Suspense>} />
+            <Route path="/dashboard/reviews" element={<Suspense fallback={<PageLoader />}><ProtectedRoute><Layout><Reviews /></Layout></ProtectedRoute></Suspense>} />
+            <Route path="/dashboard/art" element={<Suspense fallback={<PageLoader />}><ProtectedRoute><Layout><MyArt /></Layout></ProtectedRoute></Suspense>} />
+            <Route path="/dashboard/writing" element={<Suspense fallback={<PageLoader />}><ProtectedRoute><Layout><MyWritings /></Layout></ProtectedRoute></Suspense>} />
+            <Route path="/dashboard/suggestions" element={<Suspense fallback={<PageLoader />}><ProtectedRoute><Layout><Suggestions /></Layout></ProtectedRoute></Suspense>} />
+            <Route path="/dashboard/settings" element={<Suspense fallback={<PageLoader />}><ProtectedRoute><Layout><Settings /></Layout></ProtectedRoute></Suspense>} />
 
             {/* Legacy redirects */}
             <Route

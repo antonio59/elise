@@ -214,7 +214,7 @@ const Dashboard: React.FC = () => {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between">
                       <h4 className="font-medium text-slate-800 line-clamp-1">{book.title}</h4>
-                      <Link to="/books" className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-slate-200 rounded">
+                      <Link to="/dashboard/books" className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-slate-200 rounded">
                         <Pencil className="w-3.5 h-3.5 text-slate-400" />
                       </Link>
                     </div>
@@ -324,7 +324,7 @@ const Dashboard: React.FC = () => {
       {/* Quick Actions */}
       <div className="grid md:grid-cols-3 gap-4">
         <Link
-          to="/books"
+          to="/dashboard/books"
           className="card p-6 hover:border-primary-300 transition-colors group"
         >
           <div className="flex items-center gap-4">
@@ -342,7 +342,7 @@ const Dashboard: React.FC = () => {
         </Link>
 
         <Link
-          to="/writing"
+          to="/dashboard/writing"
           className="card p-6 hover:border-violet-300 transition-colors group"
         >
           <div className="flex items-center gap-4">
@@ -360,7 +360,7 @@ const Dashboard: React.FC = () => {
         </Link>
 
         <Link
-          to="/art"
+          to="/dashboard/art"
           className="card p-6 hover:border-accent-300 transition-colors group"
         >
           <div className="flex items-center gap-4">
@@ -383,7 +383,7 @@ const Dashboard: React.FC = () => {
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold text-slate-800">Recent Books</h2>
           <Link
-            to="/books"
+            to="/dashboard/books"
             className="text-primary-600 hover:text-primary-700 text-sm font-medium"
           >
             View all
@@ -396,7 +396,7 @@ const Dashboard: React.FC = () => {
             <p className="text-slate-500 mb-4">
               No books yet. Start adding your favorites!
             </p>
-            <Link to="/books" className="btn btn-primary">
+            <Link to="/dashboard/books" className="btn btn-primary">
               Add Your First Book
             </Link>
           </div>
@@ -443,7 +443,7 @@ const Dashboard: React.FC = () => {
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold text-slate-800">Recent Art</h2>
           <Link
-            to="/art"
+            to="/dashboard/art"
             className="text-accent-600 hover:text-accent-700 text-sm font-medium"
           >
             View all
@@ -456,7 +456,7 @@ const Dashboard: React.FC = () => {
             <p className="text-slate-500 mb-4">
               No artworks yet. Show off your creations!
             </p>
-            <Link to="/art" className="btn btn-gradient">
+            <Link to="/dashboard/art" className="btn btn-gradient">
               Upload Your First Art
             </Link>
           </div>

@@ -23,12 +23,12 @@ interface LayoutProps {
 
 const NAV_ITEMS = [
   { path: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { path: "/books", label: "My Books", icon: BookOpen },
-  { path: "/reviews", label: "Reviews", icon: Star },
-  { path: "/writing", label: "My Writing", icon: PenTool },
-  { path: "/art", label: "My Art", icon: Palette },
-  { path: "/suggestions", label: "Suggestions", icon: MessageSquare },
-  { path: "/settings", label: "Settings", icon: Settings },
+  { path: "/dashboard/books", label: "My Books", icon: BookOpen },
+  { path: "/dashboard/reviews", label: "Reviews", icon: Star },
+  { path: "/dashboard/writing", label: "My Writing", icon: PenTool },
+  { path: "/dashboard/art", label: "My Art", icon: Palette },
+  { path: "/dashboard/suggestions", label: "Suggestions", icon: MessageSquare },
+  { path: "/dashboard/settings", label: "Settings", icon: Settings },
 ];
 
 // Main layout for protected pages (with sidebar)
@@ -174,9 +174,10 @@ export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
 
   const navLinks = [
-    { label: "Books", href: "/#books", type: "href" as const },
-    { label: "Gallery", to: "/gallery", type: "link" as const },
-    { label: "Writing", href: "/#writing", type: "href" as const },
+    { label: "Books", to: "/books", type: "link" as const },
+    { label: "Reviews", to: "/reviews", type: "link" as const },
+    { label: "Writing", to: "/writing", type: "link" as const },
+    { label: "Art", to: "/art", type: "link" as const },
     { label: "Wishlist", to: "/wishlist", type: "link" as const },
     { label: "About", to: "/about", type: "link" as const },
   ];
@@ -197,17 +198,11 @@ export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
 
           {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-6">
-            {navLinks.map((link) =>
-              link.type === "href" ? (
-                <a key={link.label} href={link.href} className="text-slate-600 hover:text-primary-600 font-medium transition-colors">
-                  {link.label}
-                </a>
-              ) : (
-                <Link key={link.label} to={link.to!} className="text-slate-600 hover:text-primary-600 font-medium transition-colors">
-                  {link.label}
-                </Link>
-              )
-            )}
+            {navLinks.map((link) => (
+              <Link key={link.label} to={link.to} className="text-slate-600 hover:text-primary-600 font-medium transition-colors">
+                {link.label}
+              </Link>
+            ))}
             {user ? (
               <Link to="/dashboard" className="btn btn-secondary text-sm">
                 Dashboard
@@ -238,27 +233,16 @@ export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
               exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.2 }}
             >
-              {navLinks.map((link) =>
-                link.type === "href" ? (
-                  <a
-                    key={link.label}
-                    href={link.href}
-                    className="block px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 font-medium"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    {link.label}
-                  </a>
-                ) : (
-                  <Link
-                    key={link.label}
-                    to={link.to!}
-                    className="block px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 font-medium"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    {link.label}
-                  </Link>
-                )
-              )}
+              {navLinks.map((link) => (
+                <Link
+                  key={link.label}
+                  to={link.to}
+                  className="block px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 font-medium"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {link.label}
+                </Link>
+              ))}
               <div className="pt-2">
                 {user ? (
                   <Link to="/dashboard" className="btn btn-secondary w-full justify-center" onClick={() => setMobileMenuOpen(false)}>
