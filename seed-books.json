@@ -1,0 +1,42 @@
+[
+  {
+    "title": "Impossible Creatures",
+    "author": "Katherine Rundell",
+    "coverUrl": "http://books.google.com/books/content?id=4stGEQAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api",
+    "genre": "Fantasy",
+    "pageCount": 385,
+    "status": "read"
+  },
+  {
+    "title": "My Hero Academia, Vol. 2",
+    "author": "Kohei Horikoshi",
+    "coverUrl": "http://books.google.com/books/content?id=OnrICgAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api",
+    "genre": "Manga",
+    "pageCount": 209,
+    "status": "read"
+  },
+  {
+    "title": "Lottie Brooks's Totally Disastrous School-Trip",
+    "author": "Katie Kirby",
+    "coverUrl": "http://books.google.com/books/content?id=9YBzEAAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api",
+    "genre": "Comedy",
+    "pageCount": 288,
+    "status": "read"
+  },
+  {
+    "title": "The Extremely Embarrassing Life of Lottie Brooks",
+    "author": "Katie Kirby",
+    "coverUrl": "http://books.google.com/books/content?id=OQQwEQAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api",
+    "genre": "Comedy",
+    "pageCount": 433,
+    "status": "read"
+  },
+  {
+    "title": "The Wimpy Kid Movie Diary",
+    "author": "Jeff Kinney",
+    "coverUrl": "http://books.google.com/books/content?id=IMDsswEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api",
+    "genre": "Comedy",
+    "pageCount": 199,
+    "status": "read"
+  }
+]
