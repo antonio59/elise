@@ -22,6 +22,7 @@ interface Book {
   isFavorite?: boolean;
   pageCount?: number;
   status: string;
+  moodTags?: string[];
 }
 
 // Fix Google Books HTML-encoded URLs
@@ -252,6 +253,15 @@ const ReviewsPage: React.FC = () => {
                           <span className="inline-block mt-2 px-2 py-0.5 bg-slate-100 rounded text-xs text-slate-500">
                             {book.genre}
                           </span>
+                        )}
+                        {book.moodTags && book.moodTags.length > 0 && (
+                          <div className="flex flex-wrap gap-1 mt-2">
+                            {book.moodTags.map((tag) => (
+                              <span key={tag} className="mood-tag">
+                                {tag}
+                              </span>
+                            ))}
+                          </div>
                         )}
                       </div>
                     </div>
