@@ -173,8 +173,9 @@ export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
 
   const navLinks = [
     { label: "Books", href: "/#books", type: "href" as const },
-    { label: "Wishlist", to: "/wishlist", type: "link" as const },
     { label: "Gallery", to: "/gallery", type: "link" as const },
+    { label: "Writing", href: "/#writing", type: "href" as const },
+    { label: "Wishlist", to: "/wishlist", type: "link" as const },
   ];
 
   return (
@@ -205,12 +206,12 @@ export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
               )
             )}
             {user ? (
-              <Link to="/dashboard" className="btn btn-gradient text-sm">
+              <Link to="/dashboard" className="btn btn-secondary text-sm">
                 Dashboard
               </Link>
             ) : (
-              <Link to="/login" className="btn btn-primary text-sm">
-                Sign In
+              <Link to="/login" className="text-sm text-slate-400 hover:text-slate-600 transition-colors">
+                Sign in
               </Link>
             )}
           </nav>
@@ -257,12 +258,12 @@ export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
               )}
               <div className="pt-2">
                 {user ? (
-                  <Link to="/dashboard" className="btn btn-gradient w-full justify-center" onClick={() => setMobileMenuOpen(false)}>
+                  <Link to="/dashboard" className="btn btn-secondary w-full justify-center" onClick={() => setMobileMenuOpen(false)}>
                     Dashboard
                   </Link>
                 ) : (
-                  <Link to="/login" className="btn btn-primary w-full justify-center" onClick={() => setMobileMenuOpen(false)}>
-                    Sign In
+                  <Link to="/login" className="text-sm text-slate-400 hover:text-slate-600 px-4 py-3 block" onClick={() => setMobileMenuOpen(false)}>
+                    Sign in
                   </Link>
                 )}
               </div>
