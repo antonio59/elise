@@ -216,3 +216,60 @@ export const toggleFavorite = mutation({
     await ctx.db.patch(args.id, { isFavorite: !book.isFavorite });
   },
 });
+
+// Seed books for a specific user (admin use)
+export const seedBooks = mutation({
+  args: {
+    email: v.string(),
+    books: v.array(
+      v.object({
+        title: v.string(),
+        author: v.string(),
+        coverUrl: v.optional(v.string()),
+        genre: v.optional(v.string()),
+        pageCount: v.optional(v.number()),
+        status: v.optional(
+          v.union(
+            v.literal("reading"),
+            v.literal("read"),
+            v.literal("wishlist"),
+          ),
+        ),
+      }),
+    ),
+  },
+  handler: async (ctx, args) => {
+    // Find user by email
+    const allProfiles = await ctx.db.query("userProfiles").collect();
+    const profile = allProfiles.find(
+      (p) => p.email?.toLowerCase() === args.email.toLowerCase(),
+    );
+    if (!profile) throw new Error(`User not found for email: ${args.email}`);
+
+    let count = 0;
+    for (const book of args.books) {
+      // Check for duplicates
+      const normalizedTitle = book.title.toLowerCase().trim();
+      const normalizedAuthor = book.author.toLowerCase().trim();
+      const allBooks = await ctx.db.query("books").collect();
+      const existing = allBooks.find(
+        (b) =>
+          b.title.toLowerCase().trim() === normalizedTitle &&
+          b.author.toLowerCase().trim() === normalizedAuthor,
+      );
+      if (existing) continue;
+
+      await ctx.db.insert("books", {
+        title: book.title,
+        author: book.author,
+        coverUrl: book.coverUrl,
+        genre: book.genre || "Other",
+        pageCount: book.pageCount,
+        status: book.status || "read",
+        userId: profile.userId,
+      });
+      count++;
+    }
+    return `Added ${count} book(s) for ${args.email}`;
+  },
+});
