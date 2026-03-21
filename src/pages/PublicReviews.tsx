@@ -44,7 +44,10 @@ const PublicReviews: React.FC = () => {
           <ArrowLeft className="w-4 h-4" />
           Back
         </Link>
-        <h1 className="text-3xl font-bold text-slate-800">Reviews</h1>
+        <span className="inline-block px-3 py-1 bg-violet-100 text-violet-600 rounded-full text-xs font-semibold uppercase tracking-wider mb-3">Book Reviews</span>
+            <h1 className="text-3xl sm:text-4xl font-bold">
+              <span className="bg-gradient-to-r from-primary-600 to-violet-500 bg-clip-text text-transparent">My Reviews</span>
+            </h1>
         <p className="text-slate-500 mt-1">what I thought about these books</p>
       </div>
 

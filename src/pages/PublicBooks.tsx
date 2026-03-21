@@ -40,7 +40,10 @@ const PublicBooks: React.FC = () => {
           <ArrowLeft className="w-4 h-4" />
           Back
         </Link>
-        <h1 className="text-3xl font-bold text-slate-800">Books</h1>
+        <span className="inline-block px-3 py-1 bg-primary-100 text-primary-600 rounded-full text-xs font-semibold uppercase tracking-wider mb-3">Book Shelf</span>
+          <h1 className="text-3xl sm:text-4xl font-bold">
+            <span className="bg-gradient-to-r from-primary-600 to-violet-500 bg-clip-text text-transparent">Books I've Read</span>
+          </h1>
         <p className="text-slate-500 mt-1">everything I've read</p>
       </div>
 
