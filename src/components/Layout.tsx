@@ -13,6 +13,7 @@ import {
   Menu,
   X,
   PenTool,
+  Star,
 } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 
@@ -23,6 +24,7 @@ interface LayoutProps {
 const NAV_ITEMS = [
   { path: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { path: "/books", label: "My Books", icon: BookOpen },
+  { path: "/reviews", label: "Reviews", icon: Star },
   { path: "/writing", label: "My Writing", icon: PenTool },
   { path: "/art", label: "My Art", icon: Palette },
   { path: "/suggestions", label: "Suggestions", icon: MessageSquare },

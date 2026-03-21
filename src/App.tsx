@@ -27,6 +27,7 @@ const MyArt = lazy(() => import("./pages/MyArt"));
 const MyWritings = lazy(() => import("./pages/MyWritings"));
 const Suggestions = lazy(() => import("./pages/Suggestions"));
 const Settings = lazy(() => import("./pages/Settings"));
+const Reviews = lazy(() => import("./pages/Reviews"));
 const ProtectedRoute = lazy(() => import("./components/ProtectedRoute"));
 
 // Loading spinner
@@ -119,6 +120,18 @@ function App() {
                   <ProtectedRoute>
                     <Layout>
                       <MyBooks />
+                    </Layout>
+                  </ProtectedRoute>
+                </Suspense>
+              }
+            />
+            <Route
+              path="/reviews"
+              element={
+                <Suspense fallback={<PageLoader />}>
+                  <ProtectedRoute>
+                    <Layout>
+                      <Reviews />
                     </Layout>
                   </ProtectedRoute>
                 </Suspense>
