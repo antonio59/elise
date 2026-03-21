@@ -48,10 +48,13 @@ const MyBooks: React.FC = () => {
   const updateBook = useMutation(api.books.update);
   const removeBook = useMutation(api.books.remove);
 
-  const [activeTab, setActiveTab] = useState<TabType>("read");
+  const [activeTab, setActiveTab] = useState<"read" | "reading" | "wishlist">("read");
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingBook, setEditingBook] = useState<Book | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [showEditReview, setShowEditReview] = useState(false);
+  const [reviewBookId, setReviewBookId] = useState<Id<"books"> | null>(null);
+  const [reviewText, setReviewText] = useState("");
 
   // Filter by status instead of isRead
   const readBooks = books.filter((b: Book) => b.status === "read");
@@ -244,7 +247,7 @@ const MyBooks: React.FC = () => {
         isOpen={showAddModal}
         onClose={() => setShowAddModal(false)}
         onAdd={async (book, destination) => {
-          await addBook({
+          const bookId = await addBook({
             title: book.title,
             author: book.author,
             coverUrl: book.coverUrl,
@@ -255,6 +258,12 @@ const MyBooks: React.FC = () => {
             isFavorite: false,
           });
           setShowAddModal(false);
+          // If added as "read", prompt to write a review
+          if (destination === "read") {
+            setReviewBookId(bookId);
+            setReviewText("");
+            setShowEditReview(true);
+          }
         }}
       />
 
@@ -271,6 +280,65 @@ const MyBooks: React.FC = () => {
           setEditingBook(null);
         }}
       />
+
+      {/* Write Review Popup */}
+      <AnimatePresence>
+        {showEditReview && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+              onClick={() => setShowEditReview(false)}
+            />
+            <motion.div
+              className="relative bg-white rounded-2xl shadow-xl max-w-md w-full p-6"
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+            >
+              <h2 className="text-xl font-bold text-slate-800 mb-2">Write a Review ✨</h2>
+              <p className="text-sm text-slate-500 mb-4">Share your thoughts about this book</p>
+              <textarea
+                value={reviewText}
+                onChange={(e) => setReviewText(e.target.value)}
+                className="w-full h-32 p-3 border border-slate-200 rounded-xl text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent"
+                placeholder="What did you think? Did it make you feel something? Would you recommend it?"
+              />
+              <div className="flex gap-3 mt-4">
+                <button
+                  onClick={() => {
+                    setShowEditReview(false);
+                    setReviewBookId(null);
+                    setReviewText("");
+                  }}
+                  className="btn btn-secondary flex-1"
+                >
+                  Skip
+                </button>
+                <button
+                  onClick={async () => {
+                    if (reviewBookId && reviewText.trim()) {
+                      await updateBook({
+                        id: reviewBookId,
+                        review: reviewText.trim(),
+                      });
+                    }
+                    setShowEditReview(false);
+                    setReviewBookId(null);
+                    setReviewText("");
+                  }}
+                  className="btn btn-primary flex-1"
+                  disabled={!reviewText.trim()}
+                >
+                  Save Review
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
@@ -306,6 +374,7 @@ interface EditBookModalProps {
     pageCount?: number;
     status?: "read" | "reading" | "wishlist";
     rating?: number;
+    review?: string;
     isFavorite?: boolean;
     moodTags?: string[];
   }) => Promise<void>;
@@ -319,10 +388,11 @@ const EditBookModal: React.FC<EditBookModalProps> = ({
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [coverUrl, setCoverUrl] = useState("");
-  const [genre, setGenre] = useState("");
+  const [genre, setGenre] = useState("Other");
   const [pageCount, setPageCount] = useState("");
   const [status, setStatus] = useState<"read" | "reading" | "wishlist">("read");
   const [rating, setRating] = useState(0);
+  const [review, setReview] = useState("");
   const [isFavorite, setIsFavorite] = useState(false);
   const [moodTags, setMoodTags] = useState<string[]>([]);
   const [saving, setSaving] = useState(false);
@@ -337,6 +407,7 @@ const EditBookModal: React.FC<EditBookModalProps> = ({
       setPageCount(book.pageCount?.toString() || "");
       setStatus(book.status);
       setRating(book.rating || 0);
+      setReview(book.review || "");
       setIsFavorite(book.isFavorite);
       setMoodTags(book.moodTags || []);
     }
@@ -356,6 +427,7 @@ const EditBookModal: React.FC<EditBookModalProps> = ({
         pageCount: pageCount ? parseInt(pageCount) : undefined,
         status,
         rating: status === "read" && rating > 0 ? rating : undefined,
+        review: review.trim() || undefined,
         isFavorite,
         moodTags: moodTags.length > 0 ? moodTags : undefined,
       });
@@ -587,6 +659,21 @@ const EditBookModal: React.FC<EditBookModalProps> = ({
                 <p className="text-xs text-slate-500 mt-2">
                   Click to tag the vibes of this book
                 </p>
+              </div>
+            )}
+
+            {/* Review (only for finished books) */}
+            {status === "read" && (
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-2">
+                  Review
+                </label>
+                <textarea
+                  value={review}
+                  onChange={(e) => setReview(e.target.value)}
+                  className="w-full h-28 p-3 border border-slate-200 rounded-xl text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent"
+                  placeholder="What did you think about this book? Did it make you feel something?"
+                />
               </div>
             )}
 
