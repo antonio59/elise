@@ -12,10 +12,16 @@ import {
   X,
   Loader2,
   PenTool,
+  Pencil,
 } from "lucide-react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { useAuth } from "../contexts/AuthContext";
+
+// Fix HTML-encoded URLs (Google Books stores &amp; instead of &)
+function fixCoverUrl(url: string | undefined): string | undefined {
+  return url?.replace(/&amp;/g, "&");
+}
 
 const Dashboard: React.FC = () => {
   const { user } = useAuth();
@@ -195,10 +201,10 @@ const Dashboard: React.FC = () => {
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {currentlyReading.map((book) => (
-                <div key={book._id} className="flex gap-3 p-3 bg-slate-50 rounded-xl">
+                <div key={book._id} className="flex gap-3 p-3 bg-slate-50 rounded-xl group relative">
                   <div className="w-16 h-24 rounded-lg overflow-hidden bg-slate-200 flex-shrink-0">
-                    {book.coverUrl ? (
-                      <img src={book.coverUrl} alt={book.title} className="w-full h-full object-cover" />
+                    {fixCoverUrl(book.coverUrl) ? (
+                      <img src={fixCoverUrl(book.coverUrl)} alt={book.title} className="w-full h-full object-cover" />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-100 to-accent-100">
                         <BookOpen className="w-6 h-6 text-primary-300" />
@@ -206,7 +212,12 @@ const Dashboard: React.FC = () => {
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h4 className="font-medium text-slate-800 line-clamp-1">{book.title}</h4>
+                    <div className="flex items-start justify-between">
+                      <h4 className="font-medium text-slate-800 line-clamp-1">{book.title}</h4>
+                      <Link to="/books" className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-slate-200 rounded">
+                        <Pencil className="w-3.5 h-3.5 text-slate-400" />
+                      </Link>
+                    </div>
                     <p className="text-sm text-slate-500">{book.author}</p>
                     {book.pagesRead && book.pageCount && (
                       <div className="mt-2">
@@ -402,9 +413,9 @@ const Dashboard: React.FC = () => {
               }) => (
                 <div key={book._id} className="group">
                   <div className="aspect-[2/3] rounded-xl overflow-hidden bg-slate-100 shadow-sm group-hover:shadow-lg transition-all">
-                    {book.coverUrl ? (
+                    {fixCoverUrl(book.coverUrl) ? (
                       <img
-                        src={book.coverUrl}
+                        src={fixCoverUrl(book.coverUrl)}
                         alt={book.title}
                         className="w-full h-full object-cover"
                       />

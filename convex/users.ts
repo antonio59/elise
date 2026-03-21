@@ -70,9 +70,14 @@ export const createProfile = mutation({
 
     return await ctx.db.insert("userProfiles", {
       userId,
-      ...args,
+      name: args.name,
+      username: args.username,
+      isParent: args.isParent,
+      theme: args.theme as any, // eslint-disable-line @typescript-eslint/no-explicit-any
+      yearlyBookGoal: args.yearlyBookGoal,
+      notifications: args.notifications,
       role,
-    } as any);
+    });
   },
 });
 
