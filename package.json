@@ -11,9 +11,7 @@
     "build:frontend": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "deploy:staging": "convex deploy --cmd 'bun run build'",
-    "deploy:production": "npx convex deploy --cmd 'npm run build'",
-    "postinstall": "node scripts/postinstall.cjs"
+    "deploy:production": "npx convex deploy --cmd 'npm run build'"
   },
   "dependencies": {
     "@auth/core": "^0.37.4",
