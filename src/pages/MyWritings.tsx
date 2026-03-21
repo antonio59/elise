@@ -15,7 +15,9 @@ import {
   Eye,
   EyeOff,
   Globe,
+  Smile,
 } from "lucide-react";
+import GiphyPicker from "../components/GiphyPicker";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import type { Doc, Id } from "../../convex/_generated/dataModel";
@@ -311,6 +313,7 @@ const WritingEditor: React.FC<WritingEditorProps> = ({ writing, onSave, onClose 
   const [type, setType] = useState<WritingType>(writing?.type || "poetry");
   const [genre, setGenre] = useState(writing?.genre || "");
   const [isPublished, setIsPublished] = useState(writing?.isPublished || false);
+  const [showEmoji, setShowEmoji] = useState(false);
   const [saving, setSaving] = useState(false);
 
   const wordCount = content.trim().split(/\s+/).filter(Boolean).length;
@@ -418,18 +421,34 @@ const WritingEditor: React.FC<WritingEditorProps> = ({ writing, onSave, onClose 
               </label>
               <span className="text-xs text-slate-400">{wordCount} words</span>
             </div>
-            <textarea
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              className="input min-h-[250px] resize-y font-[var(--font-body)] leading-relaxed"
-              placeholder={
-                type === "poetry"
-                  ? "Write your poem here...\n\nEach line a whisper,\nEach verse a dream..."
-                  : type === "story"
-                    ? "Once upon a time...\n\nWrite your story here. The world you create is yours alone..."
-                    : "Dear Diary,\n\nToday was..."
-              }
-            />
+            <div className="relative">
+              <textarea
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                className="input min-h-[250px] resize-y font-[var(--font-body)] leading-relaxed"
+                placeholder={
+                  type === "poetry"
+                    ? "Write your poem here...\n\nEach line a whisper,\nEach verse a dream..."
+                    : type === "story"
+                      ? "Once upon a time...\n\nWrite your story here. The world you create is yours alone..."
+                      : "Dear Diary,\n\nToday was..."
+                }
+              />
+              <button
+                type="button"
+                onClick={() => setShowEmoji(!showEmoji)}
+                className="absolute bottom-3 right-3 p-1.5 text-slate-400 hover:text-primary-500 hover:bg-slate-100 rounded-lg transition-colors"
+                title="Emoji & GIF"
+              >
+                <Smile className="w-4 h-4" />
+              </button>
+              {showEmoji && (
+                <GiphyPicker
+                  onSelect={(value) => setContent((prev) => prev + value)}
+                  onClose={() => setShowEmoji(false)}
+                />
+              )}
+            </div>
           </div>
 
           {/* Publish Toggle */}

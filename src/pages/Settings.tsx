@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
@@ -9,6 +10,7 @@ import {
   Target,
   CheckCircle,
   Sparkles,
+  Heart,
   Moon,
   Sun,
   Leaf,
@@ -35,6 +37,8 @@ const Settings: React.FC = () => {
   const [notifications, setNotifications] = useState(true);
   const [heroTitle, setHeroTitle] = useState("");
   const [heroSubtitle, setHeroSubtitle] = useState("");
+  const [footerTagline, setFooterTagline] = useState("");
+  const [footerNote, setFooterNote] = useState("");
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
@@ -54,6 +58,8 @@ const Settings: React.FC = () => {
     if (siteSettings) {
       setHeroTitle(siteSettings.heroTitle || "");
       setHeroSubtitle(siteSettings.heroSubtitle || "");
+      setFooterTagline((siteSettings as any).footerTagline || "");
+      setFooterNote((siteSettings as any).footerNote || "");
     }
   }, [siteSettings]);
 
@@ -67,15 +73,16 @@ const Settings: React.FC = () => {
         name: name.trim() || undefined,
         username: username.trim() || undefined,
         bio: bio.trim() || undefined,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        theme: theme as any,
+theme: theme as any,
         yearlyBookGoal: yearlyBookGoal ? parseInt(yearlyBookGoal) : undefined,
         notifications,
       });
       await updateSiteSettings({
         heroTitle: heroTitle.trim() || undefined,
         heroSubtitle: heroSubtitle.trim() || undefined,
-      });
+        footerTagline: footerTagline.trim() || undefined,
+        footerNote: footerNote.trim() || undefined,
+      } as any);
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
     } finally {
@@ -163,32 +170,6 @@ const Settings: React.FC = () => {
           </div>
 
           <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
-                Display Name
-              </label>
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="input"
-                placeholder="Your name"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
-                Username
-              </label>
-              <input
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className="input"
-                placeholder="@username"
-              />
-            </div>
-
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">
                 Bio
@@ -324,6 +305,47 @@ const Settings: React.FC = () => {
               <p className="text-base text-slate-500 italic mt-1">
                 {heroSubtitle || "books I've read, art I make, and words I write"}
               </p>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Footer Settings Section */}
+        <motion.div
+          className="card p-6"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.18 }}
+        >
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-400 to-violet-400 flex items-center justify-center">
+              <Heart className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <h2 className="font-bold text-slate-800">Footer</h2>
+              <p className="text-sm text-slate-500">Customise what's at the bottom</p>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Tagline</label>
+              <input
+                type="text"
+                value={footerTagline}
+                onChange={(e) => setFooterTagline(e.target.value)}
+                className="input"
+                placeholder="books I've read, art I make, and words I write"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Note</label>
+              <input
+                type="text"
+                value={footerNote}
+                onChange={(e) => setFooterNote(e.target.value)}
+                className="input"
+                placeholder="Made with love for Elise 💜"
+              />
             </div>
           </div>
         </motion.div>

@@ -58,6 +58,7 @@ const MyBooks: React.FC = () => {
   const [editingBook, setEditingBook] = useState<Book | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [showEditReview, setShowEditReview] = useState(false);
+  const [showReviewEmoji, setShowReviewEmoji] = useState(false);
   const [reviewBookId, setReviewBookId] = useState<Id<"books"> | null>(null);
   const [reviewText, setReviewText] = useState("");
 
@@ -308,12 +309,28 @@ const MyBooks: React.FC = () => {
             >
               <h2 className="text-xl font-bold text-slate-800 mb-2">Write a Review ✨</h2>
               <p className="text-sm text-slate-500 mb-4">Share your thoughts about this book</p>
-              <textarea
-                value={reviewText}
-                onChange={(e) => setReviewText(e.target.value)}
-                className="w-full h-32 p-3 border border-slate-200 rounded-xl text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent"
-                placeholder="What did you think? Did it make you feel something? Would you recommend it?"
-              />
+              <div className="relative">
+                <textarea
+                  value={reviewText}
+                  onChange={(e) => setReviewText(e.target.value)}
+                  className="w-full h-32 p-3 border border-slate-200 rounded-xl text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent"
+                  placeholder="What did you think? Did it make you feel something? Would you recommend it?"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowReviewEmoji(!showReviewEmoji)}
+                  className="absolute bottom-2 right-2 p-1.5 text-slate-400 hover:text-primary-500 hover:bg-slate-100 rounded-lg transition-colors"
+                  title="Emoji & GIF"
+                >
+                  <Smile className="w-4 h-4" />
+                </button>
+                {showReviewEmoji && (
+                  <GiphyPicker
+                    onSelect={(value) => setReviewText((prev) => prev + value)}
+                    onClose={() => setShowReviewEmoji(false)}
+                  />
+                )}
+              </div>
               <div className="flex gap-3 mt-4">
                 <button
                   onClick={() => {

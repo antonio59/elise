@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -18,6 +19,8 @@ import {
   Gift,
 } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
+import { useQuery } from "convex/react";
+import { api } from "../../convex/_generated/api";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -173,6 +176,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
 
 // Public layout (with header/footer)
 export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
+  const siteSettings = useQuery(api.siteSettings.get);
   const { user } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
 
@@ -284,8 +288,8 @@ export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
             </div>
             <span className="text-lg font-bold bg-gradient-to-r from-primary-600 to-violet-500 bg-clip-text text-transparent">Elise Reads</span>
           </Link>
-          <p className="text-sm text-slate-400 italic">books I've read, art I make, and words I write</p>
-          <p className="text-xs text-slate-300 mt-3">Made with love for Elise 💜</p>
+          <p className="text-sm text-slate-400 italic">{(siteSettings as any)?.footerTagline || "books I've read, art I make, and words I write"}</p>
+          <p className="text-xs text-slate-300 mt-3">{(siteSettings as any)?.footerNote || "Made with love for Elise 💜"}</p>
         </div>
       </footer>
     </div>
