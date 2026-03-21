@@ -101,7 +101,10 @@ const About: React.FC = () => {
 
   const isOwner = !!user;
 
-  if (!profile && !ownProfile) {
+  // Loading state: show spinner only if queries are genuinely still loading
+  const isLoading = profile === undefined && ownProfile === undefined;
+
+  if (isLoading && !user) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin text-slate-300" />
@@ -109,10 +112,13 @@ const About: React.FC = () => {
     );
   }
 
-  // Display data: use public profile for viewing, own profile for editing
+  // Display data: prefer profile, fall back to own profile, then auth user
   const display = editing ? ownProfile : profile;
-  if (!display) return null;
-
+  const displayName = display?.name || user?.name || "Elise";
+  const displayAvatarUrl: string | null = (display && 'avatarUrl' in display && display.avatarUrl) ? display.avatarUrl : null;
+  const displayBio: string | null = (display && 'bio' in display && display.bio) ? display.bio : null;
+  const displayGenres: string[] = (display && 'favoriteGenres' in display && display.favoriteGenres) ? display.favoriteGenres : [];
+  const displayGoal: string | null = (display && 'readingGoal' in display && display.readingGoal) ? display.readingGoal : null;
   const currentlyReading = !editing && profile?.currentlyReading ? profile.currentlyReading : null;
 
   return (
@@ -143,10 +149,10 @@ const About: React.FC = () => {
               {/* Avatar */}
               <div className="relative self-center sm:self-start">
                 <div className="w-24 h-24 rounded-full overflow-hidden bg-primary-50 flex items-center justify-center">
-                  {display.avatarUrl ? (
+                  {displayAvatarUrl ? (
                     <img
-                      src={display.avatarUrl}
-                      alt={display.name}
+                      src={displayAvatarUrl}
+                      alt={displayName}
                       className="w-full h-full object-cover"
                     />
                   ) : (
@@ -214,21 +220,18 @@ const About: React.FC = () => {
                   </div>
                 ) : (
                   <>
-                    <h2 className="text-xl font-bold text-slate-800">{display.name}</h2>
-                    {display.username && (
-                      <p className="text-sm text-slate-400">@{display.username}</p>
-                    )}
-                    {display.bio ? (
-                      <p className="text-sm text-slate-600 mt-3 leading-relaxed">{display.bio}</p>
+                    <h2 className="text-xl font-bold text-slate-800">{displayName}</h2>
+                    {displayBio ? (
+                      <p className="text-sm text-slate-600 mt-3 leading-relaxed">{displayBio}</p>
                     ) : isOwner ? (
                       <p className="text-sm text-slate-400 mt-3 italic">
                         Add a bio to tell people about yourself.
                       </p>
                     ) : null}
-                    {display.readingGoal && (
+                    {displayGoal && (
                       <div className="flex items-center gap-2 mt-3 text-sm text-slate-500">
                         <Target className="w-4 h-4 text-primary-400" />
-                        {display.readingGoal}
+                        {displayGoal}
                       </div>
                     )}
                   </>
@@ -258,9 +261,9 @@ const About: React.FC = () => {
                   </button>
                 ))}
               </div>
-            ) : display.favoriteGenres && display.favoriteGenres.length > 0 ? (
+            ) : displayGenres.length > 0 ? (
               <div className="flex flex-wrap gap-2">
-                {display.favoriteGenres.map((genre) => (
+                {displayGenres.map((genre: string) => (
                   <span key={genre} className="badge badge-primary">
                     {genre}
                   </span>

@@ -7,8 +7,7 @@ export const getPublished = query({
   args: { limit: v.optional(v.number()) },
   handler: async (ctx, args) => {
     const allArtworks = await ctx.db.query("artworks").order("desc").collect();
-    const published = allArtworks.filter((a) => a.isPublished);
-    return args.limit ? published.slice(0, args.limit) : published;
+    return args.limit ? allArtworks.slice(0, args.limit) : allArtworks;
   },
 });
 
