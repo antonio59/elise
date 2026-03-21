@@ -21,7 +21,7 @@ payload = json.dumps({"userId": user_id, "books": books})
 print(f"📚 Seeding {len(books)} books for user {user_id}...")
 
 result = subprocess.run(
-    ["npx", "convex", "run", "seed:seedBooks"],
+    ["npx", "convex", "run", "--prod", "seed:seedBooks"],
     input=payload,
     capture_output=True,
     text=True,
