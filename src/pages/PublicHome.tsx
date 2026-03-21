@@ -33,7 +33,7 @@ const PublicHome: React.FC = () => {
     <div className="min-h-screen">
 
       {/* Hero Section */}
-      <section className="py-24 px-4">
+      <section className="py-12 sm:py-16 px-4">
         <div className="max-w-3xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -49,7 +49,7 @@ const PublicHome: React.FC = () => {
             </p>
 
             <div className="flex flex-wrap justify-center gap-3">
-              <a href="#books" className="btn btn-primary">
+              <a href="#books" className="btn btn-secondary">
                 <BookOpen className="w-4 h-4" />
                 Books
               </a>
@@ -78,7 +78,7 @@ const PublicHome: React.FC = () => {
       {books.filter((b) => b.rating === 5).length > 0 && (
         <section className="py-8 px-4">
           <div className="max-w-6xl mx-auto">
-            <h2 className="text-xl font-bold text-slate-800 mb-4">5-Star Shelf</h2>
+            <div><h2 className="text-xl font-bold text-slate-800 mb-4">5-Star Shelf</h2><div className="w-10 h-0.5 bg-primary-400 mt-1 rounded-full"></div></div>
             <div className="shelf-scroll">
               {books
                 .filter((b) => b.rating === 5)
@@ -112,7 +112,7 @@ const PublicHome: React.FC = () => {
         <div className="max-w-6xl mx-auto">
           <div className="flex items-end justify-between mb-8">
             <div>
-              <h2 className="text-2xl sm:text-3xl font-bold text-slate-800">Books</h2>
+              <div><h2 className="text-2xl sm:text-3xl font-bold text-slate-800">Books</h2><div className="w-12 h-0.5 bg-primary-400 mt-2 rounded-full"></div></div>
               <p className="text-slate-500 mt-1">
                 everything I've been reading
               </p>
@@ -229,7 +229,7 @@ const PublicHome: React.FC = () => {
       <section className="py-16 px-4 bg-white">
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center justify-between mb-8">
-            <h2 className="text-2xl sm:text-3xl font-bold text-slate-800">Reviews</h2>
+            <div><h2 className="text-2xl sm:text-3xl font-bold text-slate-800">Reviews</h2><div className="w-12 h-0.5 bg-primary-400 mt-2 rounded-full"></div></div>
             <Link to="/reviews" className="text-sm text-primary-500 hover:text-primary-700 font-medium">
               See all →
             </Link>
@@ -245,7 +245,7 @@ const PublicHome: React.FC = () => {
       <section className="py-16 px-4 bg-white">
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center justify-between mb-8">
-            <h2 className="text-2xl sm:text-3xl font-bold text-slate-800">Art</h2>
+            <div><h2 className="text-2xl sm:text-3xl font-bold text-slate-800">Art</h2><div className="w-12 h-0.5 bg-primary-400 mt-2 rounded-full"></div></div>
             <Link
               to="/art"
               className="text-primary-500 hover:text-primary-600 text-sm font-medium"
@@ -299,7 +299,7 @@ const PublicHome: React.FC = () => {
         <div className="max-w-6xl mx-auto">
           <div className="flex items-end justify-between mb-8">
             <div>
-              <h2 className="text-2xl sm:text-3xl font-bold text-slate-800">Wishlist</h2>
+              <div><h2 className="text-2xl sm:text-3xl font-bold text-slate-800">Wishlist</h2><div className="w-12 h-0.5 bg-primary-400 mt-2 rounded-full"></div></div>
               <p className="text-slate-500 mt-1">books I'd love to read next ✨</p>
             </div>
             {wishlist.length > 0 && (
@@ -852,7 +852,7 @@ const PublicWritings: React.FC = () => {
     <section id="writing" className="py-16 px-4">
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center justify-between mb-8">
-          <h2 className="text-2xl sm:text-3xl font-bold text-slate-800">Writing</h2>
+          <div><h2 className="text-2xl sm:text-3xl font-bold text-slate-800">Writing</h2><div className="w-12 h-0.5 bg-primary-400 mt-2 rounded-full"></div></div>
           {writings.length > 0 && (
             <Link to="/writing" className="text-sm text-primary-500 hover:text-primary-700 font-medium">
               See all →
