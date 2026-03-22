@@ -7,52 +7,57 @@ interface CoverImageProps {
   alt?: string;
 }
 
-// Generate a consistent gradient from title string
-function titleToGradient(title: string): string {
-  const gradients = [
-    "from-rose-400 to-pink-500",
-    "from-violet-400 to-purple-500",
-    "from-sky-400 to-blue-500",
-    "from-emerald-400 to-teal-500",
-    "from-amber-400 to-orange-500",
-    "from-fuchsia-400 to-pink-500",
-    "from-indigo-400 to-violet-500",
-    "from-cyan-400 to-sky-500",
-    "from-red-400 to-rose-500",
-    "from-lime-400 to-green-500",
-  ];
+// Generate a consistent gradient from title string using inline styles
+// (dynamic Tailwind classes don't work at runtime)
+const GRADIENTS: [string, string][] = [
+  ["#f472b6", "#ec4899"],   // rose-400 → pink-500
+  ["#a78bfa", "#a855f7"],   // violet-400 → purple-500
+  ["#38bdf8", "#3b82f6"],   // sky-400 → blue-500
+  ["#34d399", "#14b8a6"],   // emerald-400 → teal-500
+  ["#fbbf24", "#f97316"],   // amber-400 → orange-500
+  ["#e879f9", "#ec4899"],   // fuchsia-400 → pink-500
+  ["#818cf8", "#a78bfa"],   // indigo-400 → violet-500
+  ["#22d3ee", "#38bdf8"],   // cyan-400 → sky-500
+  ["#f87171", "#fb7185"],   // red-400 → rose-500
+  ["#a3e635", "#22c55e"],   // lime-400 → green-500
+];
+
+function titleToGradient(title: string): { from: string; to: string } {
   let hash = 0;
   for (let i = 0; i < title.length; i++) {
     hash = title.charCodeAt(i) + ((hash << 5) - hash);
   }
-  return gradients[Math.abs(hash) % gradients.length];
+  const [from, to] = GRADIENTS[Math.abs(hash) % GRADIENTS.length];
+  return { from, to };
 }
 
 const CoverImage: React.FC<CoverImageProps> = ({ book, className = "", alt }) => {
   const primaryUrl = getCoverUrl(book);
   const fallbackUrl = getFallbackCoverUrl(book);
-  const [currentSrc, setCurrentSrc] = useState(primaryUrl);
-  const [hasErrored, setHasErrored] = useState(false);
+  const [attempt, setAttempt] = useState<"primary" | "fallback" | "failed">(
+    primaryUrl ? "primary" : fallbackUrl ? "fallback" : "failed"
+  );
+
+  const currentSrc = attempt === "primary" ? primaryUrl : attempt === "fallback" ? fallbackUrl : undefined;
 
   const handleError = () => {
-    if (!hasErrored && fallbackUrl && currentSrc !== fallbackUrl) {
-      setHasErrored(true);
-      setCurrentSrc(fallbackUrl);
+    if (attempt === "primary" && fallbackUrl) {
+      setAttempt("fallback");
     } else {
-      setHasErrored(true);
-      setCurrentSrc(undefined);
+      setAttempt("failed");
     }
   };
 
-  // No cover available — show title card
-  if (!currentSrc || hasErrored && !currentSrc) {
+  // No cover available — show title card with inline gradient
+  if (!currentSrc) {
     const title = book.title || "Untitled";
     const author = book.author || "";
-    const gradient = titleToGradient(title);
+    const { from, to } = titleToGradient(title);
 
     return (
       <div
-        className={`bg-gradient-to-br ${gradient} flex flex-col items-center justify-center p-3 text-center ${className}`}
+        style={{ background: `linear-gradient(to bottom right, ${from}, ${to})` }}
+        className={`flex flex-col items-center justify-center p-3 text-center ${className}`}
       >
         <p className="text-white font-bold text-xs sm:text-sm leading-tight line-clamp-4 drop-shadow-sm">
           {title}

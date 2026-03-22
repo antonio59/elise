@@ -36,13 +36,13 @@ const PublicGallery: React.FC = () => {
           <ArrowLeft className="w-4 h-4" />
           Back
         </Link>
-        <div className="mb-8">
-          <span className="inline-block px-3 py-1 bg-accent-100 text-accent-600 rounded-full text-xs font-semibold uppercase tracking-wider mb-3">Art Gallery</span>
-          <h1 className="text-3xl sm:text-4xl font-bold">
-            <span className="bg-gradient-to-r from-primary-500 to-accent-500 bg-clip-text text-transparent">My Creations</span>
-          </h1>
-          <p className="text-slate-500 mt-1">art inspired by the stories I read</p>
-        </div>
+      <div className="mb-8">
+        <span className="inline-block px-3 py-1 bg-accent-100 text-accent-600 rounded-full text-xs font-semibold uppercase tracking-wider mb-3">Art Gallery</span>
+        <h1 className="text-3xl sm:text-4xl font-bold">
+          <span className="bg-gradient-to-r from-primary-600 to-violet-500 bg-clip-text text-transparent">My Creations</span>
+        </h1>
+        <p className="text-slate-500 mt-1">art inspired by the stories I read</p>
+      </div>
 
         {/* Gallery Grid */}
         {artworks.length === 0 ? (
