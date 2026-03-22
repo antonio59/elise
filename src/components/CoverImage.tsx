@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { getCoverUrl } from "../utils/cover";
+
 
 interface CoverImageProps {
   book: { coverStorageId?: string; coverUrl?: string; title?: string; author?: string };
