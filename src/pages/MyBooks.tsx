@@ -1,5 +1,4 @@
-import { getCoverUrl } from "../utils/cover";
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BookOpen,
@@ -16,12 +15,13 @@ import {
   AlertCircle,
   Smile,
 } from "lucide-react";
-import { useQuery, useMutation } from "convex/react";
+import { useQuery, useMutation, useAction } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import type { Doc, Id } from "../../convex/_generated/dataModel";
 import GoogleBookSearch from "../components/GoogleBookSearch";
 import GiphyPicker from "../components/GiphyPicker";
 import CoverUpload from "../components/CoverUpload";
+import CoverImage from "../components/CoverImage";
 
 type TabType = "read" | "reading" | "wishlist";
 
@@ -52,6 +52,19 @@ const MyBooks: React.FC = () => {
   const addBook = useMutation(api.books.add);
   const updateBook = useMutation(api.books.update);
   const removeBook = useMutation(api.books.remove);
+  const storeCover = useAction(api.covers.storeFromUrl);
+  const storeAllCovers = useAction(api.covers.storeAll);
+
+  // Once per session: kick off cover storage for any book that has a coverUrl
+  // but no permanent coverStorageId (e.g. existing books with expired Google URLs).
+  const coverSyncRan = useRef(false);
+  useEffect(() => {
+    if (coverSyncRan.current || books.length === 0) return;
+    const needsSync = books.some((b: Book) => b.coverUrl && !b.coverStorageId);
+    if (!needsSync) return;
+    coverSyncRan.current = true;
+    storeAllCovers({}).catch(() => {});
+  }, [books, storeAllCovers]);
 
   const [activeTab, setActiveTab] = useState<"read" | "reading" | "wishlist">("read");
   const [showAddModal, setShowAddModal] = useState(false);
@@ -185,17 +198,7 @@ const MyBooks: React.FC = () => {
             transition={{ delay: index * 0.05 }}
           >
             <div className="relative aspect-[2/3] rounded-xl overflow-hidden bg-slate-100 shadow-sm group-hover:shadow-xl transition-all">
-              {getCoverUrl(book) ? (
-                <img
-                  src={getCoverUrl(book)}
-                  alt={book.title}
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-100 to-accent-100">
-                  <BookOpen className="w-8 h-8 text-primary-400" />
-                </div>
-              )}
+              <CoverImage book={book} />
 
               {/* Hover overlay */}
               <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
@@ -260,12 +263,15 @@ const MyBooks: React.FC = () => {
             title: book.title,
             author: book.author,
             coverUrl: book.coverUrl,
+            isbn: book.isbn,
             genre: book.genre,
             pageCount: book.pageCount,
             status: destination,
             rating: destination === "read" ? book.rating : undefined,
             isFavorite: false,
           });
+          // Fire-and-forget: permanently store the cover in Convex storage
+          storeCover({ bookId }).catch(() => {});
           setShowAddModal(false);
           // If added as "read", prompt to write a review
           if (destination === "read") {
@@ -377,6 +383,7 @@ interface AddBookModalProps {
       title: string;
       author: string;
       coverUrl?: string;
+      isbn?: string;
       genre: string;
       pageCount?: number;
       description?: string;
@@ -783,6 +790,7 @@ const AddBookModal: React.FC<AddBookModalProps> = ({
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [coverUrl, setCoverUrl] = useState("");
+  const [isbn, setIsbn] = useState<string | undefined>(undefined);
   const [genre, setGenre] = useState("Manga");
   const [pageCount, setPageCount] = useState("");
   const [rating, setRating] = useState(0);
@@ -801,6 +809,7 @@ const AddBookModal: React.FC<AddBookModalProps> = ({
     setTitle("");
     setAuthor("");
     setCoverUrl("");
+    setIsbn(undefined);
     setGenre("Manga");
     setPageCount("");
     setRating(0);
@@ -841,6 +850,7 @@ const AddBookModal: React.FC<AddBookModalProps> = ({
           title: title.trim(),
           author: author.trim(),
           coverUrl: coverUrl.trim() || undefined,
+          isbn,
           genre,
           pageCount: pageCount ? parseInt(pageCount) : undefined,
           ageRating: "All Ages",
@@ -1110,7 +1120,7 @@ const AddBookModal: React.FC<AddBookModalProps> = ({
                   Not the right book?{" "}
                   <button
                     type="button"
-                    onClick={() => { setTitle(""); setAuthor(""); setCoverUrl(""); setGenre("Other"); setPageCount(""); setManualMode(true); }}
+                    onClick={() => { setTitle(""); setAuthor(""); setCoverUrl(""); setIsbn(undefined); setGenre("Other"); setPageCount(""); setManualMode(true); }}
                     className="text-primary-500 hover:underline"
                   >
                     Clear &amp; add manually
@@ -1125,6 +1135,7 @@ const AddBookModal: React.FC<AddBookModalProps> = ({
                     setTitle(book.title);
                     setAuthor(book.author);
                     setCoverUrl(book.coverUrl);
+                    setIsbn(book.isbn);
                     setGenre(book.genre);
                     if (book.pageCount > 0) setPageCount(book.pageCount.toString());
                     setManualMode(false);
