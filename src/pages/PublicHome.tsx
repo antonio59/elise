@@ -1,4 +1,4 @@
-import { getCoverUrl } from "../utils/cover";
+import CoverImage from "../components/CoverImage";
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -15,7 +15,6 @@ import {
   AlertCircle,
   Search,
   Feather,
-  BookHeart,
 } from "lucide-react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
@@ -72,6 +71,37 @@ const PublicHome: React.FC = () => {
       </section>
 
 
+      {/* 5-Star Shelf — horizontal scroll of top-rated books */}
+      {books.filter((b) => b.rating === 5).length > 0 && (
+        <section className="py-8 px-4">
+          <div className="max-w-6xl mx-auto">
+            <div><div><h2 className="text-xl font-bold text-slate-800 mb-4">5-Star Shelf</h2><div className="w-10 h-0.5 bg-primary-400 mt-1 rounded-full"></div></div><div className="w-10 h-0.5 bg-primary-400 mt-1 rounded-full"></div></div>
+            <div className="shelf-scroll">
+              {books
+                .filter((b) => b.rating === 5)
+                .map((book) => (
+                  <div key={book._id} className="w-28 sm:w-32">
+                    <div className="aspect-[2/3] rounded-lg overflow-hidden bg-slate-100 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg">
+                      <CoverImage book={book} className="w-full h-full object-cover" />
+                    </div>
+                    <p className="mt-1.5 text-xs font-medium text-slate-700 line-clamp-1">
+                      {book.title}
+                    </p>
+                  </div>
+                ))}
+              {/* Placeholder slots */}
+              {Array.from({ length: Math.max(0, 4 - books.filter((b) => b.rating === 5).length) }).map((_, i) => (
+                <div key={`ph-${i}`} className="w-28 sm:w-32">
+                  <div className="aspect-[2/3] rounded-lg border-2 border-dashed border-primary-200 bg-primary-50/50 flex flex-col items-center justify-center gap-1">
+                    <Star className="w-5 h-5 text-primary-300" />
+                    <span className="text-[10px] text-primary-400 italic">more soon...</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
       {/* Books Section */}
       <section id="books" className="py-16 px-4">
         <div className="max-w-6xl mx-auto">
@@ -106,17 +136,7 @@ const PublicHome: React.FC = () => {
                   transition={{ delay: Math.min(index * 0.05, 0.3) }}
                 >
                   <div className="aspect-[2/3] rounded-xl overflow-hidden bg-slate-100 shadow-md book-spine transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
-                    {getCoverUrl(book) ? (
-                      <img
-                        src={getCoverUrl(book)}
-                        alt={book.title}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-100 to-accent-100">
-                        <BookOpen className="w-8 h-8 text-primary-400" />
-                      </div>
-                    )}
+                    <CoverImage book={book} className="w-full h-full object-cover" />
                   </div>
                   <h3 className="mt-2 text-sm font-medium text-slate-800 line-clamp-1">
                     {book.title}
@@ -179,47 +199,6 @@ const PublicHome: React.FC = () => {
         </div>
       </section>
 
-      {/* 5-Star Shelf — horizontal scroll of top-rated books */}
-      {books.filter((b) => b.rating === 5).length > 0 && (
-        <section className="py-8 px-4">
-          <div className="max-w-6xl mx-auto">
-            <div><div><h2 className="text-xl font-bold text-slate-800 mb-4">5-Star Shelf</h2><div className="w-10 h-0.5 bg-primary-400 mt-1 rounded-full"></div></div><div className="w-10 h-0.5 bg-primary-400 mt-1 rounded-full"></div></div>
-            <div className="shelf-scroll">
-              {books
-                .filter((b) => b.rating === 5)
-                .map((book) => (
-                  <div key={book._id} className="w-28 sm:w-32">
-                    <div className="aspect-[2/3] rounded-lg overflow-hidden bg-slate-100 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg">
-                      {book.coverUrl ? (
-                        <img
-                          src={getCoverUrl(book)}
-                          alt={book.title}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-primary-50">
-                          <BookHeart className="w-6 h-6 text-primary-300" />
-                        </div>
-                      )}
-                    </div>
-                    <p className="mt-1.5 text-xs font-medium text-slate-700 line-clamp-1">
-                      {book.title}
-                    </p>
-                  </div>
-                ))}
-              {/* Placeholder slots */}
-              {Array.from({ length: Math.max(0, 4 - books.filter((b) => b.rating === 5).length) }).map((_, i) => (
-                <div key={`ph-${i}`} className="w-28 sm:w-32">
-                  <div className="aspect-[2/3] rounded-lg border-2 border-dashed border-primary-200 bg-primary-50/50 flex flex-col items-center justify-center gap-1">
-                    <Star className="w-5 h-5 text-primary-300" />
-                    <span className="text-[10px] text-primary-400 italic">more soon...</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
 
       {/* Writing & Art Teasers */}
       <section className="py-16 px-4">
@@ -278,17 +257,7 @@ const PublicHome: React.FC = () => {
                   viewport={{ once: true }}
                 >
                   <div className="relative aspect-[2/3] rounded-xl overflow-hidden bg-slate-100 shadow-sm group-hover:shadow-xl transition-all">
-                    {getCoverUrl(book) ? (
-                      <img
-                        src={getCoverUrl(book)}
-                        alt={book.title}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-pink-100 to-amber-100">
-                        <BookOpen className="w-8 h-8 text-slate-300" />
-                      </div>
-                    )}
+                    <CoverImage book={book} className="w-full h-full object-cover" />
                     {book.giftedBy && (
                       <div className="absolute top-2 left-2 px-2 py-1 bg-green-500 text-white text-xs rounded-full font-medium">
                         🎁 Gifted by {book.giftedBy}
@@ -606,17 +575,7 @@ const SuggestBookModal: React.FC<SuggestBookModalProps> = ({
                           onClick={() => selectBook(book)}
                           className="w-full flex items-center gap-3 p-3 hover:bg-primary-50 transition-colors text-left border-b border-slate-100 last:border-0"
                         >
-                          {book.coverUrl ? (
-                            <img
-                              src={getCoverUrl(book)}
-                              alt={book.title}
-                              className="w-10 h-14 object-cover rounded"
-                            />
-                          ) : (
-                            <div className="w-10 h-14 bg-slate-100 rounded flex items-center justify-center">
-                              <BookOpen className="w-5 h-5 text-slate-400" />
-                            </div>
-                          )}
+                          <CoverImage book={book} className="w-10 h-14 object-cover rounded" />
                           <div className="flex-1 min-w-0">
                             <p className="font-medium text-slate-800 truncate">
                               {book.title}
@@ -639,17 +598,9 @@ const SuggestBookModal: React.FC<SuggestBookModalProps> = ({
               {/* Selected Book Preview */}
               {selectedBook && (
                 <div className="flex items-start gap-4 p-4 bg-primary-50 rounded-xl border-2 border-primary-200">
-                  {selectedBook.coverUrl ? (
-                    <img
-                      src={selectedBook.coverUrl}
-                      alt={selectedBook.title}
-                      className="w-16 h-24 object-cover rounded-lg shadow"
-                    />
-                  ) : (
-                    <div className="w-16 h-24 bg-slate-200 rounded-lg flex items-center justify-center">
-                      <BookOpen className="w-6 h-6 text-slate-400" />
-                    </div>
-                  )}
+                  <div className="w-16 h-24 rounded-lg overflow-hidden flex-shrink-0">
+                    <CoverImage book={selectedBook} className="w-full h-full object-cover rounded-lg shadow" />
+                  </div>
                   <div className="flex-1 min-w-0">
                     <h3 className="font-bold text-slate-800 truncate">
                       {selectedBook.title}
@@ -820,17 +771,7 @@ const ReviewStrip: React.FC<{ books: Array<{ _id: string; title: string; author:
         >
           <div className="flex gap-3">
             <div className="w-16 h-24 rounded-lg overflow-hidden bg-slate-100 flex-shrink-0">
-              {getCoverUrl(book) ? (
-                <img
-                  src={getCoverUrl(book)}
-                  alt={book.title}
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-100 to-accent-100">
-                  <BookOpen className="w-5 h-5 text-primary-300" />
-                </div>
-              )}
+              <CoverImage book={book} className="w-full h-full object-cover" />
             </div>
             <div className="flex-1 min-w-0">
               <h3 className="font-bold text-sm text-slate-800 line-clamp-1">{book.title}</h3>

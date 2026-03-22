@@ -532,3 +532,9 @@
   color: var(--color-violet-400);
   animation: sparkle 1.5s ease-in-out infinite;
 }
+
+/* Sharp cover images */
+img[src*="googleapis.com"],
+img[src*="convex.cloud"] {
+  image-rendering: -webkit-optimize-contrast;
+}

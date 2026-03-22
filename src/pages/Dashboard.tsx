@@ -1,4 +1,4 @@
-import { getCoverUrl } from "../utils/cover";
+import CoverImage from "../components/CoverImage";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -144,7 +144,7 @@ const Dashboard: React.FC = () => {
         </motion.div>
 
         <motion.div
-          className="stat-card"
+          className="stat-card hidden md:block"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.25 }}
@@ -163,7 +163,7 @@ const Dashboard: React.FC = () => {
         </motion.div>
 
         <motion.div
-          className="stat-card"
+          className="stat-card hidden md:block"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
@@ -201,13 +201,7 @@ const Dashboard: React.FC = () => {
               {currentlyReading.map((book) => (
                 <div key={book._id} className="flex gap-3 p-3 bg-slate-50 rounded-xl group relative">
                   <div className="w-16 h-24 rounded-lg overflow-hidden bg-slate-200 flex-shrink-0">
-                    {getCoverUrl(book) ? (
-                      <img src={getCoverUrl(book)} alt={book.title} className="w-full h-full object-cover" />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-100 to-accent-100">
-                        <BookOpen className="w-6 h-6 text-primary-300" />
-                      </div>
-                    )}
+                    <CoverImage book={book} className="w-full h-full object-cover" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between">
@@ -473,17 +467,7 @@ const Dashboard: React.FC = () => {
               }) => (
                 <div key={book._id} className="group">
                   <div className="aspect-[2/3] rounded-xl overflow-hidden bg-slate-100 shadow-sm group-hover:shadow-lg transition-all">
-                    {getCoverUrl(book) ? (
-                      <img
-                        src={getCoverUrl(book)}
-                        alt={book.title}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-100 to-accent-100">
-                        <BookOpen className="w-8 h-8 text-primary-400" />
-                      </div>
-                    )}
+                    <CoverImage book={book} className="w-full h-full object-cover" />
                   </div>
                   <h3 className="mt-2 text-sm font-medium text-slate-800 line-clamp-1">
                     {book.title}

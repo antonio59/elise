@@ -1,7 +1,8 @@
-import { getCoverUrl } from "../utils/cover";
+import CoverImage from "../components/CoverImage";
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { BookOpen, Star, ArrowLeft, Search, LayoutGrid, List, SlidersHorizontal } from "lucide-react";
+import { Star, ArrowLeft, Search, LayoutGrid, List, SlidersHorizontal, Check } from "lucide-react";
+import { BookGridSkeleton } from "../components/Skeleton";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Link } from "react-router-dom";
@@ -68,6 +69,10 @@ const PublicBooks: React.FC = () => {
         <ArrowLeft className="w-4 h-4" />
         Back
       </Link>
+      {books === undefined ? (
+        <BookGridSkeleton />
+      ) : (
+        <>
       <div className="mb-8">
         <span className="inline-block px-3 py-1 bg-primary-100 text-primary-600 rounded-full text-xs font-semibold uppercase tracking-wider mb-3">Book Shelf</span>
         <h1 className="text-3xl sm:text-4xl font-bold">
@@ -136,6 +141,7 @@ const PublicBooks: React.FC = () => {
               !genreFilter ? "bg-primary-500 text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200"
             }`}
           >
+            {!genreFilter && <Check className="w-3 h-3" />}
             All
           </button>
           {genresWithCounts.map((g) => (
@@ -148,6 +154,7 @@ const PublicBooks: React.FC = () => {
                   : (genreColors[g.name] || "bg-slate-100 text-slate-600")
               }`}
             >
+              {genreFilter === g.name && <Check className="w-3 h-3" />}
               {g.name} ({g.count})
             </button>
           ))}
@@ -180,13 +187,7 @@ const PublicBooks: React.FC = () => {
               transition={{ delay: index * 0.03 }}
             >
               <div className="relative aspect-[2/3] rounded-xl overflow-hidden bg-slate-100 shadow-sm group-hover:shadow-lg group-hover:-translate-y-1 transition-all duration-200">
-                {getCoverUrl(book) ? (
-                  <img src={getCoverUrl(book)} alt={book.title} className="w-full h-full object-cover" />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-100 to-accent-100">
-                    <BookOpen className="w-8 h-8 text-primary-400" />
-                  </div>
-                )}
+                <CoverImage book={book} className="w-full h-full object-cover" />
                 {book.rating && book.rating > 0 && (
                   <div className="absolute top-2 right-2 px-2 py-0.5 bg-black/50 backdrop-blur-sm rounded-full flex items-center gap-0.5">
                     {Array.from({ length: book.rating }).map((_, i) => (
@@ -223,13 +224,7 @@ const PublicBooks: React.FC = () => {
               transition={{ delay: index * 0.03 }}
             >
               <div className="w-14 h-20 rounded-lg overflow-hidden bg-slate-100 flex-shrink-0">
-                {getCoverUrl(book) ? (
-                  <img src={getCoverUrl(book)} alt={book.title} className="w-full h-full object-cover" />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-100 to-accent-100">
-                    <BookOpen className="w-4 h-4 text-primary-300" />
-                  </div>
-                )}
+                <CoverImage book={book} className="w-full h-full object-cover" />
               </div>
               <div className="flex-1 min-w-0">
                 <h3 className="font-medium text-slate-800 truncate">{book.title}</h3>
@@ -257,7 +252,9 @@ const PublicBooks: React.FC = () => {
           ))}
         </div>
       )}
-    </div>
+    </>
+  )}
+</div>
   );
 };
 
