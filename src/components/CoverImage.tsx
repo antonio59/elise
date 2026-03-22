@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { getCoverUrl, getFallbackCoverUrl } from "../utils/cover";
 
 interface CoverImageProps {
@@ -7,19 +7,17 @@ interface CoverImageProps {
   alt?: string;
 }
 
-// Generate a consistent gradient from title string using inline styles
-// (dynamic Tailwind classes don't work at runtime)
 const GRADIENTS: [string, string][] = [
-  ["#f472b6", "#ec4899"],   // rose-400 → pink-500
-  ["#a78bfa", "#a855f7"],   // violet-400 → purple-500
-  ["#38bdf8", "#3b82f6"],   // sky-400 → blue-500
-  ["#34d399", "#14b8a6"],   // emerald-400 → teal-500
-  ["#fbbf24", "#f97316"],   // amber-400 → orange-500
-  ["#e879f9", "#ec4899"],   // fuchsia-400 → pink-500
-  ["#818cf8", "#a78bfa"],   // indigo-400 → violet-500
-  ["#22d3ee", "#38bdf8"],   // cyan-400 → sky-500
-  ["#f87171", "#fb7185"],   // red-400 → rose-500
-  ["#a3e635", "#22c55e"],   // lime-400 → green-500
+  ["#f472b6", "#ec4899"],
+  ["#a78bfa", "#a855f7"],
+  ["#38bdf8", "#3b82f6"],
+  ["#34d399", "#14b8a6"],
+  ["#fbbf24", "#f97316"],
+  ["#e879f9", "#ec4899"],
+  ["#818cf8", "#a78bfa"],
+  ["#22d3ee", "#38bdf8"],
+  ["#f87171", "#fb7185"],
+  ["#a3e635", "#22c55e"],
 ];
 
 function titleToGradient(title: string): { from: string; to: string } {
@@ -31,24 +29,41 @@ function titleToGradient(title: string): { from: string; to: string } {
   return { from, to };
 }
 
+function isBlankImage(img: HTMLImageElement): boolean {
+  // naturalWidth/naturalHeight of 0 or 1 means blank/1px placeholder
+  // Some Google Books zoom=2 URLs return tiny blank images
+  return img.naturalWidth <= 1 || img.naturalHeight <= 1;
+}
+
 const CoverImage: React.FC<CoverImageProps> = ({ book, className = "", alt }) => {
   const primaryUrl = getCoverUrl(book);
   const fallbackUrl = getFallbackCoverUrl(book);
   const [attempt, setAttempt] = useState<"primary" | "fallback" | "failed">(
     primaryUrl ? "primary" : fallbackUrl ? "fallback" : "failed"
   );
+  const imgRef = useRef<HTMLImageElement>(null);
 
   const currentSrc = attempt === "primary" ? primaryUrl : attempt === "fallback" ? fallbackUrl : undefined;
 
-  const handleError = () => {
+  const advanceAttempt = useCallback(() => {
     if (attempt === "primary" && fallbackUrl) {
       setAttempt("fallback");
     } else {
       setAttempt("failed");
     }
-  };
+  }, [attempt, fallbackUrl]);
 
-  // No cover available — show title card with inline gradient
+  const handleError = useCallback(() => {
+    advanceAttempt();
+  }, [advanceAttempt]);
+
+  // Check for blank images on load (Google Books zoom=2 returns blank 200s)
+  const handleLoad = useCallback(() => {
+    if (imgRef.current && isBlankImage(imgRef.current)) {
+      advanceAttempt();
+    }
+  }, [advanceAttempt]);
+
   if (!currentSrc) {
     const title = book.title || "Untitled";
     const author = book.author || "";
@@ -71,10 +86,12 @@ const CoverImage: React.FC<CoverImageProps> = ({ book, className = "", alt }) =>
 
   return (
     <img
+      ref={imgRef}
       src={currentSrc}
       alt={alt || book.title || "Book cover"}
       className={className}
       onError={handleError}
+      onLoad={handleLoad}
       loading="lazy"
     />
   );
