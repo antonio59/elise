@@ -1,4 +1,5 @@
-import { getCoverUrl } from "../utils/cover";
+import CoverImage from "../components/CoverImage";
+import CoverImage from "../components/CoverImage";
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -210,17 +211,7 @@ const ReviewsPage: React.FC = () => {
                   >
                     <div className="flex gap-4">
                       <div className="w-20 h-28 rounded-lg overflow-hidden bg-slate-100 flex-shrink-0">
-                        {getCoverUrl(book) ? (
-                          <img
-                            src={getCoverUrl(book)}
-                            alt={book.title}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-100 to-accent-100">
-                            <BookOpen className="w-6 h-6 text-primary-300" />
-                          </div>
-                        )}
+                        <CoverImage book={book} className="w-full h-full object-cover" />
                       </div>
                       <div className="flex-1 min-w-0">
                         <h3 className="font-bold text-slate-800 line-clamp-1">

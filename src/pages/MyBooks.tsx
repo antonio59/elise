@@ -1,4 +1,5 @@
-import { getCoverUrl } from "../utils/cover";
+import CoverImage from "../components/CoverImage";
+import CoverImage from "../components/CoverImage";
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -185,17 +186,7 @@ const MyBooks: React.FC = () => {
             transition={{ delay: index * 0.05 }}
           >
             <div className="relative aspect-[2/3] rounded-xl overflow-hidden bg-slate-100 shadow-sm group-hover:shadow-xl transition-all">
-              {getCoverUrl(book) ? (
-                <img
-                  src={getCoverUrl(book)}
-                  alt={book.title}
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-100 to-accent-100">
-                  <BookOpen className="w-8 h-8 text-primary-400" />
-                </div>
-              )}
+              <CoverImage book={book} className="w-full h-full object-cover" />
 
               {/* Hover overlay */}
               <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">

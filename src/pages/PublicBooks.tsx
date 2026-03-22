@@ -1,4 +1,4 @@
-import { getCoverUrl, getFallbackCoverUrl, handleCoverError } from "../utils/cover";
+import CoverImage from "../components/CoverImage";
 import CoverImage from "../components/CoverImage";
 import React, { useState } from "react";
 import { motion } from "framer-motion";
@@ -181,13 +181,7 @@ const PublicBooks: React.FC = () => {
               transition={{ delay: index * 0.03 }}
             >
               <div className="relative aspect-[2/3] rounded-xl overflow-hidden bg-slate-100 shadow-sm group-hover:shadow-lg group-hover:-translate-y-1 transition-all duration-200">
-                {getCoverUrl(book) ? (
-                  <img src={getCoverUrl(book)} alt={book.title} className="w-full h-full object-cover" />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-100 to-accent-100">
-                    <BookOpen className="w-8 h-8 text-primary-400" />
-                  </div>
-                )}
+                <CoverImage book={book} className="w-full h-full object-cover" />
                 {book.rating && book.rating > 0 && (
                   <div className="absolute top-2 right-2 px-2 py-0.5 bg-black/50 backdrop-blur-sm rounded-full flex items-center gap-0.5">
                     {Array.from({ length: book.rating }).map((_, i) => (
