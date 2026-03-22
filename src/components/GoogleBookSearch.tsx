@@ -150,7 +150,7 @@ const GoogleBookSearch: React.FC<GoogleBookSearchProps> = ({ onSelect }) => {
     setLoading(true);
     setSearched(true);
     try {
-      const items = await convex.query((api as any).googleBooks.search, { query });
+      const items = await convex.action((api as any).googleBooks.search, { query });
 
       const books: BookResult[] = (items || []).map(
         (item: { id: string; title: string; authors: string[]; coverUrl: string; pageCount: number; description: string; categories: string[] }) => ({
