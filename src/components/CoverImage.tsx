@@ -78,3 +78,4 @@ const CoverImage: React.FC<CoverImageProps> = ({ book, className = "", alt }) =>
 };
 
 export default CoverImage;
+// force rebuild 1774194664
