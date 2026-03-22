@@ -69,6 +69,10 @@ const PublicBooks: React.FC = () => {
         <ArrowLeft className="w-4 h-4" />
         Back
       </Link>
+      {books === undefined ? (
+        <BookGridSkeleton />
+      ) : (
+        <>
       <div className="mb-8">
         <span className="inline-block px-3 py-1 bg-primary-100 text-primary-600 rounded-full text-xs font-semibold uppercase tracking-wider mb-3">Book Shelf</span>
         <h1 className="text-3xl sm:text-4xl font-bold">
@@ -248,7 +252,9 @@ const PublicBooks: React.FC = () => {
           ))}
         </div>
       )}
-    </div>
+    </>
+  )}
+</div>
   );
 };
 

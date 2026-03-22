@@ -2,7 +2,6 @@ import CoverImage from "../components/CoverImage";
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Star, ArrowLeft, MessageCircle } from "lucide-react";
-import { ReviewCardSkeleton } from "../components/Skeleton";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Link } from "react-router-dom";
