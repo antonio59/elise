@@ -1,4 +1,5 @@
-import { getCoverUrl } from "../utils/cover";
+import { getCoverUrl, getFallbackCoverUrl, handleCoverError } from "../utils/cover";
+import CoverImage from "../components/CoverImage";
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { BookOpen, Star, ArrowLeft, Search, LayoutGrid, List, SlidersHorizontal } from "lucide-react";

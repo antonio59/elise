@@ -1,4 +1,5 @@
-import { getCoverUrl } from "../utils/cover";
+import { getCoverUrl, getFallbackCoverUrl, handleCoverError } from "../utils/cover";
+import CoverImage from "../components/CoverImage";
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
