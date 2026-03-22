@@ -598,17 +598,9 @@ const SuggestBookModal: React.FC<SuggestBookModalProps> = ({
               {/* Selected Book Preview */}
               {selectedBook && (
                 <div className="flex items-start gap-4 p-4 bg-primary-50 rounded-xl border-2 border-primary-200">
-                  {selectedBook.coverUrl ? (
-                    <img
-                      src={selectedBook.coverUrl}
-                      alt={selectedBook.title}
-                      className="w-16 h-24 object-cover rounded-lg shadow"
-                    />
-                  ) : (
-                    <div className="w-16 h-24 bg-slate-200 rounded-lg flex items-center justify-center">
-                      <BookOpen className="w-6 h-6 text-slate-400" />
-                    </div>
-                  )}
+                  <div className="w-16 h-24 rounded-lg overflow-hidden flex-shrink-0">
+                    <CoverImage book={selectedBook} className="w-full h-full object-cover rounded-lg shadow" />
+                  </div>
                   <div className="flex-1 min-w-0">
                     <h3 className="font-bold text-slate-800 truncate">
                       {selectedBook.title}

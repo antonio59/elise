@@ -13,6 +13,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import CoverImage from "../components/CoverImage";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 
@@ -135,8 +136,7 @@ const PublicWishlist: React.FC = () => {
               }}
             >
               {sortedWishlist.map((book) => {
-                const [color1, color2] = getBookGradient(book.title);
-                return (
+                                return (
                   <motion.div
                     key={book._id}
                     className="cursor-pointer group"
@@ -163,25 +163,7 @@ const PublicWishlist: React.FC = () => {
                       }}
                       whileTap={{ scale: 0.97 }}
                     >
-                      {book.coverUrl ? (
-                        <img
-                          src={book.coverUrl}
-                          alt={book.title}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <div
-                          className="w-full h-full flex flex-col items-center justify-center p-4 text-white"
-                          style={{
-                            background: `linear-gradient(135deg, ${color1} 0%, ${color2} 100%)`,
-                          }}
-                        >
-                          <span className="text-4xl mb-3">🎁</span>
-                          <span className="text-sm font-bold text-center leading-tight line-clamp-3">
-                            {book.title}
-                          </span>
-                        </div>
-                      )}
+                      <CoverImage book={book} className="w-full h-full object-cover" />
 
                       {/* Wishlist badge */}
                       <div className="absolute top-2 left-2 w-8 h-8 bg-pink-500 rounded-full flex items-center justify-center shadow-lg">
@@ -256,24 +238,9 @@ const PublicWishlist: React.FC = () => {
             >
               {/* Cover */}
               <div className="relative h-72 bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center p-6">
-                {selectedBook.coverUrl ? (
-                  <img
-                    src={selectedBook.coverUrl}
-                    alt={selectedBook.title}
-                    className="h-56 w-auto shadow-2xl rounded-lg object-cover"
-                  />
-                ) : (
-                  <div
-                    className="h-56 w-40 shadow-2xl flex items-center justify-center text-white p-4 rounded-lg"
-                    style={{
-                      background: `linear-gradient(135deg, ${getBookGradient(selectedBook.title)[0]} 0%, ${getBookGradient(selectedBook.title)[1]} 100%)`,
-                    }}
-                  >
-                    <span className="text-xl font-bold text-center">
-                      {selectedBook.title}
-                    </span>
-                  </div>
-                )}
+                <div className="h-56 w-40 shadow-2xl rounded-lg overflow-hidden">
+                  <CoverImage book={selectedBook} className="h-full w-full object-cover" />
+                </div>
 
                 {/* Wishlist badge */}
                 <div className="absolute top-4 left-4 flex items-center gap-2 bg-pink-500 text-white px-3 py-1.5 rounded-full shadow-lg">
