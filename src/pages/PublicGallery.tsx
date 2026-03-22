@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Heart, X, Palette, Sparkles } from "lucide-react";
+import { Heart, X, Palette, Sparkles, ArrowLeft } from "lucide-react";
+import { Link } from "react-router-dom";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
@@ -28,27 +29,19 @@ const PublicGallery: React.FC = () => {
   return (
     <div className="min-h-screen py-12 px-4">
       <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-white rounded-full shadow-sm mb-4">
-              <Palette className="w-4 h-4 text-accent-500" />
-              <span className="text-sm font-medium text-slate-600">
-                Art Gallery
-              </span>
-            </div>
-            <h1 className="text-4xl md:text-5xl font-black mb-4">
-              <span className="bg-gradient-to-r from-primary-500 to-accent-500 bg-clip-text text-transparent">
-                My Creations
-              </span>
-            </h1>
-            <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-              Art inspired by the stories I read and the worlds I imagine
-            </p>
-          </motion.div>
+        <Link
+          to="/"
+          className="inline-flex items-center gap-1 text-sm text-slate-500 hover:text-slate-700 mb-6"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back
+        </Link>
+        <div className="mb-8">
+          <span className="inline-block px-3 py-1 bg-accent-100 text-accent-600 rounded-full text-xs font-semibold uppercase tracking-wider mb-3">Art Gallery</span>
+          <h1 className="text-3xl sm:text-4xl font-bold">
+            <span className="bg-gradient-to-r from-primary-500 to-accent-500 bg-clip-text text-transparent">My Creations</span>
+          </h1>
+          <p className="text-slate-500 mt-1">art inspired by the stories I read</p>
         </div>
 
         {/* Gallery Grid */}
