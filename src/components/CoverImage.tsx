@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { getCoverUrl, getFallbackCoverUrl } from "../utils/cover";
 
 interface CoverImageProps {
@@ -20,56 +20,25 @@ const GRADIENTS: [string, string][] = [
   ["#a3e635", "#22c55e"],
 ];
 
-function titleToGradient(title: string): { from: string; to: string } {
+function titleToGradient(title: string): [string, string] {
   let hash = 0;
   for (let i = 0; i < title.length; i++) {
     hash = title.charCodeAt(i) + ((hash << 5) - hash);
   }
-  const [from, to] = GRADIENTS[Math.abs(hash) % GRADIENTS.length];
-  return { from, to };
-}
-
-function replaceWithTitleCard(img: HTMLImageElement, title: string, author?: string) {
-  const parent = img.parentElement;
-  if (!parent) return;
-  const { from, to } = titleToGradient(title);
-  const el = document.createElement("div");
-  el.style.cssText = `background:linear-gradient(to bottom right,${from},${to});width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0.75rem;text-align:center`;
-  const p = document.createElement("p");
-  p.style.cssText = "color:white;font-weight:bold;font-size:0.75rem;line-height:1.2";
-  p.textContent = title;
-  el.appendChild(p);
-  if (author) {
-    const a = document.createElement("p");
-    a.style.cssText = "color:rgba(255,255,255,0.7);font-size:0.625rem;margin-top:0.25rem";
-    a.textContent = author;
-    el.appendChild(a);
-  }
-  parent.replaceChild(el, img);
-}
-
-function handleFallback(
-  img: HTMLImageElement,
-  fallbackUrl: string | undefined,
-  title: string,
-  author?: string
-) {
-  if (fallbackUrl && img.src !== fallbackUrl) {
-    img.src = fallbackUrl;
-  } else {
-    replaceWithTitleCard(img, title, author);
-  }
+  return GRADIENTS[Math.abs(hash) % GRADIENTS.length];
 }
 
 const CoverImage: React.FC<CoverImageProps> = ({ book, className = "", alt }) => {
+  const title = book.title || "Untitled";
+  const author = book.author || "";
   const primaryUrl = getCoverUrl(book);
   const fallbackUrl = getFallbackCoverUrl(book);
-  const title = book.title || "Untitled";
-  const author = book.author;
 
-  // No URL at all — show title card immediately
-  if (!primaryUrl) {
-    const { from, to } = titleToGradient(title);
+  const [src, setSrc] = useState(primaryUrl);
+  const [showCard, setShowCard] = useState(!primaryUrl);
+
+  if (showCard || !src) {
+    const [from, to] = titleToGradient(title);
     return (
       <div
         style={{ background: `linear-gradient(to bottom right, ${from}, ${to})` }}
@@ -85,17 +54,23 @@ const CoverImage: React.FC<CoverImageProps> = ({ book, className = "", alt }) =>
     );
   }
 
+  const tryFallback = () => {
+    if (fallbackUrl && src !== fallbackUrl) {
+      setSrc(fallbackUrl);
+    } else {
+      setShowCard(true);
+    }
+  };
+
   return (
     <img
-      src={primaryUrl}
+      src={src}
       alt={alt || title}
       className={className}
-      
-      onError={(e) => handleFallback(e.currentTarget, fallbackUrl, title, author)}
+      onError={tryFallback}
       onLoad={(e) => {
-        const img = e.currentTarget;
-        if (img.naturalWidth < 100 || img.naturalHeight < 100) {
-          handleFallback(img, fallbackUrl, title, author);
+        if (e.currentTarget.naturalWidth < 100) {
+          tryFallback();
         }
       }}
     />
