@@ -73,6 +73,47 @@ const PublicHome: React.FC = () => {
       </section>
 
 
+      {/* 5-Star Shelf — horizontal scroll of top-rated books */}
+      {books.filter((b) => b.rating === 5).length > 0 && (
+        <section className="py-8 px-4">
+          <div className="max-w-6xl mx-auto">
+            <div><div><h2 className="text-xl font-bold text-slate-800 mb-4">5-Star Shelf</h2><div className="w-10 h-0.5 bg-primary-400 mt-1 rounded-full"></div></div><div className="w-10 h-0.5 bg-primary-400 mt-1 rounded-full"></div></div>
+            <div className="shelf-scroll">
+              {books
+                .filter((b) => b.rating === 5)
+                .map((book) => (
+                  <div key={book._id} className="w-28 sm:w-32">
+                    <div className="aspect-[2/3] rounded-lg overflow-hidden bg-slate-100 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg">
+                      {book.coverUrl ? (
+                        <img
+                          src={getCoverUrl(book)}
+                          alt={book.title}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-primary-50">
+                          <BookHeart className="w-6 h-6 text-primary-300" />
+                        </div>
+                      )}
+                    </div>
+                    <p className="mt-1.5 text-xs font-medium text-slate-700 line-clamp-1">
+                      {book.title}
+                    </p>
+                  </div>
+                ))}
+              {/* Placeholder slots */}
+              {Array.from({ length: Math.max(0, 4 - books.filter((b) => b.rating === 5).length) }).map((_, i) => (
+                <div key={`ph-${i}`} className="w-28 sm:w-32">
+                  <div className="aspect-[2/3] rounded-lg border-2 border-dashed border-primary-200 bg-primary-50/50 flex flex-col items-center justify-center gap-1">
+                    <Star className="w-5 h-5 text-primary-300" />
+                    <span className="text-[10px] text-primary-400 italic">more soon...</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
       {/* Books Section */}
       <section id="books" className="py-16 px-4">
         <div className="max-w-6xl mx-auto">
@@ -180,47 +221,6 @@ const PublicHome: React.FC = () => {
         </div>
       </section>
 
-      {/* 5-Star Shelf — horizontal scroll of top-rated books */}
-      {books.filter((b) => b.rating === 5).length > 0 && (
-        <section className="py-8 px-4">
-          <div className="max-w-6xl mx-auto">
-            <div><div><h2 className="text-xl font-bold text-slate-800 mb-4">5-Star Shelf</h2><div className="w-10 h-0.5 bg-primary-400 mt-1 rounded-full"></div></div><div className="w-10 h-0.5 bg-primary-400 mt-1 rounded-full"></div></div>
-            <div className="shelf-scroll">
-              {books
-                .filter((b) => b.rating === 5)
-                .map((book) => (
-                  <div key={book._id} className="w-28 sm:w-32">
-                    <div className="aspect-[2/3] rounded-lg overflow-hidden bg-slate-100 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg">
-                      {book.coverUrl ? (
-                        <img
-                          src={getCoverUrl(book)}
-                          alt={book.title}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-primary-50">
-                          <BookHeart className="w-6 h-6 text-primary-300" />
-                        </div>
-                      )}
-                    </div>
-                    <p className="mt-1.5 text-xs font-medium text-slate-700 line-clamp-1">
-                      {book.title}
-                    </p>
-                  </div>
-                ))}
-              {/* Placeholder slots */}
-              {Array.from({ length: Math.max(0, 4 - books.filter((b) => b.rating === 5).length) }).map((_, i) => (
-                <div key={`ph-${i}`} className="w-28 sm:w-32">
-                  <div className="aspect-[2/3] rounded-lg border-2 border-dashed border-primary-200 bg-primary-50/50 flex flex-col items-center justify-center gap-1">
-                    <Star className="w-5 h-5 text-primary-300" />
-                    <span className="text-[10px] text-primary-400 italic">more soon...</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
 
       {/* Writing & Art Teasers */}
       <section className="py-16 px-4">
