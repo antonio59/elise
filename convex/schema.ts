@@ -173,6 +173,18 @@ export default defineSchema(
       heroImageStorageId: v.optional(v.id("_storage")),
       updatedAt: v.number(),
     }),
+
+    // Reactions (emoji reactions on books, writings, artworks)
+    reactions: defineTable({
+      targetType: v.union(v.literal("book"), v.literal("writing"), v.literal("artwork")),
+      targetId: v.string(), // ID of the book/writing/artwork
+      emoji: v.string(), // the emoji used
+      visitorId: v.string(), // anonymous visitor identifier (from sessionStorage)
+      createdAt: v.number(),
+    })
+      .index("by_target", ["targetType", "targetId"])
+      .index("by_target_emoji", ["targetType", "targetId", "emoji"])
+      .index("by_visitor", ["visitorId", "targetType", "targetId"]),
   },
   // Disable strict schema enforcement to allow legacy data
   { schemaValidation: false },
