@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useRef, useEffect } from "react";
 import { useConvex } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Search, Loader2, BookOpen, Plus } from "lucide-react";
@@ -143,6 +143,7 @@ const GoogleBookSearch: React.FC<GoogleBookSearchProps> = ({ onSelect }) => {
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
   const convex = useConvex();
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   const searchBooks = useCallback(async () => {
     if (!query.trim()) return;
@@ -172,6 +173,19 @@ const GoogleBookSearch: React.FC<GoogleBookSearchProps> = ({ onSelect }) => {
       setLoading(false);
     }
   }, [query, convex]);
+
+  // Auto-search after 500ms of no typing
+  useEffect(() => {
+    if (query.length < 2) {
+      setResults([]);
+      setSearched(false);
+      return;
+    }
+    debounceRef.current = setTimeout(() => {
+      searchBooks();
+    }, 500);
+    return () => clearTimeout(debounceRef.current);
+  }, [query, searchBooks]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {

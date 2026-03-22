@@ -1,7 +1,8 @@
 import CoverImage from "../components/CoverImage";
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Star, ArrowLeft, Search, LayoutGrid, List, SlidersHorizontal } from "lucide-react";
+import { Star, ArrowLeft, Search, LayoutGrid, List, SlidersHorizontal, Check } from "lucide-react";
+import { BookGridSkeleton } from "../components/Skeleton";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Link } from "react-router-dom";
@@ -136,6 +137,7 @@ const PublicBooks: React.FC = () => {
               !genreFilter ? "bg-primary-500 text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200"
             }`}
           >
+            {!genreFilter && <Check className="w-3 h-3" />}
             All
           </button>
           {genresWithCounts.map((g) => (
@@ -148,6 +150,7 @@ const PublicBooks: React.FC = () => {
                   : (genreColors[g.name] || "bg-slate-100 text-slate-600")
               }`}
             >
+              {genreFilter === g.name && <Check className="w-3 h-3" />}
               {g.name} ({g.count})
             </button>
           ))}

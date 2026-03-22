@@ -11,9 +11,13 @@ const NotFound: React.FC = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <div className="text-9xl font-black bg-gradient-to-r from-primary-500 to-accent-500 bg-clip-text text-transparent mb-4">
+        <motion.div
+          className="text-9xl font-black bg-gradient-to-r from-primary-500 to-accent-500 bg-clip-text text-transparent mb-4"
+          animate={{ y: [0, -10, 0] }}
+          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+        >
           404
-        </div>
+        </motion.div>
         <h1 className="text-2xl font-bold text-slate-800 mb-2">
           Page Not Found
         </h1>

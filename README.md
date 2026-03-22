@@ -2,168 +2,111 @@
 
 A personal book tracking, art gallery, and writing site for Elise. Built with a warm editorial aesthetic that grows with her.
 
+🌐 **Live:** [elisereads.com](https://elisereads.com)
+
+---
+
 ## Features
 
 ### 📚 Books
-- **Google Books Search** — search and auto-fill book details (title, author, cover, genre, pages)
+- **Google Books Search** (via Convex proxy) — search and auto-fill book details
 - **Smart Genre Detection** — maps Google Books categories to manga/fantasy/romance/mystery/etc.
 - **Custom Rating Labels** — "not it" → "meh" → "solid read" → "obsessed" → "all-time fav"
 - **Mood Tags** — 16 BookTok vibes (dark academia, cottagecore, found family, etc.)
-- **Flip Card Reviews** — tap to reveal full review with rating
+- **Cover Fallback** — Google Books zoom=2 → zoom=1 → Open Library → title card gradient
+- **Flip Card Reviews** — desktop: tap to flip; mobile: review shown directly
+- **5-Star Shelf** — horizontal scroll of top-rated books on homepage
+- **Currently Reading** — dedicated strip showing books in progress
 - **Wishlist** — public-facing so people can see and gift books
+- **Book Suggestions** — visitors can suggest books for Elise
+
+### ✍️ Writing
+- Rich text editor with draft/publish workflow
+- Category filters (Poetry / Story / Journal)
+- Emoji & GIF support via Giphy (proxied through Convex)
+- Date stamps on published pieces
 
 ### 🎨 Art Gallery
 - Upload and publish artwork
 - Public gallery with lightbox viewer
-- Suggestion system for visitors
+- Drag-and-drop reorder
 
-### ✍️ Writing
-- Rich text editor for creative writing
-- Draft/publish workflow
-- Emoji & GIF support via Giphy (proxied through Convex)
+### 💬 Reactions
+- Emoji reactions (❤️ 📚 ✨ 🔥 😭 💀 🤯 👀) on reviews, writings, and art
+- Anonymous — uses sessionStorage visitor ID
+- Dashboard stats showing total reactions, top emojis, and most-reacted items
 
-### 👤 About
-- Customizable profile (bio, avatar, favorite genres, reading goal)
-- Currently reading display
+### 👤 About & Avatar
+- Customizable profile (bio, avatar, favorite genres, reading goal, fun facts)
+- **DiceBear Avatar Creator** — 13 styles (pixel art, robots, doodles, emoji faces, etc.)
 - Public-facing bio page
+
+### 🏠 Dashboard
+- Animated stats grid (books read, pages, written, artworks, favourites)
+- Currently reading strip with progress
+- Hero editor (customise homepage title + tagline)
+- Quick actions
+- Reactions overview
 
 ### ⚙️ Settings
 - 7 theme options (Editorial, Sakura, Lavender, Midnight, Sunset, Botanical, Berry)
 - Yearly reading goal with progress tracking
-- Notification preferences
+- Footer customisation (tagline + note)
 
-### 🔐 Security
-- Email allowlist (only approved users can sign up)
-- Admin/viewer role system
-- Giphy API key proxied through Convex (never exposed to client)
+### 📬 Email
+- Resend integration for book suggestion notifications
+- API key stays server-side (Convex action)
+
+---
 
 ## Tech Stack
 
-- **Frontend**: React 19, TypeScript, Vite 7, Tailwind CSS 4
-- **Backend**: Convex (real-time database + serverless functions)
-- **Auth**: Convex Auth (Password provider)
-- **Animations**: Framer Motion
-- **Hosting**: Netlify (free tier)
+- **Frontend:** React 19, TypeScript, Vite 7, Tailwind CSS 4
+- **Backend:** Convex (real-time database + serverless functions)
+- **Auth:** Convex Auth (Password provider, email allowlist)
+- **Animations:** Framer Motion
+- **Hosting:** Netlify (frontend) + Convex Cloud (backend)
+- **Email:** Resend
 
 ## Getting Started
 
-### Prerequisites
-
-- [Node.js](https://nodejs.org/) 20+
-- [Convex CLI](https://docs.convex.dev/quickstart)
-
-### Installation
-
 ```bash
-# Install dependencies
 npm install
-
-# Start Convex dev server
-npx convex dev
-
-# In another terminal, start Vite dev server
-npm run dev
+npx convex dev        # Start Convex backend
+npm run dev           # Start Vite dev server (in another terminal)
 ```
 
 ### Environment Variables
 
-**Convex** (set via `npx convex env set KEY VALUE`):
-- `AUTH_SECRET` — auth encryption key
-- `JWKS` — JSON Web Key Set
-- `JWT_PRIVATE_KEY` — JWT signing key
-- `SITE_URL` — your site URL (e.g. https://elisereads.com)
-- `GIPHY_API_KEY` — Giphy API key for GIF search
+**Convex** (`npx convex env set KEY VALUE`):
+- `AUTH_SECRET`, `JWKS`, `JWT_PRIVATE_KEY` — auth
+- `GIPHY_API_KEY` — GIF search
+- `GOOGLE_BOOKS_API_KEY` — cover art search
+- `RESEND_API_KEY` — email notifications
+- `ALLOWED_EMAILS` — comma-separated email allowlist
 
 **Local** (`.env.local`):
 ```
-VITE_CONVEX_URL=your_convex_deployment_url
+VITE_CONVEX_URL=https://your-deployment.convex.cloud
 ```
-
-## Project Structure
-
-```
-elise/
-├── convex/                    # Convex backend
-│   ├── schema.ts              # Database schema
-│   ├── auth.ts                # Authentication setup
-│   ├── auth.config.ts         # Auth config (keep providers: [])
-│   ├── books.ts               # Book CRUD + search
-│   ├── artworks.ts            # Artwork CRUD
-│   ├── users.ts               # User profiles + stats
-│   ├── writings.ts            # Writing CRUD
-│   ├── giphy.ts               # Giphy proxy (API key stays server-side)
-│   └── http.ts                # HTTP routes
-├── src/
-│   ├── components/            # Reusable components
-│   │   ├── GoogleBookSearch.tsx
-│   │   ├── GiphyPicker.tsx
-│   │   ├── CoverUpload.tsx
-│   │   ├── ThemeProvider.tsx
-│   │   └── ...
-│   ├── contexts/              # React contexts (Auth)
-│   ├── pages/                 # Page components
-│   │   ├── PublicHome.tsx     # Public homepage
-│   │   ├── Dashboard.tsx      # Owner dashboard
-│   │   ├── MyBooks.tsx        # Book management
-│   │   ├── Reviews.tsx        # Review cards + editing
-│   │   ├── About.tsx          # Public bio page
-│   │   └── ...
-│   ├── styles/                # CSS tokens, themes
-│   └── App.tsx                # Main app with routing
-├── .github/workflows/         # CI + Convex deploy
-└── netlify.toml               # Netlify configuration
-```
-
-## Routes
-
-### Public
-| Path | Page |
-|------|------|
-| `/` | Homepage (books, art, writing preview, wishlist) |
-| `/gallery` | Public art gallery |
-| `/wishlist` | Books to gift |
-| `/about` | Elise's bio |
-| `/login` | Sign in |
-| `/signup` | Create account (email-allowlisted) |
-
-### Dashboard (owner only)
-| Path | Page |
-|------|------|
-| `/dashboard` | Overview + stats |
-| `/books` | Manage books (add, edit, rate, review) |
-| `/reviews` | Flip card reviews with inline editing |
-| `/art` | Manage artwork |
-| `/writing` | Manage writings |
-| `/suggestions` | Visitor book suggestions |
-| `/settings` | Profile, theme, goals |
 
 ## Deployment
 
-### Deploy Convex
+### Convex
 ```bash
-npx convex deploy
+npx convex dev        # Regenerate _generated types
+npx convex deploy     # Push to production
 ```
 
-**Note:** `npx convex deploy` deploys to production by default. There is no `--prod` flag.
-
-### Deploy Frontend
+### Frontend
 Netlify auto-deploys on push to `main`.
 
-### Important Gotchas
-- **Never use `npx convex dev` for production data** — it pushes to a separate dev database
-- **`auth.config.ts` must keep `providers: []`** — the CLI rejects any provider object
-- **Never commit `.npmrc`** — add to `.gitignore`
-- **Never set `omit=optional` in `.npmrc`** — breaks platform optional dependencies
-- **`process.env.CONVEX_SITE_URL` does not resolve at deploy time** — hardcode the fallback
+## Important Gotchas
 
-## Scripts
-
-```bash
-npm run dev          # Start Vite dev server
-npm run build        # Build for production
-npm run preview      # Preview production build
-npm run lint         # Run ESLint
-```
+- `convex/_generated/` **must be committed** — it's how Convex types work
+- Never use `as any` on action function references — breaks deploy
+- Platform packages go in `optionalDependencies` only
+- Always `npx convex dev` after pulling to regenerate types
 
 ## License
 
