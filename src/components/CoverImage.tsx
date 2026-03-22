@@ -29,35 +29,6 @@ function titleToGradient(title: string): { from: string; to: string } {
   return { from, to };
 }
 
-// Check if a loaded image is blank/tiny by sampling pixels via canvas
-function isUsableImage(img: HTMLImageElement): boolean {
-  if (img.naturalWidth < 10 || img.naturalHeight < 10) return false;
-  try {
-    const canvas = document.createElement("canvas");
-    const size = Math.min(img.naturalWidth, img.naturalHeight, 50);
-    canvas.width = size;
-    canvas.height = size;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return true; // Can't check, assume ok
-    ctx.drawImage(img, 0, 0, size, size);
-    const data = ctx.getImageData(0, 0, size, size).data;
-    // Check first ~100 pixels for any non-white content
-    let coloredPixels = 0;
-    const pixelCount = Math.min(size * size, 100);
-    for (let i = 0; i < pixelCount * 4; i += 4) {
-      const r = data[i], g = data[i + 1], b = data[i + 2], a = data[i + 3];
-      // Not white, not transparent, not very light grey
-      if (a > 10 && (r < 245 || g < 245 || b < 245)) {
-        coloredPixels++;
-      }
-    }
-    return coloredPixels > 5; // Need at least 5 colored pixels out of 100
-  } catch {
-    // Canvas tainted or other error — assume image is fine
-    return true;
-  }
-}
-
 const CoverImage: React.FC<CoverImageProps> = ({ book, className = "", alt }) => {
   const primaryUrl = getCoverUrl(book);
   const fallbackUrl = getFallbackCoverUrl(book);
@@ -74,16 +45,15 @@ const CoverImage: React.FC<CoverImageProps> = ({ book, className = "", alt }) =>
     });
   }, [fallbackUrl]);
 
-  const handleError = useCallback(() => {
-    advanceAttempt();
-  }, [advanceAttempt]);
-
+  // If image is suspiciously small (< 100px), it's a blank/placeholder — try next fallback
   const handleLoad = useCallback((e: React.SyntheticEvent<HTMLImageElement>) => {
-    if (!isUsableImage(e.currentTarget)) {
+    const img = e.currentTarget;
+    if (img.naturalWidth < 100 || img.naturalHeight < 100) {
       advanceAttempt();
     }
   }, [advanceAttempt]);
 
+  // Show title card as last resort
   if (!currentSrc) {
     const title = book.title || "Untitled";
     const author = book.author || "";
@@ -109,7 +79,7 @@ const CoverImage: React.FC<CoverImageProps> = ({ book, className = "", alt }) =>
       src={currentSrc}
       alt={alt || book.title || "Book cover"}
       className={className}
-      onError={handleError}
+      onError={advanceAttempt}
       onLoad={handleLoad}
       loading="lazy"
     />
