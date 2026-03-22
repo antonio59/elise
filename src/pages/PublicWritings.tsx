@@ -5,6 +5,7 @@ import { Feather, BookHeart, BookOpenText, ArrowLeft } from "lucide-react";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Link } from "react-router-dom";
+import ReactionBar from "../components/ReactionBar";
 
 const PublicWritings: React.FC = () => {
   const writings = useQuery(api.writings.getPublished, { limit: 20 }) ?? [];
@@ -102,6 +103,9 @@ const PublicWritings: React.FC = () => {
                 </div>
                 <h3 className="font-bold text-slate-800 text-lg mb-2">{writing.title}</h3>
                 <p className="text-sm text-slate-600 italic leading-relaxed line-clamp-4">{preview}</p>
+                <div className="mt-4 pt-4 border-t border-slate-100">
+                  <ReactionBar targetType="writing" targetId={writing._id} />
+                </div>
               </motion.div>
             );
           })}

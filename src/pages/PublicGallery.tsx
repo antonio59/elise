@@ -4,6 +4,7 @@ import { Heart, X, Palette, Sparkles } from "lucide-react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
+import ReactionBar from "../components/ReactionBar";
 
 const PublicGallery: React.FC = () => {
   const artworks = useQuery(api.artworks.getPublished, { limit: 50 }) ?? [];
@@ -112,6 +113,11 @@ const PublicGallery: React.FC = () => {
                     {art.likes + (likedIds.has(art._id) ? 1 : 0)}
                   </div>
                 )}
+
+                {/* Reaction Bar */}
+                <div className="absolute bottom-3 left-3 right-16 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <ReactionBar targetType="artwork" targetId={art._id} className="bg-white/90 backdrop-blur-sm rounded-full px-2 py-1 shadow-sm" />
+                </div>
               </motion.div>
             ))}
           </div>

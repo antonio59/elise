@@ -5,6 +5,7 @@ import { Star, BookOpen, ArrowLeft, MessageCircle } from "lucide-react";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Link } from "react-router-dom";
+import ReactionBar from "../components/ReactionBar";
 
 interface Book {
   _id: string;
@@ -188,6 +189,9 @@ const PublicReviews: React.FC = () => {
                         ))}
                       </div>
                     )}
+                    <div className="mt-3 pt-3 border-t border-slate-100">
+                      <ReactionBar targetType="book" targetId={book._id} />
+                    </div>
                   </motion.div>
                 )}
               </AnimatePresence>
