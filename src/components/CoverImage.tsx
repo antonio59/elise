@@ -69,7 +69,11 @@ const CoverImage: React.FC<CoverImageProps> = ({ book, className = "", alt }) =>
       className={className}
       onError={tryFallback}
       onLoad={(e) => {
-        if (e.currentTarget.naturalWidth < 100) {
+        const img = e.currentTarget;
+        const w = img.naturalWidth;
+        const h = img.naturalHeight;
+        // Detect tiny images OR Google Books "image not available" placeholder (575×750)
+        if (w < 100 || (w === 575 && h === 750)) {
           tryFallback();
         }
       }}
