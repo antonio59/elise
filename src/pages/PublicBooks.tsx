@@ -1,8 +1,7 @@
 import CoverImage from "../components/CoverImage";
-import CoverImage from "../components/CoverImage";
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { BookOpen, Star, ArrowLeft, Search, LayoutGrid, List, SlidersHorizontal } from "lucide-react";
+import { Star, ArrowLeft, Search, LayoutGrid, List, SlidersHorizontal } from "lucide-react";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Link } from "react-router-dom";
@@ -218,13 +217,7 @@ const PublicBooks: React.FC = () => {
               transition={{ delay: index * 0.03 }}
             >
               <div className="w-14 h-20 rounded-lg overflow-hidden bg-slate-100 flex-shrink-0">
-                {getCoverUrl(book) ? (
-                  <img src={getCoverUrl(book)} alt={book.title} className="w-full h-full object-cover" />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-100 to-accent-100">
-                    <BookOpen className="w-4 h-4 text-primary-300" />
-                  </div>
-                )}
+                <CoverImage book={book} className="w-full h-full object-cover" />
               </div>
               <div className="flex-1 min-w-0">
                 <h3 className="font-medium text-slate-800 truncate">{book.title}</h3>

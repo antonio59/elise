@@ -159,7 +159,7 @@ const PublicReviews: React.FC = () => {
               </div>
 
               {/* Desktop: flip card */}
-              <div className="hidden md:block cursor-pointer" onClick={() => setFlippedId(flippedId === book._id ? null : book._id)}>
+              <div className="hidden md:block cursor-pointer [perspective:1000px]" onClick={() => setFlippedId(flippedId === book._id ? null : book._id)} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setFlippedId(flippedId === book._id ? null : book._id); } }}>
                 <AnimatePresence mode="wait">
                   {flippedId !== book._id ? (
                     /* Front: Editorial Card */

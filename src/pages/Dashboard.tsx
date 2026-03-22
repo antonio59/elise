@@ -1,5 +1,4 @@
 import CoverImage from "../components/CoverImage";
-import CoverImage from "../components/CoverImage";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -145,7 +144,7 @@ const Dashboard: React.FC = () => {
         </motion.div>
 
         <motion.div
-          className="stat-card"
+          className="stat-card hidden md:block"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.25 }}
@@ -164,7 +163,7 @@ const Dashboard: React.FC = () => {
         </motion.div>
 
         <motion.div
-          className="stat-card"
+          className="stat-card hidden md:block"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}

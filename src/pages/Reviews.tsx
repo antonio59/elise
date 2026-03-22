@@ -1,5 +1,4 @@
 import CoverImage from "../components/CoverImage";
-import CoverImage from "../components/CoverImage";
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {

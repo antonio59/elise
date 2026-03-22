@@ -179,6 +179,7 @@ export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
   const siteSettings = useQuery(api.siteSettings.get);
   const { user } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+  const location = useLocation();
 
   const navLinks = [
     { label: "Books", to: "/books", icon: BookOpen },

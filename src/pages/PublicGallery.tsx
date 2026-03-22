@@ -108,7 +108,7 @@ const PublicGallery: React.FC = () => {
                 )}
 
                 {/* Reaction Bar */}
-                <div className="absolute bottom-3 left-3 right-16 opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="absolute bottom-3 left-3 right-16 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
                   <ReactionBar targetType="artwork" targetId={art._id} className="bg-white/90 backdrop-blur-sm rounded-full px-2 py-1 shadow-sm" />
                 </div>
               </motion.div>
