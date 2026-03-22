@@ -14,7 +14,6 @@ interface CoverImageProps {
 }
 
 // Eight gradient pairs that complement the dusty-rose / teal design system.
-// Each is [fromColor, toColor] for a 135° linear gradient.
 const GRADIENTS: [string, string][] = [
   ["#e0b8a8", "#9a5640"],  // dusty rose
   ["#9fb3c8", "#06b6d4"],  // slate → teal

@@ -198,7 +198,7 @@ const MyBooks: React.FC = () => {
             transition={{ delay: index * 0.05 }}
           >
             <div className="relative aspect-[2/3] rounded-xl overflow-hidden bg-slate-100 shadow-sm group-hover:shadow-xl transition-all">
-              <CoverImage book={book} />
+              <CoverImage book={book} className="w-full h-full object-cover" />
 
               {/* Hover overlay */}
               <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
@@ -973,13 +973,7 @@ const AddBookModal: React.FC<AddBookModalProps> = ({
                 {/* Book Preview Card */}
                 <div className="flex gap-4 p-4 bg-slate-50 rounded-xl">
                   <div className="w-16 h-24 rounded-lg overflow-hidden bg-slate-200 flex-shrink-0">
-                    {coverUrl ? (
-                      <img src={coverUrl} alt={title} className="w-full h-full object-cover" />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center">
-                        <BookOpen className="w-6 h-6 text-slate-300" />
-                      </div>
-                    )}
+                    <CoverImage book={{ coverUrl, title, author }} className="w-full h-full object-cover" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <h3 className="font-bold text-slate-800 line-clamp-2">{title}</h3>

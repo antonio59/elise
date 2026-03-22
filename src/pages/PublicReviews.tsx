@@ -1,7 +1,7 @@
-import { getCoverUrl } from "../utils/cover";
+import CoverImage from "../components/CoverImage";
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Star, BookOpen, ArrowLeft, MessageCircle } from "lucide-react";
+import { Star, ArrowLeft, MessageCircle } from "lucide-react";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Link } from "react-router-dom";
@@ -105,85 +105,47 @@ const PublicReviews: React.FC = () => {
           {filteredBooks.map((book, index) => (
             <motion.div
               key={book._id}
-              className="cursor-pointer"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.05 }}
-              onClick={() => setFlippedId(flippedId === book._id ? null : book._id)}
             >
-              <AnimatePresence mode="wait">
-                {flippedId !== book._id ? (
-                  /* Front: Editorial Card */
-                  <motion.div
-                    key="front"
-                    className="card overflow-hidden flex h-[180px] hover:shadow-lg transition-shadow"
-                    initial={{ rotateY: -90 }}
-                    animate={{ rotateY: 0 }}
-                    exit={{ rotateY: 90 }}
-                    transition={{ duration: 0.3 }}
-                  >
+              {/* Mobile: show everything. Desktop: flip card */}
+              <div className="md:hidden">
+                <div className="card overflow-hidden">
+                  <div className="flex">
                     {/* Cover */}
-                    <div className="w-28 flex-shrink-0 bg-slate-100">
-                      {getCoverUrl(book) ? (
-                        <img src={getCoverUrl(book)} alt={book.title} className="w-full h-full object-cover" />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-100 to-violet-100">
-                          <BookOpen className="w-8 h-8 text-primary-300" />
-                        </div>
-                      )}
+                    <div className="w-24 flex-shrink-0 bg-slate-100">
+<CoverImage book={book} className="w-full h-full object-cover" />
                     </div>
                     {/* Info */}
-                    <div className="p-5 flex-1 flex flex-col justify-between">
-                      <div>
-                        <h3 className="font-bold text-slate-800 text-lg line-clamp-1">{book.title}</h3>
-                        <p className="text-sm text-slate-500 mb-2">{book.author}</p>
-                        <div className="flex items-center gap-1">
-                          {Array.from({ length: 5 }).map((_, i) => (
-                            <Star key={i} className={`w-4 h-4 ${i < (book.rating ?? 0) ? "text-yellow-400 fill-yellow-400" : "text-slate-200"}`} />
-                          ))}
-                          {book.rating && book.rating > 0 && (
-                            <span className="ml-2 text-xs text-primary-500 font-medium">{RATING_LABELS[book.rating]}</span>
-                          )}
-                        </div>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        {book.genre && book.genre !== "Other" && (
-                          <span className="text-[10px] px-2 py-0.5 bg-violet-50 text-violet-600 rounded-full border border-violet-200">{book.genre}</span>
+                    <div className="p-4 flex-1">
+                      <h3 className="font-bold text-slate-800 line-clamp-1">{book.title}</h3>
+                      <p className="text-sm text-slate-500 mb-2">{book.author}</p>
+                      <div className="flex items-center gap-1">
+                        {Array.from({ length: 5 }).map((_, i) => (
+                          <Star key={i} className={`w-3.5 h-3.5 ${i < (book.rating ?? 0) ? "text-yellow-400 fill-yellow-400" : "text-slate-200"}`} />
+                        ))}
+                        {book.rating && book.rating > 0 && (
+                          <span className="ml-1 text-xs text-primary-500 font-medium">{RATING_LABELS[book.rating]}</span>
                         )}
-                        <span className="text-xs text-slate-400 flex items-center gap-1">
-                          <MessageCircle className="w-3 h-3" />
-                          tap for review
-                        </span>
                       </div>
+                      {book.genre && book.genre !== "Other" && (
+                        <span className="inline-block mt-1.5 text-[10px] px-2 py-0.5 bg-violet-50 text-violet-600 rounded-full border border-violet-200">{book.genre}</span>
+                      )}
                     </div>
-                  </motion.div>
-                ) : (
-                  /* Back: Full Review */
-                  <motion.div
-                    key="back"
-                    className="card p-6 bg-gradient-to-br from-violet-50 to-white h-[180px] flex flex-col"
-                    initial={{ rotateY: 90 }}
-                    animate={{ rotateY: 0 }}
-                    exit={{ rotateY: -90 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <div className="flex items-start justify-between mb-3">
-                      <div>
-                        <h3 className="font-bold text-slate-800">{book.title}</h3>
-                        <p className="text-xs text-slate-400">by {book.author}</p>
-                      </div>
-                      <span className="text-xs text-slate-400 flex-shrink-0">tap to flip</span>
-                    </div>
+                  </div>
+                  {/* Review text — always visible on mobile */}
+                  <div className="px-4 pb-3">
                     {book.review ? (
-                      <blockquote className="text-slate-600 text-sm leading-relaxed border-l-3 border-primary-300 pl-4 flex-1 line-clamp-4">
+                      <blockquote className="text-slate-600 text-sm leading-relaxed border-l-2 border-primary-300 pl-3">
                         "{book.review}"
                       </blockquote>
                     ) : (
-                      <p className="text-sm text-slate-400 italic flex-1">No written review — just a rating.</p>
+                      <p className="text-sm text-slate-400 italic">No written review — just a rating.</p>
                     )}
                     {book.moodTags && book.moodTags.length > 0 && (
-                      <div className="flex flex-wrap gap-1 mt-3">
+                      <div className="flex flex-wrap gap-1 mt-2">
                         {book.moodTags.map((tag) => (
                           <span key={tag} className="text-[10px] px-1.5 py-0.5 bg-slate-100 text-slate-500 rounded-full">#{tag}</span>
                         ))}
@@ -192,9 +154,88 @@ const PublicReviews: React.FC = () => {
                     <div className="mt-3 pt-3 border-t border-slate-100">
                       <ReactionBar targetType="book" targetId={book._id} />
                     </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+                  </div>
+                </div>
+              </div>
+
+              {/* Desktop: flip card */}
+              <div className="hidden md:block cursor-pointer [perspective:1000px]" onClick={() => setFlippedId(flippedId === book._id ? null : book._id)} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setFlippedId(flippedId === book._id ? null : book._id); } }}>
+                <AnimatePresence mode="wait">
+                  {flippedId !== book._id ? (
+                    /* Front: Editorial Card */
+                    <motion.div
+                      key="front"
+                      className="card overflow-hidden flex h-[180px] hover:shadow-lg transition-shadow"
+                      initial={{ rotateY: -90 }}
+                      animate={{ rotateY: 0 }}
+                      exit={{ rotateY: 90 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <div className="w-28 flex-shrink-0 bg-slate-100">
+  <CoverImage book={book} className="w-full h-full object-cover" />
+                      </div>
+                      <div className="p-5 flex-1 flex flex-col justify-between">
+                        <div>
+                          <h3 className="font-bold text-slate-800 text-lg line-clamp-1">{book.title}</h3>
+                          <p className="text-sm text-slate-500 mb-2">{book.author}</p>
+                          <div className="flex items-center gap-1">
+                            {Array.from({ length: 5 }).map((_, i) => (
+                              <Star key={i} className={`w-4 h-4 ${i < (book.rating ?? 0) ? "text-yellow-400 fill-yellow-400" : "text-slate-200"}`} />
+                            ))}
+                            {book.rating && book.rating > 0 && (
+                              <span className="ml-2 text-xs text-primary-500 font-medium">{RATING_LABELS[book.rating]}</span>
+                            )}
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          {book.genre && book.genre !== "Other" && (
+                            <span className="text-[10px] px-2 py-0.5 bg-violet-50 text-violet-600 rounded-full border border-violet-200">{book.genre}</span>
+                          )}
+                          <span className="text-xs text-slate-400 flex items-center gap-1">
+                            <MessageCircle className="w-3 h-3" />
+                            tap for review
+                          </span>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ) : (
+                    /* Back: Full Review */
+                    <motion.div
+                      key="back"
+                      className="card p-6 bg-gradient-to-br from-violet-50 to-white h-[180px] flex flex-col"
+                      initial={{ rotateY: 90 }}
+                      animate={{ rotateY: 0 }}
+                      exit={{ rotateY: -90 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <div className="flex items-start justify-between mb-3">
+                        <div>
+                          <h3 className="font-bold text-slate-800">{book.title}</h3>
+                          <p className="text-xs text-slate-400">by {book.author}</p>
+                        </div>
+                        <span className="text-xs text-slate-400 flex-shrink-0">tap to flip</span>
+                      </div>
+                      {book.review ? (
+                        <blockquote className="text-slate-600 text-sm leading-relaxed border-l-3 border-primary-300 pl-4 flex-1 line-clamp-4">
+                          "{book.review}"
+                        </blockquote>
+                      ) : (
+                        <p className="text-sm text-slate-400 italic flex-1">No written review — just a rating.</p>
+                      )}
+                      {book.moodTags && book.moodTags.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mt-3">
+                          {book.moodTags.map((tag) => (
+                            <span key={tag} className="text-[10px] px-1.5 py-0.5 bg-slate-100 text-slate-500 rounded-full">#{tag}</span>
+                          ))}
+                        </div>
+                      )}
+                      <div className="mt-3 pt-3 border-t border-slate-100">
+                        <ReactionBar targetType="book" targetId={book._id} />
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             </motion.div>
           ))}
         </div>

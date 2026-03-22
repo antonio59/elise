@@ -9,7 +9,10 @@ import {
   Clock,
   CheckCircle,
   XCircle,
+
+  ArrowLeft,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import type { Doc } from "../../convex/_generated/dataModel";
@@ -62,11 +65,19 @@ const Suggestions: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-slate-800">Book Suggestions</h1>
-        <p className="text-slate-500 mt-1">
-          Book recommendations from your visitors
-        </p>
+      <Link
+        to="/"
+        className="inline-flex items-center gap-1 text-sm text-slate-500 hover:text-slate-700 mb-6"
+      >
+        <ArrowLeft className="w-4 h-4" />
+        Back
+      </Link>
+      <div className="mb-8">
+        <span className="inline-block px-3 py-1 bg-amber-100 text-amber-600 rounded-full text-xs font-semibold uppercase tracking-wider mb-3">Recommendations</span>
+        <h1 className="text-3xl sm:text-4xl font-bold">
+          <span className="bg-gradient-to-r from-primary-600 to-violet-500 bg-clip-text text-transparent">Book Suggestions</span>
+        </h1>
+        <p className="text-slate-500 mt-1">book recommendations from your visitors</p>
       </div>
 
       {/* Stats */}

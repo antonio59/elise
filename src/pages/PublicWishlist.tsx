@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
+  ArrowLeft,
   Gift,
   BookOpen,
   Sparkles,
@@ -11,26 +12,10 @@ import {
   CheckCircle,
   AlertCircle,
 } from "lucide-react";
+import { Link } from "react-router-dom";
+import CoverImage from "../components/CoverImage";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
-
-// Generate consistent gradient colors for books without covers
-function getBookGradient(title: string): [string, string] {
-  const colors: [string, string][] = [
-    ["#f472b6", "#e879f9"], // pink to fuchsia
-    ["#a78bfa", "#818cf8"], // violet to indigo
-    ["#60a5fa", "#38bdf8"], // blue to sky
-    ["#34d399", "#2dd4bf"], // emerald to teal
-    ["#fbbf24", "#fb923c"], // amber to orange
-    ["#f87171", "#fb7185"], // red to rose
-    ["#a3e635", "#4ade80"], // lime to green
-    ["#22d3ee", "#818cf8"], // cyan to indigo
-  ];
-  const hash = title
-    .split("")
-    .reduce((acc, char) => acc + char.charCodeAt(0), 0);
-  return colors[hash % colors.length];
-}
 
 interface WishlistBook {
   _id: string;
@@ -70,18 +55,19 @@ const PublicWishlist: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             className="flex flex-col md:flex-row items-center justify-between gap-6"
           >
-            <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary-500 to-accent-500 shadow-lg flex items-center justify-center">
-                <Gift className="w-7 h-7 text-white" />
-              </div>
-              <div>
-                <h1 className="text-3xl md:text-4xl font-black text-slate-800">
-                  My Reading Wishlist
-                </h1>
-                <p className="text-slate-500 mt-1">
-                  Books I can't wait to read!
-                </p>
-              </div>
+              <Link
+              to="/"
+              className="inline-flex items-center gap-1 text-sm text-slate-500 hover:text-slate-700 mb-6"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back
+            </Link>
+            <div className="mb-8">
+              <span className="inline-block px-3 py-1 bg-primary-100 text-primary-600 rounded-full text-xs font-semibold uppercase tracking-wider mb-3">Wishlist</span>
+              <h1 className="text-3xl sm:text-4xl font-bold">
+                <span className="bg-gradient-to-r from-primary-600 to-violet-500 bg-clip-text text-transparent">My Reading Wishlist</span>
+              </h1>
+              <p className="text-slate-500 mt-1">Books I can't wait to read!</p>
             </div>
 
             <div className="flex items-center gap-3 flex-wrap justify-center">
@@ -132,8 +118,7 @@ const PublicWishlist: React.FC = () => {
               }}
             >
               {sortedWishlist.map((book) => {
-                const [color1, color2] = getBookGradient(book.title);
-                return (
+                                return (
                   <motion.div
                     key={book._id}
                     className="cursor-pointer group"
@@ -160,25 +145,7 @@ const PublicWishlist: React.FC = () => {
                       }}
                       whileTap={{ scale: 0.97 }}
                     >
-                      {book.coverUrl ? (
-                        <img
-                          src={book.coverUrl}
-                          alt={book.title}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <div
-                          className="w-full h-full flex flex-col items-center justify-center p-4 text-white"
-                          style={{
-                            background: `linear-gradient(135deg, ${color1} 0%, ${color2} 100%)`,
-                          }}
-                        >
-                          <span className="text-4xl mb-3">🎁</span>
-                          <span className="text-sm font-bold text-center leading-tight line-clamp-3">
-                            {book.title}
-                          </span>
-                        </div>
-                      )}
+                      <CoverImage book={book} className="w-full h-full object-cover" />
 
                       {/* Wishlist badge */}
                       <div className="absolute top-2 left-2 w-8 h-8 bg-pink-500 rounded-full flex items-center justify-center shadow-lg">
@@ -253,24 +220,9 @@ const PublicWishlist: React.FC = () => {
             >
               {/* Cover */}
               <div className="relative h-72 bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center p-6">
-                {selectedBook.coverUrl ? (
-                  <img
-                    src={selectedBook.coverUrl}
-                    alt={selectedBook.title}
-                    className="h-56 w-auto shadow-2xl rounded-lg object-cover"
-                  />
-                ) : (
-                  <div
-                    className="h-56 w-40 shadow-2xl flex items-center justify-center text-white p-4 rounded-lg"
-                    style={{
-                      background: `linear-gradient(135deg, ${getBookGradient(selectedBook.title)[0]} 0%, ${getBookGradient(selectedBook.title)[1]} 100%)`,
-                    }}
-                  >
-                    <span className="text-xl font-bold text-center">
-                      {selectedBook.title}
-                    </span>
-                  </div>
-                )}
+                <div className="h-56 w-40 shadow-2xl rounded-lg overflow-hidden">
+                  <CoverImage book={selectedBook} className="h-full w-full object-cover" />
+                </div>
 
                 {/* Wishlist badge */}
                 <div className="absolute top-4 left-4 flex items-center gap-2 bg-pink-500 text-white px-3 py-1.5 rounded-full shadow-lg">
