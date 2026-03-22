@@ -90,7 +90,7 @@ const CoverImage: React.FC<CoverImageProps> = ({ book, className = "", alt }) =>
       src={primaryUrl}
       alt={alt || title}
       className={className}
-      loading="lazy"
+      
       onError={(e) => handleFallback(e.currentTarget, fallbackUrl, title, author)}
       onLoad={(e) => {
         const img = e.currentTarget;
