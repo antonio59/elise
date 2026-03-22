@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { getCoverUrl, getFallbackCoverUrl } from "../utils/cover";
+import { getCoverUrl } from "../utils/cover";
 
 interface CoverImageProps {
   book: { coverStorageId?: string; coverUrl?: string; title?: string; author?: string };
@@ -28,14 +28,22 @@ function titleToGradient(title: string): [string, string] {
   return GRADIENTS[Math.abs(hash) % GRADIENTS.length];
 }
 
+function getOpenLibraryUrl(title: string): string {
+  return `https://covers.openlibrary.org/b/title/${encodeURIComponent(title)}-M.jpg?default=false`;
+}
+
 const CoverImage: React.FC<CoverImageProps> = ({ book, className = "", alt }) => {
   const title = book.title || "Untitled";
   const author = book.author || "";
-  const primaryUrl = getCoverUrl(book);
-  const fallbackUrl = getFallbackCoverUrl(book);
 
-  const [src, setSrc] = useState(primaryUrl);
-  const [showCard, setShowCard] = useState(!primaryUrl);
+  // Priority: Convex storage > Open Library by title > title card
+  const convexUrl = book.coverStorageId
+    ? `https://agile-shrimp-456.convex.cloud/api/storage/${book.coverStorageId}`
+    : undefined;
+  const openLibraryUrl = title !== "Untitled" ? getOpenLibraryUrl(title) : undefined;
+
+  const [src, setSrc] = useState(convexUrl || openLibraryUrl);
+  const [showCard, setShowCard] = useState(!convexUrl && !openLibraryUrl);
 
   if (showCard || !src) {
     const [from, to] = titleToGradient(title);
@@ -55,8 +63,9 @@ const CoverImage: React.FC<CoverImageProps> = ({ book, className = "", alt }) =>
   }
 
   const tryFallback = () => {
-    if (fallbackUrl && src !== fallbackUrl) {
-      setSrc(fallbackUrl);
+    // If Convex storage failed, try Open Library
+    if (convexUrl && src === convexUrl && openLibraryUrl) {
+      setSrc(openLibraryUrl);
     } else {
       setShowCard(true);
     }
@@ -68,18 +77,8 @@ const CoverImage: React.FC<CoverImageProps> = ({ book, className = "", alt }) =>
       alt={alt || title}
       className={className}
       onError={tryFallback}
-      onLoad={(e) => {
-        const img = e.currentTarget;
-        const w = img.naturalWidth;
-        const h = img.naturalHeight;
-        // Detect tiny images OR Google Books "image not available" placeholder (575×750)
-        if (w < 100 || (w === 575 && h === 750)) {
-          tryFallback();
-        }
-      }}
     />
   );
 };
 
 export default CoverImage;
-// force rebuild 1774194664
