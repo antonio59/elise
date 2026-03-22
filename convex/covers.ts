@@ -2,6 +2,108 @@ import { query, mutation, action } from "./_generated/server";
 import { v } from "convex/values";
 import { api } from "./_generated/api";
 
+// Placeholder images Google Books returns when no cover exists are tiny (< 5 KB).
+const MIN_IMAGE_BYTES = 5_000;
+
+/** Build Google Books cover URLs at decreasing zoom levels (3 = highest res). */
+function googleZoomUrls(coverUrl: string): string[] {
+  try {
+    const base = coverUrl.replace(/&amp;/g, "&");
+    const u = new URL(base);
+    return [3, 2, 1].map((zoom) => {
+      u.searchParams.set("zoom", String(zoom));
+      return u.toString();
+    });
+  } catch {
+    return [coverUrl.replace(/&amp;/g, "&")];
+  }
+}
+
+/** Try each URL in order; return the first real image blob (skips placeholders). */
+async function fetchFirstValidImage(urls: string[]): Promise<Blob | null> {
+  for (const url of urls) {
+    try {
+      const res = await fetch(url);
+      if (!res.ok) continue;
+      const blob = await res.blob();
+      if (!blob.type.startsWith("image/")) continue;
+      if (blob.size < MIN_IMAGE_BYTES) continue;
+      return blob;
+    } catch {
+      continue;
+    }
+  }
+  return null;
+}
+
+/**
+ * Re-search Google Books API by title + author and return cover URLs for the
+ * top results (zoom 3 → 2 → 1 for each). Used when the stored coverUrl has
+ * expired or never worked.
+ */
+async function freshGoogleCoverUrls(
+  title: string,
+  author: string,
+): Promise<string[]> {
+  try {
+    const apiKey = process.env.GOOGLE_BOOKS_API_KEY;
+    const keyParam = apiKey ? `&key=${apiKey}` : "";
+    const q = encodeURIComponent(`${title} ${author}`);
+    const res = await fetch(
+      `https://www.googleapis.com/books/v1/volumes?q=${q}&maxResults=3&orderBy=relevance${keyParam}`,
+    );
+    if (!res.ok) return [];
+    const data = await res.json();
+    const urls: string[] = [];
+    for (const item of data.items ?? []) {
+      const links = item.volumeInfo?.imageLinks ?? {};
+      const best = (
+        links.extraLarge ??
+        links.large ??
+        links.medium ??
+        links.thumbnail ??
+        links.smallThumbnail
+      )?.replace("http://", "https://");
+      if (best) urls.push(...googleZoomUrls(best));
+    }
+    return urls;
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * Build the full ordered candidate list for a book:
+ *   1. Stored Google Books URL at zoom 3/2/1 (may still work for new books)
+ *   2. Fresh Google Books search by title+author (recovers expired URLs)
+ *   3. Open Library via ISBN
+ */
+async function buildCandidateUrls(book: {
+  title: string;
+  author: string;
+  coverUrl?: string;
+  isbn?: string;
+}): Promise<string[]> {
+  const candidates: string[] = [];
+
+  if (book.coverUrl) {
+    candidates.push(...googleZoomUrls(book.coverUrl));
+  }
+
+  // Always add a fresh Google Books search — it's the only reliable source
+  // when the stored URL has expired.
+  const fresh = await freshGoogleCoverUrls(book.title, book.author);
+  candidates.push(...fresh);
+
+  if (book.isbn) {
+    candidates.push(
+      `https://covers.openlibrary.org/b/isbn/${book.isbn}-L.jpg`,
+    );
+  }
+
+  return candidates;
+}
+
 // Download and store a single book cover permanently in Convex storage
 export const storeFromUrl = action({
   args: { bookId: v.id("books") },
@@ -10,47 +112,19 @@ export const storeFromUrl = action({
     if (!book) throw new Error("Book not found");
     if (book.coverStorageId) return "Already stored";
 
-    // Try Open Library by title first (reliable — returns 404 for missing covers)
-    if (book.title) {
-      const olUrl = `https://covers.openlibrary.org/b/title/${encodeURIComponent(book.title)}-M.jpg?default=false`;
-      try {
-        const resp = await fetch(olUrl);
-        if (resp.ok) {
-          const blob = await resp.blob();
-          // Skip tiny or placeholder images
-          if (blob.size > 2000) {
-            const storageId = await ctx.storage.store(blob);
-            await ctx.runMutation(api.covers.updateCoverStorage, {
-              bookId: args.bookId,
-              coverStorageId: storageId,
-            });
-            return `Cover stored from Open Library: ${storageId}`;
-          }
-        }
-      } catch { /* Open Library failed, try Google Books */ }
-    }
+    const candidates = await buildCandidateUrls(book);
+    if (candidates.length === 0) return "No cover sources";
 
-    // Fallback: try Google Books URL (may return placeholder)
-    if (book.coverUrl) {
-      const url = book.coverUrl.replace(/&amp;/g, "&");
-      try {
-        const response = await fetch(url);
-        if (response.ok) {
-          const blob = await response.blob();
-          // Skip Google Books placeholder (575x750, ~9KB grayscale PNG)
-          if (blob.size > 15000) {
-            const storageId = await ctx.storage.store(blob);
-            await ctx.runMutation(api.covers.updateCoverStorage, {
-              bookId: args.bookId,
-              coverStorageId: storageId,
-            });
-            return `Cover stored from Google Books: ${storageId}`;
-          }
-        }
-      } catch { /* failed */ }
-    }
+    const blob = await fetchFirstValidImage(candidates);
+    if (!blob) return "No valid cover found";
 
-    return "No usable cover found";
+    const storageId = await ctx.storage.store(blob);
+    await ctx.runMutation(api.covers.updateCoverStorage, {
+      bookId: args.bookId,
+      coverStorageId: storageId,
+    });
+
+    return `Cover stored: ${storageId}`;
   },
 });
 
@@ -73,7 +147,8 @@ export const getById = query({
   },
 });
 
-// Batch store covers for all books that have URLs but no storage
+// Batch store covers for all books that don't have permanent storage yet.
+// Safe to call repeatedly — skips books that already have coverStorageId.
 export const storeAll = action({
   args: {},
   handler: async (ctx) => {
@@ -81,57 +156,36 @@ export const storeAll = action({
     let stored = 0;
     let skipped = 0;
     for (const book of books) {
-      if (book.coverStorageId) { skipped++; continue; }
-
-      let stored_ = false;
-
-      // Try Open Library by title
-      if (book.title) {
-        const olUrl = `https://covers.openlibrary.org/b/title/${encodeURIComponent(book.title)}-M.jpg?default=false`;
-        try {
-          const resp = await fetch(olUrl);
-          if (resp.ok) {
-            const blob = await resp.blob();
-            if (blob.size > 2000) {
-              const storageId = await ctx.storage.store(blob);
-              await ctx.runMutation(api.covers.updateCoverStorage, {
-                bookId: book._id,
-                coverStorageId: storageId,
-              });
-              stored++;
-              stored_ = true;
-            }
-          }
-        } catch { /* try next */ }
+      if (book.coverStorageId) {
+        skipped++;
+        continue;
       }
-
-      // Fallback: Google Books (skip if likely placeholder — <15KB)
-      if (!stored_ && book.coverUrl) {
-        try {
-          const url = book.coverUrl.replace(/&amp;/g, "&");
-          const resp = await fetch(url);
-          if (resp.ok) {
-            const blob = await resp.blob();
-            if (blob.size > 15000) {
-              const storageId = await ctx.storage.store(blob);
-              await ctx.runMutation(api.covers.updateCoverStorage, {
-                bookId: book._id,
-                coverStorageId: storageId,
-              });
-              stored++;
-              stored_ = true;
-            }
-          }
-        } catch { /* skip */ }
+      try {
+        const candidates = await buildCandidateUrls(book);
+        if (candidates.length === 0) {
+          skipped++;
+          continue;
+        }
+        const blob = await fetchFirstValidImage(candidates);
+        if (!blob) {
+          skipped++;
+          continue;
+        }
+        const storageId = await ctx.storage.store(blob);
+        await ctx.runMutation(api.covers.updateCoverStorage, {
+          bookId: book._id,
+          coverStorageId: storageId,
+        });
+        stored++;
+      } catch {
+        skipped++;
       }
-
-      if (!stored_) skipped++;
     }
     return `Stored ${stored} covers, skipped ${skipped}`;
   },
 });
 
-// Get all books with cover URLs (for batch operations)
+// Get all books (for batch operations)
 export const getAll = query({
   args: {},
   handler: async (ctx) => {
