@@ -32,9 +32,13 @@ export function getFallbackCoverUrl(book: {
   if (book.coverUrl) {
     const url = book.coverUrl.replace(/&amp;/g, "&");
     // First fallback: zoom=1 (original Google Books thumbnail)
-    if (url.includes("googleapis.com") || url.includes("google.com")) {
-      return url.replace(/zoom=[0-9]/, "zoom=1");
-    }
+    try {
+      const hostname = new URL(url).hostname;
+      if (hostname === "googleapis.com" || hostname.endsWith(".googleapis.com") ||
+          hostname === "books.google.com" || hostname.endsWith(".google.com")) {
+        return url.replace(/zoom=[0-9]/, "zoom=1");
+      }
+    } catch { /* not a valid URL */ }
     return url;
   }
 
