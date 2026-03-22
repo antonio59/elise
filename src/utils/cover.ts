@@ -29,9 +29,15 @@ export function getFallbackCoverUrl(book: {
   // Convex storage URLs always work — no fallback needed
   if (book.coverStorageId) return undefined;
 
+  // Try Open Library first (returns proper 404 for missing covers)
+  if (book.title) {
+    const encoded = encodeURIComponent(book.title);
+    return `https://covers.openlibrary.org/b/title/${encoded}-M.jpg?default=false`;
+  }
+
+  // Last resort: Google Books zoom=1
   if (book.coverUrl) {
     const url = book.coverUrl.replace(/&amp;/g, "&");
-    // First fallback: zoom=1 (original Google Books thumbnail)
     try {
       const hostname = new URL(url).hostname;
       if (hostname === "googleapis.com" || hostname.endsWith(".googleapis.com") ||
@@ -39,13 +45,6 @@ export function getFallbackCoverUrl(book: {
         return url.replace(/zoom=[0-9]/, "zoom=1");
       }
     } catch { /* not a valid URL */ }
-    return url;
-  }
-
-  // Last resort: Open Library by title
-  if (book.title) {
-    const encoded = encodeURIComponent(book.title);
-    return `https://covers.openlibrary.org/b/title/${encoded}-M.jpg?default=false`;
   }
 
   return undefined;
