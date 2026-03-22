@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Heart, X, Sparkles, ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
+import { ArtGridSkeleton } from "../components/Skeleton";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";

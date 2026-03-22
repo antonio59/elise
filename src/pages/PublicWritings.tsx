@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Feather, BookHeart, BookOpenText, ArrowLeft } from "lucide-react";
+import { WritingCardSkeleton } from "../components/Skeleton";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Link } from "react-router-dom";
@@ -103,6 +104,9 @@ const PublicWritings: React.FC = () => {
                 </div>
                 <h3 className="font-bold text-slate-800 text-lg mb-2">{writing.title}</h3>
                 <p className="text-sm text-slate-600 italic leading-relaxed line-clamp-4">{preview}</p>
+                {preview.length > 200 && (
+                  <p className="text-xs text-primary-400 mt-1 font-medium">Read more →</p>
+                )}
                 <div className="mt-4 pt-4 border-t border-slate-100">
                   <ReactionBar targetType="writing" targetId={writing._id} />
                 </div>
