@@ -33,4 +33,3 @@ dist-ssr
 # Local Netlify folder
 .netlify
 .npmrc
-convex/_generated/
