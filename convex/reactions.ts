@@ -133,16 +133,8 @@ export const getDashboardStats = query({
       mostReactedItems.map(async (item) => {
         let title = "Unknown";
         try {
-          if (item.targetType === "book") {
-            const book = await ctx.db.get(item.targetId as any);
-            title = book?.title || "Unknown Book";
-          } else if (item.targetType === "writing") {
-            const writing = await ctx.db.get(item.targetId as any);
-            title = writing?.title || "Unknown Writing";
-          } else if (item.targetType === "artwork") {
-            const artwork = await ctx.db.get(item.targetId as any);
-            title = artwork?.title || "Unknown Artwork";
-          }
+          const doc = await ctx.db.get(item.targetId as any);
+          title = (doc as any)?.title || "Unknown";
         } catch {
           // If we can't fetch the item, use "Unknown"
         }
