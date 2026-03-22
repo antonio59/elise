@@ -1,42 +1,66 @@
 import React, { useState } from "react";
 import { getCoverUrl, getFallbackCoverUrl } from "../utils/cover";
-import { BookOpen } from "lucide-react";
 
 interface CoverImageProps {
-  book: { coverStorageId?: string; coverUrl?: string; title?: string };
+  book: { coverStorageId?: string; coverUrl?: string; title?: string; author?: string };
   className?: string;
   alt?: string;
-  fallback?: React.ReactNode;
 }
 
-const CoverImage: React.FC<CoverImageProps> = ({
-  book,
-  className = "",
-  alt,
-  fallback,
-}) => {
+// Generate a consistent gradient from title string
+function titleToGradient(title: string): string {
+  const gradients = [
+    "from-rose-400 to-pink-500",
+    "from-violet-400 to-purple-500",
+    "from-sky-400 to-blue-500",
+    "from-emerald-400 to-teal-500",
+    "from-amber-400 to-orange-500",
+    "from-fuchsia-400 to-pink-500",
+    "from-indigo-400 to-violet-500",
+    "from-cyan-400 to-sky-500",
+    "from-red-400 to-rose-500",
+    "from-lime-400 to-green-500",
+  ];
+  let hash = 0;
+  for (let i = 0; i < title.length; i++) {
+    hash = title.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  return gradients[Math.abs(hash) % gradients.length];
+}
+
+const CoverImage: React.FC<CoverImageProps> = ({ book, className = "", alt }) => {
   const primaryUrl = getCoverUrl(book);
   const fallbackUrl = getFallbackCoverUrl(book);
   const [currentSrc, setCurrentSrc] = useState(primaryUrl);
   const [hasErrored, setHasErrored] = useState(false);
 
   const handleError = () => {
-    if (!hasErrored && fallbackUrl) {
+    if (!hasErrored && fallbackUrl && currentSrc !== fallbackUrl) {
       setHasErrored(true);
       setCurrentSrc(fallbackUrl);
-    } else if (!hasErrored) {
+    } else {
       setHasErrored(true);
       setCurrentSrc(undefined);
     }
   };
 
-  if (!currentSrc) {
+  // No cover available — show title card
+  if (!currentSrc || hasErrored && !currentSrc) {
+    const title = book.title || "Untitled";
+    const author = book.author || "";
+    const gradient = titleToGradient(title);
+
     return (
-      fallback || (
-        <div className={`flex items-center justify-center bg-gradient-to-br from-primary-100 to-violet-100 ${className}`}>
-          <BookOpen className="w-8 h-8 text-primary-300" />
-        </div>
-      )
+      <div
+        className={`bg-gradient-to-br ${gradient} flex flex-col items-center justify-center p-3 text-center ${className}`}
+      >
+        <p className="text-white font-bold text-xs sm:text-sm leading-tight line-clamp-4 drop-shadow-sm">
+          {title}
+        </p>
+        {author && (
+          <p className="text-white/70 text-[9px] sm:text-[10px] mt-1 line-clamp-1">{author}</p>
+        )}
+      </div>
     );
   }
 
