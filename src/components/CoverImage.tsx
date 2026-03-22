@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React from "react";
 import { getCoverUrl, getFallbackCoverUrl } from "../utils/cover";
 
 interface CoverImageProps {
@@ -29,36 +29,47 @@ function titleToGradient(title: string): { from: string; to: string } {
   return { from, to };
 }
 
+function replaceWithTitleCard(img: HTMLImageElement, title: string, author?: string) {
+  const parent = img.parentElement;
+  if (!parent) return;
+  const { from, to } = titleToGradient(title);
+  const el = document.createElement("div");
+  el.style.cssText = `background:linear-gradient(to bottom right,${from},${to});width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0.75rem;text-align:center`;
+  const p = document.createElement("p");
+  p.style.cssText = "color:white;font-weight:bold;font-size:0.75rem;line-height:1.2";
+  p.textContent = title;
+  el.appendChild(p);
+  if (author) {
+    const a = document.createElement("p");
+    a.style.cssText = "color:rgba(255,255,255,0.7);font-size:0.625rem;margin-top:0.25rem";
+    a.textContent = author;
+    el.appendChild(a);
+  }
+  parent.replaceChild(el, img);
+}
+
+function handleFallback(
+  img: HTMLImageElement,
+  fallbackUrl: string | undefined,
+  title: string,
+  author?: string
+) {
+  if (fallbackUrl && img.src !== fallbackUrl) {
+    img.src = fallbackUrl;
+  } else {
+    replaceWithTitleCard(img, title, author);
+  }
+}
+
 const CoverImage: React.FC<CoverImageProps> = ({ book, className = "", alt }) => {
   const primaryUrl = getCoverUrl(book);
   const fallbackUrl = getFallbackCoverUrl(book);
-  const [attempt, setAttempt] = useState<"primary" | "fallback" | "failed">(
-    primaryUrl ? "primary" : fallbackUrl ? "fallback" : "failed"
-  );
+  const title = book.title || "Untitled";
+  const author = book.author;
 
-  const currentSrc = attempt === "primary" ? primaryUrl : attempt === "fallback" ? fallbackUrl : undefined;
-
-  const advanceAttempt = useCallback(() => {
-    setAttempt((prev) => {
-      if (prev === "primary" && fallbackUrl) return "fallback";
-      return "failed";
-    });
-  }, [fallbackUrl]);
-
-  // If image is suspiciously small (< 100px), it's a blank/placeholder — try next fallback
-  const handleLoad = useCallback((e: React.SyntheticEvent<HTMLImageElement>) => {
-    const img = e.currentTarget;
-    if (img.naturalWidth < 100 || img.naturalHeight < 100) {
-      advanceAttempt();
-    }
-  }, [advanceAttempt]);
-
-  // Show title card as last resort
-  if (!currentSrc) {
-    const title = book.title || "Untitled";
-    const author = book.author || "";
+  // No URL at all — show title card immediately
+  if (!primaryUrl) {
     const { from, to } = titleToGradient(title);
-
     return (
       <div
         style={{ background: `linear-gradient(to bottom right, ${from}, ${to})` }}
@@ -76,12 +87,17 @@ const CoverImage: React.FC<CoverImageProps> = ({ book, className = "", alt }) =>
 
   return (
     <img
-      src={currentSrc}
-      alt={alt || book.title || "Book cover"}
+      src={primaryUrl}
+      alt={alt || title}
       className={className}
-      onError={advanceAttempt}
-      onLoad={handleLoad}
       loading="lazy"
+      onError={(e) => handleFallback(e.currentTarget, fallbackUrl, title, author)}
+      onLoad={(e) => {
+        const img = e.currentTarget;
+        if (img.naturalWidth < 100 || img.naturalHeight < 100) {
+          handleFallback(img, fallbackUrl, title, author);
+        }
+      }}
     />
   );
 };
