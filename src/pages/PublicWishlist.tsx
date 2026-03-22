@@ -17,24 +17,6 @@ import CoverImage from "../components/CoverImage";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 
-// Generate consistent gradient colors for books without covers
-function getBookGradient(title: string): [string, string] {
-  const colors: [string, string][] = [
-    ["#f472b6", "#e879f9"], // pink to fuchsia
-    ["#a78bfa", "#818cf8"], // violet to indigo
-    ["#60a5fa", "#38bdf8"], // blue to sky
-    ["#34d399", "#2dd4bf"], // emerald to teal
-    ["#fbbf24", "#fb923c"], // amber to orange
-    ["#f87171", "#fb7185"], // red to rose
-    ["#a3e635", "#4ade80"], // lime to green
-    ["#22d3ee", "#818cf8"], // cyan to indigo
-  ];
-  const hash = title
-    .split("")
-    .reduce((acc, char) => acc + char.charCodeAt(0), 0);
-  return colors[hash % colors.length];
-}
-
 interface WishlistBook {
   _id: string;
   title: string;
