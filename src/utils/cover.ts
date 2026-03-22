@@ -10,7 +10,10 @@ export function getCoverUrl(book: {
     return `https://${CONVEX_DEPLOYMENT}/api/storage/${book.coverStorageId}`;
   }
   if (book.coverUrl) {
-    return book.coverUrl.replace(/&amp;/g, "&");
+    let url = book.coverUrl.replace(/&amp;/g, "&");
+    // Upgrade Google Books thumbnail resolution for sharper covers
+    url = url.replace(/zoom=[0-9]/, "zoom=2");
+    return url;
   }
   return undefined;
 }
