@@ -1,7 +1,7 @@
-import { getCoverUrl } from "../utils/cover";
+import CoverImage from "../components/CoverImage";
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Star, BookOpen, ArrowLeft, MessageCircle } from "lucide-react";
+import { Star, ArrowLeft, MessageCircle } from "lucide-react";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Link } from "react-router-dom";
@@ -116,13 +116,7 @@ const PublicReviews: React.FC = () => {
                   <div className="flex">
                     {/* Cover */}
                     <div className="w-24 flex-shrink-0 bg-slate-100">
-                      {getCoverUrl(book) ? (
-                        <img src={getCoverUrl(book)} alt={book.title} className="w-full h-full object-cover" />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-100 to-violet-100">
-                          <BookOpen className="w-8 h-8 text-primary-300" />
-                        </div>
-                      )}
+<CoverImage book={book} className="w-full h-full object-cover" />
                     </div>
                     {/* Info */}
                     <div className="p-4 flex-1">
@@ -178,13 +172,7 @@ const PublicReviews: React.FC = () => {
                       transition={{ duration: 0.3 }}
                     >
                       <div className="w-28 flex-shrink-0 bg-slate-100">
-                        {getCoverUrl(book) ? (
-                          <img src={getCoverUrl(book)} alt={book.title} className="w-full h-full object-cover" />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-100 to-violet-100">
-                            <BookOpen className="w-8 h-8 text-primary-300" />
-                          </div>
-                        )}
+  <CoverImage book={book} className="w-full h-full object-cover" />
                       </div>
                       <div className="p-5 flex-1 flex flex-col justify-between">
                         <div>

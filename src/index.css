@@ -537,5 +537,4 @@
 img[src*="googleapis.com"],
 img[src*="convex.cloud"] {
   image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
 }
