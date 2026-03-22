@@ -121,6 +121,7 @@ interface BookResult {
   title: string;
   authors: string[];
   coverUrl: string;
+  isbn?: string;
   pageCount: number;
   description: string;
   genre: string;
@@ -131,6 +132,7 @@ interface GoogleBookSearchProps {
     title: string;
     author: string;
     coverUrl: string;
+    isbn?: string;
     pageCount: number;
     description: string;
     genre: string;
@@ -154,11 +156,12 @@ const GoogleBookSearch: React.FC<GoogleBookSearchProps> = ({ onSelect }) => {
       const items = await convex.action((api as any).googleBooks.search, { query });
 
       const books: BookResult[] = (items || []).map(
-        (item: { id: string; title: string; authors: string[]; coverUrl: string; pageCount: number; description: string; categories: string[] }) => ({
+        (item: { id: string; title: string; authors: string[]; coverUrl: string; isbn?: string; pageCount: number; description: string; categories: string[] }) => ({
           id: item.id,
           title: item.title,
           authors: item.authors,
           coverUrl: item.coverUrl,
+          isbn: item.isbn,
           pageCount: item.pageCount,
           description: item.description,
           genre: mapCategoryToGenre(item.categories, item.description),
@@ -232,6 +235,7 @@ const GoogleBookSearch: React.FC<GoogleBookSearchProps> = ({ onSelect }) => {
                   title: book.title,
                   author: book.authors.join(", "),
                   coverUrl: book.coverUrl,
+                  isbn: book.isbn,
                   pageCount: book.pageCount,
                   description: book.description,
                   genre: book.genre,

@@ -1,82 +1,99 @@
 import React, { useState } from "react";
-
+import { CONVEX_DEPLOYMENT } from "../utils/cover";
 
 interface CoverImageProps {
-  book: { coverStorageId?: string; coverUrl?: string; title?: string; author?: string };
+  book: {
+    coverStorageId?: string;
+    coverUrl?: string;
+    isbn?: string;
+    title: string;
+    author?: string;
+  };
   className?: string;
-  alt?: string;
+  fallback?: React.ReactNode;
 }
 
+// Eight gradient pairs that complement the dusty-rose / teal design system.
 const GRADIENTS: [string, string][] = [
-  ["#f472b6", "#ec4899"],
-  ["#a78bfa", "#a855f7"],
-  ["#38bdf8", "#3b82f6"],
-  ["#34d399", "#14b8a6"],
-  ["#fbbf24", "#f97316"],
-  ["#e879f9", "#ec4899"],
-  ["#818cf8", "#a78bfa"],
-  ["#22d3ee", "#38bdf8"],
-  ["#f87171", "#fb7185"],
-  ["#a3e635", "#22c55e"],
+  ["#e0b8a8", "#9a5640"],  // dusty rose
+  ["#9fb3c8", "#06b6d4"],  // slate → teal
+  ["#d8b4fe", "#7c3aed"],  // lavender → violet
+  ["#fcd34d", "#f97316"],  // amber → orange
+  ["#6ee7b7", "#0d9488"],  // mint → teal
+  ["#fda4af", "#e11d48"],  // blush → crimson
+  ["#93c5fd", "#2563eb"],  // sky → blue
+  ["#f0abfc", "#a21caf"],  // pink → fuchsia
 ];
 
-function titleToGradient(title: string): [string, string] {
+function pickGradient(title: string): [string, string] {
   let hash = 0;
-  for (let i = 0; i < title.length; i++) {
-    hash = title.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  return GRADIENTS[Math.abs(hash) % GRADIENTS.length];
+  for (const ch of title) hash = (hash * 31 + ch.charCodeAt(0)) & 0xffff;
+  return GRADIENTS[hash % GRADIENTS.length];
 }
 
-function getOpenLibraryUrl(title: string): string {
-  return `https://covers.openlibrary.org/b/title/${encodeURIComponent(title)}-M.jpg?default=false`;
-}
+const GradientCard: React.FC<{ title: string; author?: string }> = ({
+  title,
+  author,
+}) => {
+  const [from, to] = pickGradient(title);
+  return (
+    <div
+      className="w-full h-full relative overflow-hidden"
+      style={{ background: `linear-gradient(135deg, ${from}, ${to})` }}
+    >
+      {/* Decorative circles for depth */}
+      <div className="absolute -top-6 -right-6 w-20 h-20 rounded-full bg-white/15" />
+      <div className="absolute top-4 -left-4 w-12 h-12 rounded-full bg-black/10" />
+      <div className="absolute -bottom-6 -right-2 w-16 h-16 rounded-full bg-black/10" />
 
-const CoverImage: React.FC<CoverImageProps> = ({ book, className = "", alt }) => {
-  const title = book.title || "Untitled";
-  const author = book.author || "";
-
-  // Priority: Convex storage > Open Library by title > title card
-  const convexUrl = book.coverStorageId
-    ? `https://agile-shrimp-456.convex.cloud/api/storage/${book.coverStorageId}`
-    : undefined;
-  const openLibraryUrl = title !== "Untitled" ? getOpenLibraryUrl(title) : undefined;
-
-  const [src, setSrc] = useState(convexUrl || openLibraryUrl);
-  const [showCard, setShowCard] = useState(!convexUrl && !openLibraryUrl);
-
-  if (showCard || !src) {
-    const [from, to] = titleToGradient(title);
-    return (
-      <div
-        style={{ background: `linear-gradient(to bottom right, ${from}, ${to})` }}
-        className={`flex flex-col items-center justify-center p-3 text-center ${className}`}
-      >
-        <p className="text-white font-bold text-xs sm:text-sm leading-tight line-clamp-4 drop-shadow-sm">
+      {/* Title + author pinned to the bottom with a scrim */}
+      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent pt-6 pb-2 px-2">
+        <p className="text-white text-[11px] font-bold leading-tight line-clamp-3 drop-shadow">
           {title}
         </p>
         {author && (
-          <p className="text-white/70 text-[9px] sm:text-[10px] mt-1 line-clamp-1">{author}</p>
+          <p className="text-white/70 text-[9px] mt-0.5 line-clamp-1 drop-shadow">
+            {author}
+          </p>
         )}
       </div>
+    </div>
+  );
+};
+
+const CoverImage: React.FC<CoverImageProps> = ({
+  book,
+  className = "w-full h-full object-cover",
+  fallback,
+}) => {
+  const storageUrl = book.coverStorageId
+    ? `https://${CONVEX_DEPLOYMENT}/api/storage/${book.coverStorageId}`
+    : undefined;
+  const googleUrl = book.coverUrl?.replace(/&amp;/g, "&");
+  const openLibraryUrl = book.isbn
+    ? `https://covers.openlibrary.org/b/isbn/${book.isbn}-L.jpg`
+    : undefined;
+
+  const urls = [storageUrl, googleUrl, openLibraryUrl].filter(
+    (u): u is string => !!u,
+  );
+
+  const [index, setIndex] = useState(0);
+  const src = urls[index];
+
+  if (!src) {
+    return (
+      fallback ?? <GradientCard title={book.title} author={book.author} />
     );
   }
 
-  const tryFallback = () => {
-    // If Convex storage failed, try Open Library
-    if (convexUrl && src === convexUrl && openLibraryUrl) {
-      setSrc(openLibraryUrl);
-    } else {
-      setShowCard(true);
-    }
-  };
-
   return (
     <img
+      key={src}
       src={src}
-      alt={alt || title}
+      alt={book.title}
       className={className}
-      onError={tryFallback}
+      onError={() => setIndex((i) => i + 1)}
     />
   );
 };
