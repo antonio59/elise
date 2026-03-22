@@ -1,6 +1,4 @@
-// Get the best cover URL for a book
-// Prefers Convex storage (permanent) over Google Books URL (expires)
-const CONVEX_DEPLOYMENT = "agile-shrimp-456.convex.cloud";
+export const CONVEX_DEPLOYMENT = "agile-shrimp-456.convex.cloud";
 
 export function getCoverUrl(book: {
   coverStorageId?: string;

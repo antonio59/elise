@@ -19,18 +19,33 @@ export const search = action({
       return [];
     }
 
-    return (data.items ?? []).map((item: Record<string, any>) => ({
-      id: item.id as string,
-      title: (item.volumeInfo?.title as string) || "Unknown Title",
-      authors: (item.volumeInfo?.authors as string[]) ?? [],
-      coverUrl: (
-        item.volumeInfo?.imageLinks?.thumbnail ??
-        item.volumeInfo?.imageLinks?.smallThumbnail ??
+    return (data.items ?? []).map((item: Record<string, any>) => {
+      const imageLinks = item.volumeInfo?.imageLinks ?? {};
+      const coverUrl = (
+        imageLinks.extraLarge ??
+        imageLinks.large ??
+        imageLinks.medium ??
+        imageLinks.thumbnail ??
+        imageLinks.smallThumbnail ??
         ""
-      ).replace("http://", "https://"),
-      pageCount: (item.volumeInfo?.pageCount as number) ?? 0,
-      description: (item.volumeInfo?.description as string) ?? "",
-      categories: (item.volumeInfo?.categories as string[]) ?? [],
-    }));
+      ).replace("http://", "https://");
+
+      const identifiers: Array<{ type: string; identifier: string }> =
+        item.volumeInfo?.industryIdentifiers ?? [];
+      const isbn =
+        identifiers.find((id) => id.type === "ISBN_13")?.identifier ??
+        identifiers.find((id) => id.type === "ISBN_10")?.identifier;
+
+      return {
+        id: item.id as string,
+        title: (item.volumeInfo?.title as string) || "Unknown Title",
+        authors: (item.volumeInfo?.authors as string[]) ?? [],
+        coverUrl,
+        isbn,
+        pageCount: (item.volumeInfo?.pageCount as number) ?? 0,
+        description: (item.volumeInfo?.description as string) ?? "",
+        categories: (item.volumeInfo?.categories as string[]) ?? [],
+      };
+    });
   },
 });
