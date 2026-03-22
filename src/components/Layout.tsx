@@ -192,7 +192,7 @@ export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50">
+      <header className="bg-white/80 backdrop-blur-md border-b border-slate-200/70 shadow-sm sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center">
@@ -281,15 +281,31 @@ export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
 
       {/* Footer */}
       <footer className="bg-gradient-to-br from-primary-50 to-violet-50 border-t border-slate-200 py-10">
-        <div className="max-w-6xl mx-auto px-4 text-center">
-          <Link to="/" className="inline-flex items-center gap-2 mb-3">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-primary-500 to-violet-500 flex items-center justify-center">
-              <BookOpen className="w-4 h-4 text-white" />
-            </div>
-            <span className="text-lg font-bold bg-gradient-to-r from-primary-600 to-violet-500 bg-clip-text text-transparent">Elise Reads</span>
-          </Link>
-          <p className="text-sm text-slate-400 italic">{(siteSettings as any)?.footerTagline || "books I've read, art I make, and words I write"}</p>
-          <p className="text-xs text-slate-300 mt-3">{(siteSettings as any)?.footerNote || "Made with love for Elise 💜"}</p>
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="flex flex-col items-center text-center">
+            <Link to="/" className="inline-flex items-center gap-2 mb-4">
+              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-primary-500 to-violet-500 flex items-center justify-center">
+                <BookOpen className="w-4 h-4 text-white" />
+              </div>
+              <span className="text-lg font-bold bg-gradient-to-r from-primary-600 to-violet-500 bg-clip-text text-transparent">Elise Reads</span>
+            </Link>
+
+            {/* Page Links */}
+            <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2 mb-6">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.label}
+                  to={link.to}
+                  className="text-sm text-slate-500 hover:text-primary-600 transition-colors font-medium"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
+
+            <p className="text-sm text-slate-400 italic">{(siteSettings as any)?.footerTagline || "books I've read, art I make, and words I write"}</p>
+            <p className="text-xs text-slate-300 mt-3">{(siteSettings as any)?.footerNote || "Made with love for Elise 💜"}</p>
+          </div>
         </div>
       </footer>
     </div>
