@@ -4,5 +4,16 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-    open-pull-requests-limit: 5
-    labels: ["dependencies"]
+      day: "monday"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "antonio59"
+    labels:
+      - "dependencies"
+    groups:
+      minor-patch:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
