@@ -21,3 +21,8 @@ updates:
       # @convex-dev/auth@0.0.91 requires @auth/core@^0.37.0 — cannot bump past 0.37.x
       - dependency-name: "@auth/core"
         versions: [">=0.38.0"]
+      # eslint-plugin-react-hooks@7.0.1 peer dep only covers eslint ^9.0.0
+      - dependency-name: "eslint"
+        versions: [">=10.0.0"]
+      - dependency-name: "@eslint/js"
+        versions: [">=10.0.0"]
