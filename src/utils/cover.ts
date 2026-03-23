@@ -1,4 +1,7 @@
-export const CONVEX_DEPLOYMENT = "agile-shrimp-456.convex.cloud";
+const convexUrl = import.meta.env.VITE_CONVEX_URL as string | undefined;
+export const CONVEX_DEPLOYMENT = convexUrl
+  ? convexUrl.replace(/^https?:\/\//, "").replace(/\/$/, "")
+  : "agile-shrimp-456.convex.cloud";
 
 export function getCoverUrl(book: {
   coverStorageId?: string;

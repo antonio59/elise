@@ -60,6 +60,8 @@ const ReactionBar: React.FC<ReactionBarProps> = ({ targetType, targetId, classNa
           <button
             key={emoji}
             onClick={() => handleToggle(emoji)}
+            aria-label={`${emoji} reaction${count > 0 ? `, ${count}` : ""}${hasReacted ? " (active, click to remove)" : ""}`}
+            aria-pressed={hasReacted}
             className={`
               flex items-center gap-1 px-2 py-1 rounded-full text-sm
               transition-all duration-200 hover:scale-105 active:scale-95
@@ -68,7 +70,6 @@ const ReactionBar: React.FC<ReactionBarProps> = ({ targetType, targetId, classNa
                 : "bg-slate-100 text-slate-600 hover:bg-slate-200"
               }
             `}
-            title={hasReacted ? "Click to remove reaction" : "Click to react"}
           >
             <span className="text-base">{emoji}</span>
             {count > 0 && (
