@@ -8,7 +8,11 @@ export const getMyBooks = query({
   handler: async (ctx) => {
     const userId = await auth.getUserId(ctx);
     if (!userId) return [];
-    return await ctx.db.query("books").order("desc").collect();
+    return await ctx.db
+      .query("books")
+      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .order("desc")
+      .collect();
   },
 });
 
@@ -22,8 +26,15 @@ export const getByStatus = query({
     ),
   },
   handler: async (ctx, args) => {
-    const allBooks = await ctx.db.query("books").order("desc").collect();
-    return allBooks.filter((b) => b.status === args.status);
+    const userId = await auth.getUserId(ctx);
+    if (!userId) return [];
+    return await ctx.db
+      .query("books")
+      .withIndex("by_user_status", (q) =>
+        q.eq("userId", userId).eq("status", args.status),
+      )
+      .order("desc")
+      .collect();
   },
 });
 
@@ -64,8 +75,14 @@ export const checkDuplicate = query({
     const normalizedTitle = args.title.toLowerCase().trim();
     const normalizedAuthor = args.author.toLowerCase().trim();
 
-    const allBooks = await ctx.db.query("books").collect();
-    const existingBook = allBooks.find(
+    const userId = await auth.getUserId(ctx);
+    if (!userId) return { exists: false };
+
+    const userBooks = await ctx.db
+      .query("books")
+      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .collect();
+    const existingBook = userBooks.find(
       (b) =>
         b.title.toLowerCase().trim() === normalizedTitle &&
         b.author.toLowerCase().trim() === normalizedAuthor,
@@ -113,8 +130,11 @@ export const add = mutation({
     const normalizedTitle = args.title.toLowerCase().trim();
     const normalizedAuthor = args.author.toLowerCase().trim();
 
-    const allBooks = await ctx.db.query("books").collect();
-    const existingBook = allBooks.find(
+    const userBooks = await ctx.db
+      .query("books")
+      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .collect();
+    const existingBook = userBooks.find(
       (b) =>
         b.title.toLowerCase().trim() === normalizedTitle &&
         b.author.toLowerCase().trim() === normalizedAuthor,

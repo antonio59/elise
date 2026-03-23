@@ -6,8 +6,12 @@ import { auth } from "./auth";
 export const getPublished = query({
   args: { limit: v.optional(v.number()) },
   handler: async (ctx, args) => {
-    const allArtworks = await ctx.db.query("artworks").order("desc").collect();
-    return args.limit ? allArtworks.slice(0, args.limit) : allArtworks;
+    const artworks = await ctx.db
+      .query("artworks")
+      .withIndex("by_published", (q) => q.eq("isPublished", true))
+      .order("desc")
+      .collect();
+    return args.limit ? artworks.slice(0, args.limit) : artworks;
   },
 });
 
@@ -23,8 +27,11 @@ export const getMyArtworks = query({
 export const getBySeries = query({
   args: { seriesId: v.id("artSeries") },
   handler: async (ctx, args) => {
-    const allArtworks = await ctx.db.query("artworks").order("desc").collect();
-    return allArtworks.filter((a) => a.seriesId === args.seriesId);
+    return await ctx.db
+      .query("artworks")
+      .withIndex("by_series", (q) => q.eq("seriesId", args.seriesId))
+      .order("desc")
+      .collect();
   },
 });
 
