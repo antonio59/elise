@@ -1,4 +1,5 @@
 import CoverImage from "../components/CoverImage";
+import ReadingStreak from "../components/ReadingStreak";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -83,6 +84,11 @@ const Dashboard: React.FC = () => {
         <div className="flex items-center gap-2">
           <Sparkles className="w-6 h-6 text-primary-400" />
         </div>
+      </div>
+
+      {/* Reading Streak */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <ReadingStreak />
       </div>
 
       {/* Stats Grid */}
