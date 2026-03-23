@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  ArrowLeft,
   Gift,
   BookOpen,
   Sparkles,
@@ -12,10 +11,10 @@ import {
   CheckCircle,
   AlertCircle,
 } from "lucide-react";
-import { Link } from "react-router-dom";
 import CoverImage from "../components/CoverImage";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
+import PageHeader from "../components/PageHeader";
 
 interface WishlistBook {
   _id: string;
@@ -45,62 +44,42 @@ const PublicWishlist: React.FC = () => {
     0,
   );
 
-  return (
-    <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="py-12 px-4">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="flex flex-col md:flex-row items-center justify-between gap-6"
-          >
-              <Link
-              to="/"
-              className="inline-flex items-center gap-1 text-sm text-slate-500 hover:text-slate-700 mb-6"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Back
-            </Link>
-            <div className="mb-8">
-              <span className="inline-block px-3 py-1 bg-primary-100 text-primary-600 rounded-full text-xs font-semibold uppercase tracking-wider mb-3">Wishlist</span>
-              <h1 className="text-3xl sm:text-4xl font-bold">
-                <span className="bg-gradient-to-r from-primary-600 to-violet-500 bg-clip-text text-transparent">My Reading Wishlist</span>
-              </h1>
-              <p className="text-slate-500 mt-1">Books I can't wait to read!</p>
-            </div>
-
-            <div className="flex items-center gap-3 flex-wrap justify-center">
-              <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm border border-slate-200">
-                <span className="text-2xl font-bold bg-gradient-to-r from-primary-500 to-accent-500 bg-clip-text text-transparent">
-                  {wishlistBooks.length}
-                </span>
-                <span className="text-sm text-slate-500">books</span>
-              </div>
-              {totalPages > 0 && (
-                <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm border border-slate-200">
-                  <BookOpen className="w-4 h-4 text-primary-500" />
-                  <span className="text-lg font-bold text-primary-600">
-                    {totalPages.toLocaleString()}
-                  </span>
-                  <span className="text-sm text-slate-500">pages</span>
-                </div>
-              )}
-              <button
-                onClick={() => setShowSuggestModal(true)}
-                className="btn btn-gradient"
-              >
-                <MessageSquarePlus className="w-5 h-5" />
-                Suggest a Book
-              </button>
-            </div>
-          </motion.div>
+  const actions = (
+    <div className="flex items-center gap-3 flex-wrap">
+      <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm border border-slate-200">
+        <span className="text-xl font-bold bg-gradient-to-r from-primary-500 to-accent-500 bg-clip-text text-transparent">
+          {wishlistBooks.length}
+        </span>
+        <span className="text-sm text-slate-500">books</span>
+      </div>
+      {totalPages > 0 && (
+        <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm border border-slate-200">
+          <BookOpen className="w-4 h-4 text-primary-500" />
+          <span className="text-lg font-bold text-primary-600">
+            {totalPages.toLocaleString()}
+          </span>
+          <span className="text-sm text-slate-500">pages</span>
         </div>
-      </section>
+      )}
+      <button
+        onClick={() => setShowSuggestModal(true)}
+        className="btn btn-gradient"
+      >
+        <MessageSquarePlus className="w-5 h-5" />
+        Suggest a Book
+      </button>
+    </div>
+  );
 
-      {/* Wishlist Grid */}
-      <section className="py-8 px-4 pb-16">
-        <div className="max-w-6xl mx-auto">
+  return (
+    <div className="max-w-6xl mx-auto px-4 py-10 sm:py-12">
+      <PageHeader
+        badge="Wishlist"
+        title="My Reading Wishlist"
+        subtitle="Books I can't wait to read!"
+        breadcrumbs={[{ label: "Wishlist" }]}
+        actions={actions}
+      />
           {sortedWishlist.length > 0 ? (
             <motion.div
               className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6"
@@ -195,8 +174,6 @@ const PublicWishlist: React.FC = () => {
               </button>
             </motion.div>
           )}
-        </div>
-      </section>
 
       {/* Book Detail Modal */}
       <AnimatePresence>

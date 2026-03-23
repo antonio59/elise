@@ -1,11 +1,11 @@
 import CoverImage from "../components/CoverImage";
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Star, ArrowLeft, Search, LayoutGrid, List, SlidersHorizontal, Check } from "lucide-react";
+import { Star, Search, LayoutGrid, List, SlidersHorizontal, Check } from "lucide-react";
 import { BookGridSkeleton } from "../components/Skeleton";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
-import { Link } from "react-router-dom";
+import PageHeader from "../components/PageHeader";
 
 const RATING_LABELS: Record<number, string> = {
   1: "not it",
@@ -61,25 +61,17 @@ const PublicBooks: React.FC = () => {
   });
 
   return (
-    <div className="max-w-6xl mx-auto px-4">
-      <Link
-        to="/"
-        className="inline-flex items-center gap-1 text-sm text-slate-500 hover:text-slate-700 mb-6"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        Back
-      </Link>
+    <div className="max-w-6xl mx-auto px-4 py-10 sm:py-12">
       {books === undefined ? (
         <BookGridSkeleton />
       ) : (
         <>
-      <div className="mb-8">
-        <span className="inline-block px-3 py-1 bg-primary-100 text-primary-600 rounded-full text-xs font-semibold uppercase tracking-wider mb-3">Book Shelf</span>
-        <h1 className="text-3xl sm:text-4xl font-bold">
-          <span className="bg-gradient-to-r from-primary-600 to-violet-500 bg-clip-text text-transparent">Books I've Read</span>
-        </h1>
-        <p className="text-slate-500 mt-1">everything I've read</p>
-      </div>
+      <PageHeader
+        badge="Book Shelf"
+        title="Books I've Read"
+        subtitle="everything I've read"
+        breadcrumbs={[{ label: "Books" }]}
+      />
 
       {/* Search + Filter + View Toggle */}
       <div className="flex flex-wrap gap-3 mb-4">
