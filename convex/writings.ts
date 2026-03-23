@@ -9,11 +9,14 @@ export const getPublished = query({
     type: v.optional(v.union(v.literal("poetry"), v.literal("story"), v.literal("journal"))),
   },
   handler: async (ctx, args) => {
-    const allWritings = await ctx.db.query("writings").order("desc").collect();
-    let published = allWritings.filter((w) => w.isPublished);
-    if (args.type) {
-      published = published.filter((w) => w.type === args.type);
-    }
+    const writings = await ctx.db
+      .query("writings")
+      .withIndex("by_published", (q) => q.eq("isPublished", true))
+      .order("desc")
+      .collect();
+    const published = args.type
+      ? writings.filter((w) => w.type === args.type)
+      : writings;
     return args.limit ? published.slice(0, args.limit) : published;
   },
 });
@@ -24,11 +27,23 @@ export const getMyWritings = query({
     type: v.optional(v.union(v.literal("poetry"), v.literal("story"), v.literal("journal"))),
   },
   handler: async (ctx, args) => {
-    const allWritings = await ctx.db.query("writings").order("desc").collect();
-    if (args.type) {
-      return allWritings.filter((w) => w.type === args.type);
+    const userId = await auth.getUserId(ctx);
+    if (!userId) return [];
+    const type = args.type;
+    if (type) {
+      return await ctx.db
+        .query("writings")
+        .withIndex("by_user_type", (q) =>
+          q.eq("userId", userId).eq("type", type),
+        )
+        .order("desc")
+        .collect();
     }
-    return allWritings;
+    return await ctx.db
+      .query("writings")
+      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .order("desc")
+      .collect();
   },
 });
 
@@ -47,8 +62,10 @@ export const getStats = query({
     const userId = await auth.getUserId(ctx);
     if (!userId) return null;
 
-    const allWritings = await ctx.db.query("writings").order("desc").collect();
-    const userWritings = allWritings.filter((w) => w.userId === userId);
+    const userWritings = await ctx.db
+      .query("writings")
+      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .collect();
 
     const poems = userWritings.filter((w) => w.type === "poetry");
     const stories = userWritings.filter((w) => w.type === "story");

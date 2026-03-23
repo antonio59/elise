@@ -155,30 +155,29 @@ export const storeAll = action({
     const books = await ctx.runQuery(api.covers.getAll);
     let stored = 0;
     let skipped = 0;
-    for (const book of books) {
-      if (book.coverStorageId) {
-        skipped++;
-        continue;
-      }
-      try {
-        const candidates = await buildCandidateUrls(book);
-        if (candidates.length === 0) {
-          skipped++;
-          continue;
-        }
-        const blob = await fetchFirstValidImage(candidates);
-        if (!blob) {
-          skipped++;
-          continue;
-        }
-        const storageId = await ctx.storage.store(blob);
-        await ctx.runMutation(api.covers.updateCoverStorage, {
-          bookId: book._id,
-          coverStorageId: storageId,
-        });
-        stored++;
-      } catch {
-        skipped++;
+    const pending = books.filter((b) => !b.coverStorageId);
+    skipped += books.length - pending.length;
+
+    const BATCH = 5;
+    for (let i = 0; i < pending.length; i += BATCH) {
+      const batch = pending.slice(i, i + BATCH);
+      const results = await Promise.allSettled(
+        batch.map(async (book) => {
+          const candidates = await buildCandidateUrls(book);
+          if (candidates.length === 0) return "skip";
+          const blob = await fetchFirstValidImage(candidates);
+          if (!blob) return "skip";
+          const storageId = await ctx.storage.store(blob);
+          await ctx.runMutation(api.covers.updateCoverStorage, {
+            bookId: book._id,
+            coverStorageId: storageId,
+          });
+          return "stored";
+        }),
+      );
+      for (const r of results) {
+        if (r.status === "fulfilled" && r.value === "stored") stored++;
+        else skipped++;
       }
     }
     return `Stored ${stored} covers, skipped ${skipped}`;

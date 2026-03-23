@@ -1,10 +1,11 @@
 [build]
-  command = "npm install && npm run build"
+  command = "npm ci && npm run build"
   publish = "dist"
 
 [build.environment]
   NODE_VERSION = "20"
-  VITE_CONVEX_URL = "https://agile-shrimp-456.convex.cloud"
+  # VITE_CONVEX_URL is set per deploy context in the Netlify dashboard
+  # (Production → agile-shrimp-456.convex.cloud, Preview → staging URL)
 
 [[redirects]]
   from = "/*"
