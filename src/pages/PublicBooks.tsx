@@ -1,4 +1,6 @@
 import CoverImage from "../components/CoverImage";
+import StickerSection from "../components/StickerSection";
+import ShareButton from "../components/ShareButton";
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Star, Search, LayoutGrid, List, SlidersHorizontal, Check } from "lucide-react";
@@ -190,7 +192,7 @@ const PublicBooks: React.FC = () => {
               </div>
               <h3 className="mt-2 text-sm font-medium text-slate-800 line-clamp-1">{book.title}</h3>
               <p className="text-xs text-slate-500 line-clamp-1">{book.author}</p>
-              <div className="flex flex-wrap gap-1 mt-1">
+              <div className="flex flex-wrap items-center gap-1 mt-1">
                 {book.genre && book.genre !== "Other" && (
                   <span className={`text-[10px] px-1.5 py-0.5 rounded-full border ${genreColors[book.genre] || "bg-slate-50 text-slate-500 border-slate-200"}`}>
                     {book.genre}
@@ -199,7 +201,9 @@ const PublicBooks: React.FC = () => {
                 {book.rating && book.rating > 0 && (
                   <span className="text-[10px] text-slate-400">{RATING_LABELS[book.rating]}</span>
                 )}
+                <ShareButton title={book.title} author={book.author} path="/books" />
               </div>
+              <StickerSection bookId={book._id} />
             </motion.div>
           ))}
         </div>
