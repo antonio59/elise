@@ -32,10 +32,12 @@ export const search = action({
       // Force zoom=3 on all Google Books URLs for sharper stored covers.
       let coverUrl = rawCoverUrl;
       try {
-        if (rawCoverUrl && rawCoverUrl.includes("books.google.com")) {
+        if (rawCoverUrl) {
           const u = new URL(rawCoverUrl);
-          u.searchParams.set("zoom", "3");
-          coverUrl = u.toString();
+          if (u.hostname === "books.google.com" || u.hostname.endsWith(".books.google.com")) {
+            u.searchParams.set("zoom", "3");
+            coverUrl = u.toString();
+          }
         }
       } catch { /* leave as-is */ }
 
