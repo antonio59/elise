@@ -21,7 +21,7 @@ export const search = action({
 
     return (data.items ?? []).map((item: Record<string, any>) => {
       const imageLinks = item.volumeInfo?.imageLinks ?? {};
-      const coverUrl = (
+      const rawCoverUrl = (
         imageLinks.extraLarge ??
         imageLinks.large ??
         imageLinks.medium ??
@@ -29,6 +29,15 @@ export const search = action({
         imageLinks.smallThumbnail ??
         ""
       ).replace("http://", "https://");
+      // Force zoom=3 on all Google Books URLs for sharper stored covers.
+      let coverUrl = rawCoverUrl;
+      try {
+        if (rawCoverUrl && rawCoverUrl.includes("books.google.com")) {
+          const u = new URL(rawCoverUrl);
+          u.searchParams.set("zoom", "3");
+          coverUrl = u.toString();
+        }
+      } catch { /* leave as-is */ }
 
       const identifiers: Array<{ type: string; identifier: string }> =
         item.volumeInfo?.industryIdentifiers ?? [];

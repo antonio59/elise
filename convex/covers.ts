@@ -10,7 +10,7 @@ function googleZoomUrls(coverUrl: string): string[] {
   try {
     const base = coverUrl.replace(/&amp;/g, "&");
     const u = new URL(base);
-    return [3, 2, 1].map((zoom) => {
+    return [5, 3, 2, 1].map((zoom) => {
       u.searchParams.set("zoom", String(zoom));
       return u.toString();
     });
