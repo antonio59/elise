@@ -65,7 +65,7 @@ const GradientCard: React.FC<{ title: string; author?: string }> = ({
 function upgradeGoogleZoom(url: string, zoom = 3): string {
   try {
     const u = new URL(url.replace(/&amp;/g, "&"));
-    if (u.hostname.includes("books.google.com")) {
+    if (u.hostname === "books.google.com" || u.hostname.endsWith(".books.google.com")) {
       u.searchParams.set("zoom", String(zoom));
     }
     return u.toString();
