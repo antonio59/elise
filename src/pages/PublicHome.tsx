@@ -26,26 +26,49 @@ const PublicHome: React.FC = () => {
   const wishlist = useQuery(api.books.getWishlist) ?? [];
   const [showSuggestModal, setShowSuggestModal] = useState(false);
 
+  const nowReading = books.filter((b) => b.status === "reading");
+  const subtitle = (siteSettings?.heroSubtitle as string | undefined) ?? "books I've read, art I make, and words I write";
+  const subtitleWords = subtitle.split(" ");
+
   return (
     <div className="min-h-screen">
 
       {/* Hero Section */}
       <section className="py-8 sm:py-12 px-4">
         <div className="max-w-3xl mx-auto text-center">
-          <motion.div
+          <motion.h1
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 text-slate-900"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.5 }}
           >
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 text-slate-900">
-              {siteSettings?.heroTitle || "Elise Reads"}
-            </h1>
+            {(siteSettings?.heroTitle as string | undefined) ?? "Elise Reads"}
+          </motion.h1>
 
-            <p className="text-xl md:text-2xl text-slate-500/80 max-w-lg mx-auto mb-8 font-medium italic">
-              {siteSettings?.heroSubtitle || "books I've read, art I make, and words I write"}
-            </p>
+          {/* Word-stagger subtitle */}
+          <motion.p
+            className="text-xl md:text-2xl text-slate-500/80 max-w-lg mx-auto mb-8 font-medium italic flex flex-wrap justify-center gap-x-1.5"
+            initial="hidden"
+            animate="visible"
+            variants={{ visible: { transition: { staggerChildren: 0.07, delayChildren: 0.4 } } }}
+          >
+            {subtitleWords.map((word, i) => (
+              <motion.span
+                key={i}
+                variants={{ hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0 } }}
+                transition={{ duration: 0.35 }}
+              >
+                {word}
+              </motion.span>
+            ))}
+          </motion.p>
 
-            <div className="flex flex-wrap justify-center gap-3">
+            <motion.div
+              className="flex flex-wrap justify-center gap-3"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.9 }}
+            >
               <a href="#books" className="btn btn-secondary">
                 <BookOpen className="w-4 h-4" />
                 Books
@@ -65,11 +88,39 @@ const PublicHome: React.FC = () => {
                 <MessageSquarePlus className="w-4 h-4" />
                 Suggest
               </button>
-            </div>
-          </motion.div>
+            </motion.div>
         </div>
       </section>
 
+
+      {/* Now Reading */}
+      {nowReading.length > 0 && (
+        <section className="py-6 px-4">
+          <div className="max-w-6xl mx-auto">
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+              <span className="text-sm font-semibold text-slate-600 uppercase tracking-wide">Now Reading</span>
+            </div>
+            <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
+              {nowReading.map((book) => (
+                <motion.div
+                  key={book._id}
+                  className="flex-shrink-0 w-36"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ type: "spring", stiffness: 200, damping: 20 }}
+                >
+                  <div className="aspect-[2/3] rounded-xl overflow-hidden bg-slate-100 shadow-md hover:shadow-xl transition-shadow">
+                    <CoverImage book={book} className="w-full h-full object-cover" />
+                  </div>
+                  <p className="mt-2 text-sm font-medium text-slate-800 line-clamp-1">{book.title}</p>
+                  <p className="text-xs text-slate-500 line-clamp-1">{book.author}</p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* 5-Star Shelf — horizontal scroll of top-rated books */}
       {books.filter((b) => b.rating === 5).length > 0 && (

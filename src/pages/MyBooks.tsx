@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import confetti from "canvas-confetti";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BookOpen,
@@ -273,8 +274,14 @@ const MyBooks: React.FC = () => {
           // Fire-and-forget: permanently store the cover in Convex storage
           storeCover({ bookId }).catch(() => {});
           setShowAddModal(false);
-          // If added as "read", prompt to write a review
+          // If added as "read", celebrate and prompt to write a review
           if (destination === "read") {
+            confetti({
+              particleCount: 120,
+              spread: 80,
+              origin: { y: 0.6 },
+              colors: ["#a855f7", "#ec4899", "#f59e0b", "#10b981", "#3b82f6"],
+            });
             setReviewBookId(bookId);
             setReviewText("");
             setShowEditReview(true);
