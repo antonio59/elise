@@ -1,5 +1,6 @@
 import { mutation } from "./_generated/server";
 import { v } from "convex/values";
+import { auth } from "./auth";
 
 // Seed books for a specific user
 export const seedBooks = mutation({
@@ -23,6 +24,8 @@ export const seedBooks = mutation({
     ),
   },
   handler: async (ctx, args) => {
+    const callerId = await auth.getUserId(ctx);
+    if (!callerId) throw new Error("Not authenticated");
     let count = 0;
     for (const book of args.books) {
       const existing = await ctx.db

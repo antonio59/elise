@@ -11,6 +11,17 @@ export const toggle = mutation({
     visitorId: v.string(),
   },
   handler: async (ctx, args) => {
+    // Rate limit: max 30 reactions per minute per visitor
+    const oneMinuteAgo = Date.now() - 60_000;
+    const recentCount = await ctx.db
+      .query("reactions")
+      .withIndex("by_visitor", (q) => q.eq("visitorId", args.visitorId))
+      .filter((q) => q.gte(q.field("createdAt"), oneMinuteAgo))
+      .collect();
+    if (recentCount.length >= 30) {
+      throw new Error("Too many reactions. Please slow down.");
+    }
+
     // Check if reaction already exists
     const existing = await ctx.db
       .query("reactions")

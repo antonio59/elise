@@ -84,6 +84,17 @@ export const submit = mutation({
     genre: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    // Rate limit: max 3 suggestions per hour per name
+    const oneHourAgo = Date.now() - 3_600_000;
+    const recentSuggestions = await ctx.db
+      .query("bookSuggestions")
+      .withIndex("by_created", (q) => q.gte("createdAt", oneHourAgo))
+      .filter((q) => q.eq(q.field("suggestedBy"), args.suggestedBy))
+      .collect();
+    if (recentSuggestions.length >= 3) {
+      throw new Error("Too many suggestions. Please try again later.");
+    }
+
     const normalizedTitle = args.title.toLowerCase().trim();
     const normalizedAuthor = args.author.toLowerCase().trim();
 
