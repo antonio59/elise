@@ -174,6 +174,26 @@ export default defineSchema(
       updatedAt: v.number(),
     }),
 
+    // Reading streaks (daily check-ins)
+    readingStreaks: defineTable({
+      userId: v.any(),
+      date: v.string(), // "YYYY-MM-DD"
+      createdAt: v.number(),
+    })
+      .index("by_user", ["userId"])
+      .index("by_user_date", ["userId", "date"]),
+
+    // Stickers left by visitors on books
+    stickers: defineTable({
+      targetType: v.literal("book"),
+      targetId: v.string(),
+      sticker: v.string(),
+      visitorId: v.string(),
+      createdAt: v.number(),
+    })
+      .index("by_target", ["targetType", "targetId"])
+      .index("by_visitor_target", ["visitorId", "targetId"]),
+
     // Reactions (emoji reactions on books, writings, artworks)
     reactions: defineTable({
       targetType: v.union(v.literal("book"), v.literal("writing"), v.literal("artwork")),
