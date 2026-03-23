@@ -26,3 +26,6 @@ updates:
         versions: [">=10.0.0"]
       - dependency-name: "@eslint/js"
         versions: [">=10.0.0"]
+      # typescript-eslint@8.x requires typescript <6.0.0
+      - dependency-name: "typescript"
+        versions: [">=6.0.0"]
