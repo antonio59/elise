@@ -17,3 +17,7 @@ updates:
         update-types:
           - "minor"
           - "patch"
+    ignore:
+      # @convex-dev/auth@0.0.91 requires @auth/core@^0.37.0 — cannot bump past 0.37.x
+      - dependency-name: "@auth/core"
+        versions: [">=0.38.0"]
