@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Heart, X, Sparkles, ArrowLeft } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Heart, X, Sparkles } from "lucide-react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
 import ReactionBar from "../components/ReactionBar";
+import PageHeader from "../components/PageHeader";
 
 const PublicGallery: React.FC = () => {
   const artworks = useQuery(api.artworks.getPublished, { limit: 50 }) ?? [];
@@ -27,22 +27,13 @@ const PublicGallery: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen py-12 px-4">
-      <div className="max-w-6xl mx-auto">
-        <Link
-          to="/"
-          className="inline-flex items-center gap-1 text-sm text-slate-500 hover:text-slate-700 mb-6"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Back
-        </Link>
-      <div className="mb-8">
-        <span className="inline-block px-3 py-1 bg-accent-100 text-accent-600 rounded-full text-xs font-semibold uppercase tracking-wider mb-3">Art Gallery</span>
-        <h1 className="text-3xl sm:text-4xl font-bold">
-          <span className="bg-gradient-to-r from-primary-600 to-violet-500 bg-clip-text text-transparent">My Creations</span>
-        </h1>
-        <p className="text-slate-500 mt-1">art inspired by the stories I read</p>
-      </div>
+    <div className="max-w-6xl mx-auto px-4 py-10 sm:py-12">
+      <PageHeader
+        badge="Art Gallery"
+        title="My Creations"
+        subtitle="art inspired by the stories I read"
+        breadcrumbs={[{ label: "Art" }]}
+      />
 
         {/* Gallery Grid */}
         {artworks.length === 0 ? (
@@ -115,7 +106,6 @@ const PublicGallery: React.FC = () => {
             ))}
           </div>
         )}
-      </div>
 
       {/* Lightbox Modal */}
       <AnimatePresence>
