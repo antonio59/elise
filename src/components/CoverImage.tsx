@@ -61,6 +61,19 @@ const GradientCard: React.FC<{ title: string; author?: string }> = ({
   );
 };
 
+/** Upgrade a Google Books cover URL to the largest available zoom level. */
+function upgradeGoogleZoom(url: string, zoom = 3): string {
+  try {
+    const u = new URL(url.replace(/&amp;/g, "&"));
+    if (u.hostname.includes("books.google.com")) {
+      u.searchParams.set("zoom", String(zoom));
+    }
+    return u.toString();
+  } catch {
+    return url.replace(/&amp;/g, "&");
+  }
+}
+
 const CoverImage: React.FC<CoverImageProps> = ({
   book,
   className = "w-full h-full object-cover",
@@ -69,7 +82,7 @@ const CoverImage: React.FC<CoverImageProps> = ({
   const storageUrl = book.coverStorageId
     ? `https://${CONVEX_DEPLOYMENT}/api/storage/${book.coverStorageId}`
     : undefined;
-  const googleUrl = book.coverUrl?.replace(/&amp;/g, "&");
+  const googleUrl = book.coverUrl ? upgradeGoogleZoom(book.coverUrl) : undefined;
   const openLibraryUrl = book.isbn
     ? `https://covers.openlibrary.org/b/isbn/${book.isbn}-L.jpg`
     : undefined;
@@ -93,6 +106,8 @@ const CoverImage: React.FC<CoverImageProps> = ({
       src={src}
       alt={book.title}
       className={className}
+      loading="lazy"
+      decoding="async"
       onError={() => setIndex((i) => i + 1)}
     />
   );
