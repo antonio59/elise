@@ -446,6 +446,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 - Add git-cliff config for changelog generation
 - Add git-cliff config for changelog generation
+- Add git-cliff config for changelog generation
 - Add reminder to lift typescript 6.x ignore when typescript-eslint supports it
 - Ignore typescript 6.x bumps (blocked by typescript-eslint peer dep)
 - Ignore @auth/core bumps past 0.37.x (blocked by @convex-dev/auth peer dep)
@@ -464,6 +465,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 
 ### Features
