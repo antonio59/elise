@@ -23,6 +23,97 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
+- Merge pull request #22 from antonio59/dependabot/npm_and_yarn/minor-patch-d5db63d792
+
+Bump the minor-patch group with 7 updates
+- Bump the minor-patch group with 7 updates
+
+Bumps the minor-patch group with 7 updates:
+
+| Package | From | To |
+| --- | --- | --- |
+| [convex](https://github.com/get-convex/convex-backend/tree/HEAD/npm-packages/convex) | `1.34.0` | `1.34.1` |
+| [lucide-react](https://github.com/lucide-icons/lucide/tree/HEAD/packages/lucide-react) | `1.0.1` | `1.7.0` |
+| [vitest](https://github.com/vitest-dev/vitest/tree/HEAD/packages/vitest) | `4.1.1` | `4.1.2` |
+| [typescript-eslint](https://github.com/typescript-eslint/typescript-eslint/tree/HEAD/packages/typescript-eslint) | `8.57.2` | `8.58.0` |
+| [vite](https://github.com/vitejs/vite/tree/HEAD/packages/vite) | `8.0.2` | `8.0.3` |
+| [@rollup/rollup-darwin-arm64](https://github.com/rollup/rollup) | `4.60.0` | `4.60.1` |
+| [@rollup/rollup-linux-x64-gnu](https://github.com/rollup/rollup) | `4.60.0` | `4.60.1` |
+
+
+Updates `convex` from 1.34.0 to 1.34.1
+- [Release notes](https://github.com/get-convex/convex-backend/releases)
+- [Changelog](https://github.com/get-convex/convex-backend/blob/main/npm-packages/convex/CHANGELOG.md)
+- [Commits](https://github.com/get-convex/convex-backend/commits/HEAD/npm-packages/convex)
+
+Updates `lucide-react` from 1.0.1 to 1.7.0
+- [Release notes](https://github.com/lucide-icons/lucide/releases)
+- [Commits](https://github.com/lucide-icons/lucide/commits/1.7.0/packages/lucide-react)
+
+Updates `vitest` from 4.1.1 to 4.1.2
+- [Release notes](https://github.com/vitest-dev/vitest/releases)
+- [Commits](https://github.com/vitest-dev/vitest/commits/v4.1.2/packages/vitest)
+
+Updates `typescript-eslint` from 8.57.2 to 8.58.0
+- [Release notes](https://github.com/typescript-eslint/typescript-eslint/releases)
+- [Changelog](https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/typescript-eslint/CHANGELOG.md)
+- [Commits](https://github.com/typescript-eslint/typescript-eslint/commits/v8.58.0/packages/typescript-eslint)
+
+Updates `vite` from 8.0.2 to 8.0.3
+- [Release notes](https://github.com/vitejs/vite/releases)
+- [Changelog](https://github.com/vitejs/vite/blob/main/packages/vite/CHANGELOG.md)
+- [Commits](https://github.com/vitejs/vite/commits/create-vite@8.0.3/packages/vite)
+
+Updates `@rollup/rollup-darwin-arm64` from 4.60.0 to 4.60.1
+- [Release notes](https://github.com/rollup/rollup/releases)
+- [Changelog](https://github.com/rollup/rollup/blob/master/CHANGELOG.md)
+- [Commits](https://github.com/rollup/rollup/compare/v4.60.0...v4.60.1)
+
+Updates `@rollup/rollup-linux-x64-gnu` from 4.60.0 to 4.60.1
+- [Release notes](https://github.com/rollup/rollup/releases)
+- [Changelog](https://github.com/rollup/rollup/blob/master/CHANGELOG.md)
+- [Commits](https://github.com/rollup/rollup/compare/v4.60.0...v4.60.1)
+
+---
+updated-dependencies:
+- dependency-name: convex
+  dependency-version: 1.34.1
+  dependency-type: direct:production
+  update-type: version-update:semver-patch
+  dependency-group: minor-patch
+- dependency-name: lucide-react
+  dependency-version: 1.7.0
+  dependency-type: direct:production
+  update-type: version-update:semver-minor
+  dependency-group: minor-patch
+- dependency-name: vitest
+  dependency-version: 4.1.2
+  dependency-type: direct:development
+  update-type: version-update:semver-patch
+  dependency-group: minor-patch
+- dependency-name: typescript-eslint
+  dependency-version: 8.58.0
+  dependency-type: direct:development
+  update-type: version-update:semver-minor
+  dependency-group: minor-patch
+- dependency-name: vite
+  dependency-version: 8.0.3
+  dependency-type: direct:development
+  update-type: version-update:semver-patch
+  dependency-group: minor-patch
+- dependency-name: "@rollup/rollup-darwin-arm64"
+  dependency-version: 4.60.1
+  dependency-type: direct:production
+  update-type: version-update:semver-patch
+  dependency-group: minor-patch
+- dependency-name: "@rollup/rollup-linux-x64-gnu"
+  dependency-version: 4.60.1
+  dependency-type: direct:production
+  update-type: version-update:semver-patch
+  dependency-group: minor-patch
+...
+
+Signed-off-by: dependabot[bot] <support@github.com>
 - Merge pull request #20 from antonio59/dependabot/npm_and_yarn/minor-patch-cf38323bd8
 
 Bump the minor-patch group with 7 updates
@@ -466,6 +557,8 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Documentation
 
+- Update changelog [skip ci]
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 
