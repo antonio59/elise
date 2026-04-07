@@ -21,6 +21,8 @@ interface WishlistBook {
   title: string;
   author: string;
   coverUrl?: string;
+  coverImageUrl?: string | null;
+  coverStorageId?: string;
   genre?: string;
   pageCount?: number;
   description?: string;

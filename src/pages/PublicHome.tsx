@@ -794,7 +794,7 @@ const SuggestBookModal: React.FC<SuggestBookModalProps> = ({
 export default PublicHome;
 
 // ===== PUBLIC WRITINGS SECTION =====
-const ReviewStrip: React.FC<{ books: Array<{ _id: string; title: string; author: string; coverUrl?: string; rating?: number; review?: string; isFavorite?: boolean }> }> = ({ books }) => {
+const ReviewStrip: React.FC<{ books: Array<{ _id: string; title: string; author: string; coverUrl?: string; coverImageUrl?: string | null; coverStorageId?: string; rating?: number; review?: string; isFavorite?: boolean }> }> = ({ books }) => {
   const reviewed = books.filter((b) => b.rating && b.rating > 0);
 
   if (reviewed.length === 0) {

@@ -38,3 +38,4 @@ dist-ssr
 email-to-elise.md
 seed-books*.json
 all-books.json
+.gstack/

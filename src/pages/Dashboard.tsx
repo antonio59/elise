@@ -468,6 +468,8 @@ const Dashboard: React.FC = () => {
                 title: string;
                 author: string;
                 coverUrl?: string;
+                coverImageUrl?: string | null;
+                coverStorageId?: string;
                 status: string;
                 rating?: number;
               }) => (

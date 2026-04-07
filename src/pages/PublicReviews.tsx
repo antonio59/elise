@@ -12,6 +12,8 @@ interface Book {
   title: string;
   author: string;
   coverUrl?: string;
+  coverImageUrl?: string | null;
+  coverStorageId?: string;
   genre?: string;
   rating?: number;
   review?: string;
