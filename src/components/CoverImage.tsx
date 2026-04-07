@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { CONVEX_DEPLOYMENT } from "../utils/cover";
 
 interface CoverImageProps {
   book: {
+    coverImageUrl?: string | null;
     coverStorageId?: string;
     coverUrl?: string;
     isbn?: string;
@@ -79,9 +79,7 @@ const CoverImage: React.FC<CoverImageProps> = ({
   className = "w-full h-full object-cover",
   fallback,
 }) => {
-  const storageUrl = book.coverStorageId
-    ? `https://${CONVEX_DEPLOYMENT}/api/storage/${book.coverStorageId}`
-    : undefined;
+  const storageUrl = book.coverImageUrl ?? undefined;
   const googleUrl = book.coverUrl ? upgradeGoogleZoom(book.coverUrl) : undefined;
   const openLibraryUrl = book.isbn
     ? `https://covers.openlibrary.org/b/isbn/${book.isbn}-L.jpg`

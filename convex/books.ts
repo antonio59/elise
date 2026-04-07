@@ -1,6 +1,18 @@
-import { query, mutation } from "./_generated/server";
+import { query, mutation, type QueryCtx } from "./_generated/server";
 import { v } from "convex/values";
 import { auth } from "./auth";
+import type { Doc } from "./_generated/dataModel";
+
+async function withCoverUrls(ctx: QueryCtx, books: Doc<"books">[]) {
+  return Promise.all(
+    books.map(async (b) => ({
+      ...b,
+      coverImageUrl: b.coverStorageId
+        ? await ctx.storage.getUrl(b.coverStorageId)
+        : null,
+    })),
+  );
+}
 
 // Get all books (for authenticated user — single-user site, return all books)
 export const getMyBooks = query({
@@ -8,10 +20,11 @@ export const getMyBooks = query({
   handler: async (ctx) => {
     const userId = await auth.getUserId(ctx);
     if (!userId) return [];
-    return await ctx.db
+    const books = await ctx.db
       .query("books")
       .order("desc")
       .collect();
+    return withCoverUrls(ctx, books);
   },
 });
 
@@ -28,7 +41,7 @@ export const getByStatus = query({
     const userId = await auth.getUserId(ctx);
     if (!userId) return [];
     const allBooks = await ctx.db.query("books").order("desc").collect();
-    return allBooks.filter((b) => b.status === args.status);
+    return withCoverUrls(ctx, allBooks.filter((b) => b.status === args.status));
   },
 });
 
@@ -37,7 +50,7 @@ export const getReadBooks = query({
   args: {},
   handler: async (ctx) => {
     const allBooks = await ctx.db.query("books").collect();
-    return allBooks.filter((b) => b.status === "read" || b.status === "reading");
+    return withCoverUrls(ctx, allBooks.filter((b) => b.status === "read" || b.status === "reading"));
   },
 });
 
@@ -46,7 +59,7 @@ export const getWishlist = query({
   args: {},
   handler: async (ctx) => {
     const allBooks = await ctx.db.query("books").order("desc").collect();
-    return allBooks.filter((b) => b.status === "wishlist");
+    return withCoverUrls(ctx, allBooks.filter((b) => b.status === "wishlist"));
   },
 });
 
@@ -55,7 +68,7 @@ export const getFavorites = query({
   args: {},
   handler: async (ctx) => {
     const allBooks = await ctx.db.query("books").collect();
-    return allBooks.filter((b) => b.isFavorite);
+    return withCoverUrls(ctx, allBooks.filter((b) => b.isFavorite));
   },
 });
 
