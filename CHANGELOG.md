@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- Add coverImageUrl to all Book type interfaces across pages
+- Add coverImageUrl to all Book type interfaces across pages
 - Resolve cover storage URLs server-side via ctx.storage.getUrl()
 - Remove userId index filtering for single-user site
 - Resolve brace-expansion security vulnerability
@@ -560,6 +562,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
