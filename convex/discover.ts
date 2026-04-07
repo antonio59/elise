@@ -2,7 +2,6 @@
 import { query, mutation, action } from "./_generated/server";
 import { v } from "convex/values";
 import { auth } from "./auth";
-import { api } from "./_generated/api";
 
 // Get user's reading profile for recommendations
 export const getReadingProfile = query({

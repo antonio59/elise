@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import confetti from "canvas-confetti";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -48,7 +48,8 @@ const GENRES = [
 
 const MyBooks: React.FC = () => {
   // Get all books - the query handles auth internally
-  const books = useQuery(api.books.getMyBooks) ?? [];
+  const booksRaw = useQuery(api.books.getMyBooks);
+  const books = useMemo(() => booksRaw ?? [], [booksRaw]);
 
   const addBook = useMutation(api.books.add);
   const updateBook = useMutation(api.books.update);
