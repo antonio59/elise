@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- Remove userId index filtering for single-user site
 - Resolve brace-expansion security vulnerability
 - Strict hostname validation for Google Books URLs (CodeQL #5, #6)
 - Pin eslint to ^9.x (react-hooks plugin incompatible with eslint 10), add missing canvas-confetti + vitest deps
@@ -558,6 +559,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
