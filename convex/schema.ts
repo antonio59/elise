@@ -194,6 +194,24 @@ export default defineSchema(
       .index("by_target", ["targetType", "targetId"])
       .index("by_visitor_target", ["visitorId", "targetId"]),
 
+    // Book discovery swipe decisions (Tinder-style recommendations)
+    bookSwipes: defineTable({
+      userId: v.any(),
+      googleBookId: v.string(), // Google Books volume ID
+      title: v.string(),
+      author: v.string(),
+      coverUrl: v.optional(v.string()),
+      genre: v.optional(v.string()),
+      pageCount: v.optional(v.number()),
+      description: v.optional(v.string()),
+      action: v.union(v.literal("liked"), v.literal("passed")),
+      addedToWishlist: v.boolean(),
+      createdAt: v.number(),
+    })
+      .index("by_user", ["userId"])
+      .index("by_user_action", ["userId", "action"])
+      .index("by_user_googleBookId", ["userId", "googleBookId"]),
+
     // Reactions (emoji reactions on books, writings, artworks)
     reactions: defineTable({
       targetType: v.union(v.literal("book"), v.literal("writing"), v.literal("artwork")),
