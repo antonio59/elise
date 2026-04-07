@@ -305,7 +305,7 @@ const Discover: React.FC = () => {
         {profile && profile.topGenres.length > 0 && (
           <div className="flex flex-wrap gap-2 mt-4">
             <span className="text-xs text-slate-400 self-center">Based on:</span>
-            {profile.topGenres.slice(0, 4).map((genre) => (
+            {profile.topGenres.slice(0, 4).map((genre: string) => (
               <span
                 key={genre}
                 className="px-2.5 py-1 rounded-full bg-primary-50 text-primary-600 text-xs font-medium"
@@ -313,7 +313,7 @@ const Discover: React.FC = () => {
                 {genre}
               </span>
             ))}
-            {profile.topMoods.slice(0, 2).map((mood) => (
+            {profile.topMoods.slice(0, 2).map((mood: string) => (
               <span
                 key={mood}
                 className="px-2.5 py-1 rounded-full bg-violet-50 text-violet-600 text-xs font-medium"
