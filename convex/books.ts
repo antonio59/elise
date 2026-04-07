@@ -2,7 +2,7 @@ import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 import { auth } from "./auth";
 
-// Get all books (for authenticated user)
+// Get all books (for authenticated user — single-user site, return all books)
 export const getMyBooks = query({
   args: {},
   handler: async (ctx) => {
@@ -10,7 +10,6 @@ export const getMyBooks = query({
     if (!userId) return [];
     return await ctx.db
       .query("books")
-      .withIndex("by_user", (q) => q.eq("userId", userId))
       .order("desc")
       .collect();
   },
@@ -28,13 +27,8 @@ export const getByStatus = query({
   handler: async (ctx, args) => {
     const userId = await auth.getUserId(ctx);
     if (!userId) return [];
-    return await ctx.db
-      .query("books")
-      .withIndex("by_user_status", (q) =>
-        q.eq("userId", userId).eq("status", args.status),
-      )
-      .order("desc")
-      .collect();
+    const allBooks = await ctx.db.query("books").order("desc").collect();
+    return allBooks.filter((b) => b.status === args.status);
   },
 });
 
@@ -80,7 +74,6 @@ export const checkDuplicate = query({
 
     const userBooks = await ctx.db
       .query("books")
-      .withIndex("by_user", (q) => q.eq("userId", userId))
       .collect();
     const existingBook = userBooks.find(
       (b) =>
@@ -132,7 +125,6 @@ export const add = mutation({
 
     const userBooks = await ctx.db
       .query("books")
-      .withIndex("by_user", (q) => q.eq("userId", userId))
       .collect();
     const existingBook = userBooks.find(
       (b) =>

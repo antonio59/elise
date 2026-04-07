@@ -12,7 +12,6 @@ export const getReadingProfile = query({
 
     const books = await ctx.db
       .query("books")
-      .withIndex("by_user", (q) => q.eq("userId", userId))
       .collect();
 
     const readBooks = books.filter((b) => b.status === "read");
@@ -103,7 +102,6 @@ export const getExistingBookKeys = query({
 
     const books = await ctx.db
       .query("books")
-      .withIndex("by_user", (q) => q.eq("userId", userId))
       .collect();
 
     return books.map((b) => `${b.title.toLowerCase().trim()}::${b.author.toLowerCase().trim()}`);
@@ -210,7 +208,6 @@ export const recordSwipe = mutation({
       // Check if book already exists
       const userBooks = await ctx.db
         .query("books")
-        .withIndex("by_user", (q) => q.eq("userId", userId))
         .collect();
 
       const normalizedTitle = args.title.toLowerCase().trim();
