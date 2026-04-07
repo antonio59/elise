@@ -563,9 +563,11 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
+- Update changelog [skip ci]
 
 ### Features
 
+- Discover page with Tinder-style book swipe recommendations (#25)
 - Reading streaks, stickers, and share buttons
 - Consistent page layout with breadcrumb navigation across all public pages
 - Permanent cover storage with auto-refresh for expired Google Books URLs (#10)
