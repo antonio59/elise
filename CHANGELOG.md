@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- Re-enable schema validation on elise production
 - Prioritize high-res Google Books URLs over blurry storage thumbnails
 - Upgrade cover art to high-res — add migration + remove curl effect
 - Add auth cleanup migration, guard empty allowlist, temp disable validation
@@ -566,6 +567,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
