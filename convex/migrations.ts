@@ -1,21 +1,41 @@
 import { mutation, internalMutation } from "./_generated/server";
 import { auth } from "./auth";
 
-// One-time cleanup: delete authAccounts records with empty userId ("")
+// Diagnostic: inspect authAccounts userId values
+// Run via: npx convex run migrations:inspectAuthAccounts
+export const inspectAuthAccounts = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    const accounts = await ctx.db.query("authAccounts").collect();
+    return accounts.map((a) => ({
+      id: a._id,
+      provider: a.provider,
+      userId: a.userId,
+      userIdType: typeof a.userId,
+    }));
+  },
+});
+
+// One-time cleanup: delete authAccounts records with invalid userId
 // that prevent schema validation from being enabled.
 // Run via: npx convex run migrations:cleanupBadAuthRecords
 export const cleanupBadAuthRecords = internalMutation({
   args: {},
   handler: async (ctx) => {
     const accounts = await ctx.db.query("authAccounts").collect();
+    // Also check valid users exist
+    const users = await ctx.db.query("users").collect();
+    const validUserIds = new Set(users.map((u) => u._id));
+
     let deleted = 0;
     for (const account of accounts) {
-      if (!account.userId || account.userId === "") {
+      const uid = account.userId as string;
+      if (!uid || uid === "" || !validUserIds.has(uid as any)) {
         await ctx.db.delete(account._id);
         deleted++;
       }
     }
-    return { deleted, total: accounts.length };
+    return { deleted, total: accounts.length, validUsers: users.length };
   },
 });
 
