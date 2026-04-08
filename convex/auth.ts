@@ -11,7 +11,7 @@ const ALLOWED_EMAILS = (process.env.ALLOWED_EMAILS || "")
 const CustomPassword = Password<DataModel>({
   profile(params) {
     const email = (params.email as string).toLowerCase().trim();
-    if (!ALLOWED_EMAILS.includes(email)) {
+    if (ALLOWED_EMAILS.length > 0 && !ALLOWED_EMAILS.includes(email)) {
       throw new Error(
         JSON.stringify({
           error: "Access denied. This site is invite-only.",

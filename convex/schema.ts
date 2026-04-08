@@ -224,4 +224,6 @@ export default defineSchema(
       .index("by_target_emoji", ["targetType", "targetId", "emoji"])
       .index("by_visitor", ["visitorId", "targetType", "targetId"]),
   },
+  // Temporarily disabled — re-enable after running cleanupBadAuthRecords migration
+  { schemaValidation: false },
 );

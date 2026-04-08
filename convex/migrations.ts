@@ -1,5 +1,23 @@
-import { mutation } from "./_generated/server";
+import { mutation, internalMutation } from "./_generated/server";
 import { auth } from "./auth";
+
+// One-time cleanup: delete authAccounts records with empty userId ("")
+// that prevent schema validation from being enabled.
+// Run via: npx convex run migrations:cleanupBadAuthRecords
+export const cleanupBadAuthRecords = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    const accounts = await ctx.db.query("authAccounts").collect();
+    let deleted = 0;
+    for (const account of accounts) {
+      if (!account.userId || account.userId === "") {
+        await ctx.db.delete(account._id);
+        deleted++;
+      }
+    }
+    return { deleted, total: accounts.length };
+  },
+});
 
 // One-time migration: update all books, artworks, writings, userProfiles,
 // readingGoals, and readingStreaks to use the current auth userId.
