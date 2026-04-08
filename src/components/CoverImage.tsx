@@ -87,7 +87,9 @@ const CoverImage: React.FC<CoverImageProps> = ({
     ? `https://covers.openlibrary.org/b/isbn/${book.isbn}-L.jpg`
     : undefined;
 
-  const urls = [storageUrl, googleUrl, openLibraryUrl].filter(
+  // Prefer Google Books zoom=3 (high-res) over stored thumbnails,
+  // fall back to storage URL, then Open Library.
+  const urls = [googleUrl, storageUrl, openLibraryUrl].filter(
     (u): u is string => !!u,
   );
 
