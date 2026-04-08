@@ -30,7 +30,8 @@ export const cleanupBadAuthRecords = internalMutation({
     let deleted = 0;
     for (const account of accounts) {
       const uid = account.userId as string;
-      if (!uid || uid === "" || !validUserIds.has(uid as any)) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      if (!uid || uid === "" || !validUserIds.has(uid as never)) {
         await ctx.db.delete(account._id);
         deleted++;
       }
