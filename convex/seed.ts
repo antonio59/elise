@@ -5,7 +5,7 @@ import { auth } from "./auth";
 // Seed books for a specific user
 export const seedBooks = mutation({
   args: {
-    userId: v.string(),
+    userId: v.id("users"),
     books: v.array(
       v.object({
         title: v.string(),

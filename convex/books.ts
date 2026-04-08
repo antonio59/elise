@@ -28,7 +28,7 @@ export const getMyBooks = query({
   },
 });
 
-// Get books by status
+// Get books by status (uses compound index)
 export const getByStatus = query({
   args: {
     status: v.union(
@@ -40,12 +40,18 @@ export const getByStatus = query({
   handler: async (ctx, args) => {
     const userId = await auth.getUserId(ctx);
     if (!userId) return [];
-    const allBooks = await ctx.db.query("books").order("desc").collect();
-    return withCoverUrls(ctx, allBooks.filter((b) => b.status === args.status));
+    const books = await ctx.db
+      .query("books")
+      .withIndex("by_user_status", (q) =>
+        q.eq("userId", userId).eq("status", args.status)
+      )
+      .order("desc")
+      .collect();
+    return withCoverUrls(ctx, books);
   },
 });
 
-// Get all read books (for public display)
+// Get all read books (for public display — no auth, single-user site)
 export const getReadBooks = query({
   args: {},
   handler: async (ctx) => {

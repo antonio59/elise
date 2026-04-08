@@ -9,7 +9,7 @@ export default defineSchema(
 
     // User profiles (extends auth user)
     userProfiles: defineTable({
-      userId: v.any(), // Allow any userId format for backward compatibility
+      userId: v.id("users"),
       name: v.string(),
       username: v.optional(v.string()),
       avatarUrl: v.optional(v.string()),
@@ -45,7 +45,7 @@ export default defineSchema(
 
     // Books
     books: defineTable({
-      userId: v.any(), // Allow any userId format for backward compatibility
+      userId: v.id("users"),
       title: v.string(),
       author: v.string(),
       coverUrl: v.optional(v.string()),
@@ -78,7 +78,7 @@ export default defineSchema(
 
     // Artworks
     artworks: defineTable({
-      userId: v.any(), // Allow any userId format for backward compatibility
+      userId: v.id("users"),
       title: v.string(),
       description: v.optional(v.string()),
       imageUrl: v.string(),
@@ -97,7 +97,7 @@ export default defineSchema(
 
     // Art Series
     artSeries: defineTable({
-      userId: v.any(), // Allow any userId format for backward compatibility
+      userId: v.id("users"),
       title: v.string(),
       description: v.optional(v.string()),
       coverImageUrl: v.optional(v.string()),
@@ -107,7 +107,7 @@ export default defineSchema(
 
     // Writings (poems, stories, journal entries)
     writings: defineTable({
-      userId: v.any(),
+      userId: v.id("users"),
       title: v.string(),
       content: v.string(),
       type: v.union(
@@ -152,7 +152,7 @@ export default defineSchema(
 
     // Reading goals
     readingGoals: defineTable({
-      userId: v.any(), // Allow any userId format for backward compatibility
+      userId: v.id("users"),
       year: v.number(),
       targetBooks: v.number(),
       targetPages: v.optional(v.number()),
@@ -176,7 +176,7 @@ export default defineSchema(
 
     // Reading streaks (daily check-ins)
     readingStreaks: defineTable({
-      userId: v.any(),
+      userId: v.id("users"),
       date: v.string(), // "YYYY-MM-DD"
       createdAt: v.number(),
     })
@@ -196,7 +196,7 @@ export default defineSchema(
 
     // Book discovery swipe decisions (Tinder-style recommendations)
     bookSwipes: defineTable({
-      userId: v.any(),
+      userId: v.id("users"),
       googleBookId: v.string(), // Google Books volume ID
       title: v.string(),
       author: v.string(),
@@ -224,6 +224,4 @@ export default defineSchema(
       .index("by_target_emoji", ["targetType", "targetId", "emoji"])
       .index("by_visitor", ["visitorId", "targetType", "targetId"]),
   },
-  // Disable strict schema enforcement to allow legacy data
-  { schemaValidation: false },
 );
