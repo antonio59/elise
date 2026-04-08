@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- Replace v.any() with v.id('users'), re-enable schema validation, use indexes
 - Add coverImageUrl to all Book type interfaces across pages
 - Add coverImageUrl to all Book type interfaces across pages
 - Resolve cover storage URLs server-side via ctx.storage.getUrl()
@@ -562,6 +563,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
