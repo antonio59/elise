@@ -579,9 +579,11 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
+- Update changelog [skip ci]
 
 ### Features
 
+- Mark-as-bought on wishlist, share wishlist link, cover art fix
 - Discover page with Tinder-style book swipe recommendations (#25)
 - Reading streaks, stickers, and share buttons
 - Consistent page layout with breadcrumb navigation across all public pages
