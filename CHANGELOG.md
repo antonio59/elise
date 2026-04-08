@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- Prioritize high-res Google Books URLs over blurry storage thumbnails
 - Upgrade cover art to high-res — add migration + remove curl effect
 - Add auth cleanup migration, guard empty allowlist, temp disable validation
 - Replace v.any() with v.id('users'), re-enable schema validation, use indexes
@@ -565,6 +566,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
