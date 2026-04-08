@@ -70,6 +70,8 @@ export default defineSchema(
       moodTags: v.optional(v.array(v.string())),
       startedAt: v.optional(v.number()),
       finishedAt: v.optional(v.number()),
+      boughtBy: v.optional(v.string()),
+      boughtAt: v.optional(v.number()),
       createdAt: v.number(),
     })
       .index("by_user", ["userId"])

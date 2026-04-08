@@ -234,6 +234,48 @@ export const remove = mutation({
   },
 });
 
+// Mark a wishlist book as bought (public - no auth required)
+export const markWishlistAsBought = mutation({
+  args: {
+    id: v.id("books"),
+    boughtBy: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const name = args.boughtBy.trim();
+    if (name.length < 1) {
+      throw new Error("Please enter your name");
+    }
+
+    const book = await ctx.db.get(args.id);
+    if (!book) throw new Error("Book not found");
+    if (book.status !== "wishlist") {
+      throw new Error("This book is not on the wishlist");
+    }
+    if (book.boughtBy) {
+      throw new Error("This book has already been marked as bought!");
+    }
+
+    await ctx.db.patch(args.id, {
+      boughtBy: name,
+      boughtAt: Date.now(),
+    });
+  },
+});
+
+// Clear bought status (requires auth)
+export const clearBought = mutation({
+  args: { id: v.id("books") },
+  handler: async (ctx, args) => {
+    const userId = await auth.getUserId(ctx);
+    if (!userId) throw new Error("Not authenticated");
+
+    await ctx.db.patch(args.id, {
+      boughtBy: undefined,
+      boughtAt: undefined,
+    });
+  },
+});
+
 // Toggle favorite (requires auth)
 export const toggleFavorite = mutation({
   args: { id: v.id("books") },
