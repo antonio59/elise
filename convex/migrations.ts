@@ -19,6 +19,37 @@ export const cleanupBadAuthRecords = internalMutation({
   },
 });
 
+// One-time migration: upgrade all Google Books cover URLs to zoom=3 for high-res.
+// Run via: npx convex run migrations:upgradeCoverUrls
+export const upgradeCoverUrls = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    const books = await ctx.db.query("books").collect();
+    let upgraded = 0;
+    for (const book of books) {
+      if (!book.coverUrl) continue;
+      try {
+        const raw = book.coverUrl.replace(/&amp;/g, "&");
+        const u = new URL(raw);
+        if (
+          (u.hostname === "books.google.com" ||
+            u.hostname.endsWith(".books.google.com")) &&
+          u.searchParams.get("zoom") !== "3"
+        ) {
+          u.searchParams.set("zoom", "3");
+          // Also remove edge=curl for cleaner images
+          u.searchParams.delete("edge");
+          await ctx.db.patch(book._id, { coverUrl: u.toString() });
+          upgraded++;
+        }
+      } catch {
+        // not a valid URL, skip
+      }
+    }
+    return { upgraded, total: books.length };
+  },
+});
+
 // One-time migration: update all books, artworks, writings, userProfiles,
 // readingGoals, and readingStreaks to use the current auth userId.
 // This fixes the mismatch when books were created with a prior auth system.

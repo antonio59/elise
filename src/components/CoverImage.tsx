@@ -64,13 +64,15 @@ const GradientCard: React.FC<{ title: string; author?: string }> = ({
 /** Upgrade a Google Books cover URL to the largest available zoom level. */
 function upgradeGoogleZoom(url: string, zoom = 3): string {
   try {
-    const u = new URL(url.replace(/&amp;/g, "&"));
+    const cleaned = url.replace(/&amp;/g, "&").replace("http://", "https://");
+    const u = new URL(cleaned);
     if (u.hostname === "books.google.com" || u.hostname.endsWith(".books.google.com")) {
       u.searchParams.set("zoom", String(zoom));
+      u.searchParams.delete("edge"); // Remove curl effect for cleaner images
     }
     return u.toString();
   } catch {
-    return url.replace(/&amp;/g, "&");
+    return url.replace(/&amp;/g, "&").replace("http://", "https://");
   }
 }
 
