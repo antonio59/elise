@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- Deprioritize storage thumbnails in CoverImage fallback chain
 - Use DOMParser for HTML sanitization instead of regex
 - Resolve eslint no-explicit-any in migrations.ts
 - Re-enable schema validation on elise production
@@ -569,6 +570,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
