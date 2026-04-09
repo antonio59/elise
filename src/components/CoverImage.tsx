@@ -81,15 +81,15 @@ const CoverImage: React.FC<CoverImageProps> = ({
   className = "w-full h-full object-cover",
   fallback,
 }) => {
-  const storageUrl = book.coverImageUrl ?? undefined;
   const googleUrl = book.coverUrl ? upgradeGoogleZoom(book.coverUrl) : undefined;
   const openLibraryUrl = book.isbn
     ? `https://covers.openlibrary.org/b/isbn/${book.isbn}-L.jpg`
     : undefined;
+  // Storage URLs are low-res compressed thumbnails — only use as last resort
+  const storageUrl = book.coverImageUrl ?? undefined;
 
-  // Prefer Google Books zoom=3 (high-res) over stored thumbnails,
-  // fall back to storage URL, then Open Library.
-  const urls = [googleUrl, storageUrl, openLibraryUrl].filter(
+  // Google Books zoom=3 first (high-res), Open Library second, storage last
+  const urls = [googleUrl, openLibraryUrl, storageUrl].filter(
     (u): u is string => !!u,
   );
 
