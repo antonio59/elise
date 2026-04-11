@@ -305,7 +305,7 @@ const PublicHome: React.FC = () => {
                         </div>
                       )}
                       {book.review && (
-                        <p className="text-xs text-slate-400 mt-1 line-clamp-2 italic">
+                        <p className="text-xs text-slate-500 mt-1 line-clamp-2 italic">
                           "{book.review}"
                         </p>
                       )}
@@ -317,7 +317,7 @@ const PublicHome: React.FC = () => {
                             </span>
                           ))}
                           {book.moodTags.length > 3 && (
-                            <span className="text-xs text-slate-400">
+                            <span className="text-xs text-slate-500">
                               +{book.moodTags.length - 3}
                             </span>
                           )}
@@ -363,7 +363,7 @@ const PublicHome: React.FC = () => {
               <Feather className="w-8 h-8 text-violet-400" />
             </div>
             <h3 className="text-xl font-bold text-slate-800 mb-2">Writing</h3>
-            <p className="text-sm text-slate-400 italic">
+            <p className="text-sm text-slate-500 italic">
               stories dropping soon... ✍️
             </p>
             <Link
@@ -378,7 +378,7 @@ const PublicHome: React.FC = () => {
               <Palette className="w-8 h-8 text-primary-400" />
             </div>
             <h3 className="text-xl font-bold text-slate-800 mb-2">Art</h3>
-            <p className="text-sm text-slate-400 italic">
+            <p className="text-sm text-slate-500 italic">
               doodles incoming... 🎨
             </p>
             <Link
@@ -420,7 +420,7 @@ const PublicHome: React.FC = () => {
             <div className="text-center py-12 bg-gradient-to-br from-primary-50 to-violet-50 rounded-2xl">
               <div className="text-4xl mb-3">🎁</div>
               <p className="text-slate-600 font-medium">Nothing here yet!</p>
-              <p className="text-sm text-slate-400 mt-1">Got a suggestion?</p>
+              <p className="text-sm text-slate-500 mt-1">Got a suggestion?</p>
               <button
                 onClick={() => setShowSuggestModal(true)}
                 className="mt-3 text-sm text-primary-500 hover:text-primary-600 font-medium underline underline-offset-2"
@@ -1008,7 +1008,7 @@ const ReviewStrip: React.FC<{
                     }`}
                   />
                 ))}
-                <span className="text-xs text-slate-400 ml-1">
+                <span className="text-xs text-slate-500 ml-1">
                   {RATING_LABELS[book.rating ?? 0]}
                 </span>
               </div>

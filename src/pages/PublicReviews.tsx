@@ -165,7 +165,7 @@ const PublicReviews: React.FC = () => {
                         "{book.review}"
                       </blockquote>
                     ) : (
-                      <p className="text-sm text-slate-400 italic">
+                      <p className="text-sm text-slate-500 italic">
                         No written review — just a rating.
                       </p>
                     )}
@@ -270,11 +270,11 @@ const PublicReviews: React.FC = () => {
                           <h3 className="font-bold text-slate-800">
                             {book.title}
                           </h3>
-                          <p className="text-xs text-slate-400">
+                          <p className="text-xs text-slate-500">
                             by {book.author}
                           </p>
                         </div>
-                        <span className="text-xs text-slate-400 flex-shrink-0">
+                        <span className="text-xs text-slate-500 flex-shrink-0">
                           tap to flip
                         </span>
                       </div>
@@ -283,7 +283,7 @@ const PublicReviews: React.FC = () => {
                           "{book.review}"
                         </blockquote>
                       ) : (
-                        <p className="text-sm text-slate-400 italic flex-1">
+                        <p className="text-sm text-slate-500 italic flex-1">
                           No written review — just a rating.
                         </p>
                       )}
