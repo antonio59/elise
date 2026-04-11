@@ -1,6 +1,7 @@
 import { query, mutation, action } from "./_generated/server";
 import { v } from "convex/values";
 import { api } from "./_generated/api";
+import type { Id } from "./_generated/dataModel";
 
 // Placeholder images Google Books returns when no cover exists are tiny (< 5 KB).
 const MIN_IMAGE_BYTES = 5_000;
@@ -46,7 +47,11 @@ async function freshGoogleCoverUrls(
   author: string,
 ): Promise<string[]> {
   try {
-    const apiKey = process.env.GOOGLE_BOOKS_API_KEY;
+    const apiKey = (
+      globalThis as unknown as {
+        process?: { env: Record<string, string | undefined> };
+      }
+    ).process?.env?.GOOGLE_BOOKS_API_KEY;
     const keyParam = apiKey ? `&key=${apiKey}` : "";
     const q = encodeURIComponent(`${title} ${author}`);
     const res = await fetch(
@@ -96,9 +101,7 @@ async function buildCandidateUrls(book: {
   candidates.push(...fresh);
 
   if (book.isbn) {
-    candidates.push(
-      `https://covers.openlibrary.org/b/isbn/${book.isbn}-L.jpg`,
-    );
+    candidates.push(`https://covers.openlibrary.org/b/isbn/${book.isbn}-L.jpg`);
   }
 
   return candidates;
@@ -155,25 +158,36 @@ export const storeAll = action({
     const books = await ctx.runQuery(api.covers.getAll);
     let stored = 0;
     let skipped = 0;
-    const pending = books.filter((b) => !b.coverStorageId);
+    const pending = books.filter(
+      (b: { coverStorageId?: string }) => !b.coverStorageId,
+    );
     skipped += books.length - pending.length;
 
     const BATCH = 5;
     for (let i = 0; i < pending.length; i += BATCH) {
       const batch = pending.slice(i, i + BATCH);
       const results = await Promise.allSettled(
-        batch.map(async (book) => {
-          const candidates = await buildCandidateUrls(book);
-          if (candidates.length === 0) return "skip";
-          const blob = await fetchFirstValidImage(candidates);
-          if (!blob) return "skip";
-          const storageId = await ctx.storage.store(blob);
-          await ctx.runMutation(api.covers.updateCoverStorage, {
-            bookId: book._id,
-            coverStorageId: storageId,
-          });
-          return "stored";
-        }),
+        batch.map(
+          async (book: {
+            _id: string;
+            title: string;
+            author: string;
+            coverUrl?: string;
+            isbn?: string;
+            coverStorageId?: string;
+          }) => {
+            const candidates = await buildCandidateUrls(book);
+            if (candidates.length === 0) return "skip";
+            const blob = await fetchFirstValidImage(candidates);
+            if (!blob) return "skip";
+            const storageId = await ctx.storage.store(blob);
+            await ctx.runMutation(api.covers.updateCoverStorage, {
+              bookId: book._id as Id<"books">,
+              coverStorageId: storageId,
+            });
+            return "stored";
+          },
+        ),
       );
       for (const r of results) {
         if (r.status === "fulfilled" && r.value === "stored") stored++;

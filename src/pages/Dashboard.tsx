@@ -1,6 +1,7 @@
 import CoverImage from "../components/CoverImage";
 import ReadingStreak from "../components/ReadingStreak";
-import React, { useState } from "react";
+import OnboardingTour from "../components/OnboardingTour";
+import React, { useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -20,7 +21,6 @@ import {
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 
-
 const Dashboard: React.FC = () => {
   const stats = useQuery(api.users.getStats) ?? null;
   const books = useQuery(api.books.getMyBooks) ?? [];
@@ -30,8 +30,34 @@ const Dashboard: React.FC = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const reactionStats = useQuery((api as any).reactions.getDashboardStats);
   const setGoal = useMutation(api.readingGoals.setGoal);
+  const userProfile = useQuery(api.users.getProfile);
+  const setOnboardingSeen = useMutation(api.users.setOnboardingSeen);
 
   const [showGoalModal, setShowGoalModal] = useState(false);
+  const [showTour, setShowTour] = useState(false);
+
+  // Show onboarding on first visit
+  const shouldShowOnboarding =
+    userProfile !== undefined &&
+    userProfile !== null &&
+    userProfile.hasSeenOnboarding !== true &&
+    !showTour;
+
+  React.useEffect(() => {
+    if (shouldShowOnboarding) {
+      setShowTour(true);
+    }
+  }, [shouldShowOnboarding]);
+
+  const handleTourComplete = useCallback(async () => {
+    setShowTour(false);
+    await setOnboardingSeen();
+  }, [setOnboardingSeen]);
+
+  const handleTourSkip = useCallback(async () => {
+    setShowTour(false);
+    await setOnboardingSeen();
+  }, [setOnboardingSeen]);
 
   // Rotating welcome verbs
   const verbs = [
@@ -74,7 +100,9 @@ const Dashboard: React.FC = () => {
                 exit={{ y: -10, opacity: 0 }}
                 transition={{ duration: 0.3 }}
               >
-                {React.createElement(verbs[verbIndex].icon, { className: "w-4 h-4" })}
+                {React.createElement(verbs[verbIndex].icon, {
+                  className: "w-4 h-4",
+                })}
                 {verbs[verbIndex].text}
               </motion.span>
             </AnimatePresence>
@@ -82,7 +110,16 @@ const Dashboard: React.FC = () => {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Sparkles className="w-6 h-6 text-primary-400" />
+          <motion.button
+            onClick={() => setShowTour(true)}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-medium text-primary-600 bg-primary-50 hover:bg-primary-100 transition-colors"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            title="Take the tour again"
+          >
+            <Sparkles className="w-4 h-4" />
+            Tour
+          </motion.button>
         </div>
       </div>
 
@@ -190,7 +227,9 @@ const Dashboard: React.FC = () => {
 
       {/* Currently Reading */}
       {(() => {
-        const currentlyReading = books.filter((b) => b.status === "reading");
+        const currentlyReading = books.filter(
+          (b: { status: string }) => b.status === "reading",
+        );
         if (currentlyReading.length === 0) return null;
         return (
           <motion.div
@@ -204,35 +243,59 @@ const Dashboard: React.FC = () => {
               Currently Reading
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {currentlyReading.map((book) => (
-                <div key={book._id} className="flex gap-3 p-3 bg-slate-50 rounded-xl group relative">
-                  <div className="w-16 h-24 rounded-lg overflow-hidden bg-slate-200 flex-shrink-0">
-                    <CoverImage book={book} className="w-full h-full object-cover" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between">
-                      <h4 className="font-medium text-slate-800 line-clamp-1">{book.title}</h4>
-                      <Link to="/dashboard/books" className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-slate-200 rounded">
-                        <Pencil className="w-3.5 h-3.5 text-slate-400" />
-                      </Link>
+              {currentlyReading.map(
+                (book: {
+                  _id: string;
+                  title: string;
+                  author: string;
+                  pagesRead?: number;
+                  pageCount?: number;
+                  coverUrl?: string;
+                  coverImageUrl?: string | null;
+                  coverStorageId?: string;
+                }) => (
+                  <div
+                    key={book._id}
+                    className="flex gap-3 p-3 bg-slate-50 rounded-xl group relative"
+                  >
+                    <div className="w-16 h-24 rounded-lg overflow-hidden bg-slate-200 flex-shrink-0">
+                      <CoverImage
+                        book={book}
+                        className="w-full h-full object-cover"
+                      />
                     </div>
-                    <p className="text-sm text-slate-500">{book.author}</p>
-                    {book.pagesRead && book.pageCount && (
-                      <div className="mt-2">
-                        <div className="h-1.5 bg-slate-200 rounded-full overflow-hidden">
-                          <div
-                            className="h-full bg-primary-400 rounded-full"
-                            style={{ width: `${Math.min((book.pagesRead / book.pageCount) * 100, 100)}%` }}
-                          />
-                        </div>
-                        <p className="text-xs text-slate-400 mt-1">
-                          {book.pagesRead} / {book.pageCount} pages
-                        </p>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between">
+                        <h4 className="font-medium text-slate-800 line-clamp-1">
+                          {book.title}
+                        </h4>
+                        <Link
+                          to="/dashboard/books"
+                          className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-slate-200 rounded"
+                        >
+                          <Pencil className="w-3.5 h-3.5 text-slate-400" />
+                        </Link>
                       </div>
-                    )}
+                      <p className="text-sm text-slate-500">{book.author}</p>
+                      {book.pagesRead && book.pageCount && (
+                        <div className="mt-2">
+                          <div className="h-1.5 bg-slate-200 rounded-full overflow-hidden">
+                            <div
+                              className="h-full bg-primary-400 rounded-full"
+                              style={{
+                                width: `${Math.min((book.pagesRead / book.pageCount) * 100, 100)}%`,
+                              }}
+                            />
+                          </div>
+                          <p className="text-xs text-slate-400 mt-1">
+                            {book.pagesRead} / {book.pageCount} pages
+                          </p>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ),
+              )}
             </div>
           </motion.div>
         );
@@ -261,39 +324,67 @@ const Dashboard: React.FC = () => {
           <div className="grid md:grid-cols-2 gap-6">
             {/* Top Emojis */}
             <div>
-              <h4 className="text-sm font-medium text-slate-700 mb-3">Top Emojis</h4>
+              <h4 className="text-sm font-medium text-slate-700 mb-3">
+                Top Emojis
+              </h4>
               <div className="flex items-center gap-3">
-                {reactionStats.topEmojis.map((item: { emoji: string; count: number }, index: number) => (
-                  <div
-                    key={item.emoji}
-                    className="flex items-center gap-2 px-3 py-2 bg-slate-50 rounded-xl"
-                  >
-                    <span className="text-2xl">{item.emoji}</span>
-                    <div className="text-center">
-                      <span className="block text-lg font-bold text-slate-800">{item.count}</span>
-                      {index === 0 && <span className="text-[10px] text-amber-500 font-medium">#1</span>}
+                {reactionStats.topEmojis.map(
+                  (item: { emoji: string; count: number }, index: number) => (
+                    <div
+                      key={item.emoji}
+                      className="flex items-center gap-2 px-3 py-2 bg-slate-50 rounded-xl"
+                    >
+                      <span className="text-2xl">{item.emoji}</span>
+                      <div className="text-center">
+                        <span className="block text-lg font-bold text-slate-800">
+                          {item.count}
+                        </span>
+                        {index === 0 && (
+                          <span className="text-[10px] text-amber-500 font-medium">
+                            #1
+                          </span>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ),
+                )}
               </div>
             </div>
 
             {/* Most Reacted Items */}
             <div>
-              <h4 className="text-sm font-medium text-slate-700 mb-3">Most Popular</h4>
+              <h4 className="text-sm font-medium text-slate-700 mb-3">
+                Most Popular
+              </h4>
               <div className="space-y-2">
-                {reactionStats.mostReactedItems.slice(0, 3).map((item: { targetType: string; targetId: string; title: string; count: number }, index: number) => (
-                  <div
-                    key={`${item.targetType}:${item.targetId}`}
-                    className="flex items-center justify-between px-3 py-2 bg-slate-50 rounded-lg"
-                  >
-                    <div className="flex items-center gap-2 min-w-0">
-                      <span className="text-xs font-medium text-slate-400 w-4">{index + 1}</span>
-                      <span className="text-sm text-slate-700 truncate">{item.title}</span>
+                {reactionStats.mostReactedItems.slice(0, 3).map(
+                  (
+                    item: {
+                      targetType: string;
+                      targetId: string;
+                      title: string;
+                      count: number;
+                    },
+                    index: number,
+                  ) => (
+                    <div
+                      key={`${item.targetType}:${item.targetId}`}
+                      className="flex items-center justify-between px-3 py-2 bg-slate-50 rounded-lg"
+                    >
+                      <div className="flex items-center gap-2 min-w-0">
+                        <span className="text-xs font-medium text-slate-400 w-4">
+                          {index + 1}
+                        </span>
+                        <span className="text-sm text-slate-700 truncate">
+                          {item.title}
+                        </span>
+                      </div>
+                      <span className="text-xs font-medium text-primary-600 ml-2">
+                        {item.count} ❤️
+                      </span>
                     </div>
-                    <span className="text-xs font-medium text-primary-600 ml-2">{item.count} ❤️</span>
-                  </div>
-                ))}
+                  ),
+                )}
               </div>
             </div>
           </div>
@@ -412,7 +503,8 @@ const Dashboard: React.FC = () => {
             <div className="flex-1">
               <h3 className="text-lg font-bold text-slate-800">My Writing</h3>
               <p className="text-slate-500 text-sm">
-                {writingStats?.total ?? 0} pieces · {(writingStats?.totalWords ?? 0).toLocaleString()} words
+                {writingStats?.total ?? 0} pieces ·{" "}
+                {(writingStats?.totalWords ?? 0).toLocaleString()} words
               </p>
             </div>
             <Plus className="w-5 h-5 text-slate-400 group-hover:text-violet-500 transition-colors" />
@@ -475,7 +567,10 @@ const Dashboard: React.FC = () => {
               }) => (
                 <div key={book._id} className="group">
                   <div className="aspect-[2/3] rounded-xl overflow-hidden bg-slate-100 shadow-sm group-hover:shadow-lg transition-all">
-                    <CoverImage book={book} className="w-full h-full object-cover" />
+                    <CoverImage
+                      book={book}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                   <h3 className="mt-2 text-sm font-medium text-slate-800 line-clamp-1">
                     {book.title}
@@ -533,6 +628,14 @@ const Dashboard: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Onboarding Tour */}
+      {showTour && (
+        <OnboardingTour
+          onComplete={handleTourComplete}
+          onSkip={handleTourSkip}
+        />
+      )}
 
       {/* Set Goal Modal */}
       <SetGoalModal

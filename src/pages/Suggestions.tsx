@@ -9,7 +9,6 @@ import {
   Clock,
   CheckCircle,
   XCircle,
-
   ArrowLeft,
 } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -26,12 +25,14 @@ const Suggestions: React.FC = () => {
   const removeSuggestion = useMutation(api.bookSuggestions.remove);
   const addToBooks = useMutation(api.bookSuggestions.addToBooks);
 
-  const pendingCount = suggestions.filter((s) => s.status === "pending").length;
+  const pendingCount = suggestions.filter(
+    (s: Suggestion) => s.status === "pending",
+  ).length;
   const approvedCount = suggestions.filter(
-    (s) => s.status === "approved",
+    (s: Suggestion) => s.status === "approved",
   ).length;
   const rejectedCount = suggestions.filter(
-    (s) => s.status === "rejected",
+    (s: Suggestion) => s.status === "rejected",
   ).length;
 
   const getStatusBadge = (status: string) => {
@@ -73,11 +74,17 @@ const Suggestions: React.FC = () => {
         Back
       </Link>
       <div className="mb-8">
-        <span className="inline-block px-3 py-1 bg-amber-100 text-amber-600 rounded-full text-xs font-semibold uppercase tracking-wider mb-3">Recommendations</span>
+        <span className="inline-block px-3 py-1 bg-amber-100 text-amber-600 rounded-full text-xs font-semibold uppercase tracking-wider mb-3">
+          Recommendations
+        </span>
         <h1 className="text-3xl sm:text-4xl font-bold">
-          <span className="bg-gradient-to-r from-primary-600 to-violet-500 bg-clip-text text-transparent">Book Suggestions</span>
+          <span className="bg-gradient-to-r from-primary-600 to-violet-500 bg-clip-text text-transparent">
+            Book Suggestions
+          </span>
         </h1>
-        <p className="text-slate-500 mt-1">book recommendations from your visitors</p>
+        <p className="text-slate-500 mt-1">
+          book recommendations from your visitors
+        </p>
       </div>
 
       {/* Stats */}

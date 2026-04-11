@@ -10,9 +10,7 @@ export const getReadingProfile = query({
     const userId = await auth.getUserId(ctx);
     if (!userId) return null;
 
-    const books = await ctx.db
-      .query("books")
-      .collect();
+    const books = await ctx.db.query("books").collect();
 
     const readBooks = books.filter((b) => b.status === "read");
     const favoriteBooks = books.filter((b) => b.isFavorite);
@@ -100,11 +98,12 @@ export const getExistingBookKeys = query({
     const userId = await auth.getUserId(ctx);
     if (!userId) return [];
 
-    const books = await ctx.db
-      .query("books")
-      .collect();
+    const books = await ctx.db.query("books").collect();
 
-    return books.map((b) => `${b.title.toLowerCase().trim()}::${b.author.toLowerCase().trim()}`);
+    return books.map(
+      (b) =>
+        `${b.title.toLowerCase().trim()}::${b.author.toLowerCase().trim()}`,
+    );
   },
 });
 
@@ -115,12 +114,16 @@ export const fetchRecommendations = action({
     startIndex: v.optional(v.number()),
   },
   handler: async (_ctx, args) => {
-    const apiKey = process.env.GOOGLE_BOOKS_API_KEY;
+    const apiKey = (
+      globalThis as unknown as {
+        process?: { env: Record<string, string | undefined> };
+      }
+    ).process?.env?.GOOGLE_BOOKS_API_KEY;
     const keyParam = apiKey ? `&key=${apiKey}` : "";
     const startIndex = args.startIndex ?? 0;
 
     const res = await fetch(
-      `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(args.searchQuery)}&maxResults=20&startIndex=${startIndex}&orderBy=relevance&langRestrict=en${keyParam}`
+      `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(args.searchQuery)}&maxResults=20&startIndex=${startIndex}&orderBy=relevance&langRestrict=en${keyParam}`,
     );
     const data = await res.json();
 
@@ -143,17 +146,24 @@ export const fetchRecommendations = action({
       try {
         if (rawCoverUrl) {
           const u = new URL(rawCoverUrl);
-          if (u.hostname === "books.google.com" || u.hostname.endsWith(".books.google.com")) {
+          if (
+            u.hostname === "books.google.com" ||
+            u.hostname.endsWith(".books.google.com")
+          ) {
             u.searchParams.set("zoom", "3");
             coverUrl = u.toString();
           }
         }
-      } catch { /* leave as-is */ }
+      } catch {
+        /* leave as-is */
+      }
 
       return {
         googleBookId: item.id as string,
         title: (item.volumeInfo?.title as string) || "Unknown Title",
-        author: ((item.volumeInfo?.authors as string[]) ?? []).join(", ") || "Unknown Author",
+        author:
+          ((item.volumeInfo?.authors as string[]) ?? []).join(", ") ||
+          "Unknown Author",
         coverUrl,
         pageCount: (item.volumeInfo?.pageCount as number) ?? 0,
         description: (item.volumeInfo?.description as string) ?? "",
@@ -183,7 +193,7 @@ export const recordSwipe = mutation({
     const existing = await ctx.db
       .query("bookSwipes")
       .withIndex("by_user_googleBookId", (q) =>
-        q.eq("userId", userId).eq("googleBookId", args.googleBookId)
+        q.eq("userId", userId).eq("googleBookId", args.googleBookId),
       )
       .first();
 
@@ -206,16 +216,14 @@ export const recordSwipe = mutation({
     // If liked, auto-add to wishlist
     if (args.action === "liked") {
       // Check if book already exists
-      const userBooks = await ctx.db
-        .query("books")
-        .collect();
+      const userBooks = await ctx.db.query("books").collect();
 
       const normalizedTitle = args.title.toLowerCase().trim();
       const normalizedAuthor = args.author.toLowerCase().trim();
       const alreadyExists = userBooks.some(
         (b) =>
           b.title.toLowerCase().trim() === normalizedTitle &&
-          b.author.toLowerCase().trim() === normalizedAuthor
+          b.author.toLowerCase().trim() === normalizedAuthor,
       );
 
       if (!alreadyExists) {
@@ -270,7 +278,7 @@ export const getRecentLikes = query({
     const liked = await ctx.db
       .query("bookSwipes")
       .withIndex("by_user_action", (q) =>
-        q.eq("userId", userId).eq("action", "liked")
+        q.eq("userId", userId).eq("action", "liked"),
       )
       .order("desc")
       .take(10);

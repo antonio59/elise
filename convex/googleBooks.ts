@@ -5,12 +5,16 @@ import { v } from "convex/values";
 // Search Google Books API
 export const search = action({
   args: { query: v.string() },
-  handler: async (ctx, args) => {
-    const apiKey = process.env.GOOGLE_BOOKS_API_KEY;
+  handler: async (_ctx, args) => {
+    const apiKey = (
+      globalThis as unknown as {
+        process?: { env: Record<string, string | undefined> };
+      }
+    ).process?.env?.GOOGLE_BOOKS_API_KEY;
     const keyParam = apiKey ? `&key=${apiKey}` : "";
 
     const res = await fetch(
-      `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(args.query)}&maxResults=8&orderBy=relevance${keyParam}`
+      `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(args.query)}&maxResults=8&orderBy=relevance${keyParam}`,
     );
     const data = await res.json();
 
@@ -34,12 +38,17 @@ export const search = action({
       try {
         if (rawCoverUrl) {
           const u = new URL(rawCoverUrl);
-          if (u.hostname === "books.google.com" || u.hostname.endsWith(".books.google.com")) {
+          if (
+            u.hostname === "books.google.com" ||
+            u.hostname.endsWith(".books.google.com")
+          ) {
             u.searchParams.set("zoom", "3");
             coverUrl = u.toString();
           }
         }
-      } catch { /* leave as-is */ }
+      } catch {
+        /* leave as-is */
+      }
 
       const identifiers: Array<{ type: string; identifier: string }> =
         item.volumeInfo?.industryIdentifiers ?? [];

@@ -44,7 +44,6 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const { signOut } = useAuth();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
   const renderNavContent = (onItemClick?: () => void) => (
     <>
       {/* Logo */}
@@ -223,7 +222,9 @@ export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
                 >
                   <Icon className="w-4 h-4" />
                   {link.label}
-                  {isActive && <span className="w-1.5 h-1.5 rounded-full bg-violet-400"></span>}
+                  {isActive && (
+                    <span className="w-1.5 h-1.5 rounded-full bg-violet-400"></span>
+                  )}
                 </Link>
               );
             })}
@@ -239,7 +240,11 @@ export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="md:hidden p-2 hover:bg-slate-100 rounded-lg"
           >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {mobileMenuOpen ? (
+              <X className="w-6 h-6" />
+            ) : (
+              <Menu className="w-6 h-6" />
+            )}
           </button>
         </div>
 
@@ -265,11 +270,19 @@ export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
               ))}
               <div className="pt-2">
                 {user ? (
-                  <Link to="/dashboard" className="btn btn-secondary w-full justify-center" onClick={() => setMobileMenuOpen(false)}>
+                  <Link
+                    to="/dashboard"
+                    className="btn btn-secondary w-full justify-center"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
                     Dashboard
                   </Link>
                 ) : (
-                  <Link to="/login" className="text-sm text-slate-400 hover:text-slate-600 px-4 py-3 block" onClick={() => setMobileMenuOpen(false)}>
+                  <Link
+                    to="/login"
+                    className="text-sm text-slate-400 hover:text-slate-600 px-4 py-3 block"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
                     Sign in
                   </Link>
                 )}
@@ -290,7 +303,9 @@ export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
               <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-primary-500 to-violet-500 flex items-center justify-center">
                 <BookOpen className="w-4 h-4 text-white" />
               </div>
-              <span className="text-lg font-bold bg-gradient-to-r from-primary-600 to-violet-500 bg-clip-text text-transparent">Elise Reads</span>
+              <span className="text-lg font-bold bg-gradient-to-r from-primary-600 to-violet-500 bg-clip-text text-transparent">
+                Elise Reads
+              </span>
             </Link>
 
             {/* Page Links */}
@@ -306,8 +321,14 @@ export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
               ))}
             </nav>
 
-            <p className="text-sm text-slate-400 italic">{(siteSettings as any)?.footerTagline || "books I've read, art I make, and words I write"}</p>
-            <p className="text-xs text-slate-300 mt-3">{(siteSettings as any)?.footerNote || "Made with love for Elise 💜"}</p>
+            <p className="text-sm text-slate-400 italic">
+              {(siteSettings as any)?.footerTagline ||
+                "books I've read, art I make, and words I write"}
+            </p>
+            <p className="text-xs text-slate-300 mt-3">
+              {(siteSettings as any)?.footerNote ||
+                "Made with love for Elise 💜"}
+            </p>
           </div>
         </div>
       </footer>

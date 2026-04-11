@@ -3,7 +3,14 @@ import StickerSection from "../components/StickerSection";
 import ShareButton from "../components/ShareButton";
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Star, Search, LayoutGrid, List, SlidersHorizontal, Check } from "lucide-react";
+import {
+  Star,
+  Search,
+  LayoutGrid,
+  List,
+  SlidersHorizontal,
+  Check,
+} from "lucide-react";
 import { BookGridSkeleton } from "../components/Skeleton";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
@@ -18,8 +25,19 @@ const RATING_LABELS: Record<number, string> = {
 };
 
 const GENRES = [
-  "Manga", "Manhwa", "Webtoon", "Light Novel", "Fantasy", "Sci-Fi",
-  "Romance", "Mystery", "Horror", "Slice of Life", "Action", "Comedy", "Drama",
+  "Manga",
+  "Manhwa",
+  "Webtoon",
+  "Light Novel",
+  "Fantasy",
+  "Sci-Fi",
+  "Romance",
+  "Mystery",
+  "Horror",
+  "Slice of Life",
+  "Action",
+  "Comedy",
+  "Drama",
 ];
 
 const genreColors: Record<string, string> = {
@@ -68,189 +86,261 @@ const PublicBooks: React.FC = () => {
         <BookGridSkeleton />
       ) : (
         <>
-      <PageHeader
-        badge="Book Shelf"
-        title="Books I've Read"
-        subtitle="everything I've read"
-        breadcrumbs={[{ label: "Books" }]}
-      />
-
-      {/* Search + Filter + View Toggle */}
-      <div className="flex flex-wrap gap-3 mb-4">
-        <div className="relative flex-1 min-w-[200px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="input pl-9"
-            placeholder="Search books..."
+          <PageHeader
+            badge="Book Shelf"
+            title="Books I've Read"
+            subtitle="everything I've read"
+            breadcrumbs={[{ label: "Books" }]}
           />
-        </div>
-        <button
-          onClick={() => setFilter("all")}
-          className={`btn text-sm ${filter === "all" ? "btn-primary" : "btn-secondary"}`}
-        >
-          All ({books.length})
-        </button>
-        <button
-          onClick={() => setFilter("favorites")}
-          className={`btn text-sm ${filter === "favorites" ? "btn-primary" : "btn-secondary"}`}
-        >
-          ★ ({books.filter((b) => b.isFavorite).length})
-        </button>
-        <button
-          onClick={() => setShowGenres(!showGenres)}
-          className={`btn text-sm ${showGenres ? "btn-primary" : "btn-secondary"}`}
-        >
-          <SlidersHorizontal className="w-4 h-4" />
-        </button>
-        <div className="flex rounded-lg overflow-hidden border border-slate-200">
-          <button
-            onClick={() => setViewMode("grid")}
-            className={`px-3 py-1.5 text-sm ${viewMode === "grid" ? "bg-primary-500 text-white" : "bg-white text-slate-500 hover:bg-slate-50"}`}
-          >
-            <LayoutGrid className="w-4 h-4" />
-          </button>
-          <button
-            onClick={() => setViewMode("list")}
-            className={`px-3 py-1.5 text-sm ${viewMode === "list" ? "bg-primary-500 text-white" : "bg-white text-slate-500 hover:bg-slate-50"}`}
-          >
-            <List className="w-4 h-4" />
-          </button>
-        </div>
-      </div>
 
-      {/* Genre Filter Pills */}
-      {showGenres && (
-        <motion.div
-          initial={{ height: 0, opacity: 0 }}
-          animate={{ height: "auto", opacity: 1 }}
-          exit={{ height: 0, opacity: 0 }}
-          className="flex flex-wrap gap-2 mb-6"
-        >
-          <button
-            onClick={() => setGenreFilter(null)}
-            className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
-              !genreFilter ? "bg-primary-500 text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-            }`}
-          >
-            {!genreFilter && <Check className="w-3 h-3" />}
-            All
-          </button>
-          {genresWithCounts.map((g) => (
+          {/* Search + Filter + View Toggle */}
+          <div className="flex flex-wrap gap-3 mb-4">
+            <div className="relative flex-1 min-w-[200px]">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="input pl-9"
+                placeholder="Search books..."
+              />
+            </div>
             <button
-              key={g.name}
-              onClick={() => setGenreFilter(genreFilter === g.name ? null : g.name)}
-              className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
-                genreFilter === g.name
-                  ? "bg-primary-500 text-white"
-                  : (genreColors[g.name] || "bg-slate-100 text-slate-600")
-              }`}
+              onClick={() => setFilter("all")}
+              className={`btn text-sm ${filter === "all" ? "btn-primary" : "btn-secondary"}`}
             >
-              {genreFilter === g.name && <Check className="w-3 h-3" />}
-              {g.name} ({g.count})
+              All ({books.length})
             </button>
-          ))}
-        </motion.div>
-      )}
+            <button
+              onClick={() => setFilter("favorites")}
+              className={`btn text-sm ${filter === "favorites" ? "btn-primary" : "btn-secondary"}`}
+            >
+              ★ (
+              {
+                books.filter((b: { isFavorite?: boolean }) => b.isFavorite)
+                  .length
+              }
+              )
+            </button>
+            <button
+              onClick={() => setShowGenres(!showGenres)}
+              className={`btn text-sm ${showGenres ? "btn-primary" : "btn-secondary"}`}
+            >
+              <SlidersHorizontal className="w-4 h-4" />
+            </button>
+            <div className="flex rounded-lg overflow-hidden border border-slate-200">
+              <button
+                onClick={() => setViewMode("grid")}
+                className={`px-3 py-1.5 text-sm ${viewMode === "grid" ? "bg-primary-500 text-white" : "bg-white text-slate-500 hover:bg-slate-50"}`}
+              >
+                <LayoutGrid className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => setViewMode("list")}
+                className={`px-3 py-1.5 text-sm ${viewMode === "list" ? "bg-primary-500 text-white" : "bg-white text-slate-500 hover:bg-slate-50"}`}
+              >
+                <List className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
 
-      {/* Empty State */}
-      {filtered.length === 0 ? (
-        <div className="text-center py-16 bg-gradient-to-br from-primary-50 to-violet-50 rounded-2xl">
-          <div className="text-4xl mb-3">📚</div>
-          <p className="text-slate-600 font-medium">
-            {genreFilter ? `No ${genreFilter} books yet` : search ? "No books match your search" : "No books yet"}
-          </p>
-          {genreFilter && (
-            <button onClick={() => setGenreFilter(null)} className="text-sm text-primary-500 mt-2 underline">
-              Clear filter
-            </button>
+          {/* Genre Filter Pills */}
+          {showGenres && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="flex flex-wrap gap-2 mb-6"
+            >
+              <button
+                onClick={() => setGenreFilter(null)}
+                className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                  !genreFilter
+                    ? "bg-primary-500 text-white"
+                    : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                }`}
+              >
+                {!genreFilter && <Check className="w-3 h-3" />}
+                All
+              </button>
+              {genresWithCounts.map((g) => (
+                <button
+                  key={g.name}
+                  onClick={() =>
+                    setGenreFilter(genreFilter === g.name ? null : g.name)
+                  }
+                  className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                    genreFilter === g.name
+                      ? "bg-primary-500 text-white"
+                      : genreColors[g.name] || "bg-slate-100 text-slate-600"
+                  }`}
+                >
+                  {genreFilter === g.name && <Check className="w-3 h-3" />}
+                  {g.name} ({g.count})
+                </button>
+              ))}
+            </motion.div>
           )}
-        </div>
-      ) : viewMode === "grid" ? (
-        /* Grid View */
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
-          {filtered.map((book, index) => (
-            <motion.div
-              key={book._id}
-              className="group relative book-card"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.03 }}
-            >
-              <div className="relative aspect-[2/3] rounded-xl overflow-hidden bg-slate-100 shadow-sm group-hover:shadow-lg group-hover:-translate-y-1 transition-all duration-200">
-                <CoverImage book={book} className="w-full h-full object-cover" />
-                {book.rating && book.rating > 0 && (
-                  <div className="absolute top-2 right-2 px-2 py-0.5 bg-black/50 backdrop-blur-sm rounded-full flex items-center gap-0.5">
-                    {Array.from({ length: book.rating }).map((_, i) => (
-                      <Star key={i} className="w-2.5 h-2.5 text-yellow-400 fill-yellow-400" />
-                    ))}
-                  </div>
-                )}
-              </div>
-              <h3 className="mt-2 text-sm font-medium text-slate-800 line-clamp-1">{book.title}</h3>
-              <p className="text-xs text-slate-500 line-clamp-1">{book.author}</p>
-              <div className="flex flex-wrap items-center gap-1 mt-1">
-                {book.genre && book.genre !== "Other" && (
-                  <span className={`text-[10px] px-1.5 py-0.5 rounded-full border ${genreColors[book.genre] || "bg-slate-50 text-slate-500 border-slate-200"}`}>
-                    {book.genre}
-                  </span>
-                )}
-                {book.rating && book.rating > 0 && (
-                  <span className="text-[10px] text-slate-400">{RATING_LABELS[book.rating]}</span>
-                )}
-                <ShareButton title={book.title} author={book.author} path="/books" />
-              </div>
-              <StickerSection bookId={book._id} />
-            </motion.div>
-          ))}
-        </div>
-      ) : (
-        /* List View */
-        <div className="space-y-3">
-          {filtered.map((book, index) => (
-            <motion.div
-              key={book._id}
-              className="card p-4 flex gap-4 items-center hover:shadow-md transition-shadow"
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.03 }}
-            >
-              <div className="w-14 h-20 rounded-lg overflow-hidden bg-slate-100 flex-shrink-0">
-                <CoverImage book={book} className="w-full h-full object-cover" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <h3 className="font-medium text-slate-800 truncate">{book.title}</h3>
-                <p className="text-sm text-slate-500">{book.author}</p>
-                <div className="flex items-center gap-2 mt-1">
-                  {book.genre && book.genre !== "Other" && (
-                    <span className={`text-[10px] px-1.5 py-0.5 rounded-full border ${genreColors[book.genre] || "bg-slate-50 text-slate-500 border-slate-200"}`}>
-                      {book.genre}
-                    </span>
-                  )}
-                </div>
-              </div>
-              <div className="flex items-center gap-0.5 flex-shrink-0">
-                {book.rating && book.rating > 0 ? (
-                  <>
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <Star key={i} className={`w-4 h-4 ${i < (book.rating ?? 0) ? "text-yellow-400 fill-yellow-400" : "text-slate-200"}`} />
-                    ))}
-                  </>
-                ) : (
-                  <span className="text-xs text-slate-400">unrated</span>
-                )}
-              </div>
-            </motion.div>
-          ))}
-        </div>
+
+          {/* Empty State */}
+          {filtered.length === 0 ? (
+            <div className="text-center py-16 bg-gradient-to-br from-primary-50 to-violet-50 rounded-2xl">
+              <div className="text-4xl mb-3">📚</div>
+              <p className="text-slate-600 font-medium">
+                {genreFilter
+                  ? `No ${genreFilter} books yet`
+                  : search
+                    ? "No books match your search"
+                    : "No books yet"}
+              </p>
+              {genreFilter && (
+                <button
+                  onClick={() => setGenreFilter(null)}
+                  className="text-sm text-primary-500 mt-2 underline"
+                >
+                  Clear filter
+                </button>
+              )}
+            </div>
+          ) : viewMode === "grid" ? (
+            /* Grid View */
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+              {filtered.map(
+                (
+                  book: {
+                    _id: string;
+                    title: string;
+                    author: string;
+                    coverUrl?: string;
+                    coverImageUrl?: string | null;
+                    coverStorageId?: string;
+                    genre?: string;
+                    rating?: number;
+                  },
+                  index: number,
+                ) => (
+                  <motion.div
+                    key={book._id}
+                    className="group relative book-card"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.03 }}
+                  >
+                    <div className="relative aspect-[2/3] rounded-xl overflow-hidden bg-slate-100 shadow-sm group-hover:shadow-lg group-hover:-translate-y-1 transition-all duration-200">
+                      <CoverImage
+                        book={book}
+                        className="w-full h-full object-cover"
+                      />
+                      {book.rating && book.rating > 0 && (
+                        <div className="absolute top-2 right-2 px-2 py-0.5 bg-black/50 backdrop-blur-sm rounded-full flex items-center gap-0.5">
+                          {Array.from({ length: book.rating }).map((_, i) => (
+                            <Star
+                              key={i}
+                              className="w-2.5 h-2.5 text-yellow-400 fill-yellow-400"
+                            />
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    <h3 className="mt-2 text-sm font-medium text-slate-800 line-clamp-1">
+                      {book.title}
+                    </h3>
+                    <p className="text-xs text-slate-500 line-clamp-1">
+                      {book.author}
+                    </p>
+                    <div className="flex flex-wrap items-center gap-1 mt-1">
+                      {book.genre && book.genre !== "Other" && (
+                        <span
+                          className={`text-[10px] px-1.5 py-0.5 rounded-full border ${genreColors[book.genre] || "bg-slate-50 text-slate-500 border-slate-200"}`}
+                        >
+                          {book.genre}
+                        </span>
+                      )}
+                      {book.rating && book.rating > 0 && (
+                        <span className="text-[10px] text-slate-400">
+                          {RATING_LABELS[book.rating]}
+                        </span>
+                      )}
+                      <ShareButton
+                        title={book.title}
+                        author={book.author}
+                        path="/books"
+                      />
+                    </div>
+                    <StickerSection bookId={book._id} />
+                  </motion.div>
+                ),
+              )}
+            </div>
+          ) : (
+            /* List View */
+            <div className="space-y-3">
+              {filtered.map(
+                (
+                  book: {
+                    _id: string;
+                    title: string;
+                    author: string;
+                    coverUrl?: string;
+                    coverImageUrl?: string | null;
+                    coverStorageId?: string;
+                    genre?: string;
+                    rating?: number;
+                  },
+                  index: number,
+                ) => (
+                  <motion.div
+                    key={book._id}
+                    className="card p-4 flex gap-4 items-center hover:shadow-md transition-shadow"
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.03 }}
+                  >
+                    <div className="w-14 h-20 rounded-lg overflow-hidden bg-slate-100 flex-shrink-0">
+                      <CoverImage
+                        book={book}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-medium text-slate-800 truncate">
+                        {book.title}
+                      </h3>
+                      <p className="text-sm text-slate-500">{book.author}</p>
+                      <div className="flex items-center gap-2 mt-1">
+                        {book.genre && book.genre !== "Other" && (
+                          <span
+                            className={`text-[10px] px-1.5 py-0.5 rounded-full border ${genreColors[book.genre] || "bg-slate-50 text-slate-500 border-slate-200"}`}
+                          >
+                            {book.genre}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-0.5 flex-shrink-0">
+                      {book.rating && book.rating > 0 ? (
+                        <>
+                          {Array.from({ length: 5 }).map((_, i) => (
+                            <Star
+                              key={i}
+                              className={`w-4 h-4 ${i < (book.rating ?? 0) ? "text-yellow-400 fill-yellow-400" : "text-slate-200"}`}
+                            />
+                          ))}
+                        </>
+                      ) : (
+                        <span className="text-xs text-slate-400">unrated</span>
+                      )}
+                    </div>
+                  </motion.div>
+                ),
+              )}
+            </div>
+          )}
+        </>
       )}
-    </>
-  )}
-</div>
+    </div>
   );
 };
 

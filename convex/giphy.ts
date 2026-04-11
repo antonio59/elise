@@ -7,8 +7,12 @@ export const search = query({
     query: v.string(),
     limit: v.optional(v.number()),
   },
-  handler: async (ctx, args) => {
-    const apiKey = process.env.GIPHY_API_KEY;
+  handler: async (_ctx, args) => {
+    const apiKey = (
+      globalThis as unknown as {
+        process?: { env: Record<string, string | undefined> };
+      }
+    ).process?.env?.GIPHY_API_KEY;
     if (!apiKey) {
       console.error("GIPHY_API_KEY not set");
       return [];
