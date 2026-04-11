@@ -54,7 +54,10 @@ function getBestCoverUrl(
     imageLinks.smallThumbnail ||
     "";
 
-  return url.replace("http://", "https://").replace("&edge=curl", "");
+  return url
+    .replace("http://", "https://")
+    .replace("&edge=curl", "")
+    .replace("zoom=1", "zoom=2");
 }
 
 export async function searchGoogleBooks(

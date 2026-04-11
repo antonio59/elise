@@ -15,14 +15,14 @@ interface CoverImageProps {
 
 // Eight gradient pairs that complement the dusty-rose / teal design system.
 const GRADIENTS: [string, string][] = [
-  ["#e0b8a8", "#9a5640"],  // dusty rose
-  ["#9fb3c8", "#06b6d4"],  // slate → teal
-  ["#d8b4fe", "#7c3aed"],  // lavender → violet
-  ["#fcd34d", "#f97316"],  // amber → orange
-  ["#6ee7b7", "#0d9488"],  // mint → teal
-  ["#fda4af", "#e11d48"],  // blush → crimson
-  ["#93c5fd", "#2563eb"],  // sky → blue
-  ["#f0abfc", "#a21caf"],  // pink → fuchsia
+  ["#e0b8a8", "#9a5640"], // dusty rose
+  ["#9fb3c8", "#06b6d4"], // slate → teal
+  ["#d8b4fe", "#7c3aed"], // lavender → violet
+  ["#fcd34d", "#f97316"], // amber → orange
+  ["#6ee7b7", "#0d9488"], // mint → teal
+  ["#fda4af", "#e11d48"], // blush → crimson
+  ["#93c5fd", "#2563eb"], // sky → blue
+  ["#f0abfc", "#a21caf"], // pink → fuchsia
 ];
 
 function pickGradient(title: string): [string, string] {
@@ -66,7 +66,10 @@ function upgradeGoogleZoom(url: string, zoom = 3): string {
   try {
     const cleaned = url.replace(/&amp;/g, "&").replace("http://", "https://");
     const u = new URL(cleaned);
-    if (u.hostname === "books.google.com" || u.hostname.endsWith(".books.google.com")) {
+    if (
+      u.hostname === "books.google.com" ||
+      u.hostname.endsWith(".books.google.com")
+    ) {
       u.searchParams.set("zoom", String(zoom));
       u.searchParams.delete("edge"); // Remove curl effect for cleaner images
     }
@@ -81,15 +84,15 @@ const CoverImage: React.FC<CoverImageProps> = ({
   className = "w-full h-full object-cover",
   fallback,
 }) => {
-  const googleUrl = book.coverUrl ? upgradeGoogleZoom(book.coverUrl) : undefined;
+  const storageUrl = book.coverImageUrl ?? undefined;
+  const googleUrl = book.coverUrl
+    ? upgradeGoogleZoom(book.coverUrl)
+    : undefined;
   const openLibraryUrl = book.isbn
     ? `https://covers.openlibrary.org/b/isbn/${book.isbn}-L.jpg`
     : undefined;
-  // Storage URLs are low-res compressed thumbnails — only use as last resort
-  const storageUrl = book.coverImageUrl ?? undefined;
 
-  // Google Books zoom=3 first (high-res), Open Library second, storage last
-  const urls = [googleUrl, openLibraryUrl, storageUrl].filter(
+  const urls = [storageUrl, googleUrl, openLibraryUrl].filter(
     (u): u is string => !!u,
   );
 
@@ -97,9 +100,7 @@ const CoverImage: React.FC<CoverImageProps> = ({
   const src = urls[index];
 
   if (!src) {
-    return (
-      fallback ?? <GradientCard title={book.title} author={book.author} />
-    );
+    return fallback ?? <GradientCard title={book.title} author={book.author} />;
   }
 
   return (
