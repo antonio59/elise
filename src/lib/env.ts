@@ -13,7 +13,7 @@ function validateEnv(): EnvConfig {
     }
   }
 
-  if (missing.length > 0 && import.meta.env.DEV) {
+  if (missing.length > 0) {
     console.warn(
       `Missing environment variables: ${missing.join(", ")}. ` +
         `Some features may not work correctly. ` +

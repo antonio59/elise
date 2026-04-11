@@ -90,7 +90,7 @@ const PublicWritings: React.FC = () => {
           <p className="text-lg font-medium text-slate-700">
             Stories, poems & random thoughts
           </p>
-          <p className="text-sm text-slate-500 mt-1">
+          <p className="text-sm text-slate-400 mt-1">
             dropping soon. Watch this space!
           </p>
         </div>
@@ -120,7 +120,7 @@ const PublicWritings: React.FC = () => {
                     {config.label}
                   </span>
                   {writing.createdAt && (
-                    <span className="text-xs text-slate-500 ml-auto">
+                    <span className="text-xs text-slate-400 ml-auto">
                       {new Date(writing.createdAt).toLocaleDateString("en-GB", {
                         day: "numeric",
                         month: "short",
