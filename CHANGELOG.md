@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- Change book grid to 5 columns max on desktop (matching izzy)
 - Deprioritize storage thumbnails in CoverImage fallback chain
 - Use DOMParser for HTML sanitization instead of regex
 - Resolve eslint no-explicit-any in migrations.ts
@@ -570,6 +571,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
