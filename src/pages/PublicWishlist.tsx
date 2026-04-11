@@ -153,7 +153,7 @@ const PublicWishlist: React.FC = () => {
       />
           {sortedWishlist.length > 0 ? (
             <motion.div
-              className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6"
+              className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-5 gap-4 md:gap-6"
               initial="hidden"
               animate="visible"
               variants={{

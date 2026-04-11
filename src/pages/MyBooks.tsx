@@ -190,7 +190,7 @@ const MyBooks: React.FC = () => {
       </div>
 
       {/* Books Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
         {filteredBooks().map((book: Book, index: number) => (
           <motion.div
             key={book._id}
