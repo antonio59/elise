@@ -3,9 +3,15 @@ import { Password } from "@convex-dev/auth/providers/Password";
 import type { DataModel } from "./_generated/dataModel";
 
 // Only these emails can sign up / sign in — stored as Convex env var
-const ALLOWED_EMAILS = (process.env.ALLOWED_EMAILS || "")
+const ALLOWED_EMAILS = (
+  (
+    globalThis as unknown as {
+      process?: { env: Record<string, string | undefined> };
+    }
+  ).process?.env?.ALLOWED_EMAILS || ""
+)
   .split(",")
-  .map((e) => e.trim().toLowerCase())
+  .map((e: string) => e.trim().toLowerCase())
   .filter(Boolean);
 
 const CustomPassword = Password<DataModel>({

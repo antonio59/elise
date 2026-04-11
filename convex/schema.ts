@@ -41,6 +41,7 @@ export default defineSchema(
       favoriteQuote: v.optional(v.string()),
       funFact: v.optional(v.string()),
       currentlyReading: v.optional(v.string()),
+    hasSeenOnboarding: v.optional(v.boolean()),
     }).index("by_userId", ["userId"]),
 
     // Books

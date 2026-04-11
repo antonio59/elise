@@ -1,5 +1,10 @@
-/* eslint-disable react-refresh/only-export-components */
-import React, { createContext, useContext, useMemo, useCallback, useEffect } from "react";
+import {
+  createContext,
+  useContext,
+  useMemo,
+  useCallback,
+  useEffect,
+} from "react";
 import type { ReactNode } from "react";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { useConvexAuth, useMutation, useQuery } from "convex/react";
@@ -60,7 +65,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
   // Fix #3: Replace setTimeout with an effect that fires once auth + user ID are ready
   useEffect(() => {
     if (isAuthenticated && currentUser && pendingSignupName !== undefined) {
-      const nameToUse = pendingSignupName || currentUser.email?.split("@")[0] || "User";
+      const nameToUse =
+        pendingSignupName || currentUser.email?.split("@")[0] || "User";
       pendingSignupName = undefined; // Clear immediately to prevent double-calls
 
       createUserProfile({
@@ -99,21 +105,26 @@ export function AuthProvider({ children }: AuthProviderProps) {
         formData.append("password", password);
         formData.append("flow", "signIn");
 
-        console.log("[AUTH DEBUG] convexSignIn type:", typeof convexSignIn);
-        const result = await convexSignIn("password", formData);
-        console.log("[AUTH DEBUG] convexSignIn result:", result);
+        await convexSignIn("password", formData);
       } catch (error: unknown) {
-        console.error("[AUTH DEBUG] convexSignIn threw:", error);
+        console.error("Sign in failed:", error);
         const errMessage = error instanceof Error ? error.message : "";
 
         if (errMessage.includes("InvalidAccountId")) {
-          throw new Error("No account found with this email. Please sign up first.", { cause: error });
+          throw new Error(
+            "No account found with this email. Please sign up first.",
+            { cause: error },
+          );
         }
         if (errMessage.includes("InvalidSecret")) {
-          throw new Error("Incorrect password. Please try again.", { cause: error });
+          throw new Error("Incorrect password. Please try again.", {
+            cause: error,
+          });
         }
 
-        throw new Error("Unable to sign in. Please check your credentials.", { cause: error });
+        throw new Error("Unable to sign in. Please check your credentials.", {
+          cause: error,
+        });
       }
     },
     [convexSignIn],
@@ -142,13 +153,21 @@ export function AuthProvider({ children }: AuthProviderProps) {
         const errMessage = error instanceof Error ? error.message : "";
 
         if (errMessage.includes("AccountAlreadyExists")) {
-          throw new Error("An account with this email already exists. Please sign in instead.", { cause: error });
+          throw new Error(
+            "An account with this email already exists. Please sign in instead.",
+            { cause: error },
+          );
         }
         if (errMessage.includes("WeakPassword")) {
-          throw new Error("Password is too weak. Please use at least 8 characters.", { cause: error });
+          throw new Error(
+            "Password is too weak. Please use at least 8 characters.",
+            { cause: error },
+          );
         }
 
-        throw new Error("Unable to create account. Please try again.", { cause: error });
+        throw new Error("Unable to create account. Please try again.", {
+          cause: error,
+        });
       }
     },
     [convexSignIn],

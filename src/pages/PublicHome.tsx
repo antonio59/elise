@@ -19,20 +19,22 @@ import {
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 
-
 const PublicHome: React.FC = () => {
   const books = useQuery(api.books.getReadBooks) ?? [];
   const siteSettings = useQuery(api.siteSettings.get);
   const wishlist = useQuery(api.books.getWishlist) ?? [];
   const [showSuggestModal, setShowSuggestModal] = useState(false);
 
-  const nowReading = books.filter((b) => b.status === "reading");
-  const subtitle = (siteSettings?.heroSubtitle as string | undefined) ?? "books I've read, art I make, and words I write";
+  const nowReading = books.filter(
+    (b: { status: string }) => b.status === "reading",
+  );
+  const subtitle =
+    (siteSettings?.heroSubtitle as string | undefined) ??
+    "books I've read, art I make, and words I write";
   const subtitleWords = subtitle.split(" ");
 
   return (
     <div className="min-h-screen">
-
       {/* Hero Section */}
       <section className="py-8 sm:py-12 px-4">
         <div className="max-w-3xl mx-auto text-center">
@@ -50,12 +52,19 @@ const PublicHome: React.FC = () => {
             className="text-xl md:text-2xl text-slate-500/80 max-w-lg mx-auto mb-8 font-medium italic flex flex-wrap justify-center gap-x-1.5"
             initial="hidden"
             animate="visible"
-            variants={{ visible: { transition: { staggerChildren: 0.07, delayChildren: 0.4 } } }}
+            variants={{
+              visible: {
+                transition: { staggerChildren: 0.07, delayChildren: 0.4 },
+              },
+            }}
           >
             {subtitleWords.map((word, i) => (
               <motion.span
                 key={i}
-                variants={{ hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0 } }}
+                variants={{
+                  hidden: { opacity: 0, y: 8 },
+                  visible: { opacity: 1, y: 0 },
+                }}
                 transition={{ duration: 0.35 }}
               >
                 {word}
@@ -63,35 +72,34 @@ const PublicHome: React.FC = () => {
             ))}
           </motion.p>
 
-            <motion.div
-              className="flex flex-wrap justify-center gap-3"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.9 }}
+          <motion.div
+            className="flex flex-wrap justify-center gap-3"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.9 }}
+          >
+            <a href="#books" className="btn btn-secondary">
+              <BookOpen className="w-4 h-4" />
+              Books
+            </a>
+            <Link to="/art" className="btn btn-secondary">
+              <Palette className="w-4 h-4" />
+              Art
+            </Link>
+            <a href="#writing" className="btn btn-secondary">
+              <Feather className="w-4 h-4" />
+              Writing
+            </a>
+            <button
+              onClick={() => setShowSuggestModal(true)}
+              className="btn btn-secondary"
             >
-              <a href="#books" className="btn btn-secondary">
-                <BookOpen className="w-4 h-4" />
-                Books
-              </a>
-              <Link to="/art" className="btn btn-secondary">
-                <Palette className="w-4 h-4" />
-                Art
-              </Link>
-              <a href="#writing" className="btn btn-secondary">
-                <Feather className="w-4 h-4" />
-                Writing
-              </a>
-              <button
-                onClick={() => setShowSuggestModal(true)}
-                className="btn btn-secondary"
-              >
-                <MessageSquarePlus className="w-4 h-4" />
-                Suggest
-              </button>
-            </motion.div>
+              <MessageSquarePlus className="w-4 h-4" />
+              Suggest
+            </button>
+          </motion.div>
         </div>
       </section>
-
 
       {/* Now Reading */}
       {nowReading.length > 0 && (
@@ -99,53 +107,99 @@ const PublicHome: React.FC = () => {
           <div className="max-w-6xl mx-auto">
             <div className="flex items-center gap-2 mb-4">
               <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-              <span className="text-sm font-semibold text-slate-600 uppercase tracking-wide">Now Reading</span>
+              <span className="text-sm font-semibold text-slate-600 uppercase tracking-wide">
+                Now Reading
+              </span>
             </div>
             <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
-              {nowReading.map((book) => (
-                <motion.div
-                  key={book._id}
-                  className="flex-shrink-0 w-36"
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ type: "spring", stiffness: 200, damping: 20 }}
-                >
-                  <div className="aspect-[2/3] rounded-xl overflow-hidden bg-slate-100 shadow-md hover:shadow-xl transition-shadow">
-                    <CoverImage book={book} className="w-full h-full object-cover" />
-                  </div>
-                  <p className="mt-2 text-sm font-medium text-slate-800 line-clamp-1">{book.title}</p>
-                  <p className="text-xs text-slate-500 line-clamp-1">{book.author}</p>
-                </motion.div>
-              ))}
+              {nowReading.map(
+                (book: {
+                  _id: string;
+                  title: string;
+                  author: string;
+                  coverUrl?: string;
+                  coverImageUrl?: string | null;
+                  coverStorageId?: string;
+                }) => (
+                  <motion.div
+                    key={book._id}
+                    className="flex-shrink-0 w-36"
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ type: "spring", stiffness: 200, damping: 20 }}
+                  >
+                    <div className="aspect-[2/3] rounded-xl overflow-hidden bg-slate-100 shadow-md hover:shadow-xl transition-shadow">
+                      <CoverImage
+                        book={book}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <p className="mt-2 text-sm font-medium text-slate-800 line-clamp-1">
+                      {book.title}
+                    </p>
+                    <p className="text-xs text-slate-500 line-clamp-1">
+                      {book.author}
+                    </p>
+                  </motion.div>
+                ),
+              )}
             </div>
           </div>
         </section>
       )}
 
       {/* 5-Star Shelf — horizontal scroll of top-rated books */}
-      {books.filter((b) => b.rating === 5).length > 0 && (
+      {books.filter((b: { rating?: number }) => b.rating === 5).length > 0 && (
         <section className="py-8 px-4">
           <div className="max-w-6xl mx-auto">
-            <div><div><h2 className="text-xl font-bold text-slate-800 mb-4">5-Star Shelf</h2><div className="w-10 h-0.5 bg-primary-400 mt-1 rounded-full"></div></div><div className="w-10 h-0.5 bg-primary-400 mt-1 rounded-full"></div></div>
+            <div>
+              <div>
+                <h2 className="text-xl font-bold text-slate-800 mb-4">
+                  5-Star Shelf
+                </h2>
+                <div className="w-10 h-0.5 bg-primary-400 mt-1 rounded-full"></div>
+              </div>
+              <div className="w-10 h-0.5 bg-primary-400 mt-1 rounded-full"></div>
+            </div>
             <div className="shelf-scroll">
               {books
-                .filter((b) => b.rating === 5)
-                .map((book) => (
-                  <div key={book._id} className="w-28 sm:w-32">
-                    <div className="aspect-[2/3] rounded-lg overflow-hidden bg-slate-100 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg">
-                      <CoverImage book={book} className="w-full h-full object-cover" />
+                .filter((b: { rating?: number }) => b.rating === 5)
+                .map(
+                  (book: {
+                    _id: string;
+                    title: string;
+                    coverUrl?: string;
+                    coverImageUrl?: string | null;
+                    coverStorageId?: string;
+                  }) => (
+                    <div key={book._id} className="w-28 sm:w-32">
+                      <div className="aspect-[2/3] rounded-lg overflow-hidden bg-slate-100 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg">
+                        <CoverImage
+                          book={book}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <p className="mt-1.5 text-xs font-medium text-slate-700 line-clamp-1">
+                        {book.title}
+                      </p>
                     </div>
-                    <p className="mt-1.5 text-xs font-medium text-slate-700 line-clamp-1">
-                      {book.title}
-                    </p>
-                  </div>
-                ))}
+                  ),
+                )}
               {/* Placeholder slots */}
-              {Array.from({ length: Math.max(0, 4 - books.filter((b) => b.rating === 5).length) }).map((_, i) => (
+              {Array.from({
+                length: Math.max(
+                  0,
+                  4 -
+                    books.filter((b: { rating?: number }) => b.rating === 5)
+                      .length,
+                ),
+              }).map((_, i) => (
                 <div key={`ph-${i}`} className="w-28 sm:w-32">
                   <div className="aspect-[2/3] rounded-lg border-2 border-dashed border-primary-200 bg-primary-50/50 flex flex-col items-center justify-center gap-1">
                     <Star className="w-5 h-5 text-primary-300" />
-                    <span className="text-[10px] text-primary-400 italic">more soon...</span>
+                    <span className="text-[10px] text-primary-400 italic">
+                      more soon...
+                    </span>
                   </div>
                 </div>
               ))}
@@ -158,13 +212,24 @@ const PublicHome: React.FC = () => {
         <div className="max-w-6xl mx-auto">
           <div className="flex items-end justify-between mb-8">
             <div>
-              <div><div><h2 className="text-2xl sm:text-3xl font-bold text-slate-800">Books</h2><div className="w-12 h-0.5 bg-primary-400 mt-2 rounded-full"></div></div><div className="w-12 h-0.5 bg-primary-400 mt-2 rounded-full"></div></div>
+              <div>
+                <div>
+                  <h2 className="text-2xl sm:text-3xl font-bold text-slate-800">
+                    Books
+                  </h2>
+                  <div className="w-12 h-0.5 bg-primary-400 mt-2 rounded-full"></div>
+                </div>
+                <div className="w-12 h-0.5 bg-primary-400 mt-2 rounded-full"></div>
+              </div>
               <p className="text-slate-500 mt-1">
                 everything I've been reading
               </p>
             </div>
             {books.length > 0 && (
-              <Link to="/books" className="text-sm text-primary-500 hover:text-primary-700 font-medium">
+              <Link
+                to="/books"
+                className="text-sm text-primary-500 hover:text-primary-700 font-medium"
+              >
                 See all →
               </Link>
             )}
@@ -177,79 +242,118 @@ const PublicHome: React.FC = () => {
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-              {books.filter((b) => b.status !== "reading").map((book, index) => (
-                <motion.div
-                  key={book._id}
-                  className="group book-card"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: Math.min(index * 0.05, 0.3) }}
-                >
-                  <div className="aspect-[2/3] rounded-xl overflow-hidden bg-slate-100 shadow-md book-spine transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
-                    <CoverImage book={book} className="w-full h-full object-cover" />
-                  </div>
-                  <h3 className="mt-2 text-sm font-medium text-slate-800 line-clamp-1">
-                    {book.title}
-                  </h3>
-                  <p className="text-xs text-slate-500 line-clamp-1">
-                    {book.author}
-                  </p>
-                  {book.rating && (
-                    <div className="flex items-center gap-0.5 mt-1">
-                      {Array.from({ length: 5 }).map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`w-3 h-3 ${
-                            i < book.rating!
-                              ? "text-yellow-400 fill-yellow-400"
-                              : "text-slate-200"
-                          }`}
+              {books
+                .filter((b: { status: string }) => b.status !== "reading")
+                .map(
+                  (
+                    book: {
+                      _id: string;
+                      title: string;
+                      author: string;
+                      coverUrl?: string;
+                      coverImageUrl?: string | null;
+                      coverStorageId?: string;
+                      rating?: number;
+                      review?: string;
+                      moodTags?: string[];
+                    },
+                    index: number,
+                  ) => (
+                    <motion.div
+                      key={book._id}
+                      className="group book-card"
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: Math.min(index * 0.05, 0.3) }}
+                    >
+                      <div className="aspect-[2/3] rounded-xl overflow-hidden bg-slate-100 shadow-md book-spine transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+                        <CoverImage
+                          book={book}
+                          className="w-full h-full object-cover"
                         />
-                      ))}
-                      <span className="text-xs text-primary-500 ml-1">
-                        {["not it", "meh", "solid read", "obsessed", "all-time fav"][book.rating - 1]}
-                      </span>
-                    </div>
-                  )}
-                  {book.review && (
-                    <p className="text-xs text-slate-400 mt-1 line-clamp-2 italic">
-                      "{book.review}"
-                    </p>
-                  )}
-                  {book.moodTags && book.moodTags.length > 0 && (
-                    <div className="flex flex-wrap gap-1 mt-2">
-                      {book.moodTags.slice(0, 3).map((tag) => (
-                        <span key={tag} className="mood-tag">
-                          {tag}
-                        </span>
-                      ))}
-                      {book.moodTags.length > 3 && (
-                        <span className="text-xs text-slate-400">+{book.moodTags.length - 3}</span>
+                      </div>
+                      <h3 className="mt-2 text-sm font-medium text-slate-800 line-clamp-1">
+                        {book.title}
+                      </h3>
+                      <p className="text-xs text-slate-500 line-clamp-1">
+                        {book.author}
+                      </p>
+                      {book.rating && (
+                        <div className="flex items-center gap-0.5 mt-1">
+                          {Array.from({ length: 5 }).map((_, i) => (
+                            <Star
+                              key={i}
+                              className={`w-3 h-3 ${
+                                i < book.rating!
+                                  ? "text-yellow-400 fill-yellow-400"
+                                  : "text-slate-200"
+                              }`}
+                            />
+                          ))}
+                          <span className="text-xs text-primary-500 ml-1">
+                            {
+                              [
+                                "not it",
+                                "meh",
+                                "solid read",
+                                "obsessed",
+                                "all-time fav",
+                              ][book.rating - 1]
+                            }
+                          </span>
+                        </div>
                       )}
-                    </div>
-                  )}
-                </motion.div>
-              ))}
+                      {book.review && (
+                        <p className="text-xs text-slate-400 mt-1 line-clamp-2 italic">
+                          "{book.review}"
+                        </p>
+                      )}
+                      {book.moodTags && book.moodTags.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mt-2">
+                          {book.moodTags.slice(0, 3).map((tag: string) => (
+                            <span key={tag} className="mood-tag">
+                              {tag}
+                            </span>
+                          ))}
+                          {book.moodTags.length > 3 && (
+                            <span className="text-xs text-slate-400">
+                              +{book.moodTags.length - 3}
+                            </span>
+                          )}
+                        </div>
+                      )}
+                    </motion.div>
+                  ),
+                )}
             </div>
           )}
         </div>
       </section>
 
-
       {/* Reviews Preview */}
       <section className="py-16 px-4 bg-white">
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center justify-between mb-8">
-            <div><div><h2 className="text-2xl sm:text-3xl font-bold text-slate-800">Reviews</h2><div className="w-12 h-0.5 bg-primary-400 mt-2 rounded-full"></div></div><div className="w-12 h-0.5 bg-primary-400 mt-2 rounded-full"></div></div>
-            <Link to="/reviews" className="text-sm text-primary-500 hover:text-primary-700 font-medium">
+            <div>
+              <div>
+                <h2 className="text-2xl sm:text-3xl font-bold text-slate-800">
+                  Reviews
+                </h2>
+                <div className="w-12 h-0.5 bg-primary-400 mt-2 rounded-full"></div>
+              </div>
+              <div className="w-12 h-0.5 bg-primary-400 mt-2 rounded-full"></div>
+            </div>
+            <Link
+              to="/reviews"
+              className="text-sm text-primary-500 hover:text-primary-700 font-medium"
+            >
               See all →
             </Link>
           </div>
           <ReviewStrip books={books} />
         </div>
       </section>
-
 
       {/* Writing & Art Teasers */}
       <section className="py-16 px-4">
@@ -259,16 +363,30 @@ const PublicHome: React.FC = () => {
               <Feather className="w-8 h-8 text-violet-400" />
             </div>
             <h3 className="text-xl font-bold text-slate-800 mb-2">Writing</h3>
-            <p className="text-sm text-slate-400 italic">stories dropping soon... ✍️</p>
-            <Link to="/writing" className="inline-block mt-4 text-sm text-primary-500 hover:text-primary-600 font-medium">See all →</Link>
+            <p className="text-sm text-slate-400 italic">
+              stories dropping soon... ✍️
+            </p>
+            <Link
+              to="/writing"
+              className="inline-block mt-4 text-sm text-primary-500 hover:text-primary-600 font-medium"
+            >
+              See all →
+            </Link>
           </div>
           <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-100 text-center hover:shadow-md transition-shadow">
             <div className="w-16 h-16 bg-primary-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
               <Palette className="w-8 h-8 text-primary-400" />
             </div>
             <h3 className="text-xl font-bold text-slate-800 mb-2">Art</h3>
-            <p className="text-sm text-slate-400 italic">doodles incoming... 🎨</p>
-            <Link to="/art" className="inline-block mt-4 text-sm text-primary-500 hover:text-primary-600 font-medium">See all →</Link>
+            <p className="text-sm text-slate-400 italic">
+              doodles incoming... 🎨
+            </p>
+            <Link
+              to="/art"
+              className="inline-block mt-4 text-sm text-primary-500 hover:text-primary-600 font-medium"
+            >
+              See all →
+            </Link>
           </div>
         </div>
       </section>
@@ -278,11 +396,21 @@ const PublicHome: React.FC = () => {
         <div className="max-w-6xl mx-auto">
           <div className="flex items-end justify-between mb-8">
             <div>
-              <div><h2 className="text-2xl sm:text-3xl font-bold text-slate-800">Wishlist</h2><div className="w-12 h-0.5 bg-primary-400 mt-2 rounded-full"></div></div>
-              <p className="text-slate-500 mt-1">books I'd love to read next ✨</p>
+              <div>
+                <h2 className="text-2xl sm:text-3xl font-bold text-slate-800">
+                  Wishlist
+                </h2>
+                <div className="w-12 h-0.5 bg-primary-400 mt-2 rounded-full"></div>
+              </div>
+              <p className="text-slate-500 mt-1">
+                books I'd love to read next ✨
+              </p>
             </div>
             {wishlist.length > 0 && (
-              <Link to="/wishlist" className="text-sm text-primary-500 hover:text-primary-700 font-medium">
+              <Link
+                to="/wishlist"
+                className="text-sm text-primary-500 hover:text-primary-700 font-medium"
+              >
                 See all →
               </Link>
             )}
@@ -293,42 +421,62 @@ const PublicHome: React.FC = () => {
               <div className="text-4xl mb-3">🎁</div>
               <p className="text-slate-600 font-medium">Nothing here yet!</p>
               <p className="text-sm text-slate-400 mt-1">Got a suggestion?</p>
-              <button onClick={() => setShowSuggestModal(true)} className="mt-3 text-sm text-primary-500 hover:text-primary-600 font-medium underline underline-offset-2">
+              <button
+                onClick={() => setShowSuggestModal(true)}
+                className="mt-3 text-sm text-primary-500 hover:text-primary-600 font-medium underline underline-offset-2"
+              >
                 Suggest a book →
               </button>
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
-              {wishlist.map((book) => (
-                <motion.div
-                  key={book._id}
-                  className="group relative"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                >
-                  <div className="relative aspect-[2/3] rounded-xl overflow-hidden bg-slate-100 shadow-sm group-hover:shadow-xl transition-all">
-                    <CoverImage book={book} className="w-full h-full object-cover" />
-                    {book.giftedBy && (
-                      <div className="absolute top-2 left-2 px-2 py-1 bg-green-500 text-white text-xs rounded-full font-medium">
-                        🎁 Gifted by {book.giftedBy}
-                      </div>
+              {wishlist.map(
+                (book: {
+                  _id: string;
+                  title: string;
+                  author: string;
+                  coverUrl?: string;
+                  coverImageUrl?: string | null;
+                  coverStorageId?: string;
+                  giftedBy?: string;
+                  genre?: string;
+                }) => (
+                  <motion.div
+                    key={book._id}
+                    className="group relative"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                  >
+                    <div className="relative aspect-[2/3] rounded-xl overflow-hidden bg-slate-100 shadow-sm group-hover:shadow-xl transition-all">
+                      <CoverImage
+                        book={book}
+                        className="w-full h-full object-cover"
+                      />
+                      {book.giftedBy && (
+                        <div className="absolute top-2 left-2 px-2 py-1 bg-green-500 text-white text-xs rounded-full font-medium">
+                          🎁 Gifted by {book.giftedBy}
+                        </div>
+                      )}
+                    </div>
+                    <h3 className="mt-2 text-sm font-medium text-slate-800 line-clamp-1">
+                      {book.title}
+                    </h3>
+                    <p className="text-xs text-slate-500 line-clamp-1">
+                      {book.author}
+                    </p>
+                    {book.genre && book.genre !== "Other" && (
+                      <span className="inline-block mt-1 text-xs px-2 py-0.5 bg-primary-50 text-primary-600 rounded-full">
+                        {book.genre}
+                      </span>
                     )}
-                  </div>
-                  <h3 className="mt-2 text-sm font-medium text-slate-800 line-clamp-1">
-                    {book.title}
-                  </h3>
-                  <p className="text-xs text-slate-500 line-clamp-1">{book.author}</p>
-                  {book.genre && book.genre !== "Other" && (
-                    <span className="inline-block mt-1 text-xs px-2 py-0.5 bg-primary-50 text-primary-600 rounded-full">{book.genre}</span>
-                  )}
-                </motion.div>
-              ))}
+                  </motion.div>
+                ),
+              )}
             </div>
           )}
         </div>
       </section>
-
 
       {/* Suggest a Book Section */}
       <section className="py-16 px-4">
@@ -362,8 +510,6 @@ const PublicHome: React.FC = () => {
           </motion.div>
         </div>
       </section>
-
-
 
       {/* Suggest Book Modal */}
       <SuggestBookModal
@@ -626,7 +772,10 @@ const SuggestBookModal: React.FC<SuggestBookModalProps> = ({
                           onClick={() => selectBook(book)}
                           className="w-full flex items-center gap-3 p-3 hover:bg-primary-50 transition-colors text-left border-b border-slate-100 last:border-0"
                         >
-                          <CoverImage book={book} className="w-10 h-14 object-cover rounded" />
+                          <CoverImage
+                            book={book}
+                            className="w-10 h-14 object-cover rounded"
+                          />
                           <div className="flex-1 min-w-0">
                             <p className="font-medium text-slate-800 truncate">
                               {book.title}
@@ -650,7 +799,10 @@ const SuggestBookModal: React.FC<SuggestBookModalProps> = ({
               {selectedBook && (
                 <div className="flex items-start gap-4 p-4 bg-primary-50 rounded-xl border-2 border-primary-200">
                   <div className="w-16 h-24 rounded-lg overflow-hidden flex-shrink-0">
-                    <CoverImage book={selectedBook} className="w-full h-full object-cover rounded-lg shadow" />
+                    <CoverImage
+                      book={selectedBook}
+                      className="w-full h-full object-cover rounded-lg shadow"
+                    />
                   </div>
                   <div className="flex-1 min-w-0">
                     <h3 className="font-bold text-slate-800 truncate">
@@ -794,7 +946,19 @@ const SuggestBookModal: React.FC<SuggestBookModalProps> = ({
 export default PublicHome;
 
 // ===== PUBLIC WRITINGS SECTION =====
-const ReviewStrip: React.FC<{ books: Array<{ _id: string; title: string; author: string; coverUrl?: string; coverImageUrl?: string | null; coverStorageId?: string; rating?: number; review?: string; isFavorite?: boolean }> }> = ({ books }) => {
+const ReviewStrip: React.FC<{
+  books: Array<{
+    _id: string;
+    title: string;
+    author: string;
+    coverUrl?: string;
+    coverImageUrl?: string | null;
+    coverStorageId?: string;
+    rating?: number;
+    review?: string;
+    isFavorite?: boolean;
+  }>;
+}> = ({ books }) => {
   const reviewed = books.filter((b) => b.rating && b.rating > 0);
 
   if (reviewed.length === 0) {
@@ -807,7 +971,11 @@ const ReviewStrip: React.FC<{ books: Array<{ _id: string; title: string; author:
   }
 
   const RATING_LABELS: Record<number, string> = {
-    1: "not it", 2: "meh", 3: "solid read", 4: "obsessed", 5: "all-time fav",
+    1: "not it",
+    2: "meh",
+    3: "solid read",
+    4: "obsessed",
+    5: "all-time fav",
   };
 
   return (
@@ -825,7 +993,9 @@ const ReviewStrip: React.FC<{ books: Array<{ _id: string; title: string; author:
               <CoverImage book={book} className="w-full h-full object-cover" />
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="font-bold text-sm text-slate-800 line-clamp-1">{book.title}</h3>
+              <h3 className="font-bold text-sm text-slate-800 line-clamp-1">
+                {book.title}
+              </h3>
               <p className="text-xs text-slate-500 mb-1">{book.author}</p>
               <div className="flex items-center gap-0.5 mb-1">
                 {Array.from({ length: 5 }).map((_, i) => (
@@ -838,7 +1008,9 @@ const ReviewStrip: React.FC<{ books: Array<{ _id: string; title: string; author:
                     }`}
                   />
                 ))}
-                <span className="text-xs text-slate-400 ml-1">{RATING_LABELS[book.rating ?? 0]}</span>
+                <span className="text-xs text-slate-400 ml-1">
+                  {RATING_LABELS[book.rating ?? 0]}
+                </span>
               </div>
               {book.review && (
                 <p className="text-xs text-slate-500 line-clamp-3 italic leading-relaxed">

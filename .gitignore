@@ -12,9 +12,11 @@ dist
 dist-ssr
 
 # Env files with secrets
-*.local
+.env
 .env.local
 .env.*.local
+.env.production
+.env.staging
 
 # Editor directories and files
 .vscode/*
@@ -32,3 +34,8 @@ dist-ssr
 
 # Local Netlify folder
 .netlify
+.gstack/
+
+# Seed data (generated)
+seed-books*.json
+all-books.json

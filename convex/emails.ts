@@ -14,7 +14,11 @@ export const sendSuggestionNotification = action({
     coverUrl: v.optional(v.string()),
   },
   handler: async (_, args) => {
-    const apiKey = process.env.RESEND_API_KEY;
+    const apiKey = (
+      globalThis as unknown as {
+        process?: { env: Record<string, string | undefined> };
+      }
+    ).process?.env?.RESEND_API_KEY;
     if (!apiKey) {
       console.warn("RESEND_API_KEY not set — skipping email notification");
       return;
@@ -57,13 +61,17 @@ export const sendSuggestionNotification = action({
         ${args.suggestedByEmail ? `<p style="margin: 4px 0 0 0; font-size: 13px; color: #64748b;">${args.suggestedByEmail}</p>` : ""}
       </div>
 
-      ${args.reason ? `
+      ${
+        args.reason
+          ? `
       <!-- Why -->
       <div style="margin-bottom: 20px;">
         <p style="margin: 0 0 4px 0; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: #94a3b8; font-weight: 600;">Why this book?</p>
         <p style="margin: 0; font-size: 14px; color: #475569; font-style: italic; line-height: 1.5;">"${args.reason}"</p>
       </div>
-      ` : ""}
+      `
+          : ""
+      }
 
       <!-- CTA -->
       <a href="https://elisereads.com/dashboard/suggestions" style="display: block; text-align: center; padding: 14px; background: linear-gradient(135deg, #c4856c, #7c5cbf); color: white; text-decoration: none; border-radius: 10px; font-weight: 600; font-size: 15px;">

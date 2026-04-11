@@ -131,6 +131,24 @@ export const updateProfile = mutation({
   },
 });
 
+// Mark onboarding as seen
+export const setOnboardingSeen = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const userId = await auth.getUserId(ctx);
+    if (!userId) throw new Error("Not authenticated");
+
+    const profile = await ctx.db
+      .query("userProfiles")
+      .withIndex("by_userId", (q) => q.eq("userId", userId))
+      .first();
+
+    if (!profile) throw new Error("Profile not found");
+
+    await ctx.db.patch(profile._id, { hasSeenOnboarding: true });
+  },
+});
+
 // Get site-wide reading stats (all books/artworks, not user-specific)
 export const getStats = query({
   args: {},

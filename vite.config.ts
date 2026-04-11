@@ -19,14 +19,28 @@ export default defineConfig({
     chunkSizeWarningLimit: 600,
     rollupOptions: {
       output: {
-        manualChunks(id) {
-          if (id.includes("node_modules")) {
-            if (id.includes("react") || id.includes("react-dom") || id.includes("react-router")) {
-              return "vendor-react";
-            }
-            if (id.includes("framer-motion")) {
-              return "vendor-framer";
-            }
+        manualChunks(id: string) {
+          if (
+            id.includes("node_modules/react-dom") ||
+            id.includes("node_modules/react/") ||
+            id.includes("node_modules/react-router-dom")
+          ) {
+            return "vendor-react";
+          }
+          if (id.includes("node_modules/framer-motion")) {
+            return "vendor-framer";
+          }
+          if (
+            id.includes("components/Login") ||
+            id.includes("components/Signup")
+          ) {
+            return "feature-auth";
+          }
+          if (
+            id.includes("components/Dashboard") ||
+            id.includes("pages/Dashboard")
+          ) {
+            return "feature-admin";
           }
         },
       },
