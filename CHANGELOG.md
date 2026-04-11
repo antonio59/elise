@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- Change desktop grid to 5 cols, improve color contrast, silence dev-only console warnings
 - Change book grid to 5 columns max on desktop (matching izzy)
 - Deprioritize storage thumbnails in CoverImage fallback chain
 - Use DOMParser for HTML sanitization instead of regex
@@ -590,9 +591,11 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
+- Update changelog [skip ci]
 
 ### Features
 
+- Bring elise up to izzy-reads coding and design standards
 - Mark-as-bought on wishlist, share wishlist link, cover art fix
 - Discover page with Tinder-style book swipe recommendations (#25)
 - Reading streaks, stickers, and share buttons
