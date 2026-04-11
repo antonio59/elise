@@ -2,7 +2,7 @@ import { ConvexReactClient } from "convex/react";
 
 const convexUrl = import.meta.env.VITE_CONVEX_URL;
 
-if (!convexUrl) {
+if (!convexUrl && import.meta.env.DEV) {
   console.warn("VITE_CONVEX_URL not set. Add it to your .env file.");
 }
 

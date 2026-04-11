@@ -321,11 +321,11 @@ export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
               ))}
             </nav>
 
-            <p className="text-sm text-slate-400 italic">
+            <p className="text-sm text-slate-500 italic">
               {(siteSettings as any)?.footerTagline ||
                 "books I've read, art I make, and words I write"}
             </p>
-            <p className="text-xs text-slate-300 mt-3">
+            <p className="text-xs text-slate-400 mt-3">
               {(siteSettings as any)?.footerNote ||
                 "Made with love for Elise 💜"}
             </p>

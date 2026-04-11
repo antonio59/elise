@@ -330,7 +330,7 @@ const PublicBooks: React.FC = () => {
                           ))}
                         </>
                       ) : (
-                        <span className="text-xs text-slate-400">unrated</span>
+                        <span className="text-xs text-slate-500">unrated</span>
                       )}
                     </div>
                   </motion.div>

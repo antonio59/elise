@@ -553,7 +553,7 @@ const Dashboard: React.FC = () => {
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {recentBooks.map(
               (book: {
                 _id: string;
