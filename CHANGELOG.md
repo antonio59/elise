@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- Prioritize Convex storage URL for hi-res covers, upgrade zoom at search time
 - Change desktop grid to 5 cols, improve color contrast, silence dev-only console warnings
 - Change remaining book grids from 6 to 5 columns on desktop
 - Change desktop grid to 5 cols, improve color contrast, silence dev-only console warnings
@@ -574,6 +575,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
