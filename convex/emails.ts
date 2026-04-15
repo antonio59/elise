@@ -2,6 +2,15 @@ import { action } from "./_generated/server";
 import { v } from "convex/values";
 import { Resend } from "resend";
 
+function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 // Send notification email when a book is suggested
 export const sendSuggestionNotification = action({
   args: {
@@ -46,19 +55,19 @@ export const sendSuggestionNotification = action({
 
       <!-- Book Info -->
       <div style="display: flex; gap: 16px; margin-bottom: 20px; padding: 16px; background: #faf8f5; border-radius: 12px;">
-        ${args.coverUrl ? `<img src="${args.coverUrl}" alt="${args.title}" style="width: 60px; height: 90px; object-fit: cover; border-radius: 8px; flex-shrink: 0;" />` : ""}
+        ${args.coverUrl ? `<img src="${escapeHtml(args.coverUrl)}" alt="${escapeHtml(args.title)}" style="width: 60px; height: 90px; object-fit: cover; border-radius: 8px; flex-shrink: 0;" />` : ""}
         <div>
-          <h2 style="margin: 0 0 4px 0; font-size: 18px; color: #1e293b;">${args.title}</h2>
-          <p style="margin: 0 0 8px 0; color: #64748b; font-size: 14px;">by ${args.author}</p>
-          ${args.genre ? `<span style="display: inline-block; padding: 2px 10px; background: #fef3e2; color: #c4856c; border-radius: 100px; font-size: 12px; font-weight: 600;">${args.genre}</span>` : ""}
+          <h2 style="margin: 0 0 4px 0; font-size: 18px; color: #1e293b;">${escapeHtml(args.title)}</h2>
+          <p style="margin: 0 0 8px 0; color: #64748b; font-size: 14px;">by ${escapeHtml(args.author)}</p>
+          ${args.genre ? `<span style="display: inline-block; padding: 2px 10px; background: #fef3e2; color: #c4856c; border-radius: 100px; font-size: 12px; font-weight: 600;">${escapeHtml(args.genre)}</span>` : ""}
         </div>
       </div>
 
       <!-- Who Suggested -->
       <div style="margin-bottom: 16px;">
         <p style="margin: 0 0 4px 0; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: #94a3b8; font-weight: 600;">Suggested by</p>
-        <p style="margin: 0; font-size: 16px; color: #1e293b; font-weight: 600;">${args.suggestedBy}</p>
-        ${args.suggestedByEmail ? `<p style="margin: 4px 0 0 0; font-size: 13px; color: #64748b;">${args.suggestedByEmail}</p>` : ""}
+        <p style="margin: 0; font-size: 16px; color: #1e293b; font-weight: 600;">${escapeHtml(args.suggestedBy)}</p>
+        ${args.suggestedByEmail ? `<p style="margin: 4px 0 0 0; font-size: 13px; color: #64748b;">${escapeHtml(args.suggestedByEmail)}</p>` : ""}
       </div>
 
       ${
@@ -67,7 +76,7 @@ export const sendSuggestionNotification = action({
       <!-- Why -->
       <div style="margin-bottom: 20px;">
         <p style="margin: 0 0 4px 0; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: #94a3b8; font-weight: 600;">Why this book?</p>
-        <p style="margin: 0; font-size: 14px; color: #475569; font-style: italic; line-height: 1.5;">"${args.reason}"</p>
+        <p style="margin: 0; font-size: 14px; color: #475569; font-style: italic; line-height: 1.5;">"${escapeHtml(args.reason)}"</p>
       </div>
       `
           : ""

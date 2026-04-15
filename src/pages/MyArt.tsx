@@ -509,6 +509,10 @@ const AddArtworkModal: React.FC<AddArtworkModalProps> = ({
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (!file.type.startsWith("image/")) {
+        alert("Please select an image file (JPG, PNG, or WebP).");
+        return;
+      }
       if (file.size > 5 * 1024 * 1024) {
         alert("Image must be less than 5MB");
         return;

@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
+import { getVisitorId } from "../lib/visitorId";
 
 const DEFAULT_EMOJIS = ["❤️", "📚", "✨", "🔥", "😭", "💀", "🤯", "👀"];
 
@@ -10,16 +11,6 @@ interface ReactionBarProps {
   targetId: string;
   className?: string;
 }
-
-const getVisitorId = (): string => {
-  const STORAGE_KEY = "elise-visitor-id";
-  let id = sessionStorage.getItem(STORAGE_KEY);
-  if (!id) {
-    id = crypto.randomUUID();
-    sessionStorage.setItem(STORAGE_KEY, id);
-  }
-  return id;
-};
 
 const ReactionBar: React.FC<ReactionBarProps> = ({ targetType, targetId, className = "" }) => {
   const [visitorId] = useState<string>(() => getVisitorId());

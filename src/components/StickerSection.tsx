@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
+import { getVisitorId } from "../lib/visitorId";
 
 const STICKER_PACK = [
   "🌸", "✨", "💜", "📚", "⭐", "💫", "🌙", "🦋",
@@ -10,17 +11,6 @@ const STICKER_PACK = [
   "🎀", "🦄", "🍓", "🌟", "👑", "🩷", "🫧", "🧁",
   "🍭", "💝", "🌻", "🎵", "🐾", "🌊",
 ];
-
-const STORAGE_KEY = "elise-visitor-id";
-
-function getVisitorId(): string {
-  let id = sessionStorage.getItem(STORAGE_KEY);
-  if (!id) {
-    id = crypto.randomUUID();
-    sessionStorage.setItem(STORAGE_KEY, id);
-  }
-  return id;
-}
 
 interface StickerSectionProps {
   bookId: string;

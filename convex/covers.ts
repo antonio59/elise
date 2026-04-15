@@ -1,16 +1,27 @@
-import { query, mutation, action } from "./_generated/server";
+import { query, internalMutation, action } from "./_generated/server";
 import { v } from "convex/values";
-import { api } from "./_generated/api";
+import { api, internal } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
 
 // Placeholder images Google Books returns when no cover exists are tiny (< 5 KB).
 const MIN_IMAGE_BYTES = 5_000;
+
+function isGoogleBooksHost(hostname: string): boolean {
+  return (
+    hostname === "books.google.com" ||
+    hostname.endsWith(".books.google.com")
+  );
+}
 
 /** Build Google Books cover URLs at decreasing zoom levels (3 = highest res). */
 function googleZoomUrls(coverUrl: string): string[] {
   try {
     const base = coverUrl.replace(/&amp;/g, "&");
     const u = new URL(base);
+    if (!isGoogleBooksHost(u.hostname)) {
+      // Only manipulate URLs we recognize as Google Books
+      return [base];
+    }
     return [5, 3, 2, 1].map((zoom) => {
       u.searchParams.set("zoom", String(zoom));
       return u.toString();
@@ -122,7 +133,7 @@ export const storeFromUrl = action({
     if (!blob) return "No valid cover found";
 
     const storageId = await ctx.storage.store(blob);
-    await ctx.runMutation(api.covers.updateCoverStorage, {
+    await ctx.runMutation(internal.covers.updateCoverStorage, {
       bookId: args.bookId,
       coverStorageId: storageId,
     });
@@ -131,8 +142,8 @@ export const storeFromUrl = action({
   },
 });
 
-// Update book with cover storage ID
-export const updateCoverStorage = mutation({
+// Update book with cover storage ID (internal only — called from actions)
+export const updateCoverStorage = internalMutation({
   args: {
     bookId: v.id("books"),
     coverStorageId: v.id("_storage"),
@@ -181,7 +192,7 @@ export const storeAll = action({
             const blob = await fetchFirstValidImage(candidates);
             if (!blob) return "skip";
             const storageId = await ctx.storage.store(blob);
-            await ctx.runMutation(api.covers.updateCoverStorage, {
+            await ctx.runMutation(internal.covers.updateCoverStorage, {
               bookId: book._id as Id<"books">,
               coverStorageId: storageId,
             });

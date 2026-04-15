@@ -1,8 +1,8 @@
-import { query } from "./_generated/server";
+import { action } from "./_generated/server";
 import { v } from "convex/values";
 
 // Giphy search proxy — API key stays server-side
-export const search = query({
+export const search = action({
   args: {
     query: v.string(),
     limit: v.optional(v.number()),

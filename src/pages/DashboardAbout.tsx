@@ -160,7 +160,7 @@ const DashboardAbout: React.FC = () => {
   };
 
   const avatarUrl = profile?.avatarStorageId
-    ? `https://agile-shrimp-456.convex.cloud/api/storage/${profile.avatarStorageId}`
+    ? `https://${import.meta.env.VITE_CONVEX_URL?.replace(/^https?:\/\//, "").replace(/\/$/, "")}/api/storage/${profile.avatarStorageId}`
     : profile?.avatarUrl || undefined;
 
   return (

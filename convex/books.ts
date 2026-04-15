@@ -205,6 +205,7 @@ export const update = mutation({
 
     const book = await ctx.db.get(args.id);
     if (!book) throw new Error("Book not found");
+    if (book.userId !== userId) throw new Error("Not authorized");
 
     const { id, ...updates } = args;
     const filteredUpdates = Object.fromEntries(
@@ -229,6 +230,7 @@ export const remove = mutation({
 
     const book = await ctx.db.get(args.id);
     if (!book) throw new Error("Book not found");
+    if (book.userId !== userId) throw new Error("Not authorized");
 
     await ctx.db.delete(args.id);
   },
@@ -262,12 +264,16 @@ export const markWishlistAsBought = mutation({
   },
 });
 
-// Clear bought status (requires auth)
+// Clear bought status (requires auth and ownership)
 export const clearBought = mutation({
   args: { id: v.id("books") },
   handler: async (ctx, args) => {
     const userId = await auth.getUserId(ctx);
     if (!userId) throw new Error("Not authenticated");
+
+    const book = await ctx.db.get(args.id);
+    if (!book) throw new Error("Book not found");
+    if (book.userId !== userId) throw new Error("Not authorized");
 
     await ctx.db.patch(args.id, {
       boughtBy: undefined,
@@ -285,6 +291,7 @@ export const toggleFavorite = mutation({
 
     const book = await ctx.db.get(args.id);
     if (!book) throw new Error("Book not found");
+    if (book.userId !== userId) throw new Error("Not authorized");
 
     await ctx.db.patch(args.id, { isFavorite: !book.isFavorite });
   },

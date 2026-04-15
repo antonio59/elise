@@ -2,6 +2,19 @@ import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 import { auth } from "./auth";
 
+// Helper: check if current user has admin role
+export async function isAdmin(ctx: { db: unknown }): Promise<boolean> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const userId = await auth.getUserId(ctx as any);
+  if (!userId) return false;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const profile = await (ctx as any).db
+    .query("userProfiles")
+    .withIndex("by_userId", (q: any) => q.eq(q.field("userId"), userId))
+    .first();
+  return profile?.role === "admin";
+}
+
 // Get current authenticated user
 export const getCurrentUser = query({
   args: {},

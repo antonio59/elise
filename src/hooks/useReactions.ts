@@ -1,18 +1,7 @@
 import { useState, useCallback } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
-
-function getVisitorId(): string {
-  const STORAGE_KEY = "elise_visitor_id";
-  let visitorId = localStorage.getItem(STORAGE_KEY);
-
-  if (!visitorId) {
-    visitorId = `visitor_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
-    localStorage.setItem(STORAGE_KEY, visitorId);
-  }
-
-  return visitorId;
-}
+import { getVisitorId } from "../lib/visitorId";
 
 type TargetType = "book" | "writing" | "artwork";
 

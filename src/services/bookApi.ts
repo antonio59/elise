@@ -127,7 +127,7 @@ export async function getBookWithCover(
     };
   }
 
-  if (book.source === "google" && book._openLibraryBook?.cover_i) {
+  if (book.source === "openlibrary" && book._openLibraryBook?.cover_i) {
     return {
       title: book.title,
       author: book.author,

@@ -52,7 +52,7 @@ export const getGoalProgress = query({
       booksRead: booksThisYear.length,
       pagesRead: pagesThisYear,
       year: currentYear,
-      bookProgress: goal
+      bookProgress: goal?.targetBooks
         ? Math.min(
             100,
             Math.round((booksThisYear.length / goal.targetBooks) * 100),
@@ -81,6 +81,7 @@ export const setGoal = mutation({
     const existing = existingGoals.find((g) => g.year === args.year);
 
     if (existing) {
+      if (existing.userId !== userId) throw new Error("Not authorized");
       // Update existing goal
       await ctx.db.patch(existing._id, {
         targetBooks: args.targetBooks,
@@ -100,12 +101,16 @@ export const setGoal = mutation({
   },
 });
 
-// Delete a reading goal (requires auth)
+// Delete a reading goal (requires auth and ownership)
 export const deleteGoal = mutation({
   args: { id: v.id("readingGoals") },
   handler: async (ctx, args) => {
     const userId = await auth.getUserId(ctx);
     if (!userId) throw new Error("Not authenticated");
+
+    const goal = await ctx.db.get(args.id);
+    if (!goal) throw new Error("Goal not found");
+    if (goal.userId !== userId) throw new Error("Not authorized");
 
     await ctx.db.delete(args.id);
   },

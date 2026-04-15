@@ -26,6 +26,7 @@ export const seedBooks = mutation({
   handler: async (ctx, args) => {
     const callerId = await auth.getUserId(ctx);
     if (!callerId) throw new Error("Not authenticated");
+    if (args.userId !== callerId) throw new Error("Not authorized");
     let count = 0;
     for (const book of args.books) {
       const existing = await ctx.db

@@ -28,12 +28,7 @@ const Login: React.FC = () => {
       navigate(from, { replace: true });
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Failed to sign in";
-      try {
-        const parsed = JSON.parse(msg);
-        setError(parsed.error || msg);
-      } catch {
-        setError(msg);
-      }
+      setError(msg);
     } finally {
       setLoading(false);
     }
@@ -51,7 +46,7 @@ const Login: React.FC = () => {
       </p>
 
       {error && (
-        <div className="flex items-center gap-2 p-3 bg-red-50 text-red-600 rounded-xl mb-4">
+        <div role="alert" className="flex items-center gap-2 p-3 bg-red-50 text-red-600 rounded-xl mb-4">
           <AlertCircle className="w-5 h-5 flex-shrink-0" />
           <p className="text-sm">{error}</p>
         </div>

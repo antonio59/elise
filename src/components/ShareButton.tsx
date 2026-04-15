@@ -39,6 +39,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({ title, author, path }) => {
       onClick={handleShare}
       className="flex items-center gap-1 text-[10px] text-slate-400 hover:text-primary-500 transition-colors"
       title="Share"
+      aria-label="Share"
     >
       {copied ? (
         <Check className="w-3 h-3 text-green-500" />

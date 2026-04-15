@@ -1,6 +1,6 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
-import { auth } from "./auth";
+import { isAdmin } from "./users";
 
 // Get site settings (public)
 export const get = query({
@@ -27,8 +27,8 @@ export const update = mutation({
     heroDescription: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) throw new Error("Not authenticated");
+    const admin = await isAdmin(ctx);
+    if (!admin) throw new Error("Not authorized");
 
     const existing = await ctx.db.query("siteSettings").first();
 

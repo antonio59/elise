@@ -47,11 +47,16 @@ export const getMyWritings = query({
   },
 });
 
-// Get single writing
+// Get single writing (public if published, otherwise only for owner)
 export const getById = query({
   args: { id: v.id("writings") },
   handler: async (ctx, args) => {
-    return await ctx.db.get(args.id);
+    const writing = await ctx.db.get(args.id);
+    if (!writing) return null;
+    if (writing.isPublished) return writing;
+    const userId = await auth.getUserId(ctx);
+    if (userId && writing.userId === userId) return writing;
+    return null;
   },
 });
 

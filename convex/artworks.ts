@@ -87,6 +87,7 @@ export const update = mutation({
 
     const artwork = await ctx.db.get(args.id);
     if (!artwork) throw new Error("Artwork not found");
+    if (artwork.userId !== userId) throw new Error("Not authorized");
 
     const { id, ...updates } = args;
     const filteredUpdates = Object.fromEntries(
@@ -105,6 +106,7 @@ export const remove = mutation({
 
     const artwork = await ctx.db.get(args.id);
     if (!artwork) throw new Error("Artwork not found");
+    if (artwork.userId !== userId) throw new Error("Not authorized");
 
     // Delete from storage if exists
     if (artwork.storageId) {

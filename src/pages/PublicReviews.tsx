@@ -237,7 +237,7 @@ const PublicReviews: React.FC = () => {
                             ))}
                             {book.rating && book.rating > 0 && (
                               <span className="ml-2 text-xs text-primary-500 font-medium">
-                                {RATING_LABELS[book.rating]}
+                                {RATING_LABELS[book.rating] ?? ""}
                               </span>
                             )}
                           </div>

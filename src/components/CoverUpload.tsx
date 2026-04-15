@@ -12,6 +12,10 @@ const CoverUpload: React.FC<CoverUploadProps> = ({ value, onChange }) => {
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      alert("Please select an image file (JPG, PNG, or WebP).");
+      return;
+    }
 
     // Read as data URL for preview + storage
     const reader = new FileReader();

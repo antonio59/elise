@@ -13,10 +13,8 @@ const LEGACY_TABLES = [
   "likes",
   "notifications",
   "rateLimits",
-  "readingStreaks",
   "reviews",
   "shares",
-  "stickers",
   "userPreferences",
 ] as const;
 

@@ -2,6 +2,7 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 import { auth } from "./auth";
+import { isAdmin } from "./users";
 
 // Get all suggestions (for admin)
 export const getAll = query({
@@ -155,12 +156,12 @@ export const submit = mutation({
   },
 });
 
-// Approve a suggestion (requires auth)
+// Approve a suggestion (admin only)
 export const approve = mutation({
   args: { id: v.id("bookSuggestions") },
   handler: async (ctx, args) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) throw new Error("Not authenticated");
+    const admin = await isAdmin(ctx);
+    if (!admin) throw new Error("Not authorized");
 
     await ctx.db.patch(args.id, {
       status: "approved",
@@ -169,12 +170,12 @@ export const approve = mutation({
   },
 });
 
-// Reject a suggestion (requires auth)
+// Reject a suggestion (admin only)
 export const reject = mutation({
   args: { id: v.id("bookSuggestions") },
   handler: async (ctx, args) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) throw new Error("Not authenticated");
+    const admin = await isAdmin(ctx);
+    if (!admin) throw new Error("Not authorized");
 
     await ctx.db.patch(args.id, {
       status: "rejected",
@@ -183,28 +184,30 @@ export const reject = mutation({
   },
 });
 
-// Delete a suggestion (requires auth)
+// Delete a suggestion (admin only)
 export const remove = mutation({
   args: { id: v.id("bookSuggestions") },
   handler: async (ctx, args) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) throw new Error("Not authenticated");
+    const admin = await isAdmin(ctx);
+    if (!admin) throw new Error("Not authorized");
 
     await ctx.db.delete(args.id);
   },
 });
 
-// Add approved suggestion to books (requires auth)
+// Add approved suggestion to books (admin only)
 export const addToBooks = mutation({
   args: { id: v.id("bookSuggestions") },
   handler: async (ctx, args) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) throw new Error("Not authenticated");
+    const admin = await isAdmin(ctx);
+    if (!admin) throw new Error("Not authorized");
 
     const suggestion = await ctx.db.get(args.id);
     if (!suggestion) throw new Error("Suggestion not found");
 
-    // Add to wishlist
+    // Add to wishlist for current admin
+    const userId = await auth.getUserId(ctx);
+    if (!userId) throw new Error("Not authenticated");
     await ctx.db.insert("books", {
       userId,
       title: suggestion.title,
