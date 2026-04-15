@@ -156,8 +156,18 @@ export const redownloadCoversHighRes = internalAction({
     const books = await ctx.runQuery(internal.migrations.getAllBooks);
 
     const eligible = books.filter(
-      (b: { coverUrl?: string; coverStorageId?: string }) =>
-        b.coverUrl?.includes("books.google.com") && b.coverStorageId,
+      (b: { coverUrl?: string; coverStorageId?: string }) => {
+        if (!b.coverUrl || !b.coverStorageId) return false;
+        try {
+          const u = new URL(b.coverUrl.replace(/&amp;/g, "&"));
+          return (
+            u.hostname === "books.google.com" ||
+            u.hostname.endsWith(".books.google.com")
+          );
+        } catch {
+          return false;
+        }
+      },
     );
 
     console.log(
