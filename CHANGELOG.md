@@ -602,6 +602,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
+- Update changelog [skip ci]
 
 ### Features
 
@@ -613,6 +614,10 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 - Consistent page layout with breadcrumb navigation across all public pages
 - Permanent cover storage with auto-refresh for expired Google Books URLs (#10)
 - Permanent cover storage with auto-refresh for expired Google Books URLs
+
+### Refactoring
+
+- Address all highlighted frontend and backend issues
 
 ### Testing
 
