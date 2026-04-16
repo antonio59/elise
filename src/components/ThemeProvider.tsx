@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
+import { getPublicTheme } from "./ThemeToggle";
 
 const THEME_MAP: Record<string, string> = {
   kawaii: "sakura",
@@ -19,7 +20,7 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
   const profile = useQuery(api.users.getProfile);
 
   useEffect(() => {
-    const rawTheme = profile?.theme || "editorial";
+    const rawTheme = profile?.theme || getPublicTheme();
     const theme = THEME_MAP[rawTheme] || "editorial";
 
     if (theme === "editorial") {

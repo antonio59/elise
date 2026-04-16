@@ -1,6 +1,7 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 import { auth } from "./auth";
+import { checkRateLimit } from "./lib/rateLimit";
 
 // Get all published artworks (for public gallery)
 export const getPublished = query({
@@ -10,8 +11,8 @@ export const getPublished = query({
       .query("artworks")
       .withIndex("by_published", (q) => q.eq("isPublished", true))
       .order("desc")
-      .collect();
-    return args.limit ? artworks.slice(0, args.limit) : artworks;
+      .take(args.limit ?? 1000);
+    return artworks;
   },
 });
 
@@ -121,6 +122,17 @@ export const remove = mutation({
 export const like = mutation({
   args: { id: v.id("artworks") },
   handler: async (ctx, args) => {
+    const allowed = await checkRateLimit(
+      ctx,
+      `like_${args.id}`,
+      "likeArtwork",
+      10,
+      60 * 60 * 1000,
+    );
+    if (!allowed) {
+      throw new Error("Rate limit exceeded. Please try again later.");
+    }
+
     const artwork = await ctx.db.get(args.id);
     if (!artwork) throw new Error("Artwork not found");
 

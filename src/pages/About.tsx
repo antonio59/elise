@@ -3,6 +3,8 @@ import { motion } from "framer-motion";
 import { BookOpen, User, Target } from "lucide-react";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
+import { usePageAnnouncement } from "../components/AccessibleAnnouncer";
+import { usePageMeta } from "../components/PageMeta";
 
 interface CurrentlyReading {
   title: string;
@@ -25,6 +27,8 @@ interface PublicProfile {
 }
 
 const About: React.FC = () => {
+  usePageAnnouncement("About");
+  usePageMeta({ title: "About", description: "About Elise" });
   const profile = useQuery(api.users.getPublicProfile) as PublicProfile | undefined | null;
 
   const display = profile;

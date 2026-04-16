@@ -77,7 +77,8 @@ export default defineSchema(
     })
       .index("by_user", ["userId"])
       .index("by_user_status", ["userId", "status"])
-      .index("by_user_favorite", ["userId", "isFavorite"]),
+      .index("by_user_favorite", ["userId", "isFavorite"])
+      .index("by_createdAt", ["createdAt"]),
 
     // Artworks
     artworks: defineTable({
@@ -96,7 +97,8 @@ export default defineSchema(
     })
       .index("by_user", ["userId"])
       .index("by_published", ["isPublished"])
-      .index("by_series", ["seriesId"]),
+      .index("by_series", ["seriesId"])
+      .index("by_createdAt", ["createdAt"]),
 
     // Art Series
     artSeries: defineTable({
@@ -131,7 +133,9 @@ export default defineSchema(
     })
       .index("by_user", ["userId"])
       .index("by_user_type", ["userId", "type"])
-      .index("by_published", ["isPublished"]),
+      .index("by_published", ["isPublished"])
+      .index("by_published_type", ["isPublished", "type"])
+      .index("by_createdAt", ["createdAt"]),
 
     // Book suggestions from visitors
     bookSuggestions: defineTable({
@@ -184,7 +188,8 @@ export default defineSchema(
       createdAt: v.number(),
     })
       .index("by_user", ["userId"])
-      .index("by_user_date", ["userId", "date"]),
+      .index("by_user_date", ["userId", "date"])
+      .index("by_createdAt", ["createdAt"]),
 
     // Stickers left by visitors on books
     stickers: defineTable({
@@ -195,7 +200,8 @@ export default defineSchema(
       createdAt: v.number(),
     })
       .index("by_target", ["targetType", "targetId"])
-      .index("by_visitor_target", ["visitorId", "targetId"]),
+      .index("by_visitor_target", ["visitorId", "targetId"])
+      .index("by_createdAt", ["createdAt"]),
 
     // Book discovery swipe decisions (Tinder-style recommendations)
     bookSwipes: defineTable({
@@ -215,6 +221,16 @@ export default defineSchema(
       .index("by_user_action", ["userId", "action"])
       .index("by_user_googleBookId", ["userId", "googleBookId"]),
 
+    // Rate limits for public mutations
+    rateLimits: defineTable({
+      identifier: v.string(),
+      action: v.string(),
+      windowStart: v.number(),
+      count: v.number(),
+    })
+      .index("by_identifier_action", ["identifier", "action"])
+      .index("by_window", ["windowStart"]),
+
     // Reactions (emoji reactions on books, writings, artworks)
     reactions: defineTable({
       targetType: v.union(v.literal("book"), v.literal("writing"), v.literal("artwork")),
@@ -225,6 +241,7 @@ export default defineSchema(
     })
       .index("by_target", ["targetType", "targetId"])
       .index("by_target_emoji", ["targetType", "targetId", "emoji"])
-      .index("by_visitor", ["visitorId", "targetType", "targetId"]),
+      .index("by_visitor", ["visitorId", "targetType", "targetId"])
+      .index("by_createdAt", ["createdAt"]),
   },
 );

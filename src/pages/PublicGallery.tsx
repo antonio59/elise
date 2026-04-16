@@ -6,8 +6,12 @@ import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
 import ReactionBar from "../components/ReactionBar";
 import PageHeader from "../components/PageHeader";
+import { usePageAnnouncement } from "../components/AccessibleAnnouncer";
+import { usePageMeta } from "../components/PageMeta";
 
 const PublicGallery: React.FC = () => {
+  usePageAnnouncement("Gallery");
+  usePageMeta({ title: "Art", description: "My artwork gallery" });
   const artworks = useQuery(api.artworks.getPublished, { limit: 50 }) ?? [];
   const likeArtwork = useMutation(api.artworks.like);
   const [selectedArt, setSelectedArt] = useState<(typeof artworks)[0] | null>(

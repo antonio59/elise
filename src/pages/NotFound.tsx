@@ -2,8 +2,12 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Home, BookOpen } from "lucide-react";
+import { usePageAnnouncement } from "../components/AccessibleAnnouncer";
+import { usePageMeta } from "../components/PageMeta";
 
 const NotFound: React.FC = () => {
+  usePageAnnouncement("Not Found");
+  usePageMeta({ title: "Not Found", description: "Page not found" });
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
       <motion.div

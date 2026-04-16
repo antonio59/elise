@@ -3,8 +3,12 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Mail, Lock, Loader2, AlertCircle } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
+import { usePageAnnouncement } from "../components/AccessibleAnnouncer";
+import { usePageMeta } from "../components/PageMeta";
 
 const Login: React.FC = () => {
+  usePageAnnouncement("Login");
+  usePageMeta({ title: "Login", description: "Sign in to Elise Reads" });
   const navigate = useNavigate();
   const location = useLocation();
   const { signIn } = useAuth();

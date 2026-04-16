@@ -1,33 +1,24 @@
-import { describe, it, expect } from "vitest";
-import { getCoverUrl } from "./cover";
+import { describe, it, expect, vi } from "vitest";
+import { getCoverUrl, CONVEX_DEPLOYMENT } from "./cover";
 
 describe("getCoverUrl", () => {
   it("returns storage URL when coverStorageId is present", () => {
-    const url = getCoverUrl({ coverStorageId: "abc123" });
-    expect(url).toContain("abc123");
-    expect(url).toMatch(/^https:\/\//);
-  });
-
-  it("returns coverUrl when no storageId", () => {
-    const url = getCoverUrl({ coverUrl: "https://example.com/cover.jpg" });
-    expect(url).toBe("https://example.com/cover.jpg");
-  });
-
-  it("decodes &amp; entities in coverUrl", () => {
-    const url = getCoverUrl({ coverUrl: "https://books.google.com/img?id=1&amp;zoom=1" });
-    expect(url).toBe("https://books.google.com/img?id=1&zoom=1");
-  });
-
-  it("prefers storageId over coverUrl", () => {
-    const url = getCoverUrl({
-      coverStorageId: "stored123",
-      coverUrl: "https://example.com/fallback.jpg",
+    const result = getCoverUrl({
+      coverStorageId: "abc123",
+      coverUrl: "https://example.com/cover.jpg",
     });
-    expect(url).toContain("stored123");
-    expect(url).not.toContain("fallback");
+    expect(result).toBe(`https://${CONVEX_DEPLOYMENT}/api/storage/abc123`);
   });
 
-  it("returns undefined when both are absent", () => {
-    expect(getCoverUrl({})).toBeUndefined();
+  it("returns coverUrl with ampersands decoded when no storage id", () => {
+    const result = getCoverUrl({
+      coverUrl: "https://books.google.com/books?id=123&amp;zoom=3",
+    });
+    expect(result).toBe("https://books.google.com/books?id=123&zoom=3");
+  });
+
+  it("returns undefined when no cover sources exist", () => {
+    const result = getCoverUrl({});
+    expect(result).toBeUndefined();
   });
 });

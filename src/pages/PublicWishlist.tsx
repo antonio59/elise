@@ -18,6 +18,8 @@ import CoverImage from "../components/CoverImage";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import PageHeader from "../components/PageHeader";
+import { usePageAnnouncement } from "../components/AccessibleAnnouncer";
+import { usePageMeta } from "../components/PageMeta";
 
 interface WishlistBook {
   _id: string;
@@ -35,6 +37,8 @@ interface WishlistBook {
 }
 
 const PublicWishlist: React.FC = () => {
+  usePageAnnouncement("Wishlist");
+  usePageMeta({ title: "Wishlist", description: "Books I'd love to read" });
   const wishlistBooks = (useQuery(api.books.getWishlist) ??
     []) as WishlistBook[];
 

@@ -15,10 +15,14 @@ import { Link } from "react-router-dom";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import type { Doc } from "../../convex/_generated/dataModel";
+import { usePageAnnouncement } from "../components/AccessibleAnnouncer";
+import { usePageMeta } from "../components/PageMeta";
 
 type Suggestion = Doc<"bookSuggestions">;
 
 const Suggestions: React.FC = () => {
+  usePageAnnouncement("Suggestions");
+  usePageMeta({ title: "Suggestions", description: "Visitor suggestions" });
   const suggestions = useQuery(api.bookSuggestions.getAll) ?? [];
   const approveSuggestion = useMutation(api.bookSuggestions.approve);
   const rejectSuggestion = useMutation(api.bookSuggestions.reject);

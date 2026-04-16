@@ -1,7 +1,8 @@
 import { query, mutation, type QueryCtx } from "./_generated/server";
 import { v } from "convex/values";
 import { auth } from "./auth";
-import type { Doc } from "./_generated/dataModel";
+import type { Doc, Id } from "./_generated/dataModel";
+import { checkRateLimit } from "./lib/rateLimit";
 
 async function withCoverUrls(ctx: QueryCtx, books: Doc<"books">[]) {
   return Promise.all(
@@ -14,7 +15,7 @@ async function withCoverUrls(ctx: QueryCtx, books: Doc<"books">[]) {
   );
 }
 
-// Get all books (for authenticated user — single-user site, return all books)
+// Get all books for authenticated user
 export const getMyBooks = query({
   args: {},
   handler: async (ctx) => {
@@ -22,6 +23,7 @@ export const getMyBooks = query({
     if (!userId) return [];
     const books = await ctx.db
       .query("books")
+      .withIndex("by_user", (q) => q.eq("userId", userId))
       .order("desc")
       .collect();
     return withCoverUrls(ctx, books);
@@ -51,12 +53,29 @@ export const getByStatus = query({
   },
 });
 
+// Helper to get the single user's userId
+async function getSingleUserId(ctx: QueryCtx): Promise<Id<"users"> | null> {
+  const profile = await ctx.db.query("userProfiles").first();
+  return (profile?.userId as Id<"users"> | undefined) ?? null;
+}
+
 // Get all read books (for public display — no auth, single-user site)
 export const getReadBooks = query({
   args: {},
   handler: async (ctx) => {
-    const allBooks = await ctx.db.query("books").collect();
-    return withCoverUrls(ctx, allBooks.filter((b) => b.status === "read" || b.status === "reading"));
+    const userId = await getSingleUserId(ctx);
+    if (!userId) return [];
+    const readBooks = await ctx.db
+      .query("books")
+      .withIndex("by_user_status", (q) => q.eq("userId", userId).eq("status", "read"))
+      .order("desc")
+      .collect();
+    const readingBooks = await ctx.db
+      .query("books")
+      .withIndex("by_user_status", (q) => q.eq("userId", userId).eq("status", "reading"))
+      .order("desc")
+      .collect();
+    return withCoverUrls(ctx, [...readingBooks, ...readBooks]);
   },
 });
 
@@ -64,8 +83,14 @@ export const getReadBooks = query({
 export const getWishlist = query({
   args: {},
   handler: async (ctx) => {
-    const allBooks = await ctx.db.query("books").order("desc").collect();
-    return withCoverUrls(ctx, allBooks.filter((b) => b.status === "wishlist"));
+    const userId = await getSingleUserId(ctx);
+    if (!userId) return [];
+    const books = await ctx.db
+      .query("books")
+      .withIndex("by_user_status", (q) => q.eq("userId", userId).eq("status", "wishlist"))
+      .order("desc")
+      .collect();
+    return withCoverUrls(ctx, books);
   },
 });
 
@@ -73,8 +98,14 @@ export const getWishlist = query({
 export const getFavorites = query({
   args: {},
   handler: async (ctx) => {
-    const allBooks = await ctx.db.query("books").collect();
-    return withCoverUrls(ctx, allBooks.filter((b) => b.isFavorite));
+    const userId = await getSingleUserId(ctx);
+    if (!userId) return [];
+    const books = await ctx.db
+      .query("books")
+      .withIndex("by_user_favorite", (q) => q.eq("userId", userId).eq("isFavorite", true))
+      .order("desc")
+      .collect();
+    return withCoverUrls(ctx, books);
   },
 });
 
@@ -93,6 +124,7 @@ export const checkDuplicate = query({
 
     const userBooks = await ctx.db
       .query("books")
+      .withIndex("by_user", (q) => q.eq("userId", userId))
       .collect();
     const existingBook = userBooks.find(
       (b) =>
@@ -144,6 +176,7 @@ export const add = mutation({
 
     const userBooks = await ctx.db
       .query("books")
+      .withIndex("by_user", (q) => q.eq("userId", userId))
       .collect();
     const existingBook = userBooks.find(
       (b) =>
@@ -246,6 +279,17 @@ export const markWishlistAsBought = mutation({
     const name = args.boughtBy.trim();
     if (name.length < 1) {
       throw new Error("Please enter your name");
+    }
+
+    const allowed = await checkRateLimit(
+      ctx,
+      `bought_${name}`,
+      "markBought",
+      5,
+      60 * 60 * 1000,
+    );
+    if (!allowed) {
+      throw new Error("Rate limit exceeded. Please try again later.");
     }
 
     const book = await ctx.db.get(args.id);

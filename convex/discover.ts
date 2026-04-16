@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { query, mutation, action } from "./_generated/server";
 import { v } from "convex/values";
 import { auth } from "./auth";
@@ -10,10 +9,14 @@ export const getReadingProfile = query({
     const userId = await auth.getUserId(ctx);
     if (!userId) return null;
 
-    const books = await ctx.db.query("books").collect();
-
-    const readBooks = books.filter((b) => b.status === "read");
-    const favoriteBooks = books.filter((b) => b.isFavorite);
+    const readBooks = await ctx.db
+      .query("books")
+      .withIndex("by_user_status", (q) => q.eq("userId", userId).eq("status", "read"))
+      .collect();
+    const favoriteBooks = await ctx.db
+      .query("books")
+      .withIndex("by_user_favorite", (q) => q.eq("userId", userId).eq("isFavorite", true))
+      .collect();
 
     // Count genre frequency
     const genreCounts: Record<string, number> = {};
@@ -98,7 +101,10 @@ export const getExistingBookKeys = query({
     const userId = await auth.getUserId(ctx);
     if (!userId) return [];
 
-    const books = await ctx.db.query("books").collect();
+    const books = await ctx.db
+      .query("books")
+      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .collect();
 
     return books.map(
       (b) =>
@@ -216,7 +222,10 @@ export const recordSwipe = mutation({
     // If liked, auto-add to wishlist
     if (args.action === "liked") {
       // Check if book already exists
-      const userBooks = await ctx.db.query("books").collect();
+      const userBooks = await ctx.db
+        .query("books")
+        .withIndex("by_user", (q) => q.eq("userId", userId))
+        .collect();
 
       const normalizedTitle = args.title.toLowerCase().trim();
       const normalizedAuthor = args.author.toLowerCase().trim();

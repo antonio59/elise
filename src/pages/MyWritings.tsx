@@ -21,6 +21,8 @@ import GiphyPicker from "../components/GiphyPicker";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import type { Doc, Id } from "../../convex/_generated/dataModel";
+import { usePageAnnouncement } from "../components/AccessibleAnnouncer";
+import { usePageMeta } from "../components/PageMeta";
 
 type WritingType = "poetry" | "story" | "journal";
 type Writing = Doc<"writings">;
@@ -68,6 +70,8 @@ const TYPE_CONFIG: Record<WritingType, {
 };
 
 const MyWritings: React.FC = () => {
+  usePageAnnouncement("My Writing");
+  usePageMeta({ title: "My Writing", description: "Manage your writing" });
   const [activeType, setActiveType] = useState<WritingType | "all">("all");
   const writings = useQuery(api.writings.getMyWritings, activeType === "all" ? {} : { type: activeType as WritingType }) ?? [];
   const stats = useQuery(api.writings.getStats);

@@ -1,8 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 import { auth } from "./auth";
 import { isAdmin } from "./users";
+import { checkRateLimit } from "./lib/rateLimit";
 
 // Get all suggestions (for admin)
 export const getAll = query({
@@ -16,10 +16,20 @@ export const getAll = query({
 export const getPending = query({
   args: {},
   handler: async (ctx) => {
-    const all = await ctx.db.query("bookSuggestions").order("desc").collect();
-    return all.filter((s) => s.status === "pending");
+    return await ctx.db
+      .query("bookSuggestions")
+      .withIndex("by_status", (q) => q.eq("status", "pending"))
+      .order("desc")
+      .collect();
   },
 });
+
+import type { Id } from "./_generated/dataModel";
+
+async function getSingleUserId(ctx: { db: { query: (table: "userProfiles") => { first: () => Promise<{ userId: Id<"users"> } | null> } } }): Promise<Id<"users"> | null> {
+  const profile = await ctx.db.query("userProfiles").first();
+  return profile?.userId ?? null;
+}
 
 // Check if a book already exists (for duplicate detection)
 export const checkDuplicate = query({
@@ -30,33 +40,41 @@ export const checkDuplicate = query({
   handler: async (ctx, args) => {
     const normalizedTitle = args.title.toLowerCase().trim();
     const normalizedAuthor = args.author.toLowerCase().trim();
+    const userId = await getSingleUserId(ctx);
 
-    // Check in books table
-    const allBooks = await ctx.db.query("books").collect();
-    const existingBook = allBooks.find(
-      (b) =>
-        b.title.toLowerCase().trim() === normalizedTitle &&
-        b.author.toLowerCase().trim() === normalizedAuthor,
-    );
+    if (userId) {
+      // Check in books table for this user
+      const userBooks = await ctx.db
+        .query("books")
+        .withIndex("by_user", (q) => q.eq("userId", userId))
+        .collect();
+      const existingBook = userBooks.find(
+        (b) =>
+          b.title.toLowerCase().trim() === normalizedTitle &&
+          b.author.toLowerCase().trim() === normalizedAuthor,
+      );
 
-    if (existingBook) {
-      return {
-        exists: true,
-        location:
-          existingBook.status === "read"
-            ? "already read"
-            : existingBook.status === "reading"
-              ? "currently reading"
-              : "already on wishlist",
-        book: existingBook,
-      };
+      if (existingBook) {
+        return {
+          exists: true,
+          location:
+            existingBook.status === "read"
+              ? "already read"
+              : existingBook.status === "reading"
+                ? "currently reading"
+                : "already on wishlist",
+          book: existingBook,
+        };
+      }
     }
 
     // Check in pending suggestions
-    const allSuggestions = await ctx.db.query("bookSuggestions").collect();
-    const existingSuggestion = allSuggestions.find(
+    const pendingSuggestions = await ctx.db
+      .query("bookSuggestions")
+      .withIndex("by_status", (q) => q.eq("status", "pending"))
+      .collect();
+    const existingSuggestion = pendingSuggestions.find(
       (s) =>
-        s.status === "pending" &&
         s.title.toLowerCase().trim() === normalizedTitle &&
         s.author.toLowerCase().trim() === normalizedAuthor,
     );
@@ -85,43 +103,51 @@ export const submit = mutation({
     genre: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    // Rate limit: max 3 suggestions per hour per name
-    const oneHourAgo = Date.now() - 3_600_000;
-    const recentSuggestions = await ctx.db
-      .query("bookSuggestions")
-      .withIndex("by_created", (q) => q.gte("createdAt", oneHourAgo))
-      .filter((q) => q.eq(q.field("suggestedBy"), args.suggestedBy))
-      .collect();
-    if (recentSuggestions.length >= 3) {
+    const allowed = await checkRateLimit(
+      ctx,
+      `suggest_${args.suggestedBy.trim().toLowerCase()}`,
+      "submitSuggestion",
+      3,
+      60 * 60 * 1000,
+    );
+    if (!allowed) {
       throw new Error("Too many suggestions. Please try again later.");
     }
 
     const normalizedTitle = args.title.toLowerCase().trim();
     const normalizedAuthor = args.author.toLowerCase().trim();
+    const userId = await getSingleUserId(ctx);
 
-    // Check for duplicates in books
-    const allBooks = await ctx.db.query("books").collect();
-    const existingBook = allBooks.find(
-      (b) =>
-        b.title.toLowerCase().trim() === normalizedTitle &&
-        b.author.toLowerCase().trim() === normalizedAuthor,
-    );
+    if (userId) {
+      // Check for duplicates in books
+      const userBooks = await ctx.db
+        .query("books")
+        .withIndex("by_user", (q) => q.eq("userId", userId))
+        .collect();
+      const existingBook = userBooks.find(
+        (b) =>
+          b.title.toLowerCase().trim() === normalizedTitle &&
+          b.author.toLowerCase().trim() === normalizedAuthor,
+      );
 
-    if (existingBook) {
-      const location =
-        existingBook.status === "read"
-          ? "I've already read this book!"
-          : existingBook.status === "reading"
-            ? "I'm currently reading this book!"
-            : "This book is already on my wishlist!";
-      throw new Error(location);
+      if (existingBook) {
+        const location =
+          existingBook.status === "read"
+            ? "I've already read this book!"
+            : existingBook.status === "reading"
+              ? "I'm currently reading this book!"
+              : "This book is already on my wishlist!";
+        throw new Error(location);
+      }
     }
 
     // Check for duplicate pending suggestions
-    const allSuggestions = await ctx.db.query("bookSuggestions").collect();
-    const existingSuggestion = allSuggestions.find(
+    const pendingSuggestions = await ctx.db
+      .query("bookSuggestions")
+      .withIndex("by_status", (q) => q.eq("status", "pending"))
+      .collect();
+    const existingSuggestion = pendingSuggestions.find(
       (s) =>
-        s.status === "pending" &&
         s.title.toLowerCase().trim() === normalizedTitle &&
         s.author.toLowerCase().trim() === normalizedAuthor,
     );
@@ -139,7 +165,8 @@ export const submit = mutation({
     // Send email notification (fire-and-forget)
     try {
       const { internal } = await import("./_generated/api");
-      await ctx.scheduler.runAfter(0, (internal as any).emails.sendSuggestionNotification, {
+      // @ts-expect-error emails may not be in generated internal api types
+      await ctx.scheduler.runAfter(0, internal.emails.sendSuggestionNotification, {
         title: args.title,
         author: args.author,
         suggestedBy: args.suggestedBy,

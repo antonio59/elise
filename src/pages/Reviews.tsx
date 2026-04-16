@@ -13,6 +13,8 @@ import { api } from "../../convex/_generated/api";
 import { Link } from "react-router-dom";
 import type { Id } from "../../convex/_generated/dataModel";
 import { ReviewCardSkeleton } from "../components/Skeleton";
+import { usePageAnnouncement } from "../components/AccessibleAnnouncer";
+import { usePageMeta } from "../components/PageMeta";
 
 interface Book {
   _id: string;
@@ -41,6 +43,8 @@ const RATING_LABELS: Record<number, string> = {
 };
 
 const ReviewsPage: React.FC = () => {
+  usePageAnnouncement("Reviews");
+  usePageMeta({ title: "Reviews", description: "Book reviews" });
   const booksRaw = useQuery(api.books.getMyBooks);
   const updateBook = useMutation(api.books.update);
   const [filter, setFilter] = useState<"all" | "favorites" | "5star" | "4star">("all");

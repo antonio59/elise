@@ -23,12 +23,16 @@ import { ConfirmModal } from "../components/ui/Modal";
 import { BookGridSkeleton } from "../components/Skeleton";
 import AddBookModal from "../components/books/AddBookModal";
 import EditBookModal from "../components/books/EditBookModal";
+import { usePageAnnouncement } from "../components/AccessibleAnnouncer";
+import { usePageMeta } from "../components/PageMeta";
 
 type TabType = "read" | "reading" | "wishlist";
 
 type Book = Doc<"books">;
 
 const MyBooks: React.FC = () => {
+  usePageAnnouncement("My Books");
+  usePageMeta({ title: "My Books", description: "Manage your books" });
   // Get all books - the query handles auth internally
   const booksRaw = useQuery(api.books.getMyBooks);
   const books = booksRaw ?? [];

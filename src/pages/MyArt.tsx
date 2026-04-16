@@ -16,6 +16,8 @@ import {
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import type { Doc } from "../../convex/_generated/dataModel";
+import { usePageAnnouncement } from "../components/AccessibleAnnouncer";
+import { usePageMeta } from "../components/PageMeta";
 
 type Artwork = Doc<"artworks">;
 
@@ -34,6 +36,8 @@ const STYLES = [
 ];
 
 const MyArt: React.FC = () => {
+  usePageAnnouncement("My Art");
+  usePageMeta({ title: "My Art", description: "Manage your artwork" });
   // Get artworks - the query handles auth internally
   const artworks = useQuery(api.artworks.getMyArtworks) ?? [];
 

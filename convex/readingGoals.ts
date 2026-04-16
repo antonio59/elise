@@ -6,9 +6,13 @@ import { auth } from "./auth";
 export const getCurrentGoal = query({
   args: {},
   handler: async (ctx) => {
+    const userId = await auth.getUserId(ctx);
+    if (!userId) return null;
     const currentYear = new Date().getFullYear();
-    const goals = await ctx.db.query("readingGoals").collect();
-    return goals.find((g) => g.year === currentYear) ?? null;
+    return await ctx.db
+      .query("readingGoals")
+      .withIndex("by_user_year", (q) => q.eq("userId", userId).eq("year", currentYear))
+      .first();
   },
 });
 
@@ -24,19 +28,25 @@ export const getAllGoals = query({
 export const getGoalProgress = query({
   args: {},
   handler: async (ctx) => {
+    const userId = await auth.getUserId(ctx);
+    if (!userId) return null;
     const currentYear = new Date().getFullYear();
     const startOfYear = new Date(currentYear, 0, 1).getTime();
     const endOfYear = new Date(currentYear, 11, 31, 23, 59, 59).getTime();
 
     // Get current year's goal
-    const goals = await ctx.db.query("readingGoals").collect();
-    const goal = goals.find((g) => g.year === currentYear);
+    const goal = await ctx.db
+      .query("readingGoals")
+      .withIndex("by_user_year", (q) => q.eq("userId", userId).eq("year", currentYear))
+      .first();
 
-    // Get books finished this year
-    const allBooks = await ctx.db.query("books").collect();
-    const booksThisYear = allBooks.filter(
+    // Get read books for this user
+    const readBooks = await ctx.db
+      .query("books")
+      .withIndex("by_user_status", (q) => q.eq("userId", userId).eq("status", "read"))
+      .collect();
+    const booksThisYear = readBooks.filter(
       (b) =>
-        b.status === "read" &&
         b.finishedAt &&
         b.finishedAt >= startOfYear &&
         b.finishedAt <= endOfYear,

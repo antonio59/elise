@@ -20,6 +20,8 @@ import {
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { useAuth } from "../contexts/AuthContext";
+import { usePageAnnouncement } from "../components/AccessibleAnnouncer";
+import { usePageMeta } from "../components/PageMeta";
 
 type ThemeValue =
   | "editorial"
@@ -56,6 +58,8 @@ const VALID_THEMES: ThemeValue[] = [
 ];
 
 const Settings: React.FC = () => {
+  usePageAnnouncement("Settings");
+  usePageMeta({ title: "Settings", description: "Profile settings" });
   const { user } = useAuth();
   const siteSettings = useQuery(api.siteSettings.get);
   const updateSiteSettings = useMutation(api.siteSettings.update);

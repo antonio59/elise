@@ -16,6 +16,8 @@ import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import PageHeader from "../components/PageHeader";
 import { Button } from "../components/ui/Button";
+import { usePageAnnouncement } from "../components/AccessibleAnnouncer";
+import { usePageMeta } from "../components/PageMeta";
 
 const RATING_LABELS: Record<number, string> = {
   1: "not it",
@@ -58,6 +60,8 @@ const genreColors: Record<string, string> = {
 };
 
 const PublicBooks: React.FC = () => {
+  usePageAnnouncement("Books");
+  usePageMeta({ title: "Books", description: "Everything I've read" });
   const booksRaw = useQuery(api.books.getReadBooks);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<"all" | "favorites">("all");

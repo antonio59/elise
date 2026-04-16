@@ -6,6 +6,8 @@ import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import ReactionBar from "../components/ReactionBar";
 import PageHeader from "../components/PageHeader";
+import { usePageAnnouncement } from "../components/AccessibleAnnouncer";
+import { usePageMeta } from "../components/PageMeta";
 
 interface Book {
   _id: string;
@@ -29,6 +31,8 @@ const RATING_LABELS: Record<number, string> = {
 };
 
 const PublicReviews: React.FC = () => {
+  usePageAnnouncement("Reviews");
+  usePageMeta({ title: "Reviews", description: "Books I've rated and reviewed" });
   const books = useQuery(api.books.getReadBooks) ?? [];
   const [flippedId, setFlippedId] = useState<string | null>(null);
   const [ratingFilter, setRatingFilter] = useState<number | null>(null);

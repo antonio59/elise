@@ -21,6 +21,8 @@ import {
 import { useAuth } from "../contexts/AuthContext";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
+import ThemeToggle from "./ThemeToggle";
+import GlobalSearch from "./GlobalSearch";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -204,6 +206,10 @@ export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
             </span>
           </Link>
 
+          <div className="hidden md:flex items-center gap-4 flex-1 justify-center max-w-md mx-4">
+            <GlobalSearch />
+          </div>
+
           {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-6">
             {navLinks.map((link) => {
@@ -227,12 +233,20 @@ export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
                 </Link>
               );
             })}
-            {user && (
-              <Link to="/dashboard" className="btn btn-secondary text-sm">
-                Dashboard
-              </Link>
-            )}
+            <div className="hidden md:flex items-center gap-3">
+              <ThemeToggle />
+              {user && (
+                <Link to="/dashboard" className="btn btn-secondary text-sm">
+                  Dashboard
+                </Link>
+              )}
+            </div>
           </nav>
+
+          {/* Mobile search */}
+          <div className="md:hidden flex items-center gap-2">
+            <GlobalSearch />
+          </div>
 
           {/* Mobile hamburger */}
           <button

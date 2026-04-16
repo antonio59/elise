@@ -16,6 +16,8 @@ import SuggestBookModal from "../components/books/SuggestBookModal";
 import SectionHeader from "../components/SectionHeader";
 import { Button } from "../components/ui/Button";
 import { BookGridSkeleton, ReviewCardSkeleton } from "../components/Skeleton";
+import { usePageAnnouncement } from "../components/AccessibleAnnouncer";
+import { usePageMeta } from "../components/PageMeta";
 
 const RATING_LABELS: Record<number, string> = {
   1: "not it",
@@ -106,6 +108,8 @@ const ReviewStrip: React.FC<{
 };
 
 const PublicHome: React.FC = () => {
+  usePageAnnouncement("Home");
+  usePageMeta({ title: "Home", description: "Books, art & things I think about" });
   const books = useQuery(api.books.getReadBooks);
   const siteSettings = useQuery(api.siteSettings.get);
   const wishlist = useQuery(api.books.getWishlist);

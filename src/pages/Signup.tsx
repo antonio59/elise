@@ -3,8 +3,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Mail, Lock, User, Loader2, AlertCircle } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
+import { usePageAnnouncement } from "../components/AccessibleAnnouncer";
+import { usePageMeta } from "../components/PageMeta";
 
 const Signup: React.FC = () => {
+  usePageAnnouncement("Signup");
+  usePageMeta({ title: "Sign up", description: "Create an account" });
   const navigate = useNavigate();
   const { signUp } = useAuth();
 

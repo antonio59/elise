@@ -16,6 +16,8 @@ import {
 } from "lucide-react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
+import { usePageAnnouncement } from "../components/AccessibleAnnouncer";
+import { usePageMeta } from "../components/PageMeta";
 
 const GENRES = [
   "Manga", "Manhwa", "Webtoon", "Light Novel", "Fantasy", "Sci-Fi",
@@ -39,6 +41,8 @@ const AVATAR_STYLES = [
 ];
 
 const DashboardAbout: React.FC = () => {
+  usePageAnnouncement("About Page");
+  usePageMeta({ title: "About Page", description: "Edit your about page" });
   const profile = useQuery(api.users.getProfile);
   const updateProfile = useMutation(api.users.updateProfile);
   const generateUploadUrl = useMutation(api.users.generateAvatarUploadUrl);

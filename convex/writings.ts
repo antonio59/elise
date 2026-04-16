@@ -9,15 +9,19 @@ export const getPublished = query({
     type: v.optional(v.union(v.literal("poetry"), v.literal("story"), v.literal("journal"))),
   },
   handler: async (ctx, args) => {
-    const writings = await ctx.db
+    const type = args.type;
+    if (type) {
+      return await ctx.db
+        .query("writings")
+        .withIndex("by_published_type", (q) => q.eq("isPublished", true).eq("type", type))
+        .order("desc")
+        .take(args.limit ?? 1000);
+    }
+    return await ctx.db
       .query("writings")
       .withIndex("by_published", (q) => q.eq("isPublished", true))
       .order("desc")
-      .collect();
-    const published = args.type
-      ? writings.filter((w) => w.type === args.type)
-      : writings;
-    return args.limit ? published.slice(0, args.limit) : published;
+      .take(args.limit ?? 1000);
   },
 });
 

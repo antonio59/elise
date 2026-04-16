@@ -162,31 +162,61 @@ export const setOnboardingSeen = mutation({
   },
 });
 
-// Get site-wide reading stats (all books/artworks, not user-specific)
+// Get site-wide reading stats (single user)
 export const getStats = query({
   args: {},
   handler: async (ctx) => {
-    // Get ALL books and artworks for the site
-    const books = await ctx.db.query("books").collect();
-    const artworks = await ctx.db.query("artworks").collect();
+    const profile = await ctx.db.query("userProfiles").first();
+    const userId = profile?.userId;
 
-    const booksRead = books.filter((b) => b.status === "read").length;
-    const booksReading = books.filter((b) => b.status === "reading").length;
-    const booksWishlist = books.filter((b) => b.status === "wishlist").length;
-    const totalPages = books.reduce((sum, b) => sum + (b.pageCount || 0), 0);
-    const favorites = books.filter((b) => b.isFavorite).length;
-    const totalArtworks = artworks.length;
-    const publishedArtworks = artworks.filter((a) => a.isPublished).length;
+    if (!userId) {
+      return {
+        booksRead: 0,
+        booksReading: 0,
+        booksWishlist: 0,
+        totalBooks: 0,
+        totalPages: 0,
+        favorites: 0,
+        totalArtworks: 0,
+        publishedArtworks: 0,
+      };
+    }
+
+    const [readBooks, readingBooks, wishlistBooks, favoriteBooks, allArtworks] = await Promise.all([
+      ctx.db
+        .query("books")
+        .withIndex("by_user_status", (q) => q.eq("userId", userId).eq("status", "read"))
+        .collect(),
+      ctx.db
+        .query("books")
+        .withIndex("by_user_status", (q) => q.eq("userId", userId).eq("status", "reading"))
+        .collect(),
+      ctx.db
+        .query("books")
+        .withIndex("by_user_status", (q) => q.eq("userId", userId).eq("status", "wishlist"))
+        .collect(),
+      ctx.db
+        .query("books")
+        .withIndex("by_user_favorite", (q) => q.eq("userId", userId).eq("isFavorite", true))
+        .collect(),
+      ctx.db.query("artworks").collect(),
+    ]);
+
+    const totalBooks = readBooks.length + readingBooks.length + wishlistBooks.length;
+    const totalPages = [...readBooks, ...readingBooks, ...wishlistBooks].reduce(
+      (sum, b) => sum + (b.pageCount || 0),
+      0,
+    );
 
     return {
-      booksRead,
-      booksReading,
-      booksWishlist,
-      totalBooks: books.length,
+      booksRead: readBooks.length,
+      booksReading: readingBooks.length,
+      booksWishlist: wishlistBooks.length,
+      totalBooks,
       totalPages,
-      favorites,
-      totalArtworks,
-      publishedArtworks,
+      favorites: favoriteBooks.length,
+      totalArtworks: allArtworks.length,
+      publishedArtworks: allArtworks.filter((a) => a.isPublished).length,
     };
   },
 });

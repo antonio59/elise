@@ -14,11 +14,13 @@ import type * as bookSuggestions from "../bookSuggestions.js";
 import type * as books from "../books.js";
 import type * as cleanup from "../cleanup.js";
 import type * as covers from "../covers.js";
+import type * as crons from "../crons.js";
 import type * as discover from "../discover.js";
 import type * as emails from "../emails.js";
 import type * as giphy from "../giphy.js";
 import type * as googleBooks from "../googleBooks.js";
 import type * as http from "../http.js";
+import type * as lib_rateLimit from "../lib/rateLimit.js";
 import type * as migrations from "../migrations.js";
 import type * as reactions from "../reactions.js";
 import type * as readingGoals from "../readingGoals.js";
@@ -27,6 +29,7 @@ import type * as seed from "../seed.js";
 import type * as siteSettings from "../siteSettings.js";
 import type * as stickers from "../stickers.js";
 import type * as users from "../users.js";
+import type * as weeklyEmail from "../weeklyEmail.js";
 import type * as writings from "../writings.js";
 
 import type {
@@ -42,11 +45,13 @@ declare const fullApi: ApiFromModules<{
   books: typeof books;
   cleanup: typeof cleanup;
   covers: typeof covers;
+  crons: typeof crons;
   discover: typeof discover;
   emails: typeof emails;
   giphy: typeof giphy;
   googleBooks: typeof googleBooks;
   http: typeof http;
+  "lib/rateLimit": typeof lib_rateLimit;
   migrations: typeof migrations;
   reactions: typeof reactions;
   readingGoals: typeof readingGoals;
@@ -55,6 +60,7 @@ declare const fullApi: ApiFromModules<{
   siteSettings: typeof siteSettings;
   stickers: typeof stickers;
   users: typeof users;
+  weeklyEmail: typeof weeklyEmail;
   writings: typeof writings;
 }>;
 

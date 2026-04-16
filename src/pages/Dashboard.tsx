@@ -21,6 +21,8 @@ import { api } from "../../convex/_generated/api";
 import { Button } from "../components/ui/Button";
 import { Skeleton, BookGridSkeleton, ArtGridSkeleton } from "../components/Skeleton";
 import SetGoalModal from "../components/dashboard/SetGoalModal";
+import { usePageAnnouncement } from "../components/AccessibleAnnouncer";
+import { usePageMeta } from "../components/PageMeta";
 
 const verbs = [
   { text: "reading", icon: BookOpen },
@@ -30,6 +32,8 @@ const verbs = [
 ];
 
 const Dashboard: React.FC = () => {
+  usePageAnnouncement("Dashboard");
+  usePageMeta({ title: "Dashboard", description: "Your dashboard" });
   const stats = useQuery(api.users.getStats);
   const books = useQuery(api.books.getMyBooks);
   const artworks = useQuery(api.artworks.getMyArtworks);

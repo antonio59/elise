@@ -7,6 +7,8 @@ import ReactionBar from "../components/ReactionBar";
 import PageHeader from "../components/PageHeader";
 import { WritingCardSkeleton } from "../components/Skeleton";
 import { Button } from "../components/ui/Button";
+import { usePageAnnouncement } from "../components/AccessibleAnnouncer";
+import { usePageMeta } from "../components/PageMeta";
 
 interface Writing {
   _id: string;
@@ -17,6 +19,8 @@ interface Writing {
 }
 
 const PublicWritings: React.FC = () => {
+  usePageAnnouncement("Writings");
+  usePageMeta({ title: "Writing", description: "Stories, poems, and thoughts" });
   const writingsRaw = useQuery(api.writings.getPublished, { limit: 20 });
   const [typeFilter, setTypeFilter] = useState<string | null>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);

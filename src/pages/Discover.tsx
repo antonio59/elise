@@ -13,6 +13,8 @@ import {
   Loader2,
 } from "lucide-react";
 import SwipeCard from "../components/SwipeCard";
+import { usePageAnnouncement } from "../components/AccessibleAnnouncer";
+import { usePageMeta } from "../components/PageMeta";
 
 // Google Books categories → our genres (same mapping as GoogleBookSearch)
 const CATEGORY_MAP: Record<string, string> = {
@@ -115,6 +117,8 @@ function buildSearchQueries(
 }
 
 const Discover: React.FC = () => {
+  usePageAnnouncement("Discover");
+  usePageMeta({ title: "Discover", description: "Discover new books" });
   const profile = useQuery(api.discover.getReadingProfile);
   const swipedIds = useQuery(api.discover.getSwipedIds);
   const existingKeys = useQuery(api.discover.getExistingBookKeys);
