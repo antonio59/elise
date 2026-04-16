@@ -603,9 +603,11 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
+- Update changelog [skip ci]
 
 ### Features
 
+- Weekly summary email, global search, theme toggle, OG meta, and security hardening
 - Bring elise up to izzy-reads coding and design standards
 - Bring elise up to izzy-reads coding and design standards
 - Mark-as-bought on wishlist, share wishlist link, cover art fix
