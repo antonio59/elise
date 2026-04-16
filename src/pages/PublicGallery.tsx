@@ -77,6 +77,8 @@ const PublicGallery: React.FC = () => {
                   e.stopPropagation();
                   handleLike(art._id);
                 }}
+                aria-label={likedIds.has(art._id) ? "Unlike artwork" : "Like artwork"}
+                aria-pressed={likedIds.has(art._id)}
                 className={`absolute top-3 right-3 p-2 rounded-full transition-all ${
                   likedIds.has(art._id)
                     ? "bg-primary-500 text-white"

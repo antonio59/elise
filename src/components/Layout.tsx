@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -162,7 +161,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 p-4 md:p-8 overflow-auto">
+      <main id="main-content" className="flex-1 p-4 md:p-8 overflow-auto">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -239,6 +238,9 @@ export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="md:hidden p-2 hover:bg-slate-100 rounded-lg"
+            aria-label="Toggle menu"
+            aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-menu"
           >
             {mobileMenuOpen ? (
               <X className="w-6 h-6" />
@@ -252,6 +254,7 @@ export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
         <AnimatePresence>
           {mobileMenuOpen && (
             <motion.nav
+              id="mobile-menu"
               className="md:hidden border-t border-slate-100 bg-white px-4 py-4 space-y-1"
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: "auto", opacity: 1 }}
@@ -293,7 +296,7 @@ export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
       </header>
 
       {/* Main content */}
-      <main className="flex-1">{children}</main>
+      <main id="main-content" className="flex-1">{children}</main>
 
       {/* Footer */}
       <footer className="bg-gradient-to-br from-primary-50 to-violet-50 border-t border-slate-200 py-10">
@@ -322,11 +325,11 @@ export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
             </nav>
 
             <p className="text-sm text-slate-500 italic">
-              {(siteSettings as any)?.footerTagline ||
+              {(siteSettings as { footerTagline?: string })?.footerTagline ||
                 "books I've read, art I make, and words I write"}
             </p>
             <p className="text-xs text-slate-400 mt-3">
-              {(siteSettings as any)?.footerNote ||
+              {(siteSettings as { footerNote?: string })?.footerNote ||
                 "Made with love for Elise 💜"}
             </p>
           </div>

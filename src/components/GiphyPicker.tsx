@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useConvex } from "convex/react";
+import { api } from "../../convex/_generated/api";
 import { Search, Smile, Image as ImageIcon, X, Loader2 } from "lucide-react";
 
 interface GiphyPickerProps {
@@ -31,8 +32,8 @@ const GiphyPicker: React.FC<GiphyPickerProps> = ({ onSelect, onClose }) => {
     if (!searchTerm.trim()) return;
     setLoading(true);
     try {
-      const data = await client.query("giphy:search" as string as any, { query: searchTerm }); // eslint-disable-line @typescript-eslint/no-explicit-any
-      setResults((data as GifResult[]) || []);
+      const data = await client.action(api.giphy.search, { query: searchTerm }) as GifResult[];
+      setResults(data || []);
     } catch {
       setResults([]);
     } finally {

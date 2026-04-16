@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useCallback, useRef, useEffect } from "react";
 import { useConvex } from "convex/react";
 import { api } from "../../convex/_generated/api";
@@ -153,7 +152,7 @@ const GoogleBookSearch: React.FC<GoogleBookSearchProps> = ({ onSelect }) => {
     setLoading(true);
     setSearched(true);
     try {
-      const items = await convex.action((api as any).googleBooks.search, { query });
+      const items = await convex.action(api.googleBooks.search, { query });
 
       const books: BookResult[] = (items || []).map(
         (item: { id: string; title: string; authors: string[]; coverUrl: string; isbn?: string; pageCount: number; description: string; categories: string[] }) => ({

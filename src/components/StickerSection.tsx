@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useMutation, useQuery } from "convex/react";
@@ -22,12 +21,9 @@ const StickerSection: React.FC<StickerSectionProps> = ({ bookId }) => {
   const [error, setError] = useState<string | null>(null);
   const [placing, setPlacing] = useState<string | null>(null);
 
-  const stickerData = useQuery((api as any).stickers.getForBook, { bookId });
-  const visitorStickers = useQuery(
-    (api as any).stickers.getVisitorStickers,
-    { bookId, visitorId },
-  ) ?? [];
-  const addSticker = useMutation((api as any).stickers.add);
+  const stickerData = useQuery(api.stickers.getForBook, { bookId });
+  const visitorStickers = useQuery(api.stickers.getVisitorStickers, { bookId, visitorId }) ?? [];
+  const addSticker = useMutation(api.stickers.add);
 
   const counts: Record<string, number> = stickerData?.counts ?? {};
   const topStickers = Object.entries(counts)

@@ -1,12 +1,31 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import { motion } from "framer-motion";
 import { BookOpen, User, Target } from "lucide-react";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 
+interface CurrentlyReading {
+  title: string;
+  author: string;
+}
+
+interface PublicProfile {
+  name?: string;
+  username?: string;
+  avatarUrl?: string | null;
+  bio?: string;
+  favoriteGenres?: string[];
+  readingGoal?: string;
+  yearlyBookGoal?: number;
+  currentlyReading?: CurrentlyReading | null;
+  favoriteBook?: string;
+  rereads?: string[];
+  favoriteQuote?: string;
+  funFact?: string;
+}
+
 const About: React.FC = () => {
-  const profile = useQuery(api.users.getPublicProfile);
+  const profile = useQuery(api.users.getPublicProfile) as PublicProfile | undefined | null;
 
   const display = profile;
 
@@ -59,8 +78,8 @@ const About: React.FC = () => {
                 <BookOpen className="w-4 h-4 inline mr-1" />
                 Currently Reading
               </h3>
-              <p className="text-slate-800 font-medium">{(display as any).currentlyReading.title}</p>
-              <p className="text-sm text-slate-500">{(display as any).currentlyReading.author}</p>
+              <p className="text-slate-800 font-medium">{display.currentlyReading.title}</p>
+              <p className="text-sm text-slate-500">{display.currentlyReading.author}</p>
             </div>
           )}
 
@@ -92,23 +111,23 @@ const About: React.FC = () => {
           )}
 
           {/* Favourite Book */}
-          {(display as any)?.favoriteBook && (
+          {display?.favoriteBook && (
             <div className="card p-6 mb-6">
               <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wider mb-2">
-                📖 Favourite Book of All Time
+                <span aria-hidden="true">📖</span> Favourite Book of All Time
               </h3>
-              <p className="text-slate-800 font-medium">{(display as any).favoriteBook}</p>
+              <p className="text-slate-800 font-medium">{display.favoriteBook}</p>
             </div>
           )}
 
           {/* Books Read Multiple Times */}
-          {(display as any)?.rereads && (display as any).rereads.length > 0 && (
+          {display?.rereads && display.rereads.length > 0 && (
             <div className="card p-6 mb-6">
               <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wider mb-3">
-                🔄 Books I've Read More Than Once
+                <span aria-hidden="true">🔄</span> Books I've Read More Than Once
               </h3>
               <div className="flex flex-wrap gap-2">
-                {(display as any).rereads.map((book: string) => (
+                {display.rereads.map((book: string) => (
                   <span key={book} className="px-3 py-1 bg-slate-100 text-slate-700 rounded-full text-sm">
                     {book}
                   </span>
@@ -118,31 +137,31 @@ const About: React.FC = () => {
           )}
 
           {/* Favourite Quote */}
-          {(display as any)?.favoriteQuote && (
+          {display?.favoriteQuote && (
             <div className="card p-6 mb-6">
               <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wider mb-2">
                 Favourite Quote
               </h3>
               <blockquote className="border-l-4 border-primary-300 pl-4 italic text-slate-700">
-                "{(display as any).favoriteQuote}"
+                &ldquo;{display.favoriteQuote}&rdquo;
               </blockquote>
             </div>
           )}
 
           {/* Fun Fact */}
-          {(display as any)?.funFact && (
+          {display?.funFact && (
             <div className="card p-6 mb-6">
               <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wider mb-2">
                 Fun Fact
               </h3>
-              <p className="text-slate-700">{(display as any).funFact}</p>
+              <p className="text-slate-700">{display.funFact}</p>
             </div>
           )}
 
           {/* Empty state */}
           {!display?.name && !display?.bio && (
             <div className="text-center py-16 bg-gradient-to-br from-primary-50 to-violet-50 rounded-2xl">
-              <div className="text-5xl mb-4">📚✨</div>
+              <div className="text-5xl mb-4" aria-hidden="true">📚✨</div>
               <p className="text-lg font-medium text-slate-700">Profile incoming!</p>
               <p className="text-sm text-slate-500 mt-1">Elise is still setting up her about page</p>
             </div>

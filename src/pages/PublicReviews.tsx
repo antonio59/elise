@@ -196,6 +196,8 @@ const PublicReviews: React.FC = () => {
                 }
                 role="button"
                 tabIndex={0}
+                aria-expanded={flippedId === book._id}
+                aria-label={`Review for ${book.title}`}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault();
@@ -279,7 +281,7 @@ const PublicReviews: React.FC = () => {
                         </span>
                       </div>
                       {book.review ? (
-                        <blockquote className="text-slate-600 text-sm leading-relaxed border-l-3 border-primary-300 pl-4 flex-1 line-clamp-4">
+                        <blockquote className="text-slate-600 text-sm leading-relaxed border-l-4 border-primary-300 pl-4 flex-1 line-clamp-4">
                           "{book.review}"
                         </blockquote>
                       ) : (

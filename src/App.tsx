@@ -8,6 +8,8 @@ import { lazy, Suspense } from "react";
 import { AuthProvider } from "./contexts/AuthContext";
 import ThemeProvider from "./components/ThemeProvider";
 import ErrorBoundary from "./components/ErrorBoundary";
+import SkipToContent from "./components/SkipToContent";
+import { AccessibleAnnouncerProvider } from "./components/AccessibleAnnouncer";
 
 // Eager load public pages
 import PublicHome from "./pages/PublicHome";
@@ -51,7 +53,9 @@ function App() {
     <ErrorBoundary>
       <AuthProvider>
         <ThemeProvider>
+          <AccessibleAnnouncerProvider>
           <Router>
+          <SkipToContent />
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<PublicLayout><PublicHome /></PublicLayout>} />
@@ -85,6 +89,7 @@ function App() {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Router>
+        </AccessibleAnnouncerProvider>
         </ThemeProvider>
       </AuthProvider>
     </ErrorBoundary>

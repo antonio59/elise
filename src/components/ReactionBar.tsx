@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
@@ -15,17 +14,9 @@ interface ReactionBarProps {
 const ReactionBar: React.FC<ReactionBarProps> = ({ targetType, targetId, className = "" }) => {
   const [visitorId] = useState<string>(() => getVisitorId());
 
-  const reactions = useQuery(
-    (api as any).reactions.getReactions,
-    visitorId ? { targetType, targetId } : "skip"
-  ) ?? [];
-
-  const userReactions = useQuery(
-    (api as any).reactions.getUserReactions,
-    visitorId ? { targetType, targetId, visitorId } : "skip"
-  ) ?? [];
-
-  const toggleReaction = useMutation((api as any).reactions.toggle);
+  const reactions = useQuery(api.reactions.getReactions, visitorId ? { targetType, targetId } : "skip") ?? [];
+  const userReactions = useQuery(api.reactions.getUserReactions, visitorId ? { targetType, targetId, visitorId } : "skip") ?? [];
+  const toggleReaction = useMutation(api.reactions.toggle);
 
   const handleToggle = async (emoji: string) => {
     if (!visitorId) return;

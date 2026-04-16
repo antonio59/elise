@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
@@ -21,6 +20,40 @@ import {
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { useAuth } from "../contexts/AuthContext";
+
+type ThemeValue =
+  | "editorial"
+  | "sakura"
+  | "lavender"
+  | "midnight"
+  | "sunset"
+  | "botanical"
+  | "berry"
+  | "light"
+  | "dark"
+  | "kawaii";
+
+interface SiteSettings {
+  siteName?: string;
+  heroTitle?: string;
+  heroSubtitle?: string;
+  heroDescription?: string;
+  footerTagline?: string;
+  footerNote?: string;
+}
+
+const VALID_THEMES: ThemeValue[] = [
+  "editorial",
+  "sakura",
+  "lavender",
+  "midnight",
+  "sunset",
+  "botanical",
+  "berry",
+  "light",
+  "dark",
+  "kawaii",
+];
 
 const Settings: React.FC = () => {
   const { user } = useAuth();
@@ -56,10 +89,11 @@ const Settings: React.FC = () => {
 
   useEffect(() => {
     if (siteSettings) {
-      setHeroTitle(siteSettings.heroTitle || "");
-      setHeroSubtitle(siteSettings.heroSubtitle || "");
-      setFooterTagline((siteSettings as any).footerTagline || "");
-      setFooterNote((siteSettings as any).footerNote || "");
+      const s = siteSettings as SiteSettings;
+      setHeroTitle(s.heroTitle || "");
+      setHeroSubtitle(s.heroSubtitle || "");
+      setFooterTagline(s.footerTagline || "");
+      setFooterNote(s.footerNote || "");
     }
   }, [siteSettings]);
 
@@ -73,7 +107,7 @@ const Settings: React.FC = () => {
         name: name.trim() || undefined,
         username: username.trim() || undefined,
         bio: bio.trim() || undefined,
-theme: theme as any,
+        theme: VALID_THEMES.includes(theme as ThemeValue) ? (theme as ThemeValue) : undefined,
         yearlyBookGoal: yearlyBookGoal ? parseInt(yearlyBookGoal) : undefined,
         notifications,
       });
@@ -82,7 +116,7 @@ theme: theme as any,
         heroSubtitle: heroSubtitle.trim() || undefined,
         footerTagline: footerTagline.trim() || undefined,
         footerNote: footerNote.trim() || undefined,
-      } as any);
+      });
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
     } finally {

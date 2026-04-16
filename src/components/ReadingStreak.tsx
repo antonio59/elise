@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useMutation, useQuery } from "convex/react";
@@ -6,8 +5,8 @@ import { api } from "../../convex/_generated/api";
 import confetti from "canvas-confetti";
 
 const ReadingStreak: React.FC = () => {
-  const streak = useQuery((api as any).readingStreaks.getStreak);
-  const checkIn = useMutation((api as any).readingStreaks.checkIn);
+  const streak = useQuery(api.readingStreaks.getStreak);
+  const checkIn = useMutation(api.readingStreaks.checkIn);
   const [loading, setLoading] = useState(false);
   const [justCheckedIn, setJustCheckedIn] = useState(false);
 

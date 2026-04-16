@@ -1,8 +1,13 @@
-import { useEffect, useCallback } from "react";
+import {
+  useEffect,
+  useCallback,
+  useRef,
+} from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { Button } from "./Button";
 
 function cn(...inputs: (string | undefined | false | null)[]) {
   return twMerge(clsx(inputs));
@@ -51,6 +56,15 @@ const modalVariants = {
   },
 };
 
+const FOCUSABLE_SELECTORS = [
+  'a[href]',
+  'button:not([disabled])',
+  'textarea:not([disabled])',
+  'input:not([disabled])',
+  'select:not([disabled])',
+  '[tabindex]:not([tabindex="-1"])',
+].join(", ");
+
 export const Modal: React.FC<ModalProps> = ({
   isOpen,
   onClose,
@@ -62,6 +76,9 @@ export const Modal: React.FC<ModalProps> = ({
   showCloseButton = true,
   className,
 }) => {
+  const modalRef = useRef<HTMLDivElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+
   const handleEscape = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -71,17 +88,54 @@ export const Modal: React.FC<ModalProps> = ({
     [onClose],
   );
 
+  const handleTabKey = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key !== "Tab" || !modalRef.current) return;
+
+      const focusableElements = Array.from(
+        modalRef.current.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTORS),
+      );
+      if (focusableElements.length === 0) return;
+
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements[focusableElements.length - 1];
+
+      if (e.shiftKey && document.activeElement === firstElement) {
+        e.preventDefault();
+        lastElement.focus();
+      } else if (!e.shiftKey && document.activeElement === lastElement) {
+        e.preventDefault();
+        firstElement.focus();
+      }
+    },
+    [],
+  );
+
   useEffect(() => {
     if (isOpen) {
+      previousFocusRef.current = document.activeElement as HTMLElement;
       document.addEventListener("keydown", handleEscape);
+      document.addEventListener("keydown", handleTabKey);
       document.body.style.overflow = "hidden";
+      // Focus first focusable element or the modal itself
+      setTimeout(() => {
+        const focusable = modalRef.current?.querySelector<HTMLElement>(FOCUSABLE_SELECTORS);
+        if (focusable) {
+          focusable.focus();
+        } else {
+          modalRef.current?.focus();
+        }
+      }, 0);
     }
 
     return () => {
       document.removeEventListener("keydown", handleEscape);
+      document.removeEventListener("keydown", handleTabKey);
       document.body.style.overflow = "unset";
+      previousFocusRef.current?.focus();
+      previousFocusRef.current = null;
     };
-  }, [isOpen, handleEscape]);
+  }, [isOpen, handleEscape, handleTabKey]);
 
   return (
     <AnimatePresence>
@@ -97,9 +151,11 @@ export const Modal: React.FC<ModalProps> = ({
           />
 
           <motion.div
+            ref={modalRef}
+            tabIndex={-1}
             className={cn(
               "relative w-full bg-white rounded-2xl shadow-xl",
-              "overflow-hidden",
+              "overflow-hidden outline-none",
               sizeStyles[size],
               className,
             )}
@@ -197,44 +253,41 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
   variant = "default",
   loading = false,
 }) => {
-  const variantButtonStyles: Record<string, string> = {
-    danger: "bg-red-500 hover:bg-red-600",
-    warning: "bg-amber-500 hover:bg-amber-600",
-    default: "bg-primary-500 hover:bg-primary-600",
-  };
-
   const icons: Record<string, string> = {
     danger: "\u26A0\uFE0F",
     warning: "\u2753",
     default: "\uD83D\uDCAD",
   };
 
+  const iconLabels: Record<string, string> = {
+    danger: "Warning",
+    warning: "Question",
+    default: "Thought bubble",
+  };
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="sm">
       <div className="text-center">
-        <span className="text-4xl mb-4 block">{icons[variant]}</span>
+        <span className="text-4xl mb-4 block" aria-hidden="true">
+          {icons[variant]}
+        </span>
+        <span className="sr-only">{iconLabels[variant]}</span>
         <h3 className="text-lg font-display font-bold text-slate-900 mb-2">
           {title}
         </h3>
         <p className="text-slate-600 mb-6">{message}</p>
         <div className="flex gap-3 justify-center">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 rounded-lg font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors"
-            disabled={loading}
-          >
+          <Button variant="secondary" onClick={onClose} disabled={loading}>
             {cancelText}
-          </button>
-          <button
+          </Button>
+          <Button
+            variant={variant === "danger" ? "danger" : variant === "warning" ? "accent" : "primary"}
             onClick={onConfirm}
-            className={cn(
-              "px-4 py-2 rounded-lg font-medium text-white transition-colors disabled:opacity-50",
-              variantButtonStyles[variant],
-            )}
             disabled={loading}
+            loading={loading}
           >
-            {loading ? "Loading..." : confirmText}
-          </button>
+            {confirmText}
+          </Button>
         </div>
       </div>
     </Modal>

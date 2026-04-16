@@ -1,15 +1,25 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { Feather, BookHeart, BookOpenText } from "lucide-react";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import ReactionBar from "../components/ReactionBar";
 import PageHeader from "../components/PageHeader";
+import { WritingCardSkeleton } from "../components/Skeleton";
+import { Button } from "../components/ui/Button";
+
+interface Writing {
+  _id: string;
+  title: string;
+  content: string;
+  type: "poetry" | "story" | "journal";
+  createdAt: number;
+}
 
 const PublicWritings: React.FC = () => {
-  const writings = useQuery(api.writings.getPublished, { limit: 20 }) ?? [];
+  const writingsRaw = useQuery(api.writings.getPublished, { limit: 20 });
   const [typeFilter, setTypeFilter] = useState<string | null>(null);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const typeConfig: Record<
     string,
@@ -35,11 +45,31 @@ const PublicWritings: React.FC = () => {
     },
   };
 
-  const types = [...new Set(writings.map((w: any) => w.type as string))];
+  const writings = writingsRaw ?? [];
 
-  const filtered = writings.filter(
-    (w: any) => !typeFilter || w.type === typeFilter,
+  const types = useMemo(
+    () => [...new Set(writings.map((w: Writing) => w.type))],
+    [writings],
   );
+
+  const filtered = useMemo(
+    () => writings.filter((w: Writing) => !typeFilter || w.type === typeFilter),
+    [writings, typeFilter],
+  );
+
+  if (writingsRaw === undefined) {
+    return (
+      <div className="max-w-6xl mx-auto px-4 py-10 sm:py-12">
+        <PageHeader
+          badge="Creative Writing"
+          title="Words & Worlds"
+          subtitle="stories, poems, and thoughts"
+          breadcrumbs={[{ label: "Writing" }]}
+        />
+        <WritingCardSkeleton />
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-10 sm:py-12">
@@ -53,31 +83,29 @@ const PublicWritings: React.FC = () => {
       {/* Category Filter */}
       {types.length > 0 && (
         <div className="flex flex-wrap gap-2 mb-8">
-          <button
+          <Button
+            variant={!typeFilter ? "primary" : "secondary"}
+            size="sm"
+            className="rounded-full text-xs"
             onClick={() => setTypeFilter(null)}
-            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
-              !typeFilter
-                ? "bg-primary-500 text-white"
-                : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-            }`}
           >
             All
-          </button>
+          </Button>
           {types.map((type: string) => {
             const config = typeConfig[type] || typeConfig.story;
-            const count = writings.filter((w: any) => w.type === type).length;
+            const count = writings.filter((w: Writing) => w.type === type).length;
             return (
-              <button
+              <Button
                 key={type}
-                onClick={() => setTypeFilter(typeFilter === type ? null : type)}
-                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
-                  typeFilter === type
-                    ? "bg-primary-500 text-white"
-                    : `${config.bg} ${config.color}`
+                variant={typeFilter === type ? "primary" : "secondary"}
+                size="sm"
+                className={`rounded-full text-xs ${
+                  typeFilter !== type ? `${config.bg} ${config.color}` : ""
                 }`}
+                onClick={() => setTypeFilter(typeFilter === type ? null : type)}
               >
                 {config.label} ({count})
-              </button>
+              </Button>
             );
           })}
         </div>
@@ -86,7 +114,9 @@ const PublicWritings: React.FC = () => {
       {/* Empty State */}
       {filtered.length === 0 ? (
         <div className="text-center py-16 bg-gradient-to-br from-violet-50 to-primary-50 rounded-2xl">
-          <div className="text-5xl mb-4">✍️</div>
+          <div className="text-5xl mb-4" aria-hidden="true">
+            ✍️
+          </div>
           <p className="text-lg font-medium text-slate-700">
             Stories, poems & random thoughts
           </p>
@@ -96,10 +126,13 @@ const PublicWritings: React.FC = () => {
         </div>
       ) : (
         <div className="space-y-4">
-          {filtered.map((writing: any, index: number) => {
+          {filtered.map((writing: Writing, index: number) => {
             const config = typeConfig[writing.type] || typeConfig.story;
             const Icon = config.icon;
-            const preview = writing.content.slice(0, 200) + "...";
+            const isExpanded = expandedId === writing._id;
+            const preview = isExpanded
+              ? writing.content
+              : writing.content.slice(0, 200) + "...";
 
             return (
               <motion.div
@@ -111,9 +144,7 @@ const PublicWritings: React.FC = () => {
                 transition={{ delay: index * 0.05 }}
               >
                 <div className="flex items-center gap-2 mb-3">
-                  <div
-                    className={`w-8 h-8 rounded-lg bg-gradient-to-br from-violet-100 to-primary-100 flex items-center justify-center`}
-                  >
+                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-100 to-primary-100 flex items-center justify-center">
                     <Icon className={`w-4 h-4 ${config.color}`} />
                   </div>
                   <span className={`text-xs font-medium ${config.color}`}>
@@ -132,13 +163,18 @@ const PublicWritings: React.FC = () => {
                 <h3 className="font-bold text-slate-800 text-lg mb-2">
                   {writing.title}
                 </h3>
-                <p className="text-sm text-slate-600 italic leading-relaxed line-clamp-4">
+                <p className="text-sm text-slate-600 italic leading-relaxed whitespace-pre-wrap">
                   {preview}
                 </p>
-                {preview.length > 200 && (
-                  <p className="text-xs text-primary-400 mt-1 font-medium">
-                    Read more →
-                  </p>
+                {writing.content.length > 200 && (
+                  <button
+                    onClick={() =>
+                      setExpandedId(isExpanded ? null : writing._id)
+                    }
+                    className="text-xs text-primary-500 mt-2 font-medium hover:underline focus:outline-none focus:ring-2 focus:ring-primary-300 rounded"
+                  >
+                    {isExpanded ? "Show less ↑" : "Read more →"}
+                  </button>
                 )}
                 <div className="mt-4 pt-4 border-t border-slate-100">
                   <ReactionBar targetType="writing" targetId={writing._id} />

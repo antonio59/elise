@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useCallback, useEffect, useRef } from "react";
 import { useQuery, useMutation, useConvex } from "convex/react";
 import { api } from "../../convex/_generated/api";
@@ -164,7 +163,7 @@ const Discover: React.FC = () => {
         queryIndexRef.current++;
         attempts++;
 
-        const results = await convex.action((api as any).discover.fetchRecommendations, {
+        const results = await convex.action(api.discover.fetchRecommendations, {
           searchQuery,
           startIndex: Math.floor(Math.random() * 20),
         });

@@ -169,7 +169,7 @@ const DashboardAbout: React.FC = () => {
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-slate-800">Edit About Page</h1>
         <p className="text-slate-500 text-sm mt-1">
-          This shows on your public <a href="/about" target="_blank" className="text-primary-500 hover:underline">/about</a> page
+          This shows on your public <a href="/about" target="_blank" rel="noopener noreferrer" className="text-primary-500 hover:underline">/about</a> page
         </p>
       </div>
 

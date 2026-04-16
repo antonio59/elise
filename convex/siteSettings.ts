@@ -13,6 +13,8 @@ export const get = query({
         heroTitle: "Elise Reads",
         heroSubtitle: "books I've read, art I make, and words I write",
         heroDescription: "",
+        footerTagline: "books I've read, art I make, and words I write",
+        footerNote: "Made with love for Elise 💜",
       }
     );
   },
@@ -25,6 +27,8 @@ export const update = mutation({
     heroTitle: v.optional(v.string()),
     heroSubtitle: v.optional(v.string()),
     heroDescription: v.optional(v.string()),
+    footerTagline: v.optional(v.string()),
+    footerNote: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const admin = await isAdmin(ctx);

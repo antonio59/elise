@@ -1,5 +1,5 @@
 import CoverImage from "../components/CoverImage";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Star,
@@ -12,6 +12,7 @@ import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Link } from "react-router-dom";
 import type { Id } from "../../convex/_generated/dataModel";
+import { ReviewCardSkeleton } from "../components/Skeleton";
 
 interface Book {
   _id: string;
@@ -40,7 +41,7 @@ const RATING_LABELS: Record<number, string> = {
 };
 
 const ReviewsPage: React.FC = () => {
-  const books = useQuery(api.books.getMyBooks) ?? [];
+  const booksRaw = useQuery(api.books.getMyBooks);
   const updateBook = useMutation(api.books.update);
   const [filter, setFilter] = useState<"all" | "favorites" | "5star" | "4star">("all");
   const [sortBy, setSortBy] = useState<"recent" | "rating" | "title">("recent");
@@ -50,42 +51,51 @@ const ReviewsPage: React.FC = () => {
   const [editReview, setEditReview] = useState("");
   const [saving, setSaving] = useState(false);
 
-  // Books with reviews or ratings
-  const reviewedBooks = books.filter(
-    (b: Book) => b.rating && b.rating > 0
-  );
+  const books = booksRaw ?? [];
 
-  const filtered = reviewedBooks.filter((b: Book) => {
-    switch (filter) {
-      case "favorites":
-        return b.isFavorite;
-      case "5star":
-        return b.rating === 5;
-      case "4star":
-        return b.rating === 4;
-      default:
-        return true;
-    }
-  });
+  const { sorted, stats } = useMemo(() => {
+    const reviewed = books.filter((b: Book) => b.rating && b.rating > 0);
+    const f = reviewed.filter((b: Book) => {
+      switch (filter) {
+        case "favorites":
+          return b.isFavorite;
+        case "5star":
+          return b.rating === 5;
+        case "4star":
+          return b.rating === 4;
+        default:
+          return true;
+      }
+    });
+    const s = [...f].sort((a: Book, b: Book) => {
+      switch (sortBy) {
+        case "rating":
+          return (b.rating ?? 0) - (a.rating ?? 0);
+        case "title":
+          return a.title.localeCompare(b.title);
+        default:
+          return 0;
+      }
+    });
+    const st = {
+      total: reviewed.length,
+      fiveStars: reviewed.filter((b: Book) => b.rating === 5).length,
+      fourStars: reviewed.filter((b: Book) => b.rating === 4).length,
+      favorites: reviewed.filter((b: Book) => b.isFavorite).length,
+      withReviews: reviewed.filter((b: Book) => b.review && b.review.length > 0).length,
+    };
+    return { reviewedBooks: reviewed, filtered: f, sorted: s, stats: st };
+  }, [books, filter, sortBy]);
 
-  const sorted = [...filtered].sort((a: Book, b: Book) => {
-    switch (sortBy) {
-      case "rating":
-        return (b.rating ?? 0) - (a.rating ?? 0);
-      case "title":
-        return a.title.localeCompare(b.title);
-      default:
-        return 0; // keep original order (recent)
-    }
-  });
-
-  const stats = {
-    total: reviewedBooks.length,
-    fiveStars: reviewedBooks.filter((b: Book) => b.rating === 5).length,
-    fourStars: reviewedBooks.filter((b: Book) => b.rating === 4).length,
-    favorites: reviewedBooks.filter((b: Book) => b.isFavorite).length,
-    withReviews: reviewedBooks.filter((b: Book) => b.review && b.review.length > 0).length,
-  };
+  if (booksRaw === undefined) {
+    return (
+      <div className="min-h-screen py-8 px-4">
+        <div className="max-w-6xl mx-auto">
+          <ReviewCardSkeleton />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen py-8 px-4">

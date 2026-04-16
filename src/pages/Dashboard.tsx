@@ -1,7 +1,7 @@
 import CoverImage from "../components/CoverImage";
 import ReadingStreak from "../components/ReadingStreak";
 import OnboardingTour from "../components/OnboardingTour";
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -12,19 +12,27 @@ import {
   Sparkles,
   Heart,
   Target,
-  X,
-  Loader2,
   PenTool,
   Pencil,
   Smile,
 } from "lucide-react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
+import { Button } from "../components/ui/Button";
+import { Skeleton, BookGridSkeleton, ArtGridSkeleton } from "../components/Skeleton";
+import SetGoalModal from "../components/dashboard/SetGoalModal";
+
+const verbs = [
+  { text: "reading", icon: BookOpen },
+  { text: "drawing", icon: Palette },
+  { text: "writing", icon: PenTool },
+  { text: "exploring", icon: Sparkles },
+];
 
 const Dashboard: React.FC = () => {
-  const stats = useQuery(api.users.getStats) ?? null;
-  const books = useQuery(api.books.getMyBooks) ?? [];
-  const artworks = useQuery(api.artworks.getMyArtworks) ?? [];
+  const stats = useQuery(api.users.getStats);
+  const books = useQuery(api.books.getMyBooks);
+  const artworks = useQuery(api.artworks.getMyArtworks);
   const goalProgress = useQuery(api.readingGoals.getGoalProgress);
   const writingStats = useQuery(api.writings.getStats);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -59,13 +67,6 @@ const Dashboard: React.FC = () => {
     await setOnboardingSeen();
   }, [setOnboardingSeen]);
 
-  // Rotating welcome verbs
-  const verbs = [
-    { text: "reading", icon: BookOpen },
-    { text: "drawing", icon: Palette },
-    { text: "writing", icon: PenTool },
-    { text: "exploring", icon: Sparkles },
-  ];
   const [verbIndex, setVerbIndex] = React.useState(0);
 
   React.useEffect(() => {
@@ -73,10 +74,14 @@ const Dashboard: React.FC = () => {
       setVerbIndex((i) => (i + 1) % verbs.length);
     }, 2500);
     return () => clearInterval(interval);
-  }, [verbs.length]);
+  }, []);
 
-  const recentBooks = books.slice(0, 6);
-  const recentArtworks = artworks.slice(0, 4);
+  const recentBooks = useMemo(() => books?.slice(0, 6) ?? [], [books]);
+  const recentArtworks = useMemo(() => artworks?.slice(0, 4) ?? [], [artworks]);
+  const currentlyReading = useMemo(
+    () => books?.filter((b: { status: string }) => b.status === "reading") ?? [],
+    [books],
+  );
 
   return (
     <div className="space-y-8">
@@ -84,7 +89,7 @@ const Dashboard: React.FC = () => {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold text-slate-800">
-            Hey,{" "}
+            Hey{" "}
             <span className="bg-gradient-to-r from-primary-400 to-accent-500 bg-clip-text text-transparent">
               Elise
             </span>
@@ -129,177 +134,181 @@ const Dashboard: React.FC = () => {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <motion.div
-          className="stat-card"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center">
-              <BookOpen className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <p className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-800">
-                {stats?.booksRead ?? 0}
-              </p>
-              <p className="text-sm text-slate-500">Books Read</p>
-            </div>
-          </div>
-        </motion.div>
-
-        <motion.div
-          className="stat-card"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-        >
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-accent-500 to-accent-600 flex items-center justify-center">
-              <TrendingUp className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <p className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-800">
-                {(stats?.totalPages ?? 0).toLocaleString()}
-              </p>
-              <p className="text-sm text-slate-500">Pages</p>
-            </div>
-          </div>
-        </motion.div>
-
-        <motion.div
-          className="stat-card"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-        >
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
-              <PenTool className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <p className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-800">
-                {writingStats?.total ?? 0}
-              </p>
-              <p className="text-sm text-slate-500">Written</p>
-            </div>
-          </div>
-        </motion.div>
-
-        <motion.div
-          className="stat-card hidden md:block"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.25 }}
-        >
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-accent-500 to-accent-600 flex items-center justify-center">
-              <Palette className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <p className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-800">
-                {stats?.totalArtworks ?? 0}
-              </p>
-              <p className="text-sm text-slate-500">Artworks</p>
-            </div>
-          </div>
-        </motion.div>
-
-        <motion.div
-          className="stat-card hidden md:block"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-        >
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center">
-              <Heart className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <p className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-800">
-                {stats?.favorites ?? 0}
-              </p>
-              <p className="text-sm text-slate-500">Favorites</p>
-            </div>
-          </div>
-        </motion.div>
-      </div>
-
-      {/* Currently Reading */}
-      {(() => {
-        const currentlyReading = books.filter(
-          (b: { status: string }) => b.status === "reading",
-        );
-        if (currentlyReading.length === 0) return null;
-        return (
+      {stats === undefined ? (
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <Skeleton className="h-24 rounded-xl" />
+          <Skeleton className="h-24 rounded-xl" />
+          <Skeleton className="h-24 rounded-xl" />
+          <Skeleton className="h-24 rounded-xl" />
+          <Skeleton className="h-24 rounded-xl" />
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <motion.div
-            className="card p-6"
+            className="stat-card"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.35 }}
           >
-            <h3 className="font-bold text-slate-800 mb-4 flex items-center gap-2">
-              <BookOpen className="w-5 h-5 text-primary-500" />
-              Currently Reading
-            </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {currentlyReading.map(
-                (book: {
-                  _id: string;
-                  title: string;
-                  author: string;
-                  pagesRead?: number;
-                  pageCount?: number;
-                  coverUrl?: string;
-                  coverImageUrl?: string | null;
-                  coverStorageId?: string;
-                }) => (
-                  <div
-                    key={book._id}
-                    className="flex gap-3 p-3 bg-slate-50 rounded-xl group relative"
-                  >
-                    <div className="w-16 h-24 rounded-lg overflow-hidden bg-slate-200 flex-shrink-0">
-                      <CoverImage
-                        book={book}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between">
-                        <h4 className="font-medium text-slate-800 line-clamp-1">
-                          {book.title}
-                        </h4>
-                        <Link
-                          to="/dashboard/books"
-                          className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-slate-200 rounded"
-                        >
-                          <Pencil className="w-3.5 h-3.5 text-slate-400" />
-                        </Link>
-                      </div>
-                      <p className="text-sm text-slate-500">{book.author}</p>
-                      {book.pagesRead && book.pageCount && (
-                        <div className="mt-2">
-                          <div className="h-1.5 bg-slate-200 rounded-full overflow-hidden">
-                            <div
-                              className="h-full bg-primary-400 rounded-full"
-                              style={{
-                                width: `${Math.min((book.pagesRead / book.pageCount) * 100, 100)}%`,
-                              }}
-                            />
-                          </div>
-                          <p className="text-xs text-slate-400 mt-1">
-                            {book.pagesRead} / {book.pageCount} pages
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ),
-              )}
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center">
+                <BookOpen className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <p className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-800">
+                  {stats?.booksRead ?? 0}
+                </p>
+                <p className="text-sm text-slate-500">Books Read</p>
+              </div>
             </div>
           </motion.div>
-        );
-      })()}
+
+          <motion.div
+            className="stat-card"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-accent-500 to-accent-600 flex items-center justify-center">
+                <TrendingUp className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <p className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-800">
+                  {(stats?.totalPages ?? 0).toLocaleString()}
+                </p>
+                <p className="text-sm text-slate-500">Pages</p>
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div
+            className="stat-card"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
+                <PenTool className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <p className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-800">
+                  {writingStats?.total ?? 0}
+                </p>
+                <p className="text-sm text-slate-500">Written</p>
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div
+            className="stat-card"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.25 }}
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-accent-500 to-accent-600 flex items-center justify-center">
+                <Palette className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <p className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-800">
+                  {stats?.totalArtworks ?? 0}
+                </p>
+                <p className="text-sm text-slate-500">Artworks</p>
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div
+            className="stat-card"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center">
+                <Heart className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <p className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-800">
+                  {stats?.favorites ?? 0}
+                </p>
+                <p className="text-sm text-slate-500">Favorites</p>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      )}
+
+      {/* Currently Reading */}
+      {currentlyReading.length > 0 && (
+        <motion.div
+          className="card p-6"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.35 }}
+        >
+          <h3 className="font-bold text-slate-800 mb-4 flex items-center gap-2">
+            <BookOpen className="w-5 h-5 text-primary-500" />
+            Currently Reading
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {currentlyReading.map(
+              (book: {
+                _id: string;
+                title: string;
+                author: string;
+                pagesRead?: number;
+                pageCount?: number;
+                coverUrl?: string;
+                coverImageUrl?: string | null;
+                coverStorageId?: string;
+              }) => (
+                <div
+                  key={book._id}
+                  className="flex gap-3 p-3 bg-slate-50 rounded-xl group relative"
+                >
+                  <div className="w-16 h-24 rounded-lg overflow-hidden bg-slate-200 flex-shrink-0">
+                    <CoverImage
+                      book={book}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between">
+                      <h4 className="font-medium text-slate-800 line-clamp-1">
+                        {book.title}
+                      </h4>
+                      <Link
+                        to="/dashboard/books"
+                        className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-slate-200 rounded"
+                      >
+                        <Pencil className="w-3.5 h-3.5 text-slate-400" />
+                      </Link>
+                    </div>
+                    <p className="text-sm text-slate-500">{book.author}</p>
+                    {book.pagesRead && book.pageCount && (
+                      <div className="mt-2">
+                        <div className="h-1.5 bg-slate-200 rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-primary-400 rounded-full"
+                            style={{
+                              width: `${Math.min((book.pagesRead / book.pageCount) * 100, 100)}%`,
+                            }}
+                          />
+                        </div>
+                        <p className="text-xs text-slate-400 mt-1">
+                          {book.pagesRead} / {book.pageCount} pages
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ),
+            )}
+          </div>
+        </motion.div>
+      )}
 
       {/* Reactions Stats */}
       {reactionStats && reactionStats.totalReactions > 0 && (
@@ -414,12 +423,13 @@ const Dashboard: React.FC = () => {
               </p>
             </div>
           </div>
-          <button
+          <Button
+            variant="secondary"
+            size="sm"
             onClick={() => setShowGoalModal(true)}
-            className="btn btn-secondary text-sm"
           >
             {goalProgress?.goal ? "Edit Goal" : "Set Goal"}
-          </button>
+          </Button>
         </div>
 
         {goalProgress?.goal ? (
@@ -542,7 +552,9 @@ const Dashboard: React.FC = () => {
           </Link>
         </div>
 
-        {recentBooks.length === 0 ? (
+        {books === undefined ? (
+          <BookGridSkeleton />
+        ) : recentBooks.length === 0 ? (
           <div className="card p-8 text-center">
             <BookOpen className="w-12 h-12 text-slate-300 mx-auto mb-3" />
             <p className="text-slate-500 mb-4">
@@ -597,7 +609,9 @@ const Dashboard: React.FC = () => {
           </Link>
         </div>
 
-        {recentArtworks.length === 0 ? (
+        {artworks === undefined ? (
+          <ArtGridSkeleton />
+        ) : recentArtworks.length === 0 ? (
           <div className="card p-8 text-center">
             <Palette className="w-12 h-12 text-slate-300 mx-auto mb-3" />
             <p className="text-slate-500 mb-4">
@@ -653,147 +667,6 @@ const Dashboard: React.FC = () => {
         }}
       />
     </div>
-  );
-};
-
-// Set Goal Modal Component
-interface SetGoalModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  currentGoal?: { targetBooks: number; targetPages?: number } | null;
-  year: number;
-  onSave: (targetBooks: number, targetPages?: number) => Promise<void>;
-}
-
-const SetGoalModal: React.FC<SetGoalModalProps> = ({
-  isOpen,
-  onClose,
-  currentGoal,
-  year,
-  onSave,
-}) => {
-  const [targetBooks, setTargetBooks] = useState(
-    currentGoal?.targetBooks?.toString() || "12",
-  );
-  const [targetPages, setTargetPages] = useState(
-    currentGoal?.targetPages?.toString() || "",
-  );
-  const [saving, setSaving] = useState(false);
-
-  React.useEffect(() => {
-    if (currentGoal) {
-      setTargetBooks(currentGoal.targetBooks.toString());
-      setTargetPages(currentGoal.targetPages?.toString() || "");
-    }
-  }, [currentGoal]);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!targetBooks) return;
-
-    setSaving(true);
-    try {
-      await onSave(
-        parseInt(targetBooks),
-        targetPages ? parseInt(targetPages) : undefined,
-      );
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  if (!isOpen) return null;
-
-  return (
-    <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-        <motion.div
-          className="absolute inset-0 bg-black/50"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          onClick={onClose}
-        />
-
-        <motion.div
-          className="relative bg-white rounded-2xl shadow-xl max-w-md w-full"
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.95 }}
-        >
-          {/* Header */}
-          <div className="p-6 border-b border-slate-200">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-bold text-slate-800">
-                {year} Reading Goal
-              </h2>
-              <button
-                onClick={onClose}
-                className="p-2 hover:bg-slate-100 rounded-lg"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-          </div>
-
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="p-6 space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
-                Target Books *
-              </label>
-              <input
-                type="number"
-                value={targetBooks}
-                onChange={(e) => setTargetBooks(e.target.value)}
-                className="input"
-                placeholder="e.g., 24"
-                min="1"
-                required
-              />
-              <p className="text-xs text-slate-500 mt-1">
-                How many books do you want to read this year?
-              </p>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
-                Target Pages (optional)
-              </label>
-              <input
-                type="number"
-                value={targetPages}
-                onChange={(e) => setTargetPages(e.target.value)}
-                className="input"
-                placeholder="e.g., 5000"
-                min="1"
-              />
-              <p className="text-xs text-slate-500 mt-1">
-                Optionally set a page count goal too!
-              </p>
-            </div>
-
-            <button
-              type="submit"
-              disabled={saving || !targetBooks}
-              className="btn btn-primary w-full"
-            >
-              {saving ? (
-                <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                  Saving...
-                </>
-              ) : (
-                <>
-                  <Target className="w-5 h-5" />
-                  Save Goal
-                </>
-              )}
-            </button>
-          </form>
-        </motion.div>
-      </div>
-    </AnimatePresence>
   );
 };
 

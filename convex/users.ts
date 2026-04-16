@@ -227,6 +227,10 @@ export const getPublicProfile = query({
       favoriteGenres: profile.favoriteGenres,
       readingGoal: profile.readingGoal,
       yearlyBookGoal: profile.yearlyBookGoal,
+      favoriteBook: profile.favoriteBook,
+      rereads: profile.rereads,
+      favoriteQuote: profile.favoriteQuote,
+      funFact: profile.funFact,
       currentlyReading: currentlyReading
         ? {
             title: currentlyReading.title,

@@ -1,7 +1,7 @@
 import CoverImage from "../components/CoverImage";
 import StickerSection from "../components/StickerSection";
 import ShareButton from "../components/ShareButton";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import {
   Star,
@@ -15,6 +15,7 @@ import { BookGridSkeleton } from "../components/Skeleton";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import PageHeader from "../components/PageHeader";
+import { Button } from "../components/ui/Button";
 
 const RATING_LABELS: Record<number, string> = {
   1: "not it",
@@ -57,35 +58,48 @@ const genreColors: Record<string, string> = {
 };
 
 const PublicBooks: React.FC = () => {
-  const books = useQuery(api.books.getReadBooks) ?? [];
+  const booksRaw = useQuery(api.books.getReadBooks);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<"all" | "favorites">("all");
   const [genreFilter, setGenreFilter] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [showGenres, setShowGenres] = useState(false);
 
-  const genresWithCounts = GENRES.map((g) => ({
-    name: g,
-    count: books.filter((b) => b.genre === g).length,
-  })).filter((g) => g.count > 0);
+  const books = booksRaw ?? [];
 
-  const filtered = books.filter((b) => {
-    const matchSearch =
-      !search ||
-      b.title.toLowerCase().includes(search.toLowerCase()) ||
-      b.author.toLowerCase().includes(search.toLowerCase());
-    const matchFilter =
-      filter === "all" || (filter === "favorites" && b.isFavorite);
-    const matchGenre = !genreFilter || b.genre === genreFilter;
-    return matchSearch && matchFilter && matchGenre;
-  });
+  const genresWithCounts = useMemo(
+    () =>
+      GENRES.map((g) => ({
+        name: g,
+        count: books.filter((b) => b.genre === g).length,
+      })).filter((g) => g.count > 0),
+    [books],
+  );
+
+  const filtered = useMemo(() => {
+    return books.filter((b) => {
+      const matchSearch =
+        !search ||
+        b.title.toLowerCase().includes(search.toLowerCase()) ||
+        b.author.toLowerCase().includes(search.toLowerCase());
+      const matchFilter =
+        filter === "all" || (filter === "favorites" && b.isFavorite);
+      const matchGenre = !genreFilter || b.genre === genreFilter;
+      return matchSearch && matchFilter && matchGenre;
+    });
+  }, [books, search, filter, genreFilter]);
+
+  if (booksRaw === undefined) {
+    return (
+      <div className="max-w-6xl mx-auto px-4 py-10 sm:py-12">
+        <BookGridSkeleton />
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-10 sm:py-12">
-      {books === undefined ? (
-        <BookGridSkeleton />
-      ) : (
-        <>
+      <>
           <PageHeader
             badge="Book Shelf"
             title="Books I've Read"
@@ -105,29 +119,33 @@ const PublicBooks: React.FC = () => {
                 placeholder="Search books..."
               />
             </div>
-            <button
+            <Button
+              variant={filter === "all" ? "primary" : "secondary"}
+              size="sm"
               onClick={() => setFilter("all")}
-              className={`btn text-sm ${filter === "all" ? "btn-primary" : "btn-secondary"}`}
             >
               All ({books.length})
-            </button>
-            <button
+            </Button>
+            <Button
+              variant={filter === "favorites" ? "primary" : "secondary"}
+              size="sm"
               onClick={() => setFilter("favorites")}
-              className={`btn text-sm ${filter === "favorites" ? "btn-primary" : "btn-secondary"}`}
             >
-              ★ (
+              <Star className="w-3.5 h-3.5" />
+              {" "}(
               {
                 books.filter((b: { isFavorite?: boolean }) => b.isFavorite)
                   .length
               }
               )
-            </button>
-            <button
+            </Button>
+            <Button
+              variant={showGenres ? "primary" : "secondary"}
+              size="sm"
               onClick={() => setShowGenres(!showGenres)}
-              className={`btn text-sm ${showGenres ? "btn-primary" : "btn-secondary"}`}
             >
               <SlidersHorizontal className="w-4 h-4" />
-            </button>
+            </Button>
             <div className="flex rounded-lg overflow-hidden border border-slate-200">
               <button
                 onClick={() => setViewMode("grid")}
@@ -339,7 +357,6 @@ const PublicBooks: React.FC = () => {
             </div>
           )}
         </>
-      )}
     </div>
   );
 };
