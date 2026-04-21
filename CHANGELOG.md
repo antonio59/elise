@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- Remove conflicting CSP meta tag that blocked Convex WebSocket
 - Add legacy windowExpiresAt field to rateLimits schema
 - RateLimits schema + quotes index to resolve Convex deploy failure
 - Add missing setLikingId calls in PublicGallery handleLike
@@ -587,6 +588,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
