@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- Add missing setLikingId calls in PublicGallery handleLike
 - **security**: Resolve critical backend and frontend issues
 - **security**: Replace substring check with hostname validation for Google Books URLs
 - Prioritize Convex storage URL for hi-res covers, upgrade zoom at search time
@@ -581,6 +582,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
