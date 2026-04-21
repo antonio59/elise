@@ -556,6 +556,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Chores
 
+- **deps**: Bump the minor-patch group with 18 updates (#28)
 - Remove old Claude worktrees after branch cleanup
 - Add git-cliff config for changelog generation
 - Add git-cliff config for changelog generation
@@ -578,6 +579,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
