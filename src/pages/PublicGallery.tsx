@@ -22,13 +22,16 @@ const PublicGallery: React.FC = () => {
   const [likingId, setLikingId] = useState<string | null>(null);
 
   const handleLike = async (id: Id<"artworks">) => {
-    if (likedIds.has(id)) return;
+    if (likedIds.has(id) || likingId === id) return;
 
+    setLikingId(id);
     try {
       await likeArtwork({ id, visitorId: getVisitorId() });
       setLikedIds(new Set([...likedIds, id]));
     } catch (error) {
       console.error("Failed to like artwork:", error);
+    } finally {
+      setLikingId(null);
     }
   };
 
