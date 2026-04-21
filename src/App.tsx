@@ -20,7 +20,6 @@ import PublicBooks from "./pages/PublicBooks";
 import PublicReviews from "./pages/PublicReviews";
 import PublicWritings from "./pages/PublicWritings";
 import About from "./pages/About";
-import Guestbook from "./pages/Guestbook";
 import NotFound from "./pages/NotFound";
 import { Layout, PublicLayout, AuthLayout } from "./components/Layout";
 
@@ -69,7 +68,6 @@ function App() {
             <Route path="/art" element={<PublicLayout><PublicGallery /></PublicLayout>} />
             <Route path="/wishlist" element={<PublicLayout><PublicWishlist /></PublicLayout>} />
             <Route path="/about" element={<PublicLayout><About /></PublicLayout>} />
-            <Route path="/guestbook" element={<PublicLayout><Guestbook /></PublicLayout>} />
             <Route path="/login" element={<AuthLayout><Suspense fallback={<PageLoader />}><Login /></Suspense></AuthLayout>} />
             <Route path="/signup" element={<AuthLayout><Suspense fallback={<PageLoader />}><Signup /></Suspense></AuthLayout>} />
 

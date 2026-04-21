@@ -284,18 +284,6 @@ export default defineSchema(
       .index("by_user_archived", ["userId", "isArchived"])
       .index("by_createdAt", ["createdAt"]),
 
-    // Guestbook entries (visitor messages)
-    guestbookEntries: defineTable({
-      name: v.string(),
-      message: v.string(),
-      visitorId: v.string(),
-      isApproved: v.boolean(),
-      createdAt: v.number(),
-    })
-      .index("by_approved", ["isApproved"])
-      .index("by_visitor", ["visitorId"])
-      .index("by_createdAt", ["createdAt"]),
-
     // Characters (story bible)
     characters: defineTable({
       userId: v.id("users"),

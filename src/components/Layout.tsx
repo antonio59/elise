@@ -18,7 +18,6 @@ import {
   Gift,
   Compass,
   Users,
-  MessageCircle,
 } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import { useQuery } from "convex/react";
@@ -192,7 +191,6 @@ export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
     { label: "Writing", to: "/writing", icon: PenTool },
     { label: "Art", to: "/art", icon: Palette },
     { label: "Wishlist", to: "/wishlist", icon: Gift },
-    { label: "Guestbook", to: "/guestbook", icon: MessageCircle },
     { label: "About", to: "/about", icon: User },
   ];
 
