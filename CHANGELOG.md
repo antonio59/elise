@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- RateLimits schema + quotes index to resolve Convex deploy failure
 - Add missing setLikingId calls in PublicGallery handleLike
 - **security**: Resolve critical backend and frontend issues
 - **security**: Replace substring check with hostname validation for Google Books URLs
@@ -45,6 +46,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
+- Merge branch 'main' of https://github.com/antonio59/elise
 - Merge branch 'main' of https://github.com/antonio59/elise
 - Fix accessibility and interaction issues across components (#29)
 - Merge pull request #22 from antonio59/dependabot/npm_and_yarn/minor-patch-d5db63d792
@@ -583,6 +585,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
