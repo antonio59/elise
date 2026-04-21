@@ -274,6 +274,7 @@ export const markWishlistAsBought = mutation({
   args: {
     id: v.id("books"),
     boughtBy: v.string(),
+    visitorId: v.string(),
   },
   handler: async (ctx, args) => {
     const name = args.boughtBy.trim();
@@ -283,7 +284,7 @@ export const markWishlistAsBought = mutation({
 
     const allowed = await checkRateLimit(
       ctx,
-      `bought_${name}`,
+      `bought_${args.visitorId}`,
       "markBought",
       5,
       60 * 60 * 1000,

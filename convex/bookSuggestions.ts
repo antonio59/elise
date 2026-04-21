@@ -101,11 +101,12 @@ export const submit = mutation({
     suggestedByEmail: v.optional(v.string()),
     reason: v.optional(v.string()),
     genre: v.optional(v.string()),
+    visitorId: v.string(),
   },
   handler: async (ctx, args) => {
     const allowed = await checkRateLimit(
       ctx,
-      `suggest_${args.suggestedBy.trim().toLowerCase()}`,
+      `suggest_${args.visitorId}`,
       "submitSuggestion",
       3,
       60 * 60 * 1000,

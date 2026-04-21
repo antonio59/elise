@@ -212,7 +212,7 @@ export const sendWeeklySummary = internalAction({
 </html>`;
 
     await resend.emails.send({
-      from: "Elise Reads <onboarding@resend.dev>",
+      from: "Elise Reads <noreply@elisereads.com>",
       to: allowedEmails,
       subject: "📬 Your weekly Elise Reads summary",
       html,

@@ -16,6 +16,10 @@ const CoverUpload: React.FC<CoverUploadProps> = ({ value, onChange }) => {
       alert("Please select an image file (JPG, PNG, or WebP).");
       return;
     }
+    if (file.size > 5 * 1024 * 1024) {
+      alert("Image must be smaller than 5MB.");
+      return;
+    }
 
     // Read as data URL for preview + storage
     const reader = new FileReader();

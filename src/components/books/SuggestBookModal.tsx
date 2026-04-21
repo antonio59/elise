@@ -11,6 +11,7 @@ import {
 import { useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import CoverImage from "../CoverImage";
+import { getVisitorId } from "../../lib/visitorId";
 
 interface SuggestBookModalProps {
   isOpen: boolean;
@@ -147,6 +148,7 @@ const SuggestBookModal: React.FC<SuggestBookModalProps> = ({
         genre: genre || undefined,
         suggestedBy: suggestedBy.trim(),
         reason: reason.trim() || undefined,
+        visitorId: getVisitorId(),
       });
       setSubmitted(true);
     } catch (err) {

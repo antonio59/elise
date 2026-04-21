@@ -16,11 +16,17 @@ export const getPublished = query({
   },
 });
 
-// Get all artworks (site-wide, not user-specific)
+// Get all artworks for authenticated user
 export const getMyArtworks = query({
   args: {},
   handler: async (ctx) => {
-    return await ctx.db.query("artworks").order("desc").collect();
+    const userId = await auth.getUserId(ctx);
+    if (!userId) return [];
+    return await ctx.db
+      .query("artworks")
+      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .order("desc")
+      .collect();
   },
 });
 
@@ -120,11 +126,11 @@ export const remove = mutation({
 
 // Like artwork (public - no auth required)
 export const like = mutation({
-  args: { id: v.id("artworks") },
+  args: { id: v.id("artworks"), visitorId: v.string() },
   handler: async (ctx, args) => {
     const allowed = await checkRateLimit(
       ctx,
-      `like_${args.id}`,
+      `like_${args.visitorId}`,
       "likeArtwork",
       10,
       60 * 60 * 1000,

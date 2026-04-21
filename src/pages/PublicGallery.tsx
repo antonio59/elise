@@ -8,6 +8,7 @@ import ReactionBar from "../components/ReactionBar";
 import PageHeader from "../components/PageHeader";
 import { usePageAnnouncement } from "../components/AccessibleAnnouncer";
 import { usePageMeta } from "../components/PageMeta";
+import { getVisitorId } from "../lib/visitorId";
 
 const PublicGallery: React.FC = () => {
   usePageAnnouncement("Gallery");
@@ -23,7 +24,7 @@ const PublicGallery: React.FC = () => {
     if (likedIds.has(id)) return;
 
     try {
-      await likeArtwork({ id });
+      await likeArtwork({ id, visitorId: getVisitorId() });
       setLikedIds(new Set([...likedIds, id]));
     } catch (error) {
       console.error("Failed to like artwork:", error);
