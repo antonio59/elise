@@ -20,6 +20,7 @@ import { api } from "../../convex/_generated/api";
 import PageHeader from "../components/PageHeader";
 import { usePageAnnouncement } from "../components/AccessibleAnnouncer";
 import { usePageMeta } from "../components/PageMeta";
+import { getVisitorId } from "../lib/visitorId";
 
 interface WishlistBook {
   _id: string;
@@ -58,7 +59,7 @@ const PublicWishlist: React.FC = () => {
     }
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await markAsBought({ id: bookId as any, boughtBy: buyerName.trim() });
+      await markAsBought({ id: bookId as any, boughtBy: buyerName.trim(), visitorId: getVisitorId() });
       setBuySuccess(true);
       setTimeout(() => {
         setBuyingBookId(null);
@@ -490,6 +491,7 @@ const SuggestBookModal: React.FC<SuggestBookModalProps> = ({
         suggestedBy: suggestedBy.trim(),
         suggestedByEmail: email.trim() || undefined,
         reason: reason.trim() || undefined,
+        visitorId: getVisitorId(),
       });
       setSubmitted(true);
     } catch (err) {
