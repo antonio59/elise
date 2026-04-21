@@ -115,6 +115,48 @@ export const migrateUserIds = mutation({
   },
 });
 
+// Internal fix: migrate all user-scoped data to match the userId in userProfiles.
+// Run via: npx convex run migrations:fixUserIdMismatch
+export const fixUserIdMismatch = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    const profile = await ctx.db.query("userProfiles").first();
+    if (!profile) throw new Error("No userProfiles found");
+    const targetUserId = profile.userId;
+
+    const tables = [
+      "books",
+      "artworks",
+      "writings",
+      "userProfiles",
+      "readingGoals",
+      "readingStreaks",
+      "bookSwipes",
+      "writingStreaks",
+      "quotes",
+      "ideas",
+      "characters",
+    ] as const;
+
+    let totalUpdated = 0;
+
+    for (const table of tables) {
+      const docs = await ctx.db.query(table).collect();
+      for (const doc of docs) {
+        if (
+          (doc as { userId?: unknown }).userId !== undefined &&
+          (doc as { userId?: unknown }).userId !== targetUserId
+        ) {
+          await ctx.db.patch(doc._id, { userId: targetUserId } as Record<string, unknown>);
+          totalUpdated++;
+        }
+      }
+    }
+
+    return { totalUpdated, targetUserId };
+  },
+});
+
 // Helper mutation: swap a book's coverStorageId and delete the old storage object.
 export const swapCoverStorage = internalMutation({
   args: {
