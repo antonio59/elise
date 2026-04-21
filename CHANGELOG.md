@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- Add legacy windowExpiresAt field to rateLimits schema
 - RateLimits schema + quotes index to resolve Convex deploy failure
 - Add missing setLikingId calls in PublicGallery handleLike
 - **security**: Resolve critical backend and frontend issues
@@ -46,6 +47,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
+- Merge branch 'main' of https://github.com/antonio59/elise
 - Merge branch 'main' of https://github.com/antonio59/elise
 - Merge branch 'main' of https://github.com/antonio59/elise
 - Fix accessibility and interaction issues across components (#29)
@@ -585,6 +587,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
