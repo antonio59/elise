@@ -111,6 +111,9 @@ const CoverImage: React.FC<CoverImageProps> = ({
       className={className}
       loading="lazy"
       decoding="async"
+      width={400}
+      height={600}
+      style={{ aspectRatio: "2/3" }}
       onError={() => setIndex((i) => i + 1)}
     />
   );

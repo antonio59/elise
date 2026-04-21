@@ -14,6 +14,7 @@ import type { Doc } from "../../../convex/_generated/dataModel";
 import GoogleBookSearch from "../GoogleBookSearch";
 import GiphyPicker from "../GiphyPicker";
 import CoverUpload from "../CoverUpload";
+import ReadingJournalHelper from "../ReadingJournalHelper";
 
 
 type Book = Doc<"books">;
@@ -370,6 +371,7 @@ const EditBookModal: React.FC<EditBookModalProps> = ({
                     />
                   )}
                 </div>
+                <ReadingJournalHelper onSelect={(text) => setReview((prev) => prev ? prev + "\n\n" + text : text)} />
               </div>
             )}
 

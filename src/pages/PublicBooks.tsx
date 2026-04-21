@@ -153,12 +153,16 @@ const PublicBooks: React.FC = () => {
             <div className="flex rounded-lg overflow-hidden border border-slate-200">
               <button
                 onClick={() => setViewMode("grid")}
+                aria-label="Grid view"
+                aria-pressed={viewMode === "grid"}
                 className={`px-3 py-1.5 text-sm ${viewMode === "grid" ? "bg-primary-500 text-white" : "bg-white text-slate-500 hover:bg-slate-50"}`}
               >
                 <LayoutGrid className="w-4 h-4" />
               </button>
               <button
                 onClick={() => setViewMode("list")}
+                aria-label="List view"
+                aria-pressed={viewMode === "list"}
                 className={`px-3 py-1.5 text-sm ${viewMode === "list" ? "bg-primary-500 text-white" : "bg-white text-slate-500 hover:bg-slate-50"}`}
               >
                 <List className="w-4 h-4" />
@@ -176,6 +180,7 @@ const PublicBooks: React.FC = () => {
             >
               <button
                 onClick={() => setGenreFilter(null)}
+                aria-pressed={!genreFilter}
                 className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
                   !genreFilter
                     ? "bg-primary-500 text-white"
@@ -191,6 +196,7 @@ const PublicBooks: React.FC = () => {
                   onClick={() =>
                     setGenreFilter(genreFilter === g.name ? null : g.name)
                   }
+                  aria-pressed={genreFilter === g.name}
                   className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
                     genreFilter === g.name
                       ? "bg-primary-500 text-white"

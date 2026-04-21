@@ -21,6 +21,7 @@ import PageHeader from "../components/PageHeader";
 import { usePageAnnouncement } from "../components/AccessibleAnnouncer";
 import { usePageMeta } from "../components/PageMeta";
 import { getVisitorId } from "../lib/visitorId";
+import { BookGridSkeleton } from "../components/Skeleton";
 
 interface WishlistBook {
   _id: string;
@@ -40,8 +41,8 @@ interface WishlistBook {
 const PublicWishlist: React.FC = () => {
   usePageAnnouncement("Wishlist");
   usePageMeta({ title: "Wishlist", description: "Books I'd love to read" });
-  const wishlistBooks = (useQuery(api.books.getWishlist) ??
-    []) as WishlistBook[];
+  const wishlistBooksRaw = useQuery(api.books.getWishlist);
+  const wishlistBooks = (wishlistBooksRaw ?? []) as WishlistBook[];
 
   const [selectedBook, setSelectedBook] = useState<WishlistBook | null>(null);
   const [showSuggestModal, setShowSuggestModal] = useState(false);
@@ -146,6 +147,20 @@ const PublicWishlist: React.FC = () => {
       </button>
     </div>
   );
+
+  if (wishlistBooksRaw === undefined) {
+    return (
+      <div className="max-w-6xl mx-auto px-4 py-10 sm:py-12">
+        <PageHeader
+          badge="Wishlist"
+          title="My Reading Wishlist"
+          subtitle="Books I can't wait to read!"
+          breadcrumbs={[{ label: "Wishlist" }]}
+        />
+        <BookGridSkeleton />
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-10 sm:py-12">

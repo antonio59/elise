@@ -1,5 +1,11 @@
 import CoverImage from "../components/CoverImage";
 import ReadingStreak from "../components/ReadingStreak";
+import WritingStreak from "../components/WritingStreak";
+import DailyPrompts from "../components/DailyPrompts";
+import IdeasVault from "../components/IdeasVault";
+import QuoteCollection from "../components/QuoteCollection";
+import ArtProgressTimeline from "../components/ArtProgressTimeline";
+import MonthlyWrapped from "../components/MonthlyWrapped";
 import OnboardingTour from "../components/OnboardingTour";
 import React, { useState, useCallback, useMemo } from "react";
 import { Link } from "react-router-dom";
@@ -132,9 +138,21 @@ const Dashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Reading Streak */}
+      {/* Streaks */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <ReadingStreak />
+      </div>
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <WritingStreak />
+      </div>
+
+      {/* Daily Prompts */}
+      <DailyPrompts />
+
+      {/* Ideas & Quotes */}
+      <div className="grid md:grid-cols-2 gap-6">
+        <IdeasVault />
+        <QuoteCollection />
       </div>
 
       {/* Stats Grid */}
@@ -600,6 +618,12 @@ const Dashboard: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Monthly Wrapped */}
+      <MonthlyWrapped />
+
+      {/* Art Progress */}
+      <ArtProgressTimeline />
 
       {/* Recent Artworks */}
       <div>

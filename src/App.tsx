@@ -10,6 +10,7 @@ import ThemeProvider from "./components/ThemeProvider";
 import ErrorBoundary from "./components/ErrorBoundary";
 import SkipToContent from "./components/SkipToContent";
 import { AccessibleAnnouncerProvider } from "./components/AccessibleAnnouncer";
+import { ToastProvider } from "./components/ui/Toast";
 
 // Eager load public pages
 import PublicHome from "./pages/PublicHome";
@@ -19,6 +20,7 @@ import PublicBooks from "./pages/PublicBooks";
 import PublicReviews from "./pages/PublicReviews";
 import PublicWritings from "./pages/PublicWritings";
 import About from "./pages/About";
+import Guestbook from "./pages/Guestbook";
 import NotFound from "./pages/NotFound";
 import { Layout, PublicLayout, AuthLayout } from "./components/Layout";
 
@@ -36,6 +38,7 @@ const Settings = lazy(() => import("./pages/Settings"));
 const Reviews = lazy(() => import("./pages/Reviews"));
 const DashboardAbout = lazy(() => import("./pages/DashboardAbout"));
 const Discover = lazy(() => import("./pages/Discover"));
+const Characters = lazy(() => import("./pages/Characters"));
 const ProtectedRoute = lazy(() => import("./components/ProtectedRoute"));
 
 // Loading spinner
@@ -54,6 +57,7 @@ function App() {
       <AuthProvider>
         <ThemeProvider>
           <AccessibleAnnouncerProvider>
+          <ToastProvider>
           <Router>
           <SkipToContent />
           <Routes>
@@ -65,6 +69,7 @@ function App() {
             <Route path="/art" element={<PublicLayout><PublicGallery /></PublicLayout>} />
             <Route path="/wishlist" element={<PublicLayout><PublicWishlist /></PublicLayout>} />
             <Route path="/about" element={<PublicLayout><About /></PublicLayout>} />
+            <Route path="/guestbook" element={<PublicLayout><Guestbook /></PublicLayout>} />
             <Route path="/login" element={<AuthLayout><Suspense fallback={<PageLoader />}><Login /></Suspense></AuthLayout>} />
             <Route path="/signup" element={<AuthLayout><Suspense fallback={<PageLoader />}><Signup /></Suspense></AuthLayout>} />
 
@@ -75,6 +80,7 @@ function App() {
             <Route path="/dashboard/art" element={<Suspense fallback={<PageLoader />}><ProtectedRoute><Layout><MyArt /></Layout></ProtectedRoute></Suspense>} />
             <Route path="/dashboard/writing" element={<Suspense fallback={<PageLoader />}><ProtectedRoute><Layout><MyWritings /></Layout></ProtectedRoute></Suspense>} />
             <Route path="/dashboard/discover" element={<Suspense fallback={<PageLoader />}><ProtectedRoute><Layout><Discover /></Layout></ProtectedRoute></Suspense>} />
+            <Route path="/dashboard/characters" element={<Suspense fallback={<PageLoader />}><ProtectedRoute><Layout><Characters /></Layout></ProtectedRoute></Suspense>} />
             <Route path="/dashboard/suggestions" element={<Suspense fallback={<PageLoader />}><ProtectedRoute><Layout><Suggestions /></Layout></ProtectedRoute></Suspense>} />
             <Route path="/dashboard/about" element={<Suspense fallback={<PageLoader />}><ProtectedRoute><Layout><DashboardAbout /></Layout></ProtectedRoute></Suspense>} />
             <Route path="/dashboard/settings" element={<Suspense fallback={<PageLoader />}><ProtectedRoute><Layout><Settings /></Layout></ProtectedRoute></Suspense>} />
@@ -89,6 +95,7 @@ function App() {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Router>
+        </ToastProvider>
         </AccessibleAnnouncerProvider>
         </ThemeProvider>
       </AuthProvider>

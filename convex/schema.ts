@@ -243,5 +243,74 @@ export default defineSchema(
       .index("by_target_emoji", ["targetType", "targetId", "emoji"])
       .index("by_visitor", ["visitorId", "targetType", "targetId"])
       .index("by_createdAt", ["createdAt"]),
+
+    // Writing streaks (daily writing check-ins)
+    writingStreaks: defineTable({
+      userId: v.id("users"),
+      date: v.string(), // "YYYY-MM-DD"
+      createdAt: v.number(),
+    })
+      .index("by_user", ["userId"])
+      .index("by_user_date", ["userId", "date"]),
+
+    // Quotes (favorite book quotes)
+    quotes: defineTable({
+      userId: v.id("users"),
+      bookId: v.optional(v.id("books")),
+      bookTitle: v.optional(v.string()),
+      text: v.string(),
+      page: v.optional(v.number()),
+      chapter: v.optional(v.string()),
+      isPublic: v.boolean(),
+      createdAt: v.number(),
+    })
+      .index("by_user", ["userId"])
+      .index("by_user_public", ["userId", "isPublic"])
+      .index("by_book", ["bookId"])
+      .index("by_createdAt", ["createdAt"]),
+
+    // Ideas vault (creative sparks)
+    ideas: defineTable({
+      userId: v.id("users"),
+      title: v.string(),
+      content: v.string(),
+      type: v.union(v.literal("writing"), v.literal("art"), v.literal("book"), v.literal("other")),
+      tags: v.optional(v.array(v.string())),
+      isArchived: v.boolean(),
+      createdAt: v.number(),
+    })
+      .index("by_user", ["userId"])
+      .index("by_user_archived", ["userId", "isArchived"])
+      .index("by_createdAt", ["createdAt"]),
+
+    // Guestbook entries (visitor messages)
+    guestbookEntries: defineTable({
+      name: v.string(),
+      message: v.string(),
+      visitorId: v.string(),
+      isApproved: v.boolean(),
+      createdAt: v.number(),
+    })
+      .index("by_approved", ["isApproved"])
+      .index("by_visitor", ["visitorId"])
+      .index("by_createdAt", ["createdAt"]),
+
+    // Characters (story bible)
+    characters: defineTable({
+      userId: v.id("users"),
+      name: v.string(),
+      description: v.string(),
+      personality: v.optional(v.string()),
+      appearance: v.optional(v.string()),
+      role: v.optional(v.string()),
+      relationships: v.optional(v.array(v.object({ name: v.string(), relation: v.string() }))),
+      notes: v.optional(v.string()),
+      writingIds: v.optional(v.array(v.id("writings"))),
+      createdAt: v.number(),
+      updatedAt: v.number(),
+    })
+      .index("by_user", ["userId"])
+      .index("by_user_name", ["userId", "name"])
+      .index("by_createdAt", ["createdAt"]),
   },
 );
