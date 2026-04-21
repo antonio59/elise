@@ -226,6 +226,7 @@ export default defineSchema(
       identifier: v.string(),
       action: v.string(),
       windowStart: v.optional(v.number()),
+      windowExpiresAt: v.optional(v.number()), // legacy field — can remove after data migration
       count: v.number(),
     })
       .index("by_identifier_action", ["identifier", "action"])
