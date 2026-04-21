@@ -37,13 +37,10 @@ All notable changes to this project will be documented in this file.
 
 ### CI/CD
 
+- Fix changelog workflow race condition, add security parser, backfill #30
 - Add automatic changelog workflow
 - Add automatic changelog workflow
 - Add automatic changelog workflow
-
-### Security
-
-- Harden rate limits, fix Resend domain, add HSTS, filter artworks by user (#30)
 
 ### Changes
 
@@ -612,6 +609,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
+- Update changelog [skip ci]
 
 ### Features
 
@@ -628,6 +626,10 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 ### Refactoring
 
 - Address all highlighted frontend and backend issues
+
+### Security
+
+- Harden rate limits, fix Resend domain, add HSTS, filter artworks by user (#30)
 
 ### Testing
 
