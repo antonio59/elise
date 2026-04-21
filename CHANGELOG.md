@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- Add internal migration to fix userId mismatch between books and userProfiles
 - Remove conflicting CSP meta tag that blocked Convex WebSocket
 - Add legacy windowExpiresAt field to rateLimits schema
 - RateLimits schema + quotes index to resolve Convex deploy failure
@@ -588,6 +589,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
