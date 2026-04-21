@@ -8,6 +8,7 @@ import {
   Bell,
   Target,
   CheckCircle,
+  AlertCircle,
   Sparkles,
   Heart,
   Moon,
@@ -78,6 +79,7 @@ const Settings: React.FC = () => {
   const [footerNote, setFooterNote] = useState("");
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [saveError, setSaveError] = useState("");
 
   // Load profile data when available
   useEffect(() => {
@@ -105,6 +107,7 @@ const Settings: React.FC = () => {
     e.preventDefault();
     setSaving(true);
     setSaved(false);
+    setSaveError("");
 
     try {
       await updateProfile({
@@ -123,6 +126,8 @@ const Settings: React.FC = () => {
       });
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
+    } catch (err) {
+      setSaveError(err instanceof Error ? err.message : "Failed to save changes");
     } finally {
       setSaving(false);
     }
@@ -449,8 +454,16 @@ const Settings: React.FC = () => {
             </div>
             <button
               type="button"
+              role="switch"
+              aria-checked={notifications}
               onClick={() => setNotifications(!notifications)}
-              className={`w-12 h-7 rounded-full transition-colors ${
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  setNotifications(!notifications);
+                }
+              }}
+              className={`w-12 h-7 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-2 ${
                 notifications ? "bg-primary-500" : "bg-slate-300"
               }`}
             >
@@ -487,6 +500,16 @@ const Settings: React.FC = () => {
             >
               <CheckCircle className="w-5 h-5" />
               <span className="font-medium">Changes saved!</span>
+            </motion.div>
+          )}
+          {saveError && (
+            <motion.div
+              className="flex items-center gap-2 text-red-600"
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+            >
+              <AlertCircle className="w-5 h-5" />
+              <span className="font-medium text-sm">{saveError}</span>
             </motion.div>
           )}
         </div>
