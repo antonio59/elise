@@ -58,7 +58,7 @@ export const getPublicQuotes = query({
   handler: async (ctx) => {
     return await ctx.db
       .query("quotes")
-      .withIndex("by_user_public", (q) => q.eq("isPublic", true))
+      .withIndex("by_public_created", (q) => q.eq("isPublic", true))
       .order("desc")
       .take(50);
   },

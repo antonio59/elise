@@ -20,7 +20,9 @@ export async function checkRateLimit(
     .first();
 
   if (existing) {
-    if (existing.windowStart < windowStart) {
+    // Handle old documents that used windowExpiresAt instead of windowStart
+    const existingWindowStart = existing.windowStart ?? 0;
+    if (existingWindowStart < windowStart) {
       // New window
       await ctx.db.patch(existing._id, { windowStart, count: 1 });
       return true;

@@ -225,7 +225,7 @@ export default defineSchema(
     rateLimits: defineTable({
       identifier: v.string(),
       action: v.string(),
-      windowStart: v.number(),
+      windowStart: v.optional(v.number()),
       count: v.number(),
     })
       .index("by_identifier_action", ["identifier", "action"])
@@ -265,7 +265,7 @@ export default defineSchema(
       createdAt: v.number(),
     })
       .index("by_user", ["userId"])
-      .index("by_user_public", ["userId", "isPublic"])
+      .index("by_public_created", ["isPublic", "createdAt"])
       .index("by_book", ["bookId"])
       .index("by_createdAt", ["createdAt"]),
 
