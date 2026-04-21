@@ -224,13 +224,17 @@ const AddBookModal: React.FC<AddBookModalProps> = ({
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="add-book-title"
         >
           {/* Header */}
           <div className="p-6 border-b border-slate-200">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-bold text-slate-800">Add Book</h2>
+              <h2 id="add-book-title" className="text-xl font-bold text-slate-800">Add Book</h2>
               <button
                 onClick={handleClose}
+                aria-label="Close modal"
                 className="p-2 hover:bg-slate-100 rounded-lg"
               >
                 <X className="w-5 h-5" />
@@ -303,7 +307,9 @@ const AddBookModal: React.FC<AddBookModalProps> = ({
                           key={star}
                           type="button"
                           onClick={() => setRating(star)}
-                          className="p-1"
+                          aria-label={`Rate ${star} star${star > 1 ? "s" : ""}`}
+                          aria-pressed={star <= rating}
+                          className="p-1 focus:outline-none focus:ring-2 focus:ring-yellow-400 rounded"
                         >
                           <Star
                             className={`w-8 h-8 transition-colors ${

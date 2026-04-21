@@ -18,6 +18,7 @@ const PublicGallery: React.FC = () => {
     null,
   );
   const [likedIds, setLikedIds] = useState<Set<string>>(new Set());
+  const [likingId, setLikingId] = useState<string | null>(null);
 
   const handleLike = async (id: Id<"artworks">) => {
     if (likedIds.has(id)) return;
@@ -81,13 +82,14 @@ const PublicGallery: React.FC = () => {
                   e.stopPropagation();
                   handleLike(art._id);
                 }}
+                disabled={likingId === art._id}
                 aria-label={likedIds.has(art._id) ? "Unlike artwork" : "Like artwork"}
                 aria-pressed={likedIds.has(art._id)}
                 className={`absolute top-3 right-3 p-2 rounded-full transition-all ${
                   likedIds.has(art._id)
                     ? "bg-primary-500 text-white"
                     : "bg-white/90 text-slate-600 hover:text-primary-500"
-                }`}
+                } disabled:opacity-50 disabled:cursor-not-allowed`}
               >
                 <Heart
                   className={`w-4 h-4 ${likedIds.has(art._id) ? "fill-current" : ""}`}
@@ -186,12 +188,12 @@ const PublicGallery: React.FC = () => {
 
                   <button
                     onClick={() => handleLike(selectedArt._id)}
-                    disabled={likedIds.has(selectedArt._id)}
+                    disabled={likedIds.has(selectedArt._id) || likingId === selectedArt._id}
                     className={`w-full flex items-center justify-center gap-2 py-3 rounded-xl font-medium transition-all ${
                       likedIds.has(selectedArt._id)
                         ? "bg-primary-100 text-primary-600"
                         : "bg-primary-500 text-white hover:bg-primary-600"
-                    }`}
+                    } disabled:opacity-50 disabled:cursor-not-allowed`}
                   >
                     <Heart
                       className={`w-5 h-5 ${likedIds.has(selectedArt._id) ? "fill-current" : ""}`}

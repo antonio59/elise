@@ -132,6 +132,12 @@ const Discover: React.FC = () => {
   const [lastSwipeAction, setLastSwipeAction] = useState<"liked" | "passed" | null>(null);
   const queryIndexRef = useRef(0);
   const searchQueriesRef = useRef<string[]>([]);
+  const isMountedRef = useRef(true);
+
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => { isMountedRef.current = false; };
+  }, []);
 
   const isReady = profile !== undefined && swipedIds !== undefined && existingKeys !== undefined;
 
@@ -194,10 +200,14 @@ const Discover: React.FC = () => {
         }
       }
 
-      setCandidates((prev) => [...prev, ...newCandidates]);
+      if (isMountedRef.current) {
+        setCandidates((prev) => [...prev, ...newCandidates]);
+      }
     } finally {
-      setLoading(false);
-      setInitialLoad(false);
+      if (isMountedRef.current) {
+        setLoading(false);
+        setInitialLoad(false);
+      }
     }
   }, [isReady, loading, swipedIds, existingKeys, candidates, convex]);
 
