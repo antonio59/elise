@@ -41,6 +41,10 @@ All notable changes to this project will be documented in this file.
 - Add automatic changelog workflow
 - Add automatic changelog workflow
 
+### Security
+
+- Harden rate limits, fix Resend domain, add HSTS, filter artworks by user (#30)
+
 ### Changes
 
 - Fix accessibility and interaction issues across components (#29)
