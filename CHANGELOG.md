@@ -43,6 +43,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
+- Fix accessibility and interaction issues across components (#29)
 - Merge pull request #22 from antonio59/dependabot/npm_and_yarn/minor-patch-d5db63d792
 
 Bump the minor-patch group with 7 updates
@@ -579,6 +580,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
