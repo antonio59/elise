@@ -45,6 +45,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
+- Merge branch 'main' of https://github.com/antonio59/elise
 - Fix accessibility and interaction issues across components (#29)
 - Merge pull request #22 from antonio59/dependabot/npm_and_yarn/minor-patch-d5db63d792
 
@@ -612,9 +613,11 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
+- Update changelog [skip ci]
 
 ### Features
 
+- Creative features + UI/UX improvements for Elise
 - Weekly summary email, global search, theme toggle, OG meta, and security hardening
 - Bring elise up to izzy-reads coding and design standards
 - Bring elise up to izzy-reads coding and design standards
