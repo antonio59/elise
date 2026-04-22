@@ -630,6 +630,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
+- Update changelog [skip ci]
 
 ### Features
 
@@ -650,6 +651,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Security
 
+- Override uuid to ^14.0.0 to fix CVE-2025-4848 / GHSA-w5hq-g745-h8pq
 - Harden rate limits, fix Resend domain, add HSTS, filter artworks by user (#30)
 
 ### Testing
