@@ -42,6 +42,7 @@ All notable changes to this project will be documented in this file.
 
 ### CI/CD
 
+- Remove invalid --severity flag from OSV Scanner workflow
 - Fix OSV Scanner workflow action paths and upgrade upload-sarif to v4
 - Fix changelog workflow race condition, add security parser, backfill #30
 - Add automatic changelog workflow
@@ -595,6 +596,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
