@@ -21,18 +21,35 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install OSV Scanner
-        run: |
-          curl -sSfL https://raw.githubusercontent.com/google/osv-scanner/main/install.sh | sh -s -- -b /usr/local/bin v2.3.5
+      - name: Run OSV Scanner
+        uses: google/osv-scanner-action/osv-scanner-action@v2.3.5
+        with:
+          scan-args: |
+            --recursive
+            --format=json
+            --output=results.json
+            .
+        continue-on-error: true
 
-      - name: Run OSV Scanner (SARIF)
-        run: osv-scanner --recursive --format=sarif --output=results.sarif .
+      - name: Generate SARIF
+        uses: google/osv-scanner-action/osv-reporter-action@v2.3.5
+        with:
+          scan-args: |
+            --output=results.sarif
+            --new=results.json
+            --gh-annotations=false
         continue-on-error: true
 
       - name: Upload SARIF to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v3
+        if: hashFiles('results.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: results.sarif
 
       - name: Fail on HIGH/CRITICAL
-        run: osv-scanner --recursive --severity=HIGH .
+        uses: google/osv-scanner-action/osv-scanner-action@v2.3.5
+        with:
+          scan-args: |
+            --recursive
+            --severity=HIGH
+            .
