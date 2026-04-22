@@ -49,6 +49,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
+- Refactor OSV Scanner setup and execution steps
 - Add OSV Scanner workflow for vulnerability scanning
 
 This workflow scans for vulnerabilities in the codebase using the OSV Scanner and uploads the results in SARIF format to GitHub Security tab. It is triggered on pull requests, pushes to main or master branches, and on a weekly schedule.
@@ -593,6 +594,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
