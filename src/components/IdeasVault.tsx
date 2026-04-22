@@ -13,6 +13,13 @@ const IDEA_COLORS: Record<string, string> = {
   other: "bg-slate-50 text-slate-600 border-slate-200",
 };
 
+const IDEA_ACTIVE_COLORS: Record<string, string> = {
+  writing: "bg-violet-500 text-white border-violet-600",
+  art: "bg-primary-500 text-white border-primary-600",
+  book: "bg-amber-500 text-white border-amber-600",
+  other: "bg-slate-500 text-white border-slate-600",
+};
+
 const IDEA_LABELS: Record<string, string> = {
   writing: "Writing",
   art: "Art",
@@ -89,7 +96,7 @@ const IdeasVault: React.FC = () => {
                   onClick={() => setType(t)}
                   className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
                     type === t
-                      ? IDEA_COLORS[t].replace("bg-", "bg-").replace("text-", "text-white bg-")
+                      ? IDEA_ACTIVE_COLORS[t]
                       : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                   }`}
                 >
