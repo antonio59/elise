@@ -21,14 +21,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Run OSV Scanner
-        uses: google/osv-scanner-action@v2.3.5
-        with:
-          scan-args: |
-            --recursive
-            --format=sarif
-            --output=results.sarif
-            .
+      - name: Install OSV Scanner
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/google/osv-scanner/main/install.sh | sh -s -- -b /usr/local/bin v2.3.5
+
+      - name: Run OSV Scanner (SARIF)
+        run: osv-scanner --recursive --format=sarif --output=results.sarif .
         continue-on-error: true
 
       - name: Upload SARIF to GitHub Security tab
@@ -37,9 +35,4 @@ jobs:
           sarif_file: results.sarif
 
       - name: Fail on HIGH/CRITICAL
-        uses: google/osv-scanner-action@v2.3.5
-        with:
-          scan-args: |
-            --recursive
-            --severity=HIGH
-            .
+        run: osv-scanner --recursive --severity=HIGH .
