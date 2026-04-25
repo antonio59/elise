@@ -7,7 +7,9 @@ import confetti from "canvas-confetti";
 import { useReducedMotion } from "../hooks/useReducedMotion";
 
 const WritingStreak: React.FC = () => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
   const streak = useQuery((api as any).writingStreaks.getStreak);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
   const checkIn = useMutation((api as any).writingStreaks.checkIn);
   const reducedMotion = useReducedMotion();
   const [loading, setLoading] = useState(false);

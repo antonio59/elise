@@ -28,9 +28,13 @@ const IDEA_LABELS: Record<string, string> = {
 };
 
 const IdeasVault: React.FC = () => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
   const ideas = useQuery((api as any).ideas.getMyIdeas, { includeArchived: false }) ?? [];
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
   const createIdea = useMutation((api as any).ideas.create);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
   const updateIdea = useMutation((api as any).ideas.update);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
   const removeIdea = useMutation((api as any).ideas.remove);
 
   const [showForm, setShowForm] = useState(false);

@@ -69,7 +69,7 @@ const PublicBooks: React.FC = () => {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [showGenres, setShowGenres] = useState(false);
 
-  const books = booksRaw ?? [];
+  const books = useMemo(() => booksRaw ?? [], [booksRaw]);
 
   const genresWithCounts = useMemo(
     () =>

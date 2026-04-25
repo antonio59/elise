@@ -13,6 +13,7 @@ const THEMES = [
 
 const STORAGE_KEY = "elise-public-theme";
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function getPublicTheme(): string {
   try {
     return localStorage.getItem(STORAGE_KEY) || "editorial";
@@ -21,6 +22,7 @@ export function getPublicTheme(): string {
   }
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function setPublicTheme(theme: string): void {
   try {
     localStorage.setItem(STORAGE_KEY, theme);

@@ -21,9 +21,13 @@ const Characters: React.FC = () => {
   usePageAnnouncement("Characters");
   usePageMeta({ title: "Character Bible", description: "Your story characters" });
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
   const characters = useQuery((api as any).characters.getMyCharacters) ?? [];
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
   const createCharacter = useMutation((api as any).characters.create);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
   const updateCharacter = useMutation((api as any).characters.update);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
   const removeCharacter = useMutation((api as any).characters.remove);
 
   const [showForm, setShowForm] = useState(false);

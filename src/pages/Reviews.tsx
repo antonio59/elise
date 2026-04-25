@@ -55,7 +55,7 @@ const ReviewsPage: React.FC = () => {
   const [editReview, setEditReview] = useState("");
   const [saving, setSaving] = useState(false);
 
-  const books = booksRaw ?? [];
+  const books = useMemo(() => booksRaw ?? [], [booksRaw]);
 
   const { sorted, stats } = useMemo(() => {
     const reviewed = books.filter((b: Book) => b.rating && b.rating > 0);

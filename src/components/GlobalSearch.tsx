@@ -20,9 +20,12 @@ const GlobalSearch: React.FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
-  const books = useQuery(api.books.getReadBooks) ?? [];
-  const writings = useQuery(api.writings.getPublished, { limit: 100 }) ?? [];
-  const artworks = useQuery(api.artworks.getPublished, { limit: 100 }) ?? [];
+  const booksRaw = useQuery(api.books.getReadBooks);
+  const books = useMemo(() => booksRaw ?? [], [booksRaw]);
+  const writingsRaw = useQuery(api.writings.getPublished, { limit: 100 });
+  const writings = useMemo(() => writingsRaw ?? [], [writingsRaw]);
+  const artworksRaw = useQuery(api.artworks.getPublished, { limit: 100 });
+  const artworks = useMemo(() => artworksRaw ?? [], [artworksRaw]);
 
   const results = useMemo<SearchResult[]>(() => {
     const q = query.trim().toLowerCase();
@@ -80,9 +83,15 @@ const GlobalSearch: React.FC = () => {
     const onKey = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
-        setOpen((o) => !o);
+        setOpen((prev) => {
+          if (prev) setQuery("");
+          return !prev;
+        });
       }
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape") {
+        setQuery("");
+        setOpen(false);
+      }
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
@@ -91,12 +100,11 @@ const GlobalSearch: React.FC = () => {
   useEffect(() => {
     if (open) {
       setTimeout(() => inputRef.current?.focus(), 0);
-    } else {
-      setQuery("");
     }
   }, [open]);
 
   const handleSelect = (url: string) => {
+    setQuery("");
     setOpen(false);
     navigate(url);
   };
@@ -127,7 +135,7 @@ const GlobalSearch: React.FC = () => {
         <div className="fixed inset-0 z-[60] flex items-start justify-center p-4 pt-[15vh]">
           <div
             className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
-            onClick={() => setOpen(false)}
+            onClick={() => { setQuery(""); setOpen(false); }}
           />
           <div className="relative w-full max-w-xl bg-white rounded-2xl shadow-2xl overflow-hidden">
             <div className="flex items-center gap-3 px-4 py-3 border-b border-slate-100">

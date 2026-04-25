@@ -78,6 +78,7 @@ export const Modal: React.FC<ModalProps> = ({
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
+  const reducedMotion = useReducedMotion();
 
   const handleEscape = useCallback(
     (e: KeyboardEvent) => {
@@ -163,7 +164,7 @@ export const Modal: React.FC<ModalProps> = ({
             initial="hidden"
             animate="visible"
             exit="exit"
-            transition={useReducedMotion() ? { duration: 0 } : { type: "spring", stiffness: 300, damping: 30 }}
+            transition={reducedMotion ? { duration: 0 } : { type: "spring", stiffness: 300, damping: 30 }}
             role="dialog"
             aria-modal="true"
             aria-labelledby={title ? "modal-title" : undefined}

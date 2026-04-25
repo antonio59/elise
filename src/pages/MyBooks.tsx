@@ -35,7 +35,7 @@ const MyBooks: React.FC = () => {
   usePageMeta({ title: "My Books", description: "Manage your books" });
   // Get all books - the query handles auth internally
   const booksRaw = useQuery(api.books.getMyBooks);
-  const books = booksRaw ?? [];
+  const books = useMemo(() => booksRaw ?? [], [booksRaw]);
 
   const addBook = useMutation(api.books.add);
   const updateBook = useMutation(api.books.update);
@@ -65,9 +65,7 @@ const MyBooks: React.FC = () => {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [bookToDelete, setBookToDelete] = useState<Id<"books"> | null>(null);
 
-  if (booksRaw === undefined) return <BookGridSkeleton />;
-
-  // Filter by status instead of isRead
+  // Filter by status instead of isRead — must be before any early return
   const readBooks = useMemo(() => books.filter((b: Book) => b.status === "read"), [books]);
   const readingBooks = useMemo(() => books.filter((b: Book) => b.status === "reading"), [books]);
   const wishlistBooks = useMemo(() => books.filter((b: Book) => b.status === "wishlist"), [books]);
@@ -95,6 +93,8 @@ const MyBooks: React.FC = () => {
         );
     }
   }, [activeTab, readBooks, readingBooks, wishlistBooks, searchQuery]);
+
+  if (booksRaw === undefined) return <BookGridSkeleton />;
 
   const tabs = [
     {

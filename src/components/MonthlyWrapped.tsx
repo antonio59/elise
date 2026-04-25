@@ -8,6 +8,7 @@ const MonthlyWrapped: React.FC = () => {
   const books = useQuery(api.books.getMyBooks);
   const writings = useQuery(api.writings.getMyWritings, {});
   const artworks = useQuery(api.artworks.getMyArtworks);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
   const streak = useQuery((api as any).readingStreaks.getStreak);
 
   const stats = useMemo(() => {

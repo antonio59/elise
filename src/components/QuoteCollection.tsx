@@ -6,8 +6,11 @@ import { Quote, Plus, X, Trash2, Globe, Lock } from "lucide-react";
 import type { Doc } from "../../convex/_generated/dataModel";
 
 const QuoteCollection: React.FC = () => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
   const quotes = useQuery((api as any).quotes.getMyQuotes) ?? [];
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
   const createQuote = useMutation((api as any).quotes.create);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
   const removeQuote = useMutation((api as any).quotes.remove);
 
   const [showForm, setShowForm] = useState(false);

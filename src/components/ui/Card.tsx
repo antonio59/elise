@@ -49,6 +49,7 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
     },
     ref,
   ) => {
+    const reducedMotion = useReducedMotion();
     return (
       <motion.div
         ref={ref}
@@ -58,7 +59,7 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
           paddingStyles[padding],
           className,
         )}
-        whileHover={hoverEffect && !useReducedMotion() ? { y: -4, scale: 1.01 } : {}}
+        whileHover={hoverEffect && !reducedMotion ? { y: -4, scale: 1.01 } : {}}
         transition={{ duration: 0.2 }}
         {...props}
       >

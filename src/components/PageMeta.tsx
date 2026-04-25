@@ -7,6 +7,7 @@ interface PageMetaProps {
   url?: string;
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function usePageMeta({
   title,
   description,

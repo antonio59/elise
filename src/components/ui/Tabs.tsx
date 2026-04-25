@@ -30,6 +30,7 @@ export const Tabs: React.FC<TabsProps> = ({
   size = "md",
   className,
 }) => {
+  const reducedMotion = useReducedMotion();
   const sizeStyles: Record<string, string> = {
     sm: "text-sm px-3 py-1.5",
     md: "text-base px-4 py-2",
@@ -55,7 +56,7 @@ export const Tabs: React.FC<TabsProps> = ({
               <motion.div
                 layoutId="activeTab"
                 className="absolute inset-0 bg-slate-50 rounded-lg shadow-soft"
-                transition={useReducedMotion() ? { duration: 0 } : { type: "spring", stiffness: 400, damping: 30 }}
+                transition={reducedMotion ? { duration: 0 } : { type: "spring", stiffness: 400, damping: 30 }}
               />
             )}
             <span className="relative z-10 flex items-center gap-2">
@@ -91,7 +92,7 @@ export const Tabs: React.FC<TabsProps> = ({
               <motion.div
                 layoutId="activeUnderline"
                 className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-500"
-                transition={useReducedMotion() ? { duration: 0 } : { type: "spring", stiffness: 400, damping: 30 }}
+                transition={reducedMotion ? { duration: 0 } : { type: "spring", stiffness: 400, damping: 30 }}
               />
             )}
           </button>
@@ -137,14 +138,15 @@ export const TabContent: React.FC<TabContentProps> = ({
   activeTab,
   className,
 }) => {
+  const reducedMotion = useReducedMotion();
   if (tabId !== activeTab) return null;
 
   return (
     <motion.div
-      initial={useReducedMotion() ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+      initial={reducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={useReducedMotion() ? { opacity: 0 } : { opacity: 0, y: -10 }}
-      transition={useReducedMotion() ? { duration: 0 } : { duration: 0.2 }}
+      exit={reducedMotion ? { opacity: 0 } : { opacity: 0, y: -10 }}
+      transition={reducedMotion ? { duration: 0 } : { duration: 0.2 }}
       className={className}
     >
       {children}

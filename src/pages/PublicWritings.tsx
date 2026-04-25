@@ -49,7 +49,7 @@ const PublicWritings: React.FC = () => {
     },
   };
 
-  const writings = writingsRaw ?? [];
+  const writings = useMemo(() => writingsRaw ?? [], [writingsRaw]);
 
   const types = useMemo(
     () => [...new Set(writings.map((w: Writing) => w.type))],

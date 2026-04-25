@@ -2,6 +2,28 @@ import { query, mutation, action } from "./_generated/server";
 import { v } from "convex/values";
 import { auth } from "./auth";
 
+interface GoogleBooksImageLinks {
+  extraLarge?: string;
+  large?: string;
+  medium?: string;
+  thumbnail?: string;
+  smallThumbnail?: string;
+}
+
+interface GoogleBooksVolumeInfo {
+  title?: string;
+  authors?: string[];
+  pageCount?: number;
+  description?: string;
+  categories?: string[];
+  imageLinks?: GoogleBooksImageLinks;
+}
+
+interface GoogleBooksItem {
+  id: string;
+  volumeInfo?: GoogleBooksVolumeInfo;
+}
+
 // Get user's reading profile for recommendations
 export const getReadingProfile = query({
   args: {},
@@ -137,7 +159,7 @@ export const fetchRecommendations = action({
       return [];
     }
 
-    return (data.items ?? []).map((item: Record<string, any>) => {
+    return (data.items ?? []).map((item: GoogleBooksItem) => {
       const imageLinks = item.volumeInfo?.imageLinks ?? {};
       const rawCoverUrl = (
         imageLinks.extraLarge ??
@@ -165,15 +187,15 @@ export const fetchRecommendations = action({
       }
 
       return {
-        googleBookId: item.id as string,
-        title: (item.volumeInfo?.title as string) || "Unknown Title",
+        googleBookId: item.id,
+        title: item.volumeInfo?.title || "Unknown Title",
         author:
-          ((item.volumeInfo?.authors as string[]) ?? []).join(", ") ||
+          (item.volumeInfo?.authors ?? []).join(", ") ||
           "Unknown Author",
         coverUrl,
-        pageCount: (item.volumeInfo?.pageCount as number) ?? 0,
-        description: (item.volumeInfo?.description as string) ?? "",
-        categories: (item.volumeInfo?.categories as string[]) ?? [],
+        pageCount: item.volumeInfo?.pageCount ?? 0,
+        description: item.volumeInfo?.description ?? "",
+        categories: item.volumeInfo?.categories ?? [],
       };
     });
   },
