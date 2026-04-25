@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- Resolve all ESLint errors and warnings
 - Remove no-op string replace in IdeasVault, delete stale bun.lock
 - Add internal migration to fix userId mismatch between books and userProfiles
 - Remove conflicting CSP meta tag that blocked Convex WebSocket
@@ -597,6 +598,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Add DESIGN.md following google-labs-code/design.md spec
 - Update changelog [skip ci]
