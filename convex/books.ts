@@ -1,7 +1,7 @@
 import { query, mutation, type QueryCtx } from "./_generated/server";
 import { v } from "convex/values";
 import { auth } from "./auth";
-import type { Doc, Id } from "./_generated/dataModel";
+import type { Doc } from "./_generated/dataModel";
 import { checkRateLimit } from "./lib/rateLimit";
 
 async function withCoverUrls(ctx: QueryCtx, books: Doc<"books">[]) {
@@ -53,29 +53,12 @@ export const getByStatus = query({
   },
 });
 
-// Helper to get the single user's userId
-async function getSingleUserId(ctx: QueryCtx): Promise<Id<"users"> | null> {
-  const profile = await ctx.db.query("userProfiles").first();
-  return (profile?.userId as Id<"users"> | undefined) ?? null;
-}
-
 // Get all read books (for public display — no auth, single-user site)
 export const getReadBooks = query({
   args: {},
   handler: async (ctx) => {
-    const userId = await getSingleUserId(ctx);
-    if (!userId) return [];
-    const readBooks = await ctx.db
-      .query("books")
-      .withIndex("by_user_status", (q) => q.eq("userId", userId).eq("status", "read"))
-      .order("desc")
-      .collect();
-    const readingBooks = await ctx.db
-      .query("books")
-      .withIndex("by_user_status", (q) => q.eq("userId", userId).eq("status", "reading"))
-      .order("desc")
-      .collect();
-    return withCoverUrls(ctx, [...readingBooks, ...readBooks]);
+    const allBooks = await ctx.db.query("books").collect();
+    return withCoverUrls(ctx, allBooks.filter((b) => b.status === "read" || b.status === "reading"));
   },
 });
 
@@ -83,14 +66,8 @@ export const getReadBooks = query({
 export const getWishlist = query({
   args: {},
   handler: async (ctx) => {
-    const userId = await getSingleUserId(ctx);
-    if (!userId) return [];
-    const books = await ctx.db
-      .query("books")
-      .withIndex("by_user_status", (q) => q.eq("userId", userId).eq("status", "wishlist"))
-      .order("desc")
-      .collect();
-    return withCoverUrls(ctx, books);
+    const allBooks = await ctx.db.query("books").order("desc").collect();
+    return withCoverUrls(ctx, allBooks.filter((b) => b.status === "wishlist"));
   },
 });
 
@@ -98,14 +75,8 @@ export const getWishlist = query({
 export const getFavorites = query({
   args: {},
   handler: async (ctx) => {
-    const userId = await getSingleUserId(ctx);
-    if (!userId) return [];
-    const books = await ctx.db
-      .query("books")
-      .withIndex("by_user_favorite", (q) => q.eq("userId", userId).eq("isFavorite", true))
-      .order("desc")
-      .collect();
-    return withCoverUrls(ctx, books);
+    const allBooks = await ctx.db.query("books").collect();
+    return withCoverUrls(ctx, allBooks.filter((b) => b.isFavorite));
   },
 });
 

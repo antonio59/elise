@@ -192,19 +192,19 @@ const AddBookModal: React.FC<AddBookModalProps> = ({
       key: "read" as const,
       label: "Finished",
       icon: CheckCircle2,
-      color: "bg-green-500",
+      color: "bg-success-500",
     },
     {
       key: "reading" as const,
       label: "Reading",
       icon: BookMarked,
-      color: "bg-blue-500",
+      color: "bg-accent-500",
     },
     {
       key: "wishlist" as const,
       label: "Wishlist",
       icon: Heart,
-      color: "bg-pink-500",
+      color: "bg-primary-500",
     },
   ];
 
@@ -212,7 +212,7 @@ const AddBookModal: React.FC<AddBookModalProps> = ({
     <AnimatePresence>
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
         <motion.div
-          className="absolute inset-0 bg-black/50"
+          className="absolute inset-0 bg-slate-900/50"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -309,12 +309,12 @@ const AddBookModal: React.FC<AddBookModalProps> = ({
                           onClick={() => setRating(star)}
                           aria-label={`Rate ${star} star${star > 1 ? "s" : ""}`}
                           aria-pressed={star <= rating}
-                          className="p-1 focus:outline-none focus:ring-2 focus:ring-yellow-400 rounded"
+                          className="p-1 focus:outline-none focus:ring-2 focus:ring-star rounded"
                         >
                           <Star
                             className={`w-8 h-8 transition-colors ${
                               star <= rating
-                                ? "text-yellow-400 fill-yellow-400"
+                                ? "text-star fill-star"
                                 : "text-slate-200"
                             }`}
                           />
@@ -326,7 +326,7 @@ const AddBookModal: React.FC<AddBookModalProps> = ({
 
                 {/* Error message */}
                 {error && (
-                  <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-xl text-red-700">
+                  <div className="flex items-center gap-2 p-3 bg-error-50 border border-error-200 rounded-xl text-red-700">
                     <AlertCircle className="w-5 h-5 flex-shrink-0" />
                     <p className="text-sm">{error}</p>
                   </div>
@@ -543,7 +543,7 @@ const AddBookModal: React.FC<AddBookModalProps> = ({
                               <Star
                                 className={`w-8 h-8 transition-colors ${
                                   star <= rating
-                                    ? "text-yellow-400 fill-yellow-400"
+                                    ? "text-star fill-star"
                                     : "text-slate-200"
                                 }`}
                               />
@@ -555,7 +555,7 @@ const AddBookModal: React.FC<AddBookModalProps> = ({
 
                     {/* Error message */}
                     {error && (
-                      <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-xl text-red-700">
+                      <div className="flex items-center gap-2 p-3 bg-error-50 border border-error-200 rounded-xl text-red-700">
                         <AlertCircle className="w-5 h-5 flex-shrink-0" />
                         <p className="text-sm">{error}</p>
                       </div>

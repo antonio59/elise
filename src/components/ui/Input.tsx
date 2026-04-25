@@ -96,9 +96,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             id={inputId}
             disabled={disabled}
             className={cn(
-              "w-full rounded-xl font-body transition-all duration-200",
-              "bg-white border border-slate-200 focus:border-primary-400",
-              "focus:outline-none focus:ring-2 focus:ring-primary-400/30",
+              "w-full rounded-2xl font-body transition-all duration-200",
+              "bg-slate-50 border border-slate-200 focus:border-primary-400",
+              "focus:ring-2 focus:ring-primary-400/30",
               "disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-slate-100",
               "placeholder:text-slate-400",
               styles.input,
@@ -222,9 +222,9 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           value={value}
           maxLength={maxLength}
           className={cn(
-            "w-full rounded-xl font-body transition-all duration-200 resize-none",
-            "bg-white border border-slate-200 focus:border-primary-400",
-            "focus:outline-none focus:ring-2 focus:ring-primary-400/30",
+            "w-full rounded-2xl font-body transition-all duration-200 resize-none",
+            "bg-slate-50 border border-slate-200 focus:border-primary-400",
+            "focus:ring-2 focus:ring-primary-400/30",
             "disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-slate-100",
             "placeholder:text-slate-400",
             styles.input,

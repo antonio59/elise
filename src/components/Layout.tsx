@@ -103,7 +103,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           onItemClick?.();
           signOut();
         }}
-        className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 hover:bg-red-50 hover:text-red-600 transition-colors w-full"
+        className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 hover:bg-error-50 hover:text-error-600 transition-colors w-full"
       >
         <LogOut className="w-5 h-5" />
         Sign Out
@@ -140,7 +140,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         {mobileMenuOpen && (
           <>
             <motion.div
-              className="fixed inset-0 bg-black/50 z-40 md:hidden"
+              className="fixed inset-0 bg-slate-900/50 z-40 md:hidden"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}

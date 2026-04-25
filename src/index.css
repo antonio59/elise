@@ -66,8 +66,12 @@
 
   /* Shadows */
   --shadow-soft: 0 1px 3px rgba(37, 33, 25, 0.08), 0 1px 2px rgba(37, 33, 25, 0.04);
+  --shadow-soft-lg: 0 8px 20px rgba(37, 33, 25, 0.08), 0 4px 8px rgba(37, 33, 25, 0.04);
   --shadow-primary: 0 4px 14px rgba(176, 107, 80, 0.15);
   --shadow-violet: 0 4px 14px rgba(130, 91, 158, 0.12);
+  --shadow-success: 0 4px 14px rgba(34, 197, 94, 0.15);
+  --shadow-error: 0 4px 14px rgba(239, 68, 68, 0.15);
+  --shadow-star: 0 4px 14px rgba(212, 168, 83, 0.25);
 
   /* Border radius */
   --radius-4xl: 2rem;
@@ -108,14 +112,14 @@
 @layer components {
   /* Card */
   .card {
-    @apply bg-white rounded-xl;
+    @apply bg-slate-50 rounded-xl;
     border: 1px solid var(--color-slate-200);
     box-shadow: var(--shadow-soft);
     transition: all 200ms ease;
   }
 
   .card:hover {
-    box-shadow: 0 8px 20px rgba(37, 33, 25, 0.08);
+    box-shadow: var(--shadow-soft-lg);
     transform: translateY(-2px);
   }
 
@@ -140,7 +144,7 @@
   }
 
   .btn-secondary {
-    @apply px-5 py-2.5 bg-white;
+    @apply px-5 py-2.5 bg-slate-50;
     color: var(--color-slate-700);
     border: 1.5px solid var(--color-slate-300);
   }
@@ -162,7 +166,7 @@
 
   /* Input */
   .input {
-    @apply w-full px-4 py-3 bg-white rounded-lg;
+    @apply w-full px-4 py-3 bg-slate-50 rounded-2xl;
     border: 1.5px solid var(--color-slate-200);
     font-family: var(--font-body);
     font-size: 0.875rem;
@@ -170,9 +174,8 @@
   }
 
   .input:focus {
-    @apply outline-none;
     border-color: var(--color-primary-400);
-    box-shadow: 0 0 0 3px rgba(196, 133, 108, 0.12);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary-400) 12%, transparent);
   }
 
   /* Badge */
@@ -206,7 +209,7 @@
 
   /* Stat card */
   .stat-card {
-    @apply bg-white rounded-xl p-5 relative overflow-hidden;
+    @apply bg-slate-50 rounded-xl p-5 relative overflow-hidden;
     border: 1px solid var(--color-slate-200);
   }
 
@@ -389,7 +392,7 @@
 
 .book-card:hover {
   transform: perspective(800px) rotateY(-5deg) rotateX(2deg) translateY(-8px) scale(1.03);
-  box-shadow: 12px 12px 24px rgba(0, 0, 0, 0.12), -4px -4px 12px rgba(0, 0, 0, 0.04);
+  box-shadow: 12px 12px 24px rgba(37, 33, 25, 0.12), -4px -4px 12px rgba(37, 33, 25, 0.04);
 }
 
 .book-card:active {
@@ -408,8 +411,8 @@
   top: 5%;
   bottom: 5%;
   width: 4px;
-  background: linear-gradient(to right, rgba(0,0,0,0.15), transparent);
-  border-radius: 2px 0 0 2px;
+  background: linear-gradient(to right, rgba(37, 33, 25, 0.15), transparent);
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
 }
 
 /* ===== Mood Tag Styles ===== */

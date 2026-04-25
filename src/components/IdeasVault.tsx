@@ -164,7 +164,7 @@ const IdeasVault: React.FC = () => {
                   </button>
                   <button
                     onClick={() => removeIdea({ id: idea._id })}
-                    className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg"
+                    className="p-1.5 text-slate-400 hover:text-error-500 hover:bg-error-50 rounded-lg"
                     title="Delete"
                   >
                     <Trash2 className="w-3.5 h-3.5" />

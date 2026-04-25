@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { CheckCircle, AlertCircle, Info, X, AlertTriangle } from "lucide-react";
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -110,22 +110,22 @@ const toastStyles: Record<
   { bg: string; icon: React.ReactNode; iconBg: string }
 > = {
   success: {
-    bg: "bg-white border-success-200",
+    bg: "bg-slate-50 border-success-200",
     icon: <CheckCircle className="w-5 h-5 text-success-500" />,
     iconBg: "bg-success-50",
   },
   error: {
-    bg: "bg-white border-error-200",
+    bg: "bg-slate-50 border-error-200",
     icon: <AlertCircle className="w-5 h-5 text-error-500" />,
     iconBg: "bg-error-50",
   },
   warning: {
-    bg: "bg-white border-amber-200",
-    icon: <AlertTriangle className="w-5 h-5 text-amber-500" />,
-    iconBg: "bg-amber-50",
+    bg: "bg-slate-50 border-accent-200",
+    icon: <AlertTriangle className="w-5 h-5 text-accent-600" />,
+    iconBg: "bg-accent-50",
   },
   info: {
-    bg: "bg-white border-primary-200",
+    bg: "bg-slate-50 border-primary-200",
     icon: <Info className="w-5 h-5 text-primary-500" />,
     iconBg: "bg-primary-50",
   },
@@ -137,10 +137,10 @@ function ToastItem({ toast, onClose }: ToastItemProps) {
   return (
     <motion.div
       layout
-      initial={{ opacity: 0, y: -20, scale: 0.95 }}
+      initial={useReducedMotion() ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: -20, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, x: 100, scale: 0.95 }}
-      transition={{ type: "spring", stiffness: 400, damping: 25 }}
+      exit={useReducedMotion() ? { opacity: 0 } : { opacity: 0, x: 100, scale: 0.95 }}
+      transition={useReducedMotion() ? { duration: 0 } : { type: "spring", stiffness: 400, damping: 25 }}
       className={cn(
         "flex items-start gap-3 p-4 rounded-xl border shadow-lg",
         styles.bg,

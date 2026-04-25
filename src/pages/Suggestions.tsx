@@ -50,14 +50,14 @@ const Suggestions: React.FC = () => {
         );
       case "approved":
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">
+          <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-success-100 text-success-700">
             <CheckCircle className="w-3 h-3" />
             Approved
           </span>
         );
       case "rejected":
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-700">
+          <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-error-100 text-red-700">
             <XCircle className="w-3 h-3" />
             Rejected
           </span>
@@ -100,13 +100,13 @@ const Suggestions: React.FC = () => {
           <div className="text-sm text-slate-500">Pending</div>
         </div>
         <div className="card p-4 text-center">
-          <div className="text-2xl font-bold text-green-600">
+          <div className="text-2xl font-bold text-success-600">
             {approvedCount}
           </div>
           <div className="text-sm text-slate-500">Approved</div>
         </div>
         <div className="card p-4 text-center">
-          <div className="text-2xl font-bold text-red-600">{rejectedCount}</div>
+          <div className="text-2xl font-bold text-error-600">{rejectedCount}</div>
           <div className="text-sm text-slate-500">Rejected</div>
         </div>
       </div>
@@ -188,7 +188,7 @@ const Suggestions: React.FC = () => {
                         onClick={() =>
                           approveSuggestion({ id: suggestion._id })
                         }
-                        className="p-2 bg-green-500 hover:bg-green-600 text-white rounded-lg"
+                        className="p-2 bg-success-500 hover:bg-success-600 text-white rounded-lg"
                         title="Approve"
                       >
                         <Check className="w-4 h-4" />
@@ -208,7 +208,7 @@ const Suggestions: React.FC = () => {
                         removeSuggestion({ id: suggestion._id });
                       }
                     }}
-                    className="p-2 bg-red-500 hover:bg-red-600 text-white rounded-lg"
+                    className="p-2 bg-error-500 hover:bg-error-600 text-white rounded-lg"
                     title="Delete"
                   >
                     <Trash2 className="w-4 h-4" />

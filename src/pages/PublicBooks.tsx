@@ -44,17 +44,17 @@ const GENRES = [
 ];
 
 const genreColors: Record<string, string> = {
-  Manga: "bg-red-50 text-red-600 border-red-200",
-  Manhwa: "bg-blue-50 text-blue-600 border-blue-200",
+  Manga: "bg-error-50 text-error-600 border-error-200",
+  Manhwa: "bg-blue-50 text-accent-600 border-blue-200",
   Webtoon: "bg-purple-50 text-purple-600 border-purple-200",
   "Light Novel": "bg-amber-50 text-amber-600 border-amber-200",
   Fantasy: "bg-violet-50 text-violet-600 border-violet-200",
   "Sci-Fi": "bg-cyan-50 text-cyan-600 border-cyan-200",
-  Romance: "bg-pink-50 text-pink-600 border-pink-200",
+  Romance: "bg-pink-50 text-primary-600 border-pink-200",
   Mystery: "bg-slate-50 text-slate-600 border-slate-200",
   Horror: "bg-orange-50 text-orange-700 border-orange-200",
-  "Slice of Life": "bg-green-50 text-green-600 border-green-200",
-  Action: "bg-red-50 text-red-700 border-red-200",
+  "Slice of Life": "bg-success-50 text-success-600 border-success-200",
+  Action: "bg-error-50 text-red-700 border-error-200",
   Comedy: "bg-yellow-50 text-yellow-700 border-yellow-200",
   Drama: "bg-indigo-50 text-indigo-600 border-indigo-200",
 };
@@ -261,11 +261,11 @@ const PublicBooks: React.FC = () => {
                         className="w-full h-full object-cover"
                       />
                       {book.rating && book.rating > 0 && (
-                        <div className="absolute top-2 right-2 px-2 py-0.5 bg-black/50 backdrop-blur-sm rounded-full flex items-center gap-0.5">
+                        <div className="absolute top-2 right-2 px-2 py-0.5 bg-slate-900/50 backdrop-blur-sm rounded-full flex items-center gap-0.5">
                           {Array.from({ length: book.rating }).map((_, i) => (
                             <Star
                               key={i}
-                              className="w-2.5 h-2.5 text-yellow-400 fill-yellow-400"
+                              className="w-2.5 h-2.5 text-star fill-star"
                             />
                           ))}
                         </div>
@@ -353,7 +353,7 @@ const PublicBooks: React.FC = () => {
                           {Array.from({ length: 5 }).map((_, i) => (
                             <Star
                               key={i}
-                              className={`w-4 h-4 ${i < (book.rating ?? 0) ? "text-yellow-400 fill-yellow-400" : "text-slate-200"}`}
+                              className={`w-4 h-4 ${i < (book.rating ?? 0) ? "text-star fill-star" : "text-slate-200"}`}
                             />
                           ))}
                         </>

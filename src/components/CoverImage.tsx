@@ -43,8 +43,8 @@ const GradientCard: React.FC<{ title: string; author?: string }> = ({
     >
       {/* Decorative circles for depth */}
       <div className="absolute -top-6 -right-6 w-20 h-20 rounded-full bg-white/15" />
-      <div className="absolute top-4 -left-4 w-12 h-12 rounded-full bg-black/10" />
-      <div className="absolute -bottom-6 -right-2 w-16 h-16 rounded-full bg-black/10" />
+      <div className="absolute top-4 -left-4 w-12 h-12 rounded-full bg-slate-900/10" />
+      <div className="absolute -bottom-6 -right-2 w-16 h-16 rounded-full bg-slate-900/10" />
 
       {/* Title + author pinned to the bottom with a scrim */}
       <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent pt-6 pb-2 px-2">

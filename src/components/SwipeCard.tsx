@@ -86,7 +86,7 @@ const SwipeCard: React.FC<SwipeCardProps> = ({ book, onSwipe, isTop }) => {
           {isTop && (
             <>
               <motion.div
-                className="absolute top-6 right-6 px-4 py-2 rounded-xl bg-green-500 text-white font-bold text-lg border-2 border-white shadow-lg -rotate-12"
+                className="absolute top-6 right-6 px-4 py-2 rounded-xl bg-success-500 text-white font-bold text-lg border-2 border-white shadow-lg -rotate-12"
                 style={{ opacity: likeOpacity }}
               >
                 WANT IT
@@ -154,15 +154,15 @@ const SwipeCard: React.FC<SwipeCardProps> = ({ book, onSwipe, isTop }) => {
           <div className="flex items-center justify-center gap-6 p-4 border-t border-slate-100">
             <button
               onClick={() => onSwipe("left")}
-              className="w-14 h-14 rounded-full bg-red-50 hover:bg-red-100 border-2 border-red-200 flex items-center justify-center transition-all hover:scale-110 active:scale-95"
+              className="w-14 h-14 rounded-full bg-error-50 hover:bg-error-100 border-2 border-error-200 flex items-center justify-center transition-all hover:scale-110 active:scale-95"
             >
-              <X className="w-6 h-6 text-red-400" />
+              <X className="w-6 h-6 text-error-400" />
             </button>
             <button
               onClick={() => onSwipe("right")}
-              className="w-14 h-14 rounded-full bg-green-50 hover:bg-green-100 border-2 border-green-200 flex items-center justify-center transition-all hover:scale-110 active:scale-95"
+              className="w-14 h-14 rounded-full bg-success-50 hover:bg-success-100 border-2 border-success-200 flex items-center justify-center transition-all hover:scale-110 active:scale-95"
             >
-              <Heart className="w-6 h-6 text-green-500" />
+              <Heart className="w-6 h-6 text-success-500" />
             </button>
           </div>
         )}

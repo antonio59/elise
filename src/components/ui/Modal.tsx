@@ -3,7 +3,7 @@ import {
   useCallback,
   useRef,
 } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { X } from "lucide-react";
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -142,7 +142,7 @@ export const Modal: React.FC<ModalProps> = ({
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <motion.div
-            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
             variants={overlayVariants}
             initial="hidden"
             animate="visible"
@@ -154,7 +154,7 @@ export const Modal: React.FC<ModalProps> = ({
             ref={modalRef}
             tabIndex={-1}
             className={cn(
-              "relative w-full bg-white rounded-2xl shadow-xl",
+              "relative w-full bg-slate-50 rounded-2xl shadow-xl",
               "overflow-hidden outline-none",
               sizeStyles[size],
               className,
@@ -163,7 +163,7 @@ export const Modal: React.FC<ModalProps> = ({
             initial="hidden"
             animate="visible"
             exit="exit"
-            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            transition={useReducedMotion() ? { duration: 0 } : { type: "spring", stiffness: 300, damping: 30 }}
             role="dialog"
             aria-modal="true"
             aria-labelledby={title ? "modal-title" : undefined}

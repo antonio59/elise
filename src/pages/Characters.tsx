@@ -199,8 +199,8 @@ const Characters: React.FC = () => {
                     <button onClick={() => startEdit(char)} className="p-2 hover:bg-slate-100 rounded-lg" title="Edit">
                       <Sparkles className="w-4 h-4 text-slate-400" />
                     </button>
-                    <button onClick={() => removeCharacter({ id: char._id })} className="p-2 hover:bg-red-50 rounded-lg" title="Delete">
-                      <Trash2 className="w-4 h-4 text-slate-400 hover:text-red-500" />
+                    <button onClick={() => removeCharacter({ id: char._id })} className="p-2 hover:bg-error-50 rounded-lg" title="Delete">
+                      <Trash2 className="w-4 h-4 text-slate-400 hover:text-error-500" />
                     </button>
                   </div>
                 </div>

@@ -1,5 +1,5 @@
 import { forwardRef } from "react";
-import { motion, type HTMLMotionProps } from "framer-motion";
+import { motion, useReducedMotion, type HTMLMotionProps } from "framer-motion";
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -25,11 +25,11 @@ interface ButtonProps extends Omit<HTMLMotionProps<"button">, "children"> {
 const variantStyles: Record<ButtonVariant, string> = {
   primary: "bg-primary-500 text-white hover:bg-primary-600 shadow-primary",
   secondary:
-    "bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 hover:border-primary-300",
+    "bg-slate-50 text-slate-700 border border-slate-200 hover:bg-slate-100 hover:border-primary-300",
   ghost: "bg-transparent text-primary-600 hover:bg-primary-50",
-  accent: "bg-accent-500 text-white hover:bg-accent-600 shadow-accent",
-  success: "bg-success-500 text-white hover:bg-success-600 shadow-sm",
-  danger: "bg-error-500 text-white hover:bg-error-600 shadow-sm",
+  accent: "bg-accent-600 text-white hover:bg-accent-700 shadow-accent",
+  success: "bg-success-500 text-white hover:bg-success-600 shadow-success",
+  danger: "bg-error-500 text-white hover:bg-error-600 shadow-error",
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
@@ -59,6 +59,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     ref,
   ) => {
     const isDisabled = disabled || loading;
+    const reducedMotion = useReducedMotion();
 
     return (
       <motion.button
@@ -73,8 +74,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           className,
         )}
         disabled={isDisabled}
-        whileHover={isDisabled ? {} : { y: -1, scale: 1.01 }}
-        whileTap={isDisabled ? {} : { scale: 0.98 }}
+        whileHover={isDisabled || reducedMotion ? {} : { y: -1, scale: 1.01 }}
+        whileTap={isDisabled || reducedMotion ? {} : { scale: 0.98 }}
         transition={{ duration: 0.15 }}
         {...props}
       >

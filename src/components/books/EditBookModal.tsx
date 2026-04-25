@@ -117,19 +117,19 @@ const EditBookModal: React.FC<EditBookModalProps> = ({
       key: "read" as const,
       label: "Finished",
       icon: CheckCircle2,
-      color: "bg-green-500",
+      color: "bg-success-500",
     },
     {
       key: "reading" as const,
       label: "Reading",
       icon: BookMarked,
-      color: "bg-blue-500",
+      color: "bg-accent-500",
     },
     {
       key: "wishlist" as const,
       label: "Wishlist",
       icon: Heart,
-      color: "bg-pink-500",
+      color: "bg-primary-500",
     },
   ];
 
@@ -137,7 +137,7 @@ const EditBookModal: React.FC<EditBookModalProps> = ({
     <AnimatePresence>
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
         <motion.div
-          className="absolute inset-0 bg-black/50"
+          className="absolute inset-0 bg-slate-900/50"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -294,7 +294,7 @@ const EditBookModal: React.FC<EditBookModalProps> = ({
                       <Star
                         className={`w-8 h-8 transition-colors ${
                           star <= rating
-                            ? "text-yellow-400 fill-yellow-400"
+                            ? "text-star fill-star"
                             : "text-slate-200"
                         }`}
                       />
@@ -387,7 +387,7 @@ const EditBookModal: React.FC<EditBookModalProps> = ({
                 type="button"
                 onClick={() => setIsFavorite(!isFavorite)}
                 className={`w-12 h-7 rounded-full transition-colors ${
-                  isFavorite ? "bg-pink-500" : "bg-slate-300"
+                  isFavorite ? "bg-primary-500" : "bg-slate-300"
                 }`}
               >
                 <div

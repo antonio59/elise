@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -34,7 +34,7 @@ const variantStyles: Record<BadgeVariant, string> = {
   accent: "bg-accent-100 text-accent-700 border-accent-200",
   slate: "bg-slate-100 text-slate-700 border-slate-200",
   success: "bg-success-50 text-success-600 border-success-100",
-  warning: "bg-amber-100 text-amber-700 border-amber-200",
+  warning: "bg-accent-100 text-accent-700 border-accent-200",
   error: "bg-error-50 text-error-600 border-error-100",
   outline: "bg-transparent text-slate-600 border-slate-300",
   violet: "bg-violet-100 text-violet-700 border-violet-200",
@@ -82,7 +82,7 @@ export const Badge: React.FC<BadgeProps> = ({
       {removable && (
         <button
           onClick={onRemove}
-          className="ml-1 rounded-full hover:bg-black/10 p-0.5 transition-colors"
+          className="ml-1 rounded-full hover:bg-slate-900/10 p-0.5 transition-colors"
           aria-label="Remove badge"
         >
           <svg
@@ -118,14 +118,14 @@ const rarityStyles: Record<string, string> = {
   common: "from-slate-200 to-slate-300",
   rare: "from-primary-300 to-primary-400",
   epic: "from-accent-300 to-accent-400",
-  legendary: "from-amber-300 to-amber-400",
+  legendary: "from-star to-star-light",
 };
 
 const rarityShadows: Record<string, string> = {
   common: "",
   rare: "shadow-primary",
   epic: "shadow-accent",
-  legendary: "shadow-[0_4px_14px_rgba(251,191,36,0.3)]",
+  legendary: "shadow-star",
 };
 
 export const AchievementBadge: React.FC<AchievementBadgeProps> = ({
@@ -146,9 +146,9 @@ export const AchievementBadge: React.FC<AchievementBadgeProps> = ({
   return (
     <motion.div
       className={cn("flex flex-col items-center gap-2", className)}
-      initial={{ scale: 0, rotate: -180 }}
+      initial={useReducedMotion() ? { scale: 1, rotate: 0 } : { scale: 0, rotate: -180 }}
       animate={{ scale: 1, rotate: 0 }}
-      transition={{ type: "spring", stiffness: 260, damping: 20 }}
+      transition={useReducedMotion() ? { duration: 0 } : { type: "spring", stiffness: 260, damping: 20 }}
     >
       <div
         className={cn(

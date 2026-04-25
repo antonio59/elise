@@ -37,8 +37,8 @@ class ErrorBoundary extends Component<Props, State> {
       return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-accent-50 p-4">
           <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center">
-            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <AlertTriangle className="w-8 h-8 text-red-500" />
+            <div className="w-16 h-16 bg-error-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <AlertTriangle className="w-8 h-8 text-error-500" />
             </div>
 
             <h1 className="text-2xl font-bold text-slate-800 mb-2">
@@ -65,7 +65,7 @@ class ErrorBoundary extends Component<Props, State> {
                 <summary className="text-sm text-slate-400 cursor-pointer hover:text-slate-600">
                   Error details (dev only)
                 </summary>
-                <pre className="mt-2 p-3 bg-slate-100 rounded-lg text-xs text-red-600 overflow-auto">
+                <pre className="mt-2 p-3 bg-slate-100 rounded-lg text-xs text-error-600 overflow-auto">
                   {this.state.error.toString()}
                 </pre>
               </details>

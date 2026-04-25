@@ -70,7 +70,7 @@ const CoverUpload: React.FC<CoverUploadProps> = ({ value, onChange }) => {
               <button
                 type="button"
                 onClick={() => onChange("")}
-                className="p-2 text-slate-400 hover:text-red-500 transition-colors"
+                className="p-2 text-slate-400 hover:text-error-500 transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>

@@ -1,5 +1,5 @@
 import { forwardRef } from "react";
-import { motion, type HTMLMotionProps } from "framer-motion";
+import { motion, useReducedMotion, type HTMLMotionProps } from "framer-motion";
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -23,10 +23,10 @@ interface CardProps extends HTMLMotionProps<"div"> {
 }
 
 const variantStyles: Record<CardVariant, string> = {
-  default: "bg-white shadow-soft",
-  elevated: "bg-white shadow-md",
-  interactive: "bg-white shadow-soft hover:shadow-lg cursor-pointer",
-  outlined: "bg-white border border-slate-200",
+  default: "bg-slate-50 shadow-soft",
+  elevated: "bg-slate-50 shadow-soft-lg",
+  interactive: "bg-slate-50 shadow-soft hover:shadow-soft-lg cursor-pointer",
+  outlined: "bg-slate-50 border border-slate-200",
   gradient: "bg-gradient-to-br from-primary-50 to-accent-50 shadow-soft",
 };
 
@@ -53,12 +53,12 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
       <motion.div
         ref={ref}
         className={cn(
-          "rounded-2xl overflow-hidden",
+          "rounded-xl overflow-hidden",
           variantStyles[variant],
           paddingStyles[padding],
           className,
         )}
-        whileHover={hoverEffect ? { y: -4, scale: 1.01 } : {}}
+        whileHover={hoverEffect && !useReducedMotion() ? { y: -4, scale: 1.01 } : {}}
         transition={{ duration: 0.2 }}
         {...props}
       >

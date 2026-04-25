@@ -129,7 +129,7 @@ const ReviewsPage: React.FC = () => {
               <div className="text-xs text-slate-500">Rated</div>
             </div>
             <div className="card p-3 text-center">
-              <div className="text-xl font-bold text-yellow-500">{stats.fiveStars}</div>
+              <div className="text-xl font-bold text-star">{stats.fiveStars}</div>
               <div className="text-xs text-slate-500">⭐⭐⭐⭐⭐</div>
             </div>
             <div className="card p-3 text-center">
@@ -137,7 +137,7 @@ const ReviewsPage: React.FC = () => {
               <div className="text-xs text-slate-500">⭐⭐⭐⭐</div>
             </div>
             <div className="card p-3 text-center">
-              <div className="text-xl font-bold text-red-400">{stats.favorites}</div>
+              <div className="text-xl font-bold text-error-400">{stats.favorites}</div>
               <div className="text-xs text-slate-500">Favorites</div>
             </div>
             <div className="card p-3 text-center">
@@ -239,7 +239,7 @@ const ReviewsPage: React.FC = () => {
                               key={i}
                               className={`w-4 h-4 ${
                                 i < (book.rating ?? 0)
-                                  ? "text-yellow-400 fill-yellow-400"
+                                  ? "text-star fill-star"
                                   : "text-slate-200"
                               }`}
                             />
@@ -249,8 +249,8 @@ const ReviewsPage: React.FC = () => {
                           </span>
                         </div>
                         {book.isFavorite && (
-                          <span className="inline-flex items-center gap-1 text-xs text-red-400 font-medium">
-                            <Heart className="w-3 h-3 fill-red-400" />
+                          <span className="inline-flex items-center gap-1 text-xs text-error-400 font-medium">
+                            <Heart className="w-3 h-3 fill-error-400" />
                             Favorite
                           </span>
                         )}
@@ -309,7 +309,7 @@ const ReviewsPage: React.FC = () => {
                             <Star
                               className={`w-6 h-6 transition-colors ${
                                 star <= editRating
-                                  ? "text-yellow-400 fill-yellow-400"
+                                  ? "text-star fill-star"
                                   : "text-slate-200"
                               }`}
                             />
@@ -393,7 +393,7 @@ const ReviewsPage: React.FC = () => {
                             key={i}
                             className={`w-3 h-3 ${
                               i < (book.rating ?? 0)
-                                ? "text-yellow-400 fill-yellow-400"
+                                ? "text-star fill-star"
                                 : "text-slate-200"
                             }`}
                           />

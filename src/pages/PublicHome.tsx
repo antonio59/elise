@@ -79,7 +79,7 @@ const ReviewStrip: React.FC<{
                     key={i}
                     className={`w-3 h-3 ${
                       i < (book.rating ?? 0)
-                        ? "text-yellow-400 fill-yellow-400"
+                        ? "text-star fill-star"
                         : "text-slate-200"
                     }`}
                   />
@@ -94,8 +94,8 @@ const ReviewStrip: React.FC<{
                 </p>
               )}
               {book.isFavorite && (
-                <span className="inline-flex items-center gap-1 text-xs text-red-400 font-medium mt-1">
-                  <Heart className="w-3 h-3 fill-red-400" />
+                <span className="inline-flex items-center gap-1 text-xs text-error-400 font-medium mt-1">
+                  <Heart className="w-3 h-3 fill-error-400" />
                   Fav
                 </span>
               )}
@@ -366,7 +366,7 @@ const PublicHome: React.FC = () => {
                             key={i}
                             className={`w-3 h-3 ${
                               i < book.rating!
-                                ? "text-yellow-400 fill-yellow-400"
+                                ? "text-star fill-star"
                                 : "text-slate-200"
                             }`}
                           />
@@ -512,7 +512,7 @@ const PublicHome: React.FC = () => {
                         className="w-full h-full object-cover"
                       />
                       {book.giftedBy && (
-                        <div className="absolute top-2 left-2 px-2 py-1 bg-green-500 text-white text-xs rounded-full font-medium">
+                        <div className="absolute top-2 left-2 px-2 py-1 bg-success-500 text-white text-xs rounded-full font-medium">
                           🎁 Gifted by {book.giftedBy}
                         </div>
                       )}

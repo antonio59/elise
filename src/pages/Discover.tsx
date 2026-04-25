@@ -295,12 +295,12 @@ const Discover: React.FC = () => {
         {stats && (stats.liked > 0 || stats.passed > 0) && (
           <div className="flex items-center gap-4 mt-4 px-4 py-3 bg-slate-50 rounded-xl">
             <div className="flex items-center gap-1.5 text-sm">
-              <Heart className="w-4 h-4 text-green-500" />
+              <Heart className="w-4 h-4 text-success-500" />
               <span className="font-medium text-slate-700">{stats.liked}</span>
               <span className="text-slate-400">liked</span>
             </div>
             <div className="flex items-center gap-1.5 text-sm">
-              <X className="w-4 h-4 text-red-400" />
+              <X className="w-4 h-4 text-error-400" />
               <span className="font-medium text-slate-700">{stats.passed}</span>
               <span className="text-slate-400">passed</span>
             </div>
@@ -347,7 +347,7 @@ const Discover: React.FC = () => {
             exit={{ opacity: 0, y: -20 }}
             className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-full shadow-lg text-sm font-medium ${
               lastSwipeAction === "liked"
-                ? "bg-green-500 text-white"
+                ? "bg-success-500 text-white"
                 : "bg-slate-500 text-white"
             }`}
           >

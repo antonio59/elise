@@ -102,21 +102,21 @@ const MyBooks: React.FC = () => {
       label: "Finished",
       icon: CheckCircle2,
       count: readBooks.length,
-      color: "text-green-600",
+      color: "text-success-600",
     },
     {
       key: "reading" as TabType,
       label: "Reading",
       icon: BookMarked,
       count: readingBooks.length,
-      color: "text-blue-600",
+      color: "text-accent-600",
     },
     {
       key: "wishlist" as TabType,
       label: "Wishlist",
       icon: Heart,
       count: wishlistBooks.length,
-      color: "text-pink-600",
+      color: "text-primary-600",
     },
   ];
 
@@ -192,10 +192,10 @@ const MyBooks: React.FC = () => {
               <CoverImage book={book} className="w-full h-full object-cover" />
 
               {/* Hover overlay */}
-              <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+              <div className="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                 <button
                   onClick={() => setEditingBook(book)}
-                  className="p-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg"
+                  className="p-2 bg-accent-500 hover:bg-accent-600 text-white rounded-lg"
                   title="Edit book"
                 >
                   <Pencil className="w-4 h-4" />
@@ -205,7 +205,7 @@ const MyBooks: React.FC = () => {
                     setBookToDelete(book._id);
                     setShowDeleteConfirm(true);
                   }}
-                  className="p-2 bg-red-500 hover:bg-red-600 text-white rounded-lg"
+                  className="p-2 bg-error-500 hover:bg-error-600 text-white rounded-lg"
                   title="Delete book"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -214,8 +214,8 @@ const MyBooks: React.FC = () => {
 
               {/* Rating badge */}
               {book.rating && (
-                <div className="absolute top-2 right-2 flex items-center gap-0.5 px-2 py-1 bg-black/50 rounded-full">
-                  <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />
+                <div className="absolute top-2 right-2 flex items-center gap-0.5 px-2 py-1 bg-slate-900/50 rounded-full">
+                  <Star className="w-3 h-3 text-star fill-star" />
                   <span className="text-white text-xs font-medium">
                     {book.rating}
                   </span>
@@ -321,7 +321,7 @@ const MyBooks: React.FC = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+              className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
               onClick={() => setShowEditReview(false)}
             />
             <motion.div

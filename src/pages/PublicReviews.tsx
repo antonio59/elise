@@ -86,7 +86,7 @@ const PublicReviews: React.FC = () => {
               {Array.from({ length: r }).map((_, i) => (
                 <Star
                   key={i}
-                  className="w-3 h-3 text-yellow-400 fill-yellow-400"
+                  className="w-3 h-3 text-star fill-star"
                 />
               ))}
               <span className="ml-0.5">({count})</span>
@@ -146,7 +146,7 @@ const PublicReviews: React.FC = () => {
                         {Array.from({ length: 5 }).map((_, i) => (
                           <Star
                             key={i}
-                            className={`w-3.5 h-3.5 ${i < (book.rating ?? 0) ? "text-yellow-400 fill-yellow-400" : "text-slate-200"}`}
+                            className={`w-3.5 h-3.5 ${i < (book.rating ?? 0) ? "text-star fill-star" : "text-slate-200"}`}
                           />
                         ))}
                         {book.rating && book.rating > 0 && (
@@ -238,7 +238,7 @@ const PublicReviews: React.FC = () => {
                             {Array.from({ length: 5 }).map((_, i) => (
                               <Star
                                 key={i}
-                                className={`w-4 h-4 ${i < (book.rating ?? 0) ? "text-yellow-400 fill-yellow-400" : "text-slate-200"}`}
+                                className={`w-4 h-4 ${i < (book.rating ?? 0) ? "text-star fill-star" : "text-slate-200"}`}
                               />
                             ))}
                             {book.rating && book.rating > 0 && (

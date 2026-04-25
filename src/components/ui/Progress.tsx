@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -40,6 +40,8 @@ export const Progress: React.FC<ProgressProps> = ({
   className,
 }) => {
   const percentage = Math.min(Math.max((value / max) * 100, 0), 100);
+  const reducedMotion = useReducedMotion();
+  const shouldAnimate = animated && !reducedMotion;
 
   return (
     <div className={className}>
@@ -59,9 +61,9 @@ export const Progress: React.FC<ProgressProps> = ({
       >
         <motion.div
           className={cn("h-full rounded-full", colorStyles[color])}
-          initial={animated ? { width: 0 } : { width: `${percentage}%` }}
+          initial={shouldAnimate ? { width: 0 } : { width: `${percentage}%` }}
           animate={{ width: `${percentage}%` }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
+          transition={shouldAnimate ? { duration: 0.5, ease: "easeOut" } : { duration: 0 }}
         />
       </div>
     </div>
@@ -93,6 +95,7 @@ export const CircularProgress: React.FC<CircularProgressProps> = ({
   const radius = (size - strokeWidth) / 2;
   const circumference = radius * 2 * Math.PI;
   const strokeDashoffset = circumference - (percentage / 100) * circumference;
+  const reducedMotion = useReducedMotion();
 
   const colorClasses: Record<string, string> = {
     primary: "text-primary-500",
@@ -126,9 +129,9 @@ export const CircularProgress: React.FC<CircularProgressProps> = ({
           r={radius}
           cx={size / 2}
           cy={size / 2}
-          initial={{ strokeDashoffset: circumference }}
+          initial={reducedMotion ? { strokeDashoffset } : { strokeDashoffset: circumference }}
           animate={{ strokeDashoffset }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+          transition={reducedMotion ? { duration: 0 } : { duration: 0.8, ease: "easeOut" }}
           style={{
             strokeDasharray: circumference,
           }}

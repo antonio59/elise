@@ -102,7 +102,7 @@ const PublicGallery: React.FC = () => {
 
               {/* Like count */}
               {art.likes && art.likes > 0 && (
-                <div className="absolute bottom-3 right-3 flex items-center gap-1 px-2 py-1 bg-black/50 rounded-full text-white text-xs">
+                <div className="absolute bottom-3 right-3 flex items-center gap-1 px-2 py-1 bg-slate-900/50 rounded-full text-white text-xs">
                   <Heart className="w-3 h-3 fill-current" />
                   {art.likes + (likedIds.has(art._id) ? 1 : 0)}
                 </div>
@@ -125,7 +125,7 @@ const PublicGallery: React.FC = () => {
       <AnimatePresence>
         {selectedArt && (
           <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -140,7 +140,7 @@ const PublicGallery: React.FC = () => {
             >
               <button
                 onClick={() => setSelectedArt(null)}
-                className="absolute top-4 right-4 z-10 p-2 bg-black/50 hover:bg-black/70 rounded-full text-white transition-colors"
+                className="absolute top-4 right-4 z-10 p-2 bg-slate-900/50 hover:bg-black/70 rounded-full text-white transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>

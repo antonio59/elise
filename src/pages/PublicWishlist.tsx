@@ -135,7 +135,7 @@ const PublicWishlist: React.FC = () => {
       >
         {shareStatus === "copied" ? (
           <>
-            <Check className="w-4 h-4 text-green-500" />
+            <Check className="w-4 h-4 text-success-500" />
             Copied!
           </>
         ) : (
@@ -220,7 +220,7 @@ const PublicWishlist: React.FC = () => {
                       {/* Bought overlay */}
                       {book.boughtBy ? (
                         <div className="absolute inset-0 bg-green-900/60 flex flex-col items-center justify-center">
-                          <div className="bg-green-500 rounded-full p-2 mb-2 shadow-lg">
+                          <div className="bg-success-500 rounded-full p-2 mb-2 shadow-lg">
                             <Check className="w-5 h-5 text-white" />
                           </div>
                           <span className="text-white text-xs font-bold drop-shadow">Bought!</span>
@@ -231,7 +231,7 @@ const PublicWishlist: React.FC = () => {
                       ) : (
                         <>
                           {/* Wishlist badge */}
-                          <div className="absolute top-2 left-2 w-8 h-8 bg-pink-500 rounded-full flex items-center justify-center shadow-lg">
+                          <div className="absolute top-2 left-2 w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center shadow-lg">
                             <Gift className="w-4 h-4 text-white" />
                           </div>
 
@@ -291,7 +291,7 @@ const PublicWishlist: React.FC = () => {
             exit={{ opacity: 0 }}
           >
             <motion.div
-              className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+              className="absolute inset-0 bg-slate-900/50 backdrop-blur-sm"
               onClick={() => setSelectedBook(null)}
             />
 
@@ -308,7 +308,7 @@ const PublicWishlist: React.FC = () => {
                 </div>
 
                 {/* Wishlist badge */}
-                <div className="absolute top-4 left-4 flex items-center gap-2 bg-pink-500 text-white px-3 py-1.5 rounded-full shadow-lg">
+                <div className="absolute top-4 left-4 flex items-center gap-2 bg-primary-500 text-white px-3 py-1.5 rounded-full shadow-lg">
                   <Gift className="w-4 h-4" />
                   <span className="text-sm font-semibold">On My Wishlist</span>
                 </div>
@@ -374,13 +374,13 @@ const PublicWishlist: React.FC = () => {
                 {/* Bought status / Buy button */}
                 <div className="pt-4 border-t border-slate-200">
                   {selectedBook.boughtBy ? (
-                    <div className="flex items-center gap-3 bg-green-50 rounded-xl p-4 border border-green-200">
-                      <div className="bg-green-500 rounded-full p-2">
+                    <div className="flex items-center gap-3 bg-success-50 rounded-xl p-4 border border-success-200">
+                      <div className="bg-success-500 rounded-full p-2">
                         <Check className="w-4 h-4 text-white" />
                       </div>
                       <div>
-                        <p className="text-green-700 font-semibold text-sm">Someone got this!</p>
-                        <p className="text-green-600 text-xs">
+                        <p className="text-success-700 font-semibold text-sm">Someone got this!</p>
+                        <p className="text-success-600 text-xs">
                           Bought by {selectedBook.boughtBy}
                         </p>
                       </div>
@@ -388,9 +388,9 @@ const PublicWishlist: React.FC = () => {
                   ) : buyingBookId === selectedBook._id ? (
                     <div className="space-y-3">
                       {buySuccess ? (
-                        <div className="flex items-center gap-2 justify-center bg-green-50 rounded-xl p-4">
-                          <Check className="w-5 h-5 text-green-500" />
-                          <span className="text-green-700 font-semibold">Thank you!</span>
+                        <div className="flex items-center gap-2 justify-center bg-success-50 rounded-xl p-4">
+                          <Check className="w-5 h-5 text-success-500" />
+                          <span className="text-success-700 font-semibold">Thank you!</span>
                         </div>
                       ) : (
                         <>
@@ -406,12 +406,12 @@ const PublicWishlist: React.FC = () => {
                             autoFocus
                           />
                           {buyError && (
-                            <p className="text-red-500 text-xs">{buyError}</p>
+                            <p className="text-error-500 text-xs">{buyError}</p>
                           )}
                           <div className="flex gap-2">
                             <button
                               onClick={() => handleMarkAsBought(selectedBook._id)}
-                              className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg transition-colors text-sm"
+                              className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-success-500 hover:bg-success-600 text-white font-semibold rounded-lg transition-colors text-sm"
                             >
                               <Check className="w-4 h-4" />
                               Confirm
@@ -538,7 +538,7 @@ const SuggestBookModal: React.FC<SuggestBookModalProps> = ({
     <AnimatePresence>
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
         <motion.div
-          className="absolute inset-0 bg-black/50"
+          className="absolute inset-0 bg-slate-900/50"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -572,8 +572,8 @@ const SuggestBookModal: React.FC<SuggestBookModalProps> = ({
                 animate={{ scale: 1 }}
                 transition={{ type: "spring", duration: 0.5 }}
               >
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <CheckCircle className="w-8 h-8 text-green-600" />
+                <div className="w-16 h-16 bg-success-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <CheckCircle className="w-8 h-8 text-success-600" />
                 </div>
               </motion.div>
               <h3 className="text-xl font-bold text-slate-800 mb-2">

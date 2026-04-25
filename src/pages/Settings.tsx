@@ -494,7 +494,7 @@ const Settings: React.FC = () => {
 
           {saved && (
             <motion.div
-              className="flex items-center gap-2 text-green-600"
+              className="flex items-center gap-2 text-success-600"
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
             >
@@ -504,7 +504,7 @@ const Settings: React.FC = () => {
           )}
           {saveError && (
             <motion.div
-              className="flex items-center gap-2 text-red-600"
+              className="flex items-center gap-2 text-error-600"
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
             >

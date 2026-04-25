@@ -258,7 +258,7 @@ const DashboardAbout: React.FC = () => {
         {/* Favourites */}
         <div className="card p-6">
           <h2 className="font-bold text-slate-800 mb-4 flex items-center gap-2">
-            <Heart className="w-5 h-5 text-red-400" />
+            <Heart className="w-5 h-5 text-error-400" />
             Favourites
           </h2>
           <div className="space-y-4">
@@ -306,7 +306,7 @@ const DashboardAbout: React.FC = () => {
           <button onClick={handleSave} disabled={saving} className="btn btn-primary">
             {saving ? <><Loader2 className="w-4 h-4 animate-spin" /> Saving...</> : <><Save className="w-4 h-4" /> Save Changes</>}
           </button>
-          {saved && <motion.span className="text-sm text-green-600" initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}>✓ Saved</motion.span>}
+          {saved && <motion.span className="text-sm text-success-600" initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}>✓ Saved</motion.span>}
           <a href="/about" target="_blank" className="text-sm text-slate-500 hover:text-slate-700 ml-auto">Preview public page →</a>
         </div>
       </div>
@@ -319,7 +319,7 @@ const DashboardAbout: React.FC = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+              className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
               onClick={() => { setShowAvatarCreator(false); setPreviewUrl(null); }}
             />
             <motion.div

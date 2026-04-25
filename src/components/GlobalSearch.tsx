@@ -126,7 +126,7 @@ const GlobalSearch: React.FC = () => {
       {open && (
         <div className="fixed inset-0 z-[60] flex items-start justify-center p-4 pt-[15vh]">
           <div
-            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
             onClick={() => setOpen(false)}
           />
           <div className="relative w-full max-w-xl bg-white rounded-2xl shadow-2xl overflow-hidden">

@@ -95,7 +95,7 @@ const QuoteCollection: React.FC = () => {
                 onClick={() => setIsPublic(!isPublic)}
                 className="flex items-center gap-2 text-sm text-slate-600"
               >
-                {isPublic ? <Globe className="w-4 h-4 text-green-500" /> : <Lock className="w-4 h-4 text-slate-400" />}
+                {isPublic ? <Globe className="w-4 h-4 text-success-500" /> : <Lock className="w-4 h-4 text-slate-400" />}
                 {isPublic ? "Public" : "Private"}
               </button>
               <button type="submit" disabled={submitting || !text.trim()} className="btn btn-gradient btn-sm">
@@ -128,13 +128,13 @@ const QuoteCollection: React.FC = () => {
                 </p>
                 <div className="flex items-center justify-between mt-2">
                   <div className="flex items-center gap-2">
-                    {q.bookTitle && <span className="text-xs text-pink-600 font-medium">— {q.bookTitle}</span>}
+                    {q.bookTitle && <span className="text-xs text-primary-600 font-medium">— {q.bookTitle}</span>}
                     {q.page && <span className="text-xs text-slate-400">p. {q.page}</span>}
                     {!q.isPublic && <Lock className="w-3 h-3 text-slate-400" />}
                   </div>
                   <button
                     onClick={() => removeQuote({ id: q._id })}
-                    className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                    className="p-1.5 text-slate-400 hover:text-error-500 hover:bg-error-50 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
                     title="Delete"
                   >
                     <Trash2 className="w-3.5 h-3.5" />

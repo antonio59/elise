@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -54,8 +54,8 @@ export const Tabs: React.FC<TabsProps> = ({
             {activeTab === tab.id && (
               <motion.div
                 layoutId="activeTab"
-                className="absolute inset-0 bg-white rounded-lg shadow-sm"
-                transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                className="absolute inset-0 bg-slate-50 rounded-lg shadow-soft"
+                transition={useReducedMotion() ? { duration: 0 } : { type: "spring", stiffness: 400, damping: 30 }}
               />
             )}
             <span className="relative z-10 flex items-center gap-2">
@@ -91,7 +91,7 @@ export const Tabs: React.FC<TabsProps> = ({
               <motion.div
                 layoutId="activeUnderline"
                 className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-500"
-                transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                transition={useReducedMotion() ? { duration: 0 } : { type: "spring", stiffness: 400, damping: 30 }}
               />
             )}
           </button>
@@ -141,10 +141,10 @@ export const TabContent: React.FC<TabContentProps> = ({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 10 }}
+      initial={useReducedMotion() ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -10 }}
-      transition={{ duration: 0.2 }}
+      exit={useReducedMotion() ? { opacity: 0 } : { opacity: 0, y: -10 }}
+      transition={useReducedMotion() ? { duration: 0 } : { duration: 0.2 }}
       className={className}
     >
       {children}

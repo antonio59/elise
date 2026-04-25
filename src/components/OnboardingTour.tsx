@@ -140,7 +140,7 @@ const OnboardingTour: React.FC<OnboardingTourProps> = ({
   }, [isFirstStep]);
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
       {/* Floating decorations */}
       <motion.div
         className="fixed inset-0 pointer-events-none overflow-hidden"

@@ -239,7 +239,7 @@ const MyWritings: React.FC = () => {
                           {writing.title}
                         </h3>
                         {writing.isFavorite && <Star className="w-4 h-4 text-amber-500 fill-amber-500 flex-shrink-0" />}
-                        {writing.isPublished && <Globe className="w-4 h-4 text-green-500 flex-shrink-0" />}
+                        {writing.isPublished && <Globe className="w-4 h-4 text-success-500 flex-shrink-0" />}
                       </div>
                       <div className="flex items-center gap-3 text-xs text-slate-500 mb-2">
                         <span className="capitalize">{config.label}</span>
@@ -261,7 +261,7 @@ const MyWritings: React.FC = () => {
                       </button>
                       <button
                         onClick={(e) => { e.stopPropagation(); handleDelete(writing._id); }}
-                        className="p-2 hover:bg-red-50 rounded-lg text-slate-400 hover:text-red-500"
+                        className="p-2 hover:bg-error-50 rounded-lg text-slate-400 hover:text-error-500"
                         title="Delete"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -345,7 +345,7 @@ const WritingEditor: React.FC<WritingEditorProps> = ({ writing, onSave, onClose 
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
-      <div className="absolute inset-0 bg-black/50" onClick={onClose} />
+      <div className="absolute inset-0 bg-slate-900/50" onClick={onClose} />
       <motion.div
         className="relative bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col"
         initial={{ opacity: 0, scale: 0.95 }}
@@ -458,7 +458,7 @@ const WritingEditor: React.FC<WritingEditorProps> = ({ writing, onSave, onClose 
           {/* Publish Toggle */}
           <div className="flex items-center justify-between p-3 bg-slate-50 rounded-xl">
             <div className="flex items-center gap-2">
-              {isPublished ? <Eye className="w-5 h-5 text-green-500" /> : <EyeOff className="w-5 h-5 text-slate-400" />}
+              {isPublished ? <Eye className="w-5 h-5 text-success-500" /> : <EyeOff className="w-5 h-5 text-slate-400" />}
               <div>
                 <p className="text-sm font-medium text-slate-700">
                   {isPublished ? "Published (visible to everyone)" : "Private (only you can see)"}
@@ -468,7 +468,7 @@ const WritingEditor: React.FC<WritingEditorProps> = ({ writing, onSave, onClose 
             <button
               onClick={() => setIsPublished(!isPublished)}
               className={`w-12 h-7 rounded-full transition-colors ${
-                isPublished ? "bg-green-500" : "bg-slate-300"
+                isPublished ? "bg-success-500" : "bg-slate-300"
               }`}
             >
               <div className={`w-5 h-5 rounded-full bg-white shadow transition-transform ${
