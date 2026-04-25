@@ -597,6 +597,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Add DESIGN.md following google-labs-code/design.md spec
 - Update changelog [skip ci]
 - Update changelog [skip ci]
@@ -663,6 +664,10 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 - Override uuid to ^14.0.0 to fix CVE-2025-4848 / GHSA-w5hq-g745-h8pq
 - Harden rate limits, fix Resend domain, add HSTS, filter artworks by user (#30)
+
+### Styling
+
+- Align codebase with DESIGN.md — theme tokens, reduced-motion a11y, color consistency
 
 ### Testing
 
