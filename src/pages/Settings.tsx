@@ -468,7 +468,7 @@ const Settings: React.FC = () => {
               }`}
             >
               <div
-                className={`w-5 h-5 bg-white rounded-full shadow transition-transform ${
+                className={`w-5 h-5 bg-slate-50 rounded-full shadow transition-transform ${
                   notifications ? "translate-x-6" : "translate-x-1"
                 }`}
               />

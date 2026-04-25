@@ -139,6 +139,7 @@ const QuoteCollection: React.FC = () => {
                     onClick={() => removeQuote({ id: q._id })}
                     className="p-1.5 text-slate-400 hover:text-error-500 hover:bg-error-50 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
                     title="Delete"
+                    aria-label="Delete quote"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>

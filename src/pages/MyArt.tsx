@@ -165,6 +165,7 @@ const MyArt: React.FC = () => {
                     onClick={() => setEditingArtwork(art)}
                     className="p-3 bg-accent-500 hover:bg-accent-600 text-white rounded-xl"
                     title="Edit artwork"
+                    aria-label="Edit artwork"
                   >
                     <Pencil className="w-5 h-5" />
                   </button>
@@ -181,6 +182,7 @@ const MyArt: React.FC = () => {
                         : "bg-success-500 hover:bg-success-600"
                     } text-white`}
                     title={art.isPublished ? "Unpublish" : "Publish"}
+                    aria-label="Toggle publish status"
                   >
                     {art.isPublished ? (
                       <EyeOff className="w-5 h-5" />
@@ -196,6 +198,7 @@ const MyArt: React.FC = () => {
                     }}
                     className="p-3 bg-error-500 hover:bg-error-600 text-white rounded-xl"
                     title="Delete artwork"
+                    aria-label="Delete artwork"
                   >
                     <Trash2 className="w-5 h-5" />
                   </button>
@@ -323,7 +326,7 @@ const EditArtworkModal: React.FC<EditArtworkModalProps> = ({
         />
 
         <motion.div
-          className="relative bg-white rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-auto"
+          className="relative bg-slate-50 rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-auto"
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
@@ -335,6 +338,7 @@ const EditArtworkModal: React.FC<EditArtworkModalProps> = ({
               <button
                 onClick={onClose}
                 className="p-2 hover:bg-slate-100 rounded-lg"
+                aria-label="Close edit modal"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -447,7 +451,7 @@ const EditArtworkModal: React.FC<EditArtworkModalProps> = ({
                 }`}
               >
                 <div
-                  className={`w-5 h-5 bg-white rounded-full shadow transition-transform ${
+                  className={`w-5 h-5 bg-slate-50 rounded-full shadow transition-transform ${
                     isPublished ? "translate-x-6" : "translate-x-1"
                   }`}
                 />
@@ -577,7 +581,7 @@ const AddArtworkModal: React.FC<AddArtworkModalProps> = ({
         />
 
         <motion.div
-          className="relative bg-white rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-auto"
+          className="relative bg-slate-50 rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-auto"
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
@@ -591,6 +595,7 @@ const AddArtworkModal: React.FC<AddArtworkModalProps> = ({
               <button
                 onClick={onClose}
                 className="p-2 hover:bg-slate-100 rounded-lg"
+                aria-label="Close upload modal"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -626,6 +631,7 @@ const AddArtworkModal: React.FC<AddArtworkModalProps> = ({
                       setImageUrl("");
                     }}
                     className="absolute top-2 right-2 p-2 bg-error-500 text-white rounded-lg"
+                    aria-label="Remove image preview"
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -735,7 +741,7 @@ const AddArtworkModal: React.FC<AddArtworkModalProps> = ({
                 }`}
               >
                 <div
-                  className={`w-5 h-5 bg-white rounded-full shadow transition-transform ${
+                  className={`w-5 h-5 bg-slate-50 rounded-full shadow transition-transform ${
                     isPublished ? "translate-x-6" : "translate-x-1"
                   }`}
                 />

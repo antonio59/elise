@@ -78,7 +78,7 @@ const ThemeToggle: React.FC = () => {
             className="fixed inset-0 z-40"
             onClick={() => setOpen(false)}
           />
-          <div className="absolute right-0 top-full mt-2 w-40 bg-white border border-slate-200 rounded-xl shadow-lg p-1 z-50">
+          <div className="absolute right-0 top-full mt-2 w-40 bg-slate-50 border border-slate-200 rounded-xl shadow-lg p-1 z-50">
             {THEMES.map((t) => (
               <button
                 key={t.value}

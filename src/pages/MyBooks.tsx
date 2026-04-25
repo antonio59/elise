@@ -137,7 +137,7 @@ const MyBooks: React.FC = () => {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-2 bg-white p-1.5 rounded-xl border border-slate-200 w-fit">
+      <div className="flex gap-2 bg-slate-50 p-1.5 rounded-xl border border-slate-200 w-fit">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           return (
@@ -197,6 +197,7 @@ const MyBooks: React.FC = () => {
                   onClick={() => setEditingBook(book)}
                   className="p-2 bg-accent-500 hover:bg-accent-600 text-white rounded-lg"
                   title="Edit book"
+                  aria-label="Edit book"
                 >
                   <Pencil className="w-4 h-4" />
                 </button>
@@ -207,6 +208,7 @@ const MyBooks: React.FC = () => {
                   }}
                   className="p-2 bg-error-500 hover:bg-error-600 text-white rounded-lg"
                   title="Delete book"
+                  aria-label="Delete book"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
@@ -325,7 +327,7 @@ const MyBooks: React.FC = () => {
               onClick={() => setShowEditReview(false)}
             />
             <motion.div
-              className="relative bg-white rounded-2xl shadow-xl max-w-md w-full p-6"
+              className="relative bg-slate-50 rounded-2xl shadow-xl max-w-md w-full p-6"
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95 }}

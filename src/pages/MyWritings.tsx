@@ -149,7 +149,7 @@ const MyWritings: React.FC = () => {
               <div className={`w-10 h-10 mx-auto rounded-xl bg-gradient-to-br ${config.gradient} flex items-center justify-center mb-2`}>
                 <config.icon className="w-5 h-5 text-white" />
               </div>
-              <p className="text-2xl font-bold text-slate-800">{count ?? 0}</p>
+              <p className="text-2xl font-bold font-display text-slate-800">{count ?? 0}</p>
               <p className="text-xs text-slate-500">{config.label}</p>
             </div>
           );
@@ -157,7 +157,7 @@ const MyWritings: React.FC = () => {
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex gap-2 bg-white p-1.5 rounded-xl border border-slate-200 w-fit">
+      <div className="flex gap-2 bg-slate-50 p-1.5 rounded-xl border border-slate-200 w-fit">
         {typeTabs.map((tab) => (
           <button
             key={tab.key}
@@ -256,6 +256,7 @@ const MyWritings: React.FC = () => {
                         onClick={(e) => { e.stopPropagation(); toggleFavorite({ id: writing._id }); }}
                         className="p-2 hover:bg-slate-100 rounded-lg"
                         title="Toggle favorite"
+                        aria-label="Toggle favorite"
                       >
                         <Heart className={`w-4 h-4 ${writing.isFavorite ? "text-pink-500 fill-pink-500" : "text-slate-400"}`} />
                       </button>
@@ -263,6 +264,7 @@ const MyWritings: React.FC = () => {
                         onClick={(e) => { e.stopPropagation(); handleDelete(writing._id); }}
                         className="p-2 hover:bg-error-50 rounded-lg text-slate-400 hover:text-error-500"
                         title="Delete"
+                        aria-label="Delete writing"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -347,7 +349,7 @@ const WritingEditor: React.FC<WritingEditorProps> = ({ writing, onSave, onClose 
     >
       <div className="absolute inset-0 bg-slate-900/50" onClick={onClose} />
       <motion.div
-        className="relative bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col"
+        className="relative bg-slate-50 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col"
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
@@ -357,7 +359,7 @@ const WritingEditor: React.FC<WritingEditorProps> = ({ writing, onSave, onClose 
           <h2 className="text-xl font-bold text-slate-800">
             {writing ? "Edit Piece" : "New Piece ✨"}
           </h2>
-          <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-lg">
+          <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-lg" aria-label="Close editor">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -471,7 +473,7 @@ const WritingEditor: React.FC<WritingEditorProps> = ({ writing, onSave, onClose 
                 isPublished ? "bg-success-500" : "bg-slate-300"
               }`}
             >
-              <div className={`w-5 h-5 rounded-full bg-white shadow transition-transform ${
+              <div className={`w-5 h-5 rounded-full bg-slate-50 shadow transition-transform ${
                 isPublished ? "translate-x-6" : "translate-x-1"
               }`} />
             </button>

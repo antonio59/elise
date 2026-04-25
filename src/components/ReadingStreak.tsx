@@ -36,13 +36,11 @@ const ReadingStreak: React.FC = () => {
 
   return (
     <motion.div
-      className="col-span-2 lg:col-span-4 rounded-2xl p-5 flex flex-wrap sm:flex-nowrap items-center gap-4"
-      style={{
-        background: streak.currentStreak > 0
-          ? "linear-gradient(135deg, #fff7ed, #ffedd5)"
-          : "linear-gradient(135deg, #f8fafc, #f1f5f9)",
-        border: streak.currentStreak > 0 ? "1px solid #fed7aa" : "1px solid #e2e8f0",
-      }}
+      className={`col-span-2 lg:col-span-4 rounded-2xl p-5 flex flex-wrap sm:flex-nowrap items-center gap-4 border ${
+        streak.currentStreak > 0
+          ? "bg-gradient-to-br from-primary-50 to-primary-100 border-primary-200"
+          : "bg-gradient-to-br from-slate-50 to-slate-100 border-slate-200"
+      }`}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.15 }}
@@ -59,7 +57,7 @@ const ReadingStreak: React.FC = () => {
       {/* Streak info */}
       <div className="flex-1 min-w-0">
         <div className="flex items-baseline gap-2 flex-wrap">
-          <span className={`text-3xl font-bold ${streak.currentStreak > 0 ? "text-orange-600" : "text-slate-500"}`}>
+          <span className={`text-3xl font-bold font-display ${streak.currentStreak > 0 ? "text-primary-600" : "text-slate-500"}`}>
             {streak.currentStreak}
           </span>
           <span className="text-slate-600 font-medium">

@@ -163,6 +163,7 @@ const IdeasVault: React.FC = () => {
                     onClick={() => handleArchive(idea._id)}
                     className="p-1.5 text-slate-400 hover:text-amber-500 hover:bg-amber-50 rounded-lg"
                     title="Archive"
+                    aria-label="Archive idea"
                   >
                     <Archive className="w-3.5 h-3.5" />
                   </button>
@@ -170,6 +171,7 @@ const IdeasVault: React.FC = () => {
                     onClick={() => removeIdea({ id: idea._id })}
                     className="p-1.5 text-slate-400 hover:text-error-500 hover:bg-error-50 rounded-lg"
                     title="Delete"
+                    aria-label="Delete idea"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>

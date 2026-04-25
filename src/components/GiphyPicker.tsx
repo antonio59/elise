@@ -49,7 +49,7 @@ const GiphyPicker: React.FC<GiphyPickerProps> = ({ onSelect, onClose }) => {
   };
 
   return (
-    <div className="absolute bottom-full left-0 mb-2 w-72 bg-white rounded-xl shadow-lg border border-slate-200 z-50">
+    <div className="absolute bottom-full left-0 mb-2 w-72 bg-slate-50 rounded-xl shadow-lg border border-slate-200 z-50">
       {/* Tabs */}
       <div className="flex border-b border-slate-200">
         <button
@@ -80,6 +80,7 @@ const GiphyPicker: React.FC<GiphyPickerProps> = ({ onSelect, onClose }) => {
           type="button"
           onClick={onClose}
           className="px-3 text-slate-400 hover:text-slate-600"
+          aria-label="Close GIF picker"
         >
           <X className="w-4 h-4" />
         </button>

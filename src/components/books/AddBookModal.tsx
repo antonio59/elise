@@ -220,7 +220,7 @@ const AddBookModal: React.FC<AddBookModalProps> = ({
         />
 
         <motion.div
-          className="relative bg-white rounded-2xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-auto"
+          className="relative bg-slate-50 rounded-2xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-auto"
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
@@ -423,7 +423,7 @@ const AddBookModal: React.FC<AddBookModalProps> = ({
                     <button
                       type="button"
                       onClick={() => setManualMode(!manualMode)}
-                      className="bg-white px-2 text-slate-400 uppercase tracking-wider hover:text-slate-600"
+                      className="bg-slate-50 px-2 text-slate-400 uppercase tracking-wider hover:text-slate-600"
                     >
                       {manualMode ? "back to search" : "can't find your book? add manually"}
                     </button>

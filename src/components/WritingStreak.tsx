@@ -47,13 +47,11 @@ const WritingStreak: React.FC = () => {
 
   return (
     <motion.div
-      className="col-span-2 lg:col-span-4 rounded-2xl p-5 flex flex-wrap sm:flex-nowrap items-center gap-4"
-      style={{
-        background: streak.currentStreak > 0
-          ? "linear-gradient(135deg, #f5f3ff, #ede9fe)"
-          : "linear-gradient(135deg, #f8fafc, #f1f5f9)",
-        border: streak.currentStreak > 0 ? "1px solid #ddd6fe" : "1px solid #e2e8f0",
-      }}
+      className={`col-span-2 lg:col-span-4 rounded-2xl p-5 flex flex-wrap sm:flex-nowrap items-center gap-4 border ${
+        streak.currentStreak > 0
+          ? "bg-gradient-to-br from-violet-50 to-violet-100 border-violet-200"
+          : "bg-gradient-to-br from-slate-50 to-slate-100 border-slate-200"
+      }`}
       {...animationProps}
     >
       <motion.div
@@ -66,7 +64,7 @@ const WritingStreak: React.FC = () => {
 
       <div className="flex-1 min-w-0">
         <div className="flex items-baseline gap-2 flex-wrap">
-          <span className={`text-3xl font-bold ${streak.currentStreak > 0 ? "text-violet-600" : "text-slate-500"}`}>
+          <span className={`text-3xl font-bold font-display ${streak.currentStreak > 0 ? "text-violet-600" : "text-slate-500"}`}>
             {streak.currentStreak}
           </span>
           <span className="text-slate-600 font-medium">

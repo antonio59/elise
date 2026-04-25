@@ -171,7 +171,7 @@ const OnboardingTour: React.FC<OnboardingTourProps> = ({
       </motion.div>
 
       <motion.div
-        className="relative max-w-lg w-full bg-white rounded-3xl shadow-2xl overflow-hidden"
+        className="relative max-w-lg w-full bg-slate-50 rounded-3xl shadow-2xl overflow-hidden"
         initial={{ opacity: 0, scale: 0.9, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ type: "spring", damping: 25, stiffness: 200 }}

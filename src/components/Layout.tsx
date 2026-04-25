@@ -114,7 +114,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div className="min-h-screen flex flex-col md:flex-row">
       {/* Mobile Header */}
-      <header className="md:hidden bg-white border-b border-slate-200 p-4 flex items-center justify-between sticky top-0 z-40">
+      <header className="md:hidden bg-slate-50 border-b border-slate-200 p-4 flex items-center justify-between sticky top-0 z-40">
         <Link to="/dashboard" className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center">
             <Sparkles className="w-4 h-4 text-white" />
@@ -126,6 +126,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           className="p-2 hover:bg-slate-100 rounded-lg"
+          aria-label="Toggle navigation menu"
         >
           {mobileMenuOpen ? (
             <X className="w-6 h-6" />
@@ -147,7 +148,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
               onClick={() => setMobileMenuOpen(false)}
             />
             <motion.aside
-              className="fixed top-0 left-0 bottom-0 w-64 bg-white z-50 p-6 flex flex-col md:hidden"
+              className="fixed top-0 left-0 bottom-0 w-64 bg-slate-50 z-50 p-6 flex flex-col md:hidden"
               initial={{ x: -256 }}
               animate={{ x: 0 }}
               exit={{ x: -256 }}
@@ -160,7 +161,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       </AnimatePresence>
 
       {/* Desktop Sidebar */}
-      <aside className="hidden md:flex w-64 bg-white border-r border-slate-200 p-6 flex-col h-screen sticky top-0 overflow-y-auto scrollbar-hide">
+      <aside className="hidden md:flex w-64 bg-slate-50 border-r border-slate-200 p-6 flex-col h-screen sticky top-0 overflow-y-auto scrollbar-hide">
         {renderNavContent()}
       </aside>
 
@@ -197,7 +198,7 @@ export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-md border-b border-slate-200/70 shadow-sm sticky top-0 z-50">
+      <header className="bg-slate-50/80 backdrop-blur-md border-b border-slate-200/70 shadow-sm sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center">
@@ -271,7 +272,7 @@ export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
           {mobileMenuOpen && (
             <motion.nav
               id="mobile-menu"
-              className="md:hidden border-t border-slate-100 bg-white px-4 py-4 space-y-1"
+              className="md:hidden border-t border-slate-100 bg-slate-50 px-4 py-4 space-y-1"
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}

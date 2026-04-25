@@ -191,7 +191,7 @@ const SuggestBookModal: React.FC<SuggestBookModalProps> = ({
         />
 
         <motion.div
-          className="relative bg-white rounded-2xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-auto"
+          className="relative bg-slate-50 rounded-2xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-auto"
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
@@ -205,6 +205,7 @@ const SuggestBookModal: React.FC<SuggestBookModalProps> = ({
               <button
                 onClick={handleClose}
                 className="p-2 hover:bg-slate-100 rounded-lg"
+                aria-label="Close modal"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -257,7 +258,7 @@ const SuggestBookModal: React.FC<SuggestBookModalProps> = ({
 
                   {/* Search Results Dropdown */}
                   {showResults && (
-                    <div className="absolute z-10 w-full mt-1 bg-white border border-slate-200 rounded-xl shadow-lg max-h-64 overflow-auto">
+                    <div className="absolute z-10 w-full mt-1 bg-slate-50 border border-slate-200 rounded-xl shadow-lg max-h-64 overflow-auto">
                       {searchResults.map((book, index) => (
                         <button
                           key={index}
@@ -305,7 +306,7 @@ const SuggestBookModal: React.FC<SuggestBookModalProps> = ({
                       by {selectedBook.author}
                     </p>
                     {selectedBook.genre && (
-                      <span className="inline-block mt-2 px-2 py-1 bg-white text-xs font-medium text-primary-600 rounded-full">
+                      <span className="inline-block mt-2 px-2 py-1 bg-slate-50 text-xs font-medium text-primary-600 rounded-full">
                         {selectedBook.genre}
                       </span>
                     )}
@@ -314,6 +315,7 @@ const SuggestBookModal: React.FC<SuggestBookModalProps> = ({
                     type="button"
                     onClick={clearSelection}
                     className="p-1 hover:bg-primary-100 rounded-lg transition-colors"
+                    aria-label="Clear selection"
                   >
                     <X className="w-4 h-4 text-slate-500" />
                   </button>

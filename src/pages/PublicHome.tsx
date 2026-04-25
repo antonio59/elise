@@ -318,7 +318,7 @@ const PublicHome: React.FC = () => {
           {books === undefined ? (
             <BookGridSkeleton />
           ) : books.length === 0 ? (
-            <div className="text-center py-12 bg-white rounded-2xl">
+            <div className="text-center py-12 bg-slate-50 rounded-2xl">
               <BookOpen className="w-12 h-12 text-slate-300 mx-auto mb-4" />
               <p className="text-slate-500">No books yet. Check back soon!</p>
             </div>
@@ -404,7 +404,7 @@ const PublicHome: React.FC = () => {
       </section>
 
       {/* Reviews Preview */}
-      <section className="py-16 px-4 bg-white">
+      <section className="py-16 px-4 bg-slate-50">
         <div className="max-w-6xl mx-auto">
           <SectionHeader
             title="Reviews"
@@ -422,7 +422,7 @@ const PublicHome: React.FC = () => {
       {/* Writing & Art Teasers */}
       <section className="py-16 px-4">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-6">
-          <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-100 text-center hover:shadow-md transition-shadow">
+          <div className="bg-slate-50 rounded-2xl p-8 shadow-sm border border-slate-100 text-center hover:shadow-md transition-shadow">
             <div className="w-16 h-16 bg-violet-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
               <Feather className="w-8 h-8 text-violet-400" />
             </div>
@@ -437,7 +437,7 @@ const PublicHome: React.FC = () => {
               See all →
             </Link>
           </div>
-          <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-100 text-center hover:shadow-md transition-shadow">
+          <div className="bg-slate-50 rounded-2xl p-8 shadow-sm border border-slate-100 text-center hover:shadow-md transition-shadow">
             <div className="w-16 h-16 bg-primary-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
               <Palette className="w-8 h-8 text-primary-400" />
             </div>
@@ -456,7 +456,7 @@ const PublicHome: React.FC = () => {
       </section>
 
       {/* Wishlist Section */}
-      <section id="wishlist" className="py-16 px-4 bg-white">
+      <section id="wishlist" className="py-16 px-4 bg-slate-50">
         <div className="max-w-6xl mx-auto">
           <div className="mb-8">
             <SectionHeader
@@ -544,7 +544,7 @@ const PublicHome: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-white rounded-full shadow-sm mb-6">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-slate-50 rounded-full shadow-sm mb-6">
               <MessageSquarePlus className="w-4 h-4 text-primary-500" />
               <span className="text-sm font-medium text-slate-600">
                 Have a book idea?

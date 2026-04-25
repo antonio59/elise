@@ -118,7 +118,7 @@ const GlobalSearch: React.FC = () => {
       >
         <Search className="w-4 h-4" />
         <span className="text-slate-400">Search...</span>
-        <kbd className="hidden lg:inline-block px-1.5 py-0.5 text-xs bg-white rounded border border-slate-200">
+        <kbd className="hidden lg:inline-block px-1.5 py-0.5 text-xs bg-slate-50 rounded border border-slate-200">
           ⌘K
         </kbd>
       </button>
@@ -137,7 +137,7 @@ const GlobalSearch: React.FC = () => {
             className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
             onClick={() => { setQuery(""); setOpen(false); }}
           />
-          <div className="relative w-full max-w-xl bg-white rounded-2xl shadow-2xl overflow-hidden">
+          <div className="relative w-full max-w-xl bg-slate-50 rounded-2xl shadow-2xl overflow-hidden">
             <div className="flex items-center gap-3 px-4 py-3 border-b border-slate-100">
               <Search className="w-5 h-5 text-slate-400" />
               <input
@@ -151,6 +151,7 @@ const GlobalSearch: React.FC = () => {
                 <button
                   onClick={() => setQuery("")}
                   className="p-1 rounded text-slate-400 hover:text-slate-600"
+                  aria-label="Clear search"
                 >
                   <X className="w-4 h-4" />
                 </button>

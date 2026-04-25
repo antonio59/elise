@@ -71,6 +71,7 @@ const CoverUpload: React.FC<CoverUploadProps> = ({ value, onChange }) => {
                 type="button"
                 onClick={() => onChange("")}
                 className="p-2 text-slate-400 hover:text-error-500 transition-colors"
+                aria-label="Remove cover image"
               >
                 <X className="w-4 h-4" />
               </button>

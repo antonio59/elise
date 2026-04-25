@@ -125,23 +125,23 @@ const ReviewsPage: React.FC = () => {
         {stats.total > 0 && (
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-8">
             <div className="card p-3 text-center">
-              <div className="text-xl font-bold text-slate-800">{stats.total}</div>
+              <div className="text-xl font-bold font-display text-slate-800">{stats.total}</div>
               <div className="text-xs text-slate-500">Rated</div>
             </div>
             <div className="card p-3 text-center">
-              <div className="text-xl font-bold text-star">{stats.fiveStars}</div>
+              <div className="text-xl font-bold font-display text-star">{stats.fiveStars}</div>
               <div className="text-xs text-slate-500">⭐⭐⭐⭐⭐</div>
             </div>
             <div className="card p-3 text-center">
-              <div className="text-xl font-bold text-primary-500">{stats.fourStars}</div>
+              <div className="text-xl font-bold font-display text-primary-500">{stats.fourStars}</div>
               <div className="text-xs text-slate-500">⭐⭐⭐⭐</div>
             </div>
             <div className="card p-3 text-center">
-              <div className="text-xl font-bold text-error-400">{stats.favorites}</div>
+              <div className="text-xl font-bold font-display text-error-400">{stats.favorites}</div>
               <div className="text-xs text-slate-500">Favorites</div>
             </div>
             <div className="card p-3 text-center">
-              <div className="text-xl font-bold text-slate-600">{stats.withReviews}</div>
+              <div className="text-xl font-bold font-display text-slate-600">{stats.withReviews}</div>
               <div className="text-xs text-slate-500">With Reviews</div>
             </div>
           </div>
@@ -305,6 +305,7 @@ const ReviewsPage: React.FC = () => {
                             key={star}
                             onClick={() => setEditRating(star)}
                             className="p-0.5"
+                            aria-label={`Rate ${star} star${star > 1 ? 's' : ''}`}
                           >
                             <Star
                               className={`w-6 h-6 transition-colors ${

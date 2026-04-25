@@ -61,7 +61,7 @@ const SetGoalModal: React.FC<SetGoalModalProps> = ({
         />
 
         <motion.div
-          className="relative bg-white rounded-2xl shadow-xl max-w-md w-full"
+          className="relative bg-slate-50 rounded-2xl shadow-xl max-w-md w-full"
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
@@ -75,6 +75,7 @@ const SetGoalModal: React.FC<SetGoalModalProps> = ({
               <button
                 onClick={onClose}
                 className="p-2 hover:bg-slate-100 rounded-lg"
+                aria-label="Close modal"
               >
                 <X className="w-5 h-5" />
               </button>

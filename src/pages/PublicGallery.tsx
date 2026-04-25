@@ -46,7 +46,7 @@ const PublicGallery: React.FC = () => {
 
       {/* Gallery Grid */}
       {artworks.length === 0 ? (
-        <div className="text-center py-20 bg-white rounded-2xl">
+        <div className="text-center py-20 bg-slate-50 rounded-2xl">
           <Sparkles className="w-12 h-12 text-slate-300 mx-auto mb-4" />
           <p className="text-slate-500">No artworks yet. Check back soon!</p>
         </div>
@@ -55,7 +55,7 @@ const PublicGallery: React.FC = () => {
           {artworks.map((art: (typeof artworks)[number], index: number) => (
             <motion.div
               key={art._id}
-              className="group relative aspect-square rounded-2xl overflow-hidden cursor-pointer bg-white shadow-sm hover:shadow-xl transition-all"
+              className="group relative aspect-square rounded-2xl overflow-hidden cursor-pointer bg-slate-50 shadow-sm hover:shadow-xl transition-all"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.05 }}
@@ -132,7 +132,7 @@ const PublicGallery: React.FC = () => {
             onClick={() => setSelectedArt(null)}
           >
             <motion.div
-              className="relative max-w-4xl max-h-[90vh] bg-white rounded-2xl overflow-hidden"
+              className="relative max-w-4xl max-h-[90vh] bg-slate-50 rounded-2xl overflow-hidden"
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
@@ -141,6 +141,7 @@ const PublicGallery: React.FC = () => {
               <button
                 onClick={() => setSelectedArt(null)}
                 className="absolute top-4 right-4 z-10 p-2 bg-slate-900/50 hover:bg-black/70 rounded-full text-white transition-colors"
+                aria-label="Close lightbox"
               >
                 <X className="w-5 h-5" />
               </button>

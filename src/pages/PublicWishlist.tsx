@@ -107,14 +107,14 @@ const PublicWishlist: React.FC = () => {
 
   const actions = (
     <div className="flex items-center gap-3 flex-wrap">
-      <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm border border-slate-200">
+      <div className="flex items-center gap-2 bg-slate-50 px-4 py-2 rounded-full shadow-sm border border-slate-200">
         <span className="text-xl font-bold bg-gradient-to-r from-primary-500 to-accent-500 bg-clip-text text-transparent">
           {wishlistBooks.length}
         </span>
         <span className="text-sm text-slate-500">books</span>
       </div>
       {totalPages > 0 && (
-        <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm border border-slate-200">
+        <div className="flex items-center gap-2 bg-slate-50 px-4 py-2 rounded-full shadow-sm border border-slate-200">
           <BookOpen className="w-4 h-4 text-primary-500" />
           <span className="text-lg font-bold text-primary-600">
             {totalPages.toLocaleString()}
@@ -131,7 +131,7 @@ const PublicWishlist: React.FC = () => {
       </button>
       <button
         onClick={handleShare}
-        className="flex items-center gap-2 px-4 py-2 bg-white text-slate-600 font-medium rounded-full shadow-sm border border-slate-200 hover:bg-slate-50 transition-colors text-sm"
+        className="flex items-center gap-2 px-4 py-2 bg-slate-50 text-slate-600 font-medium rounded-full shadow-sm border border-slate-200 hover:bg-slate-50 transition-colors text-sm"
       >
         {shareStatus === "copied" ? (
           <>
@@ -296,7 +296,7 @@ const PublicWishlist: React.FC = () => {
             />
 
             <motion.div
-              className="relative bg-white rounded-2xl shadow-2xl overflow-hidden w-full max-w-lg max-h-[90vh] overflow-y-auto"
+              className="relative bg-slate-50 rounded-2xl shadow-2xl overflow-hidden w-full max-w-lg max-h-[90vh] overflow-y-auto"
               initial={{ scale: 0.9, y: 50 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 50 }}
@@ -315,7 +315,8 @@ const PublicWishlist: React.FC = () => {
 
                 <button
                   onClick={() => setSelectedBook(null)}
-                  className="absolute top-4 right-4 w-10 h-10 bg-white hover:bg-slate-100 rounded-full flex items-center justify-center shadow-lg transition-colors"
+                  className="absolute top-4 right-4 w-10 h-10 bg-slate-50 hover:bg-slate-100 rounded-full flex items-center justify-center shadow-lg transition-colors"
+                  aria-label="Close book detail"
                 >
                   <X className="w-5 h-5 text-slate-600" />
                 </button>
@@ -546,7 +547,7 @@ const SuggestBookModal: React.FC<SuggestBookModalProps> = ({
         />
 
         <motion.div
-          className="relative bg-white rounded-2xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-auto"
+          className="relative bg-slate-50 rounded-2xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-auto"
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
@@ -559,6 +560,7 @@ const SuggestBookModal: React.FC<SuggestBookModalProps> = ({
               <button
                 onClick={handleClose}
                 className="p-2 hover:bg-slate-100 rounded-lg"
+                aria-label="Close suggest modal"
               >
                 <X className="w-5 h-5" />
               </button>

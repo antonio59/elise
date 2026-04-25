@@ -145,7 +145,7 @@ const EditBookModal: React.FC<EditBookModalProps> = ({
         />
 
         <motion.div
-          className="relative bg-white rounded-2xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-auto"
+          className="relative bg-slate-50 rounded-2xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-auto"
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
@@ -157,6 +157,7 @@ const EditBookModal: React.FC<EditBookModalProps> = ({
               <button
                 onClick={onClose}
                 className="p-2 hover:bg-slate-100 rounded-lg"
+                aria-label="Close modal"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -290,6 +291,7 @@ const EditBookModal: React.FC<EditBookModalProps> = ({
                       type="button"
                       onClick={() => setRating(star)}
                       className="p-1"
+                      aria-label={`Rate ${star} star${star > 1 ? 's' : ''}`}
                     >
                       <Star
                         className={`w-8 h-8 transition-colors ${
@@ -391,7 +393,7 @@ const EditBookModal: React.FC<EditBookModalProps> = ({
                 }`}
               >
                 <div
-                  className={`w-5 h-5 bg-white rounded-full shadow transition-transform ${
+                  className={`w-5 h-5 bg-slate-50 rounded-full shadow transition-transform ${
                     isFavorite ? "translate-x-6" : "translate-x-1"
                   }`}
                 />

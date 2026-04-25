@@ -94,19 +94,19 @@ const Suggestions: React.FC = () => {
       {/* Stats */}
       <div className="grid grid-cols-3 gap-4">
         <div className="card p-4 text-center">
-          <div className="text-2xl font-bold text-yellow-600">
+          <div className="text-2xl font-bold font-display text-star">
             {pendingCount}
           </div>
           <div className="text-sm text-slate-500">Pending</div>
         </div>
         <div className="card p-4 text-center">
-          <div className="text-2xl font-bold text-success-600">
+          <div className="text-2xl font-bold font-display text-success-600">
             {approvedCount}
           </div>
           <div className="text-sm text-slate-500">Approved</div>
         </div>
         <div className="card p-4 text-center">
-          <div className="text-2xl font-bold text-error-600">{rejectedCount}</div>
+          <div className="text-2xl font-bold font-display text-error-600">{rejectedCount}</div>
           <div className="text-sm text-slate-500">Rejected</div>
         </div>
       </div>
@@ -181,6 +181,7 @@ const Suggestions: React.FC = () => {
                         onClick={() => addToBooks({ id: suggestion._id })}
                         className="p-2 bg-primary-500 hover:bg-primary-600 text-white rounded-lg"
                         title="Add to wishlist"
+                        aria-label="Add to wishlist"
                       >
                         <BookPlus className="w-4 h-4" />
                       </button>
@@ -190,6 +191,7 @@ const Suggestions: React.FC = () => {
                         }
                         className="p-2 bg-success-500 hover:bg-success-600 text-white rounded-lg"
                         title="Approve"
+                        aria-label="Approve suggestion"
                       >
                         <Check className="w-4 h-4" />
                       </button>
@@ -197,6 +199,7 @@ const Suggestions: React.FC = () => {
                         onClick={() => rejectSuggestion({ id: suggestion._id })}
                         className="p-2 bg-slate-400 hover:bg-slate-500 text-white rounded-lg"
                         title="Reject"
+                        aria-label="Reject suggestion"
                       >
                         <X className="w-4 h-4" />
                       </button>
@@ -210,6 +213,7 @@ const Suggestions: React.FC = () => {
                     }}
                     className="p-2 bg-error-500 hover:bg-error-600 text-white rounded-lg"
                     title="Delete"
+                    aria-label="Delete suggestion"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>

@@ -67,22 +67,22 @@ const MonthlyWrapped: React.FC = () => {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="bg-gradient-to-br from-primary-50 to-primary-100 rounded-xl p-4 text-center">
           <BookOpen className="w-6 h-6 text-primary-500 mx-auto mb-1" />
-          <p className="text-2xl font-bold text-slate-800">{stats.books}</p>
+          <p className="text-2xl font-bold font-display text-slate-800">{stats.books}</p>
           <p className="text-xs text-slate-500">books</p>
         </div>
         <div className="bg-gradient-to-br from-violet-50 to-violet-100 rounded-xl p-4 text-center">
           <PenTool className="w-6 h-6 text-violet-500 mx-auto mb-1" />
-          <p className="text-2xl font-bold text-slate-800">{stats.writings}</p>
+          <p className="text-2xl font-bold font-display text-slate-800">{stats.writings}</p>
           <p className="text-xs text-slate-500">writings</p>
         </div>
         <div className="bg-gradient-to-br from-accent-50 to-accent-100 rounded-xl p-4 text-center">
           <Palette className="w-6 h-6 text-accent-500 mx-auto mb-1" />
-          <p className="text-2xl font-bold text-slate-800">{stats.art}</p>
+          <p className="text-2xl font-bold font-display text-slate-800">{stats.art}</p>
           <p className="text-xs text-slate-500">artworks</p>
         </div>
-        <div className="bg-gradient-to-br from-amber-50 to-amber-100 rounded-xl p-4 text-center">
-          <Star className="w-6 h-6 text-amber-500 mx-auto mb-1" />
-          <p className="text-2xl font-bold text-slate-800">{stats.streak}</p>
+        <div className="bg-gradient-to-br from-star-light to-star/20 rounded-xl p-4 text-center">
+          <Star className="w-6 h-6 text-star mx-auto mb-1" />
+          <p className="text-2xl font-bold font-display text-slate-800">{stats.streak}</p>
           <p className="text-xs text-slate-500">day streak</p>
         </div>
       </div>

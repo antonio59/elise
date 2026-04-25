@@ -197,16 +197,18 @@ const DashboardAbout: React.FC = () => {
               </div>
               <button
                 onClick={() => setShowAvatarCreator(true)}
-                className="absolute -bottom-2 -right-2 w-8 h-8 bg-white rounded-full shadow-md flex items-center justify-center hover:bg-slate-50 border border-slate-200"
+                className="absolute -bottom-2 -right-2 w-8 h-8 bg-slate-50 rounded-full shadow-md flex items-center justify-center hover:bg-slate-50 border border-slate-200"
                 title="Create avatar"
+                aria-label="Create avatar"
               >
                 <Sparkles className="w-4 h-4 text-violet-500" />
               </button>
               <button
                 onClick={() => fileRef.current?.click()}
                 disabled={uploading}
-                className="absolute -bottom-2 right-6 w-8 h-8 bg-white rounded-full shadow-md flex items-center justify-center hover:bg-slate-50 border border-slate-200"
+                className="absolute -bottom-2 right-6 w-8 h-8 bg-slate-50 rounded-full shadow-md flex items-center justify-center hover:bg-slate-50 border border-slate-200"
                 title="Upload photo"
+                aria-label="Upload photo"
               >
                 {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Camera className="w-4 h-4 text-slate-500" />}
               </button>
@@ -323,7 +325,7 @@ const DashboardAbout: React.FC = () => {
               onClick={() => { setShowAvatarCreator(false); setPreviewUrl(null); }}
             />
             <motion.div
-              className="relative bg-white rounded-2xl shadow-xl max-w-lg w-full max-h-[85vh] overflow-y-auto"
+              className="relative bg-slate-50 rounded-2xl shadow-xl max-w-lg w-full max-h-[85vh] overflow-y-auto"
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95 }}
@@ -335,7 +337,7 @@ const DashboardAbout: React.FC = () => {
                     <h2 className="text-xl font-bold text-slate-800">Create Your Avatar ✨</h2>
                     <p className="text-sm text-slate-500">Pick a style, then keep shuffling until you love it</p>
                   </div>
-                  <button onClick={() => { setShowAvatarCreator(false); setPreviewUrl(null); }} className="p-2 hover:bg-slate-100 rounded-lg">
+                  <button onClick={() => { setShowAvatarCreator(false); setPreviewUrl(null); }} className="p-2 hover:bg-slate-100 rounded-lg" aria-label="Close avatar creator">
                     <X className="w-5 h-5 text-slate-400" />
                   </button>
                 </div>

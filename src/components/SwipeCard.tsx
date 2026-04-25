@@ -64,7 +64,7 @@ const SwipeCard: React.FC<SwipeCardProps> = ({ book, onSwipe, isTop }) => {
         transition: { duration: 0.3 },
       }}
     >
-      <div className="w-full h-full bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+      <div className="w-full h-full bg-slate-50 rounded-3xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
         {/* Cover Image */}
         <div className="relative flex-shrink-0 bg-gradient-to-br from-primary-100 to-accent-100 flex items-center justify-center"
           style={{ height: expanded ? "35%" : "55%" }}
@@ -77,7 +77,7 @@ const SwipeCard: React.FC<SwipeCardProps> = ({ book, onSwipe, isTop }) => {
               draggable={false}
             />
           ) : (
-            <div className="w-32 h-48 rounded-lg bg-white/50 flex items-center justify-center">
+            <div className="w-32 h-48 rounded-lg bg-slate-50/50 flex items-center justify-center">
               <BookOpen className="w-12 h-12 text-slate-300" />
             </div>
           )}
@@ -116,6 +116,7 @@ const SwipeCard: React.FC<SwipeCardProps> = ({ book, onSwipe, isTop }) => {
                 setExpanded(!expanded);
               }}
               className="flex-shrink-0 p-1.5 rounded-lg hover:bg-slate-100 transition-colors"
+              aria-label="Toggle description"
             >
               {expanded ? (
                 <ChevronUp className="w-5 h-5 text-slate-400" />
@@ -155,12 +156,14 @@ const SwipeCard: React.FC<SwipeCardProps> = ({ book, onSwipe, isTop }) => {
             <button
               onClick={() => onSwipe("left")}
               className="w-14 h-14 rounded-full bg-error-50 hover:bg-error-100 border-2 border-error-200 flex items-center justify-center transition-all hover:scale-110 active:scale-95"
+              aria-label="Pass"
             >
               <X className="w-6 h-6 text-error-400" />
             </button>
             <button
               onClick={() => onSwipe("right")}
               className="w-14 h-14 rounded-full bg-success-50 hover:bg-success-100 border-2 border-success-200 flex items-center justify-center transition-all hover:scale-110 active:scale-95"
+              aria-label="Want it"
             >
               <Heart className="w-6 h-6 text-success-500" />
             </button>

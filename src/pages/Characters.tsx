@@ -200,10 +200,10 @@ const Characters: React.FC = () => {
                     )}
                   </div>
                   <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
-                    <button onClick={() => startEdit(char)} className="p-2 hover:bg-slate-100 rounded-lg" title="Edit">
+                    <button onClick={() => startEdit(char)} className="p-2 hover:bg-slate-100 rounded-lg" title="Edit" aria-label="Edit character">
                       <Sparkles className="w-4 h-4 text-slate-400" />
                     </button>
-                    <button onClick={() => removeCharacter({ id: char._id })} className="p-2 hover:bg-error-50 rounded-lg" title="Delete">
+                    <button onClick={() => removeCharacter({ id: char._id })} className="p-2 hover:bg-error-50 rounded-lg" title="Delete" aria-label="Delete character">
                       <Trash2 className="w-4 h-4 text-slate-400 hover:text-error-500" />
                     </button>
                   </div>

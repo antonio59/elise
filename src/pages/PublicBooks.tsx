@@ -155,7 +155,7 @@ const PublicBooks: React.FC = () => {
                 onClick={() => setViewMode("grid")}
                 aria-label="Grid view"
                 aria-pressed={viewMode === "grid"}
-                className={`px-3 py-1.5 text-sm ${viewMode === "grid" ? "bg-primary-500 text-white" : "bg-white text-slate-500 hover:bg-slate-50"}`}
+                className={`px-3 py-1.5 text-sm ${viewMode === "grid" ? "bg-primary-500 text-white" : "bg-slate-50 text-slate-500 hover:bg-slate-50"}`}
               >
                 <LayoutGrid className="w-4 h-4" />
               </button>
@@ -163,7 +163,7 @@ const PublicBooks: React.FC = () => {
                 onClick={() => setViewMode("list")}
                 aria-label="List view"
                 aria-pressed={viewMode === "list"}
-                className={`px-3 py-1.5 text-sm ${viewMode === "list" ? "bg-primary-500 text-white" : "bg-white text-slate-500 hover:bg-slate-50"}`}
+                className={`px-3 py-1.5 text-sm ${viewMode === "list" ? "bg-primary-500 text-white" : "bg-slate-50 text-slate-500 hover:bg-slate-50"}`}
               >
                 <List className="w-4 h-4" />
               </button>

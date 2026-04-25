@@ -73,7 +73,7 @@ const StickerSection: React.FC<StickerSectionProps> = ({ bookId }) => {
       <AnimatePresence>
         {open && (
           <motion.div
-            className="absolute bottom-full left-0 z-50 mb-1 bg-white border border-slate-200 rounded-2xl shadow-xl p-3 w-52"
+            className="absolute bottom-full left-0 z-50 mb-1 bg-slate-50 border border-slate-200 rounded-2xl shadow-xl p-3 w-52"
             initial={{ opacity: 0, y: 6, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 6, scale: 0.95 }}
