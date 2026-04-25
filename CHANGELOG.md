@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- Add missing @sentry/react and @sentry/vite-plugin dependencies
 - Resolve all ESLint errors and warnings
 - Remove no-op string replace in IdeasVault, delete stale bun.lock
 - Add internal migration to fix userId mismatch between books and userProfiles
@@ -598,6 +599,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
