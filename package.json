@@ -17,6 +17,8 @@
   "dependencies": {
     "@auth/core": "^0.37.4",
     "@convex-dev/auth": "^0.0.91",
+    "@sentry/react": "^9.47.1",
+    "@sentry/vite-plugin": "^3.6.1",
     "canvas-confetti": "^1.9.4",
     "clsx": "^2.1.1",
     "convex": "^1.35.1",
