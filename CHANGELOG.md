@@ -614,6 +614,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
+- Update changelog [skip ci]
 - Add DESIGN.md following google-labs-code/design.md spec
 - Update changelog [skip ci]
 - Update changelog [skip ci]
@@ -674,6 +675,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Refactoring
 
+- Use ImageUploadField in MyArt AddArtworkModal
 - Use ModalShell for CreateAlbumModal in MyPhotos
 - Extract shared Book type into src/types/books.ts
 - Use BookFormFields in AddBookModal to eliminate inline duplication
