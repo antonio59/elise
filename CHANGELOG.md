@@ -606,6 +606,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
+- Update changelog [skip ci]
 - Add DESIGN.md following google-labs-code/design.md spec
 - Update changelog [skip ci]
 - Update changelog [skip ci]
@@ -666,6 +667,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Refactoring
 
+- Deduplicate requireAuth by importing from convex/lib/crud.ts
 - Extract GalleryFilterTabs shared component for MyArt and MyPhotos
 - Extract requireAuth and requireBookOwner helpers into convex/lib/books.ts
 - Extract book duplicate detection helpers into convex/lib/books.ts
