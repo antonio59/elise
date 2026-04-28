@@ -8,6 +8,28 @@ import { v } from "convex/values";
 import { internal } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
 import { auth } from "./auth";
+import type { MutationCtx } from "./_generated/server";
+
+async function reassignUserIds(
+  ctx: MutationCtx,
+  tables: readonly string[],
+  targetUserId: Id<"users">,
+): Promise<number> {
+  let totalUpdated = 0;
+  for (const table of tables) {
+    const docs = await ctx.db.query(table as "books").collect();
+    for (const doc of docs) {
+      if (
+        (doc as { userId?: unknown }).userId !== undefined &&
+        (doc as { userId?: unknown }).userId !== targetUserId
+      ) {
+        await ctx.db.patch(doc._id, { userId: targetUserId } as Record<string, unknown>);
+        totalUpdated++;
+      }
+    }
+  }
+  return totalUpdated;
+}
 
 // Diagnostic: inspect authAccounts userId values
 // Run via: npx convex run migrations:inspectAuthAccounts
@@ -96,21 +118,7 @@ export const migrateUserIds = mutation({
       "readingStreaks",
     ] as const;
 
-    let totalUpdated = 0;
-
-    for (const table of tables) {
-      const docs = await ctx.db.query(table).collect();
-      for (const doc of docs) {
-        if (
-          (doc as { userId?: unknown }).userId !== undefined &&
-          (doc as { userId?: unknown }).userId !== userId
-        ) {
-          await ctx.db.patch(doc._id, { userId } as Record<string, unknown>);
-          totalUpdated++;
-        }
-      }
-    }
-
+    const totalUpdated = await reassignUserIds(ctx, tables, userId);
     return { totalUpdated, newUserId: userId };
   },
 });
@@ -138,21 +146,7 @@ export const fixUserIdMismatch = internalMutation({
       "characters",
     ] as const;
 
-    let totalUpdated = 0;
-
-    for (const table of tables) {
-      const docs = await ctx.db.query(table).collect();
-      for (const doc of docs) {
-        if (
-          (doc as { userId?: unknown }).userId !== undefined &&
-          (doc as { userId?: unknown }).userId !== targetUserId
-        ) {
-          await ctx.db.patch(doc._id, { userId: targetUserId } as Record<string, unknown>);
-          totalUpdated++;
-        }
-      }
-    }
-
+    const totalUpdated = await reassignUserIds(ctx, tables, targetUserId);
     return { totalUpdated, targetUserId };
   },
 });
