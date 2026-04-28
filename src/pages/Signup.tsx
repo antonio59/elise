@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Mail, Lock, User } from "lucide-react";
+import AuthFormFields from "../components/auth/AuthFormFields";
 import { useAuth } from "../contexts/AuthContext";
 import { usePageAnnouncement } from "../components/AccessibleAnnouncer";
 import { usePageMeta } from "../components/PageMeta";
@@ -56,57 +56,14 @@ const Signup: React.FC = () => {
         </>
       }
     >
-      <div>
-        <label className="block text-sm font-medium text-slate-700 mb-1">
-          Name
-        </label>
-        <div className="relative">
-          <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="input pl-10"
-            placeholder="Your name"
-            required
-          />
-        </div>
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-slate-700 mb-1">
-          Email
-        </label>
-        <div className="relative">
-          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="input pl-10"
-            placeholder="your@email.com"
-            required
-          />
-        </div>
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-slate-700 mb-1">
-          Password
-        </label>
-        <div className="relative">
-          <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="input pl-10"
-            placeholder="At least 8 characters"
-            minLength={8}
-            required
-          />
-        </div>
-      </div>
+      <AuthFormFields
+        name={name}
+        onNameChange={setName}
+        email={email}
+        onEmailChange={setEmail}
+        password={password}
+        onPasswordChange={setPassword}
+      />
     </AuthFormLayout>
   );
 };

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { Mail, Lock } from "lucide-react";
+import AuthFormFields from "../components/auth/AuthFormFields";
 import { useAuth } from "../contexts/AuthContext";
 import { usePageAnnouncement } from "../components/AccessibleAnnouncer";
 import { usePageMeta } from "../components/PageMeta";
@@ -59,39 +59,12 @@ const Login: React.FC = () => {
         </>
       }
     >
-      <div>
-        <label className="block text-sm font-medium text-slate-700 mb-1">
-          Email
-        </label>
-        <div className="relative">
-          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="input pl-10"
-            placeholder="your@email.com"
-            required
-          />
-        </div>
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-slate-700 mb-1">
-          Password
-        </label>
-        <div className="relative">
-          <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="input pl-10"
-            placeholder="Your password"
-            required
-          />
-        </div>
-      </div>
+      <AuthFormFields
+        email={email}
+        onEmailChange={setEmail}
+        password={password}
+        onPasswordChange={setPassword}
+      />
     </AuthFormLayout>
   );
 };
