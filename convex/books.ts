@@ -1,5 +1,5 @@
 import { query, mutation, type QueryCtx } from "./_generated/server";
-import { findUserBookByTitleAuthor } from "./lib/books";
+import { findUserBookByTitleAuthor, requireBookOwner } from "./lib/books";
 import { v } from "convex/values";
 import { auth } from "./auth";
 import type { Doc } from "./_generated/dataModel";
@@ -193,12 +193,7 @@ export const update = mutation({
     moodTags: v.optional(v.array(v.string())),
   },
   handler: async (ctx, args) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) throw new Error("Not authenticated");
-
-    const book = await ctx.db.get(args.id);
-    if (!book) throw new Error("Book not found");
-    if (book.userId !== userId) throw new Error("Not authorized");
+    const book = await requireBookOwner(ctx, args.id);
 
     const { id, ...updates } = args;
     const filteredUpdates = Object.fromEntries(
@@ -218,13 +213,7 @@ export const update = mutation({
 export const remove = mutation({
   args: { id: v.id("books") },
   handler: async (ctx, args) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) throw new Error("Not authenticated");
-
-    const book = await ctx.db.get(args.id);
-    if (!book) throw new Error("Book not found");
-    if (book.userId !== userId) throw new Error("Not authorized");
-
+    await requireBookOwner(ctx, args.id);
     await ctx.db.delete(args.id);
   },
 });
@@ -273,13 +262,7 @@ export const markWishlistAsBought = mutation({
 export const clearBought = mutation({
   args: { id: v.id("books") },
   handler: async (ctx, args) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) throw new Error("Not authenticated");
-
-    const book = await ctx.db.get(args.id);
-    if (!book) throw new Error("Book not found");
-    if (book.userId !== userId) throw new Error("Not authorized");
-
+    await requireBookOwner(ctx, args.id);
     await ctx.db.patch(args.id, {
       boughtBy: undefined,
       boughtAt: undefined,
@@ -291,13 +274,7 @@ export const clearBought = mutation({
 export const toggleFavorite = mutation({
   args: { id: v.id("books") },
   handler: async (ctx, args) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) throw new Error("Not authenticated");
-
-    const book = await ctx.db.get(args.id);
-    if (!book) throw new Error("Book not found");
-    if (book.userId !== userId) throw new Error("Not authorized");
-
+    const book = await requireBookOwner(ctx, args.id);
     await ctx.db.patch(args.id, { isFavorite: !book.isFavorite });
   },
 });

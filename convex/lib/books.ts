@@ -1,5 +1,6 @@
 import type { QueryCtx } from "../_generated/server";
 import type { Doc, Id } from "../_generated/dataModel";
+import { auth } from "../auth";
 
 export async function findUserBookByTitleAuthor(
   ctx: QueryCtx,
@@ -40,4 +41,21 @@ export async function findPendingSuggestion(
       s.title.toLowerCase().trim() === normalizedTitle &&
       s.author.toLowerCase().trim() === normalizedAuthor,
   );
+}
+
+export async function requireAuth(ctx: QueryCtx): Promise<Id<"users">> {
+  const userId = await auth.getUserId(ctx);
+  if (!userId) throw new Error("Not authenticated");
+  return userId;
+}
+
+export async function requireBookOwner(
+  ctx: QueryCtx,
+  bookId: Id<"books">,
+): Promise<Doc<"books">> {
+  const userId = await requireAuth(ctx);
+  const book = await ctx.db.get(bookId);
+  if (!book) throw new Error("Book not found");
+  if (book.userId !== userId) throw new Error("Not authorized");
+  return book;
 }
