@@ -4,6 +4,7 @@ import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Quote, Plus, X, Trash2, Globe, Lock } from "lucide-react";
 import CardHeader from "./CardHeader";
+import AnimatedForm from "./AnimatedForm";
 import type { Doc } from "../../convex/_generated/dataModel";
 
 const QuoteCollection: React.FC = () => {
@@ -58,15 +59,7 @@ const QuoteCollection: React.FC = () => {
         onToggle={() => setShowForm(!showForm)}
       />
 
-      <AnimatePresence>
-        {showForm && (
-          <motion.form
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            onSubmit={handleSubmit}
-            className="space-y-3 mb-4 overflow-hidden"
-          >
+      <AnimatedForm show={showForm} onSubmit={handleSubmit}>
             <textarea
               value={text}
               onChange={(e) => setText(e.target.value)}
@@ -105,9 +98,7 @@ const QuoteCollection: React.FC = () => {
                 Save Quote
               </button>
             </div>
-          </motion.form>
-        )}
-      </AnimatePresence>
+      </AnimatedForm>
 
       {quotes.length === 0 ? (
         <div className="text-center py-6 bg-slate-50 rounded-xl">

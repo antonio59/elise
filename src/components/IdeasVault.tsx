@@ -4,6 +4,7 @@ import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Lightbulb, Plus, X, Archive, Trash2, Sparkles } from "lucide-react";
 import CardHeader from "./CardHeader";
+import AnimatedForm from "./AnimatedForm";
 import type { Doc } from "../../convex/_generated/dataModel";
 
 
@@ -79,15 +80,7 @@ const IdeasVault: React.FC = () => {
         onToggle={() => setShowForm(!showForm)}
       />
 
-      <AnimatePresence>
-        {showForm && (
-          <motion.form
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            onSubmit={handleSubmit}
-            className="space-y-3 mb-4 overflow-hidden"
-          >
+      <AnimatedForm show={showForm} onSubmit={handleSubmit}>
             <div className="flex gap-2">
               {(["writing", "art", "book", "other"] as const).map((t) => (
                 <button
@@ -127,9 +120,7 @@ const IdeasVault: React.FC = () => {
               <Lightbulb className="w-4 h-4" />
               Save Idea
             </button>
-          </motion.form>
-        )}
-      </AnimatePresence>
+      </AnimatedForm>
 
       {ideas.length === 0 ? (
         <div className="text-center py-6 bg-slate-50 rounded-xl">
