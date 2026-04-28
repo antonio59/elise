@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { X } from "lucide-react";
 import { useMutation } from "convex/react";
+import ModalShell from "../ModalShell";
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
 import GoogleBookSearch from "../GoogleBookSearch";
@@ -154,40 +153,14 @@ const AddBookModal: React.FC<AddBookModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-        <motion.div
-          className="absolute inset-0 bg-slate-900/50"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          onClick={handleClose}
-        />
-
-        <motion.div
-          className="relative bg-slate-50 rounded-2xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-auto"
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.95 }}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="add-book-title"
-        >
-          {/* Header */}
-          <div className="p-6 border-b border-slate-200">
-            <div className="flex items-center justify-between">
-              <h2 id="add-book-title" className="text-xl font-bold text-slate-800">Add Book</h2>
-              <button
-                onClick={handleClose}
-                aria-label="Close modal"
-                className="p-2 hover:bg-slate-100 rounded-lg"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-          </div>
-
-          {/* Form */}
+    <ModalShell
+      isOpen={isOpen}
+      title="Add Book"
+      closeLabel="Close modal"
+      onClose={handleClose}
+      maxWidth="max-w-lg"
+      titleId="add-book-title"
+    >
           <form onSubmit={handleSubmit} className="p-6 space-y-4">
             {title && !manualMode ? (
               /* === Book Selected View === */
@@ -294,10 +267,8 @@ const AddBookModal: React.FC<AddBookModalProps> = ({
                 )}
               </>
             )}
-          </form>
-        </motion.div>
-      </div>
-    </AnimatePresence>
+      </form>
+    </ModalShell>
   );
 };
 

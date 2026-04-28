@@ -9,6 +9,7 @@ interface ModalShellProps {
   onClose: () => void;
   children: React.ReactNode;
   maxWidth?: string;
+  titleId?: string;
 }
 
 const ModalShell: React.FC<ModalShellProps> = ({
@@ -18,8 +19,11 @@ const ModalShell: React.FC<ModalShellProps> = ({
   onClose,
   children,
   maxWidth = "max-w-2xl",
+  titleId,
 }) => {
   if (!isOpen) return null;
+
+  const headingId = titleId || undefined;
 
   return (
     <AnimatePresence>
@@ -37,11 +41,19 @@ const ModalShell: React.FC<ModalShellProps> = ({
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby={headingId}
         >
           {/* Header */}
           <div className="p-6 border-b border-slate-200">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-bold text-slate-800">{title}</h2>
+              <h2
+                id={headingId}
+                className="text-xl font-bold text-slate-800"
+              >
+                {title}
+              </h2>
               <button
                 onClick={onClose}
                 className="p-2 hover:bg-slate-100 rounded-lg"
