@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Palette, Sparkles, Heart } from "lucide-react";
+import SettingsSectionHeader from "./SettingsSectionHeader";
 
 const themes = [
   {
@@ -80,17 +81,13 @@ const AppearanceSettings: React.FC<AppearanceSettingsProps> = ({
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
       >
-        <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent-500 to-primary-500 flex items-center justify-center">
-            <Palette className="w-5 h-5 text-white" />
-          </div>
-          <div>
-            <h2 className="font-bold text-slate-800">Appearance</h2>
-            <p className="text-sm text-slate-500">
-              Customize how things look
-            </p>
-          </div>
-        </div>
+        <SettingsSectionHeader
+          icon={Palette}
+          title="Appearance"
+          description="Customize how things look"
+          gradientFrom="from-accent-500"
+          gradientTo="to-primary-500"
+        />
 
         <div>
           <label className="block text-sm font-medium text-slate-700 mb-3">
@@ -134,15 +131,13 @@ const AppearanceSettings: React.FC<AppearanceSettingsProps> = ({
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.15 }}
       >
-        <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-primary-500 flex items-center justify-center">
-            <Sparkles className="w-5 h-5 text-white" />
-          </div>
-          <div>
-            <h2 className="font-bold text-slate-800">Homepage Hero</h2>
-            <p className="text-sm text-slate-500">Customize what visitors see first</p>
-          </div>
-        </div>
+        <SettingsSectionHeader
+          icon={Sparkles}
+          title="Homepage Hero"
+          description="Customize what visitors see first"
+          gradientFrom="from-violet-500"
+          gradientTo="to-primary-500"
+        />
 
         <div className="space-y-4">
           <div>
@@ -187,15 +182,13 @@ const AppearanceSettings: React.FC<AppearanceSettingsProps> = ({
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.18 }}
       >
-        <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-400 to-violet-400 flex items-center justify-center">
-            <Heart className="w-5 h-5 text-white" />
-          </div>
-          <div>
-            <h2 className="font-bold text-slate-800">Footer</h2>
-            <p className="text-sm text-slate-500">Customise what's at the bottom</p>
-          </div>
-        </div>
+        <SettingsSectionHeader
+          icon={Heart}
+          title="Footer"
+          description="Customise what's at the bottom"
+          gradientFrom="from-primary-400"
+          gradientTo="to-violet-400"
+        />
 
         <div className="space-y-4">
           <div>

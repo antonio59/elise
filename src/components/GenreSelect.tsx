@@ -1,6 +1,6 @@
 import React from "react";
 
-export const BOOK_GENRES = [
+const BOOK_GENRES = [
   "Manga",
   "Manhwa",
   "Webtoon",
