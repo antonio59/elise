@@ -623,6 +623,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
+- Update changelog [skip ci]
 - Add DESIGN.md following google-labs-code/design.md spec
 - Update changelog [skip ci]
 - Update changelog [skip ci]
@@ -683,6 +684,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Refactoring
 
+- Extract getEmailConfig helper for convex email modules
 - Extract AnimatedForm component for IdeasVault and QuoteCollection
 - Extract CardHeader component for IdeasVault and QuoteCollection
 - Extract BookMeta component for shared book title/author/genre display
