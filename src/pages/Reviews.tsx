@@ -10,22 +10,7 @@ import { usePageMeta } from "../components/PageMeta";
 import ReviewFilterBar from "../components/reviews/ReviewFilterBar";
 import ReviewCard from "../components/reviews/ReviewCard";
 import ReviewEmptyState from "../components/reviews/ReviewEmptyState";
-
-interface Book {
-  _id: string;
-  title: string;
-  author: string;
-  coverUrl?: string;
-  coverImageUrl?: string | null;
-  coverStorageId?: string;
-  genre?: string;
-  rating?: number;
-  review?: string;
-  isFavorite?: boolean;
-  pageCount?: number;
-  status: string;
-  moodTags?: string[];
-}
+import type { Book } from "../types/books";
 
 const ReviewsPage: React.FC = () => {
   usePageAnnouncement("Reviews");

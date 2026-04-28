@@ -4,6 +4,8 @@ import { Star, Heart } from "lucide-react";
 import CoverImage from "../CoverImage";
 import type { Id } from "../../../convex/_generated/dataModel";
 
+import type { Book } from "../../types/books";
+
 const RATING_LABELS: Record<number, string> = {
   1: "not it",
   2: "meh",
@@ -11,22 +13,6 @@ const RATING_LABELS: Record<number, string> = {
   4: "obsessed",
   5: "all-time fav",
 };
-
-interface Book {
-  _id: string;
-  title: string;
-  author: string;
-  coverUrl?: string;
-  coverImageUrl?: string | null;
-  coverStorageId?: string;
-  genre?: string;
-  rating?: number;
-  review?: string;
-  isFavorite?: boolean;
-  pageCount?: number;
-  status: string;
-  moodTags?: string[];
-}
 
 interface ReviewCardProps {
   book: Book;
