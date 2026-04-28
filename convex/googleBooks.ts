@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { action } from "./_generated/server";
 import { v } from "convex/values";
+import { parseGoogleBooksCoverUrl, extractIsbn } from "./lib/googleBooks";
 
 // Search Google Books API
 export const search = action({
@@ -25,36 +26,8 @@ export const search = action({
 
     return (data.items ?? []).map((item: Record<string, any>) => {
       const imageLinks = item.volumeInfo?.imageLinks ?? {};
-      const rawCoverUrl = (
-        imageLinks.extraLarge ??
-        imageLinks.large ??
-        imageLinks.medium ??
-        imageLinks.thumbnail ??
-        imageLinks.smallThumbnail ??
-        ""
-      ).replace("http://", "https://");
-      // Force zoom=3 on all Google Books URLs for sharper stored covers.
-      let coverUrl = rawCoverUrl;
-      try {
-        if (rawCoverUrl) {
-          const u = new URL(rawCoverUrl);
-          if (
-            u.hostname === "books.google.com" ||
-            u.hostname.endsWith(".books.google.com")
-          ) {
-            u.searchParams.set("zoom", "3");
-            coverUrl = u.toString();
-          }
-        }
-      } catch {
-        /* leave as-is */
-      }
-
-      const identifiers: Array<{ type: string; identifier: string }> =
-        item.volumeInfo?.industryIdentifiers ?? [];
-      const isbn =
-        identifiers.find((id) => id.type === "ISBN_13")?.identifier ??
-        identifiers.find((id) => id.type === "ISBN_10")?.identifier;
+      const coverUrl = parseGoogleBooksCoverUrl(imageLinks);
+      const isbn = extractIsbn(item.volumeInfo ?? {});
 
       return {
         id: item.id as string,

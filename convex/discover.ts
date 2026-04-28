@@ -1,28 +1,10 @@
 import { query, mutation, action } from "./_generated/server";
 import { v } from "convex/values";
 import { auth } from "./auth";
-
-interface GoogleBooksImageLinks {
-  extraLarge?: string;
-  large?: string;
-  medium?: string;
-  thumbnail?: string;
-  smallThumbnail?: string;
-}
-
-interface GoogleBooksVolumeInfo {
-  title?: string;
-  authors?: string[];
-  pageCount?: number;
-  description?: string;
-  categories?: string[];
-  imageLinks?: GoogleBooksImageLinks;
-}
-
-interface GoogleBooksItem {
-  id: string;
-  volumeInfo?: GoogleBooksVolumeInfo;
-}
+import {
+  parseGoogleBooksCoverUrl,
+  type GoogleBooksItem,
+} from "./lib/googleBooks";
 
 // Get user's reading profile for recommendations
 export const getReadingProfile = query({
@@ -160,31 +142,9 @@ export const fetchRecommendations = action({
     }
 
     return (data.items ?? []).map((item: GoogleBooksItem) => {
-      const imageLinks = item.volumeInfo?.imageLinks ?? {};
-      const rawCoverUrl = (
-        imageLinks.extraLarge ??
-        imageLinks.large ??
-        imageLinks.medium ??
-        imageLinks.thumbnail ??
-        imageLinks.smallThumbnail ??
-        ""
-      ).replace("http://", "https://");
-
-      let coverUrl = rawCoverUrl;
-      try {
-        if (rawCoverUrl) {
-          const u = new URL(rawCoverUrl);
-          if (
-            u.hostname === "books.google.com" ||
-            u.hostname.endsWith(".books.google.com")
-          ) {
-            u.searchParams.set("zoom", "3");
-            coverUrl = u.toString();
-          }
-        }
-      } catch {
-        /* leave as-is */
-      }
+      const coverUrl = parseGoogleBooksCoverUrl(
+        item.volumeInfo?.imageLinks ?? {},
+      );
 
       return {
         googleBookId: item.id,
