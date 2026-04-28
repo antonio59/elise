@@ -1,16 +1,14 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import {
   Palette,
   Plus,
   Upload,
-  X,
   Loader2,
   Eye,
   EyeOff,
   Trash2,
   Heart,
-  Image as ImageIcon,
   Pencil,
 } from "lucide-react";
 import { useQuery, useMutation } from "convex/react";
@@ -20,6 +18,7 @@ import { usePageAnnouncement } from "../components/AccessibleAnnouncer";
 import { usePageMeta } from "../components/PageMeta";
 import ArtworkModalShell from "../components/artwork/ArtworkModalShell";
 import GalleryFilterTabs from "../components/GalleryFilterTabs";
+import ImageUploadField from "../components/ImageUploadField";
 
 type Artwork = Doc<"artworks">;
 
@@ -375,27 +374,9 @@ const AddArtworkModal: React.FC<AddArtworkModalProps> = ({
   const [isPublished, setIsPublished] = useState(true);
   const [saving, setSaving] = useState(false);
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      if (!file.type.startsWith("image/")) {
-        alert("Please select an image file (JPG, PNG, or WebP).");
-        return;
-      }
-      if (file.size > 5 * 1024 * 1024) {
-        alert("Image must be less than 5MB");
-        return;
-      }
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const dataUrl = e.target?.result as string;
-        setImagePreview(dataUrl);
-        setImageUrl(dataUrl);
-      };
-      reader.readAsDataURL(file);
-    }
+  const handleImageChange = (dataUrl: string) => {
+    setImagePreview(dataUrl);
+    setImageUrl(dataUrl);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -438,51 +419,19 @@ const AddArtworkModal: React.FC<AddArtworkModalProps> = ({
       onClose={onClose}
     >
       <form onSubmit={handleSubmit} className="p-6 space-y-4">
-        {/* Image Upload */}
         <div>
           <label className="block text-sm font-medium text-slate-700 mb-2">
             Artwork Image *
           </label>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-            className="hidden"
+          <ImageUploadField
+            preview={imagePreview}
+            onChange={handleImageChange}
+            onClear={() => {
+              setImagePreview(null);
+              setImageUrl("");
+            }}
+            maxSizeMB={5}
           />
-
-          {imagePreview ? (
-            <div className="relative">
-              <img
-                src={imagePreview}
-                alt="Preview"
-                className="w-full h-64 object-contain bg-slate-100 rounded-xl"
-              />
-              <button
-                type="button"
-                onClick={() => {
-                  setImagePreview(null);
-                  setImageUrl("");
-                }}
-                className="absolute top-2 right-2 p-2 bg-error-500 text-white rounded-lg"
-                aria-label="Remove image preview"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-          ) : (
-            <button
-              type="button"
-              onClick={() => fileInputRef.current?.click()}
-              className="w-full h-48 border-2 border-dashed border-slate-300 hover:border-accent-400 rounded-xl flex flex-col items-center justify-center gap-2 transition-colors"
-            >
-              <ImageIcon className="w-10 h-10 text-slate-400" />
-              <span className="text-slate-500">Click to upload image</span>
-              <span className="text-xs text-slate-400">
-                PNG, JPG up to 5MB
-              </span>
-            </button>
-          )}
         </div>
 
         <ArtworkFormBody
