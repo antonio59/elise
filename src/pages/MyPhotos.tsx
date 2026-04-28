@@ -23,6 +23,7 @@ import { usePageMeta } from "../components/PageMeta";
 import ImageUploadField from "../components/ImageUploadField";
 import ModalShell from "../components/ModalShell";
 import PhotoFormBody from "../components/photos/PhotoFormBody";
+import { useTagInput } from "../hooks/useTagInput";
 import GalleryFilterTabs from "../components/GalleryFilterTabs";
 
 type Photo = Doc<"photos">;
@@ -425,11 +426,10 @@ const EditPhotoModal: React.FC<EditPhotoModalProps> = ({
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [location, setLocation] = useState("");
-  const [tags, setTags] = useState<string[]>([]);
-  const [tagInput, setTagInput] = useState("");
   const [albumId, setAlbumId] = useState<string | "">("");
   const [isPublished, setIsPublished] = useState(true);
   const [saving, setSaving] = useState(false);
+  const { tags, setTags, tagInput, setTagInput, addTag, removeTag } = useTagInput();
 
   React.useEffect(() => {
     if (photo) {
@@ -441,18 +441,6 @@ const EditPhotoModal: React.FC<EditPhotoModalProps> = ({
       setIsPublished(photo.isPublished);
     }
   }, [photo]);
-
-  const addTag = () => {
-    const trimmed = tagInput.trim().toLowerCase();
-    if (trimmed && !tags.includes(trimmed)) {
-      setTags([...tags, trimmed]);
-    }
-    setTagInput("");
-  };
-
-  const removeTag = (tag: string) => {
-    setTags(tags.filter((t) => t !== tag));
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -500,7 +488,7 @@ const EditPhotoModal: React.FC<EditPhotoModalProps> = ({
           onTagInputChange={setTagInput}
           onAddTag={addTag}
           onRemoveTag={removeTag}
-          onSelectPopularTag={(tag) => setTags([...tags, tag])}
+          onSelectPopularTag={(tag) => setTags((prev) => [...prev, tag])}
           albumId={albumId}
           onAlbumIdChange={setAlbumId}
           albums={albums}
@@ -552,23 +540,10 @@ const AddPhotoModal: React.FC<AddPhotoModalProps> = ({
   const [imageUrl, setImageUrl] = useState("");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [location, setLocation] = useState("");
-  const [tags, setTags] = useState<string[]>([]);
-  const [tagInput, setTagInput] = useState("");
   const [albumId, setAlbumId] = useState("");
   const [isPublished, setIsPublished] = useState(true);
   const [saving, setSaving] = useState(false);
-
-  const addTag = () => {
-    const trimmed = tagInput.trim().toLowerCase();
-    if (trimmed && !tags.includes(trimmed)) {
-      setTags([...tags, trimmed]);
-    }
-    setTagInput("");
-  };
-
-  const removeTag = (tag: string) => {
-    setTags(tags.filter((t) => t !== tag));
-  };
+  const { tags, setTags, tagInput, setTagInput, addTag, removeTag } = useTagInput();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -636,7 +611,7 @@ const AddPhotoModal: React.FC<AddPhotoModalProps> = ({
           onTagInputChange={setTagInput}
           onAddTag={addTag}
           onRemoveTag={removeTag}
-          onSelectPopularTag={(tag) => setTags([...tags, tag])}
+          onSelectPopularTag={(tag) => setTags((prev) => [...prev, tag])}
           albumId={albumId}
           onAlbumIdChange={setAlbumId}
           albums={albums}
