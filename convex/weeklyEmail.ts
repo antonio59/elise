@@ -1,6 +1,7 @@
 import { internalQuery, internalAction } from "./_generated/server";
 import { internal } from "./_generated/api";
 import { Resend } from "resend";
+import { getEmailConfig } from "./lib/email";
 
 function escapeHtml(text: string): string {
   return text
@@ -96,21 +97,9 @@ export const sendWeeklySummary = internalAction({
       }
     ).process?.env;
 
-    const apiKey = env?.RESEND_API_KEY;
-    if (!apiKey) {
-      console.warn("RESEND_API_KEY not set — skipping weekly summary email");
-      return;
-    }
-
-    const allowedEmails = (env?.ALLOWED_EMAILS || "")
-      .split(",")
-      .map((e) => e.trim())
-      .filter(Boolean);
-
-    if (allowedEmails.length === 0) {
-      console.warn("ALLOWED_EMAILS not set — skipping weekly summary email");
-      return;
-    }
+    const emailConfig = getEmailConfig(env, "weekly summary email");
+    if (!emailConfig) return;
+    const { apiKey, allowedEmails } = emailConfig;
 
     const resend = new Resend(apiKey);
 

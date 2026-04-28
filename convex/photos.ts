@@ -8,6 +8,7 @@ import {
 import { internal } from "./_generated/api";
 import { v } from "convex/values";
 import { auth } from "./auth";
+import { getEmailConfig } from "./lib/email";
 import {
   requireAuth,
   requireOwnership,
@@ -270,25 +271,9 @@ export const sendFeatureAnnouncement = internalAction({
       }
     ).process?.env;
 
-    const apiKey = env?.RESEND_API_KEY;
-    if (!apiKey) {
-      console.warn(
-        "RESEND_API_KEY not set — skipping photo feature announcement",
-      );
-      return;
-    }
-
-    const allowedEmails = (env?.ALLOWED_EMAILS || "")
-      .split(",")
-      .map((e) => e.trim())
-      .filter(Boolean);
-
-    if (allowedEmails.length === 0) {
-      console.warn(
-        "ALLOWED_EMAILS not set — skipping photo feature announcement",
-      );
-      return;
-    }
+    const emailConfig = getEmailConfig(env, "photo feature announcement");
+    if (!emailConfig) return;
+    const { apiKey, allowedEmails } = emailConfig;
 
     const resend = new Resend(apiKey);
 
