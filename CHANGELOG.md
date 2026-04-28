@@ -610,6 +610,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
+- Update changelog [skip ci]
 - Add DESIGN.md following google-labs-code/design.md spec
 - Update changelog [skip ci]
 - Update changelog [skip ci]
@@ -670,6 +671,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Refactoring
 
+- Remove redundant inline type annotations in PublicBookGrid
 - Extract Google Books cover URL parsing into convex/lib/googleBooks.ts
 - Extract useTagInput hook to deduplicate tag logic in MyPhotos modals
 - Extract requireAdmin helper and use in bookSuggestions and siteSettings
