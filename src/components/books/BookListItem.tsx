@@ -2,6 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Pencil, Trash2, Star } from "lucide-react";
 import CoverImage from "../CoverImage";
+import BookMeta from "./BookMeta";
 import type { Doc } from "../../../convex/_generated/dataModel";
 
 type Book = Doc<"books">;
@@ -59,15 +60,11 @@ const BookListItem: React.FC<BookListItemProps> = ({
           </div>
         )}
       </div>
-      <h3 className="mt-2 text-sm font-medium text-slate-800 line-clamp-1">
-        {book.title}
-      </h3>
-      <p className="text-xs text-slate-500 line-clamp-1">{book.author}</p>
-      {book.genre && book.genre !== "Other" && (
-        <span className="inline-block mt-1 text-xs px-2 py-0.5 bg-primary-50 text-primary-600 rounded-full">
-          {book.genre}
-        </span>
-      )}
+      <BookMeta
+        title={book.title}
+        author={book.author}
+        genre={book.genre}
+      />
     </motion.div>
   );
 };
