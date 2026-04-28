@@ -3,6 +3,7 @@ import { v } from "convex/values";
 import { auth } from "./auth";
 import { isAdmin } from "./users";
 import { checkRateLimit } from "./lib/rateLimit";
+import { findUserBookByTitleAuthor, findPendingSuggestion } from "./lib/books";
 
 // Get all suggestions (for admin)
 export const getAll = query({
@@ -26,7 +27,13 @@ export const getPending = query({
 
 import type { Id } from "./_generated/dataModel";
 
-async function getSingleUserId(ctx: { db: { query: (table: "userProfiles") => { first: () => Promise<{ userId: Id<"users"> } | null> } } }): Promise<Id<"users"> | null> {
+async function getSingleUserId(ctx: {
+  db: {
+    query: (table: "userProfiles") => {
+      first: () => Promise<{ userId: Id<"users"> } | null>;
+    };
+  };
+}): Promise<Id<"users"> | null> {
   const profile = await ctx.db.query("userProfiles").first();
   return profile?.userId ?? null;
 }
@@ -38,20 +45,14 @@ export const checkDuplicate = query({
     author: v.string(),
   },
   handler: async (ctx, args) => {
-    const normalizedTitle = args.title.toLowerCase().trim();
-    const normalizedAuthor = args.author.toLowerCase().trim();
     const userId = await getSingleUserId(ctx);
 
     if (userId) {
-      // Check in books table for this user
-      const userBooks = await ctx.db
-        .query("books")
-        .withIndex("by_user", (q) => q.eq("userId", userId))
-        .collect();
-      const existingBook = userBooks.find(
-        (b) =>
-          b.title.toLowerCase().trim() === normalizedTitle &&
-          b.author.toLowerCase().trim() === normalizedAuthor,
+      const existingBook = await findUserBookByTitleAuthor(
+        ctx,
+        userId,
+        args.title,
+        args.author,
       );
 
       if (existingBook) {
@@ -68,15 +69,10 @@ export const checkDuplicate = query({
       }
     }
 
-    // Check in pending suggestions
-    const pendingSuggestions = await ctx.db
-      .query("bookSuggestions")
-      .withIndex("by_status", (q) => q.eq("status", "pending"))
-      .collect();
-    const existingSuggestion = pendingSuggestions.find(
-      (s) =>
-        s.title.toLowerCase().trim() === normalizedTitle &&
-        s.author.toLowerCase().trim() === normalizedAuthor,
+    const existingSuggestion = await findPendingSuggestion(
+      ctx,
+      args.title,
+      args.author,
     );
 
     if (existingSuggestion) {
@@ -115,20 +111,14 @@ export const submit = mutation({
       throw new Error("Too many suggestions. Please try again later.");
     }
 
-    const normalizedTitle = args.title.toLowerCase().trim();
-    const normalizedAuthor = args.author.toLowerCase().trim();
     const userId = await getSingleUserId(ctx);
 
     if (userId) {
-      // Check for duplicates in books
-      const userBooks = await ctx.db
-        .query("books")
-        .withIndex("by_user", (q) => q.eq("userId", userId))
-        .collect();
-      const existingBook = userBooks.find(
-        (b) =>
-          b.title.toLowerCase().trim() === normalizedTitle &&
-          b.author.toLowerCase().trim() === normalizedAuthor,
+      const existingBook = await findUserBookByTitleAuthor(
+        ctx,
+        userId,
+        args.title,
+        args.author,
       );
 
       if (existingBook) {
@@ -142,15 +132,10 @@ export const submit = mutation({
       }
     }
 
-    // Check for duplicate pending suggestions
-    const pendingSuggestions = await ctx.db
-      .query("bookSuggestions")
-      .withIndex("by_status", (q) => q.eq("status", "pending"))
-      .collect();
-    const existingSuggestion = pendingSuggestions.find(
-      (s) =>
-        s.title.toLowerCase().trim() === normalizedTitle &&
-        s.author.toLowerCase().trim() === normalizedAuthor,
+    const existingSuggestion = await findPendingSuggestion(
+      ctx,
+      args.title,
+      args.author,
     );
 
     if (existingSuggestion) {
@@ -166,16 +151,20 @@ export const submit = mutation({
     // Send email notification (fire-and-forget)
     try {
       const { internal } = await import("./_generated/api");
-      // @ts-expect-error emails may not be in generated internal api types
-      await ctx.scheduler.runAfter(0, internal.emails.sendSuggestionNotification, {
-        title: args.title,
-        author: args.author,
-        suggestedBy: args.suggestedBy,
-        suggestedByEmail: args.suggestedByEmail,
-        reason: args.reason,
-        genre: args.genre,
-        coverUrl: args.coverUrl,
-      });
+      await ctx.scheduler.runAfter(
+        0,
+        // @ts-expect-error emails may not be in generated internal api types
+        internal.emails.sendSuggestionNotification,
+        {
+          title: args.title,
+          author: args.author,
+          suggestedBy: args.suggestedBy,
+          suggestedByEmail: args.suggestedByEmail,
+          reason: args.reason,
+          genre: args.genre,
+          coverUrl: args.coverUrl,
+        },
+      );
     } catch (e) {
       console.warn("Email notification failed:", e);
     }

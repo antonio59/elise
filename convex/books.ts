@@ -1,4 +1,5 @@
 import { query, mutation, type QueryCtx } from "./_generated/server";
+import { findUserBookByTitleAuthor } from "./lib/books";
 import { v } from "convex/values";
 import { auth } from "./auth";
 import type { Doc } from "./_generated/dataModel";
@@ -87,20 +88,14 @@ export const checkDuplicate = query({
     author: v.string(),
   },
   handler: async (ctx, args) => {
-    const normalizedTitle = args.title.toLowerCase().trim();
-    const normalizedAuthor = args.author.toLowerCase().trim();
-
     const userId = await auth.getUserId(ctx);
     if (!userId) return { exists: false };
 
-    const userBooks = await ctx.db
-      .query("books")
-      .withIndex("by_user", (q) => q.eq("userId", userId))
-      .collect();
-    const existingBook = userBooks.find(
-      (b) =>
-        b.title.toLowerCase().trim() === normalizedTitle &&
-        b.author.toLowerCase().trim() === normalizedAuthor,
+    const existingBook = await findUserBookByTitleAuthor(
+      ctx,
+      userId,
+      args.title,
+      args.author,
     );
 
     if (existingBook) {
@@ -142,17 +137,11 @@ export const add = mutation({
     if (!userId) throw new Error("Not authenticated");
 
     // Check for duplicates
-    const normalizedTitle = args.title.toLowerCase().trim();
-    const normalizedAuthor = args.author.toLowerCase().trim();
-
-    const userBooks = await ctx.db
-      .query("books")
-      .withIndex("by_user", (q) => q.eq("userId", userId))
-      .collect();
-    const existingBook = userBooks.find(
-      (b) =>
-        b.title.toLowerCase().trim() === normalizedTitle &&
-        b.author.toLowerCase().trim() === normalizedAuthor,
+    const existingBook = await findUserBookByTitleAuthor(
+      ctx,
+      userId,
+      args.title,
+      args.author,
     );
 
     if (existingBook) {
