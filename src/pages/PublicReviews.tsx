@@ -8,6 +8,7 @@ import ReactionBar from "../components/ReactionBar";
 import PageHeader from "../components/PageHeader";
 import { usePageAnnouncement } from "../components/AccessibleAnnouncer";
 import { usePageMeta } from "../components/PageMeta";
+import StarRating from "../components/StarRating";
 
 interface Book {
   _id: string;
@@ -142,19 +143,7 @@ const PublicReviews: React.FC = () => {
                       <p className="text-sm text-slate-500 mb-2">
                         {book.author}
                       </p>
-                      <div className="flex items-center gap-1">
-                        {Array.from({ length: 5 }).map((_, i) => (
-                          <Star
-                            key={i}
-                            className={`w-3.5 h-3.5 ${i < (book.rating ?? 0) ? "text-star fill-star" : "text-slate-200"}`}
-                          />
-                        ))}
-                        {book.rating && book.rating > 0 && (
-                          <span className="ml-1 text-xs text-primary-500 font-medium">
-                            {RATING_LABELS[book.rating]}
-                          </span>
-                        )}
-                      </div>
+                      <StarRating rating={book.rating} size="sm" showLabel labels={RATING_LABELS} />
                       {book.genre && book.genre !== "Other" && (
                         <span className="inline-block mt-1.5 text-[10px] px-2 py-0.5 bg-violet-50 text-violet-600 rounded-full border border-violet-200">
                           {book.genre}
@@ -234,19 +223,7 @@ const PublicReviews: React.FC = () => {
                           <p className="text-sm text-slate-500 mb-2">
                             {book.author}
                           </p>
-                          <div className="flex items-center gap-1">
-                            {Array.from({ length: 5 }).map((_, i) => (
-                              <Star
-                                key={i}
-                                className={`w-4 h-4 ${i < (book.rating ?? 0) ? "text-star fill-star" : "text-slate-200"}`}
-                              />
-                            ))}
-                            {book.rating && book.rating > 0 && (
-                              <span className="ml-2 text-xs text-primary-500 font-medium">
-                                {RATING_LABELS[book.rating] ?? ""}
-                              </span>
-                            )}
-                          </div>
+                          <StarRating rating={book.rating} size="md" showLabel labels={RATING_LABELS} />
                         </div>
                         <div className="flex items-center justify-between">
                           {book.genre && book.genre !== "Other" && (
