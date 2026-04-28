@@ -19,6 +19,7 @@ import type { Doc } from "../../convex/_generated/dataModel";
 import { usePageAnnouncement } from "../components/AccessibleAnnouncer";
 import { usePageMeta } from "../components/PageMeta";
 import ArtworkModalShell from "../components/artwork/ArtworkModalShell";
+import GalleryFilterTabs from "../components/GalleryFilterTabs";
 
 type Artwork = Doc<"artworks">;
 
@@ -75,41 +76,11 @@ const MyArt: React.FC = () => {
         </button>
       </div>
 
-      {/* Filter Tabs */}
-      <div className="flex gap-2">
-        <button
-          onClick={() => setFilter("all")}
-          className={`px-4 py-2 rounded-lg font-medium transition-all ${
-            filter === "all"
-              ? "bg-accent-100 text-accent-700"
-              : "text-slate-600 hover:bg-slate-100"
-          }`}
-        >
-          All ({artworks.length})
-        </button>
-        <button
-          onClick={() => setFilter("published")}
-          className={`px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2 ${
-            filter === "published"
-              ? "bg-success-100 text-success-700"
-              : "text-slate-600 hover:bg-slate-100"
-          }`}
-        >
-          <Eye className="w-4 h-4" />
-          Published ({publishedCount})
-        </button>
-        <button
-          onClick={() => setFilter("drafts")}
-          className={`px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2 ${
-            filter === "drafts"
-              ? "bg-slate-200 text-slate-700"
-              : "text-slate-600 hover:bg-slate-100"
-          }`}
-        >
-          <EyeOff className="w-4 h-4" />
-          Drafts ({draftCount})
-        </button>
-      </div>
+      <GalleryFilterTabs
+        filter={filter}
+        onChange={setFilter}
+        counts={{ all: artworks.length, published: publishedCount, drafts: draftCount }}
+      />
 
       {/* Artworks Grid */}
       {filteredArtworks.length === 0 ? (
