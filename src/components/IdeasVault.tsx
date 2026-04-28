@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Lightbulb, Plus, X, Archive, Trash2, Sparkles } from "lucide-react";
+import CardHeader from "./CardHeader";
 import type { Doc } from "../../convex/_generated/dataModel";
 
 
@@ -64,24 +65,19 @@ const IdeasVault: React.FC = () => {
 
   return (
     <motion.div className="card p-6" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
-            <Sparkles className="w-5 h-5 text-white" />
-          </div>
-          <div>
-            <h3 className="font-bold text-slate-800">Ideas Vault</h3>
-            <p className="text-sm text-slate-500">Capture creative sparks before they fade</p>
-          </div>
-        </div>
-        <button
-          onClick={() => setShowForm(!showForm)}
-          className="btn btn-secondary btn-sm"
-        >
-          {showForm ? <X className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
-          {showForm ? "Cancel" : "New Idea"}
-        </button>
-      </div>
+      <CardHeader
+        icon={Sparkles}
+        title="Ideas Vault"
+        description="Capture creative sparks before they fade"
+        gradientFrom="from-amber-400"
+        gradientTo="to-orange-500"
+        actionLabel="New Idea"
+        actionIcon={Plus}
+        cancelLabel="Cancel"
+        cancelIcon={X}
+        showForm={showForm}
+        onToggle={() => setShowForm(!showForm)}
+      />
 
       <AnimatePresence>
         {showForm && (

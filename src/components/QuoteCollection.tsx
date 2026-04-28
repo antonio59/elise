@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Quote, Plus, X, Trash2, Globe, Lock } from "lucide-react";
+import CardHeader from "./CardHeader";
 import type { Doc } from "../../convex/_generated/dataModel";
 
 const QuoteCollection: React.FC = () => {
@@ -43,21 +44,19 @@ const QuoteCollection: React.FC = () => {
 
   return (
     <motion.div className="card p-6" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}>
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center">
-            <Quote className="w-5 h-5 text-white" />
-          </div>
-          <div>
-            <h3 className="font-bold text-slate-800">Quote Collection</h3>
-            <p className="text-sm text-slate-500">Words that hit different</p>
-          </div>
-        </div>
-        <button onClick={() => setShowForm(!showForm)} className="btn btn-secondary btn-sm">
-          {showForm ? <X className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
-          {showForm ? "Cancel" : "Add Quote"}
-        </button>
-      </div>
+      <CardHeader
+        icon={Quote}
+        title="Quote Collection"
+        description="Words that hit different"
+        gradientFrom="from-pink-400"
+        gradientTo="to-rose-500"
+        actionLabel="Add Quote"
+        actionIcon={Plus}
+        cancelLabel="Cancel"
+        cancelIcon={X}
+        showForm={showForm}
+        onToggle={() => setShowForm(!showForm)}
+      />
 
       <AnimatePresence>
         {showForm && (
