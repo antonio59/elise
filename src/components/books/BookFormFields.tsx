@@ -1,4 +1,5 @@
 import React from "react";
+import GenreSelect from "../GenreSelect";
 
 const GENRES = [
   "Manga",
@@ -71,22 +72,11 @@ const BookFormFields: React.FC<BookFormFieldsProps> = ({
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1">
-            Genre
-          </label>
-          <select
-            value={genre}
-            onChange={(e) => onGenreChange(e.target.value)}
-            className="input"
-          >
-            {GENRES.map((g) => (
-              <option key={g} value={g}>
-                {g}
-              </option>
-            ))}
-          </select>
-        </div>
+        <GenreSelect
+          value={genre}
+          onChange={onGenreChange}
+          genres={GENRES}
+        />
         <div>
           <label className="block text-sm font-medium text-slate-700 mb-1">
             Pages

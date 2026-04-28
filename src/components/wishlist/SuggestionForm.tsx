@@ -1,22 +1,6 @@
 import React from "react";
 import { Loader2, Send, AlertCircle } from "lucide-react";
-
-const GENRES = [
-  "Manga",
-  "Manhwa",
-  "Webtoon",
-  "Light Novel",
-  "Fantasy",
-  "Sci-Fi",
-  "Romance",
-  "Mystery",
-  "Horror",
-  "Slice of Life",
-  "Action",
-  "Comedy",
-  "Drama",
-  "Other",
-];
+import GenreSelect from "../GenreSelect";
 
 interface SuggestionFormProps {
   title: string;
@@ -93,23 +77,11 @@ const SuggestionForm: React.FC<SuggestionFormProps> = ({
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">
-              Genre
-            </label>
-            <select
-              value={genre}
-              onChange={(e) => setGenre(e.target.value)}
-              className="input"
-            >
-              <option value="">Select genre</option>
-              {GENRES.map((g) => (
-                <option key={g} value={g}>
-                  {g}
-                </option>
-              ))}
-            </select>
-          </div>
+          <GenreSelect
+            value={genre}
+            onChange={setGenre}
+            placeholder="Select genre"
+          />
         </>
       )}
 

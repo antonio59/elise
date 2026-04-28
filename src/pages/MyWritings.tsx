@@ -18,6 +18,7 @@ import {
   Smile,
 } from "lucide-react";
 import GiphyPicker from "../components/GiphyPicker";
+import GenreSelect from "../components/GenreSelect";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import type { Doc, Id } from "../../convex/_generated/dataModel";
@@ -402,22 +403,13 @@ const WritingEditor: React.FC<WritingEditorProps> = ({ writing, onSave, onClose 
             />
           </div>
 
-          {/* Genre */}
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">
-              Genre (optional)
-            </label>
-            <select
-              value={genre}
-              onChange={(e) => setGenre(e.target.value)}
-              className="input"
-            >
-              <option value="">Choose a genre...</option>
-              {GENRES.map((g) => (
-                <option key={g} value={g}>{g}</option>
-              ))}
-            </select>
-          </div>
+          <GenreSelect
+            value={genre}
+            onChange={setGenre}
+            label="Genre (optional)"
+            placeholder="Choose a genre..."
+            genres={GENRES}
+          />
 
           {/* Content */}
           <div>
