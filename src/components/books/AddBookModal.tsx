@@ -8,23 +8,9 @@ import GoogleBookSearch from "../GoogleBookSearch";
 import CoverImage from "../CoverImage";
 import CoverUpload from "../CoverUpload";
 import BookFormFooter from "./BookFormFooter";
+import BookFormFields from "./BookFormFields";
 
-const GENRES = [
-  "Manga",
-  "Manhwa",
-  "Webtoon",
-  "Light Novel",
-  "Fantasy",
-  "Sci-Fi",
-  "Romance",
-  "Mystery",
-  "Horror",
-  "Slice of Life",
-  "Action",
-  "Comedy",
-  "Drama",
-  "Other",
-];
+
 
 interface AddBookModalProps {
   isOpen: boolean;
@@ -278,66 +264,18 @@ const AddBookModal: React.FC<AddBookModalProps> = ({
 
                 {manualMode && (
                   <>
-                    <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-1">
-                        Title *
-                      </label>
-                      <input
-                        type="text"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        className="input"
-                        placeholder="Book title"
-                        required
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-1">
-                        Author *
-                      </label>
-                      <input
-                        type="text"
-                        value={author}
-                        onChange={(e) => setAuthor(e.target.value)}
-                        className="input"
-                        placeholder="Author name"
-                        required
-                      />
-                    </div>
-
+                    <BookFormFields
+                      title={title}
+                      onTitleChange={setTitle}
+                      author={author}
+                      onAuthorChange={setAuthor}
+                      genre={genre}
+                      onGenreChange={setGenre}
+                      pageCount={pageCount}
+                      onPageCountChange={setPageCount}
+                      showRequired
+                    />
                     <CoverUpload value={coverUrl} onChange={setCoverUrl} />
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-1">
-                          Genre
-                        </label>
-                        <select
-                          value={genre}
-                          onChange={(e) => setGenre(e.target.value)}
-                          className="input"
-                        >
-                          {GENRES.map((g) => (
-                            <option key={g} value={g}>
-                              {g}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-1">
-                          Pages
-                        </label>
-                        <input
-                          type="number"
-                          value={pageCount}
-                          onChange={(e) => setPageCount(e.target.value)}
-                          className="input"
-                          placeholder="Optional"
-                        />
-                      </div>
-                    </div>
 
                     <BookFormFooter
                       destination={destination}
