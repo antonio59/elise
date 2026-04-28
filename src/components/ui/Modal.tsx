@@ -65,7 +65,7 @@ const FOCUSABLE_SELECTORS = [
   '[tabindex]:not([tabindex="-1"])',
 ].join(", ");
 
-export const Modal: React.FC<ModalProps> = ({
+const Modal: React.FC<ModalProps> = ({
   isOpen,
   onClose,
   children,
@@ -210,27 +210,6 @@ export const Modal: React.FC<ModalProps> = ({
   );
 };
 
-interface ModalFooterProps {
-  children: React.ReactNode;
-  className?: string;
-}
-
-export const ModalFooter: React.FC<ModalFooterProps> = ({
-  children,
-  className,
-}) => {
-  return (
-    <div
-      className={cn(
-        "flex items-center justify-end gap-3 pt-4 border-t border-slate-100",
-        className,
-      )}
-    >
-      {children}
-    </div>
-  );
-};
-
 interface ConfirmModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -295,4 +274,4 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
   );
 };
 
-export default Modal;
+

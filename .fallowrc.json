@@ -1,0 +1,26 @@
+{
+  "$schema": "https://raw.githubusercontent.com/fallow-rs/fallow/main/schema.json",
+  "entry": [
+    "src/index.{ts,tsx,js,jsx}",
+    "src/main.{ts,tsx,js,jsx}"
+  ],
+  "ignorePatterns": [
+    "convex/_generated/**",
+    "node_modules/**",
+    ".fallow/**",
+    "**/*.test.{ts,tsx}",
+    "src/test/**"
+  ],
+  "ignoreDependencies": [
+    "@esbuild/*",
+    "@rollup/*",
+    "@tailwindcss/oxide-*",
+    "lightningcss-*",
+    "@sentry/vite-plugin"
+  ],
+  "rules": {
+    "unused-dependencies": "warn",
+    "duplication": "warn",
+    "complexity": "warn"
+  }
+}

@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   Palette,
   Plus,
@@ -18,6 +18,7 @@ import { api } from "../../convex/_generated/api";
 import type { Doc } from "../../convex/_generated/dataModel";
 import { usePageAnnouncement } from "../components/AccessibleAnnouncer";
 import { usePageMeta } from "../components/PageMeta";
+import ArtworkModalShell from "../components/artwork/ArtworkModalShell";
 
 type Artwork = Doc<"artworks">;
 
@@ -38,7 +39,6 @@ const STYLES = [
 const MyArt: React.FC = () => {
   usePageAnnouncement("My Art");
   usePageMeta({ title: "My Art", description: "Manage your artwork" });
-  // Get artworks - the query handles auth internally
   const artworks = useQuery(api.artworks.getMyArtworks) ?? [];
 
   const createArtwork = useMutation(api.artworks.create);
@@ -278,7 +278,6 @@ const EditArtworkModal: React.FC<EditArtworkModalProps> = ({
   const [isPublished, setIsPublished] = useState(true);
   const [saving, setSaving] = useState(false);
 
-  // Update form when artwork changes
   React.useEffect(() => {
     if (artwork) {
       setTitle(artwork.title);
@@ -312,173 +311,66 @@ const EditArtworkModal: React.FC<EditArtworkModalProps> = ({
     }
   };
 
-  if (!artwork) return null;
-
   return (
-    <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-        <motion.div
-          className="absolute inset-0 bg-slate-900/50"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          onClick={onClose}
+    <ArtworkModalShell
+      isOpen={!!artwork}
+      title="Edit Artwork"
+      closeLabel="Close edit modal"
+      onClose={onClose}
+    >
+      <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        {/* Current Image Preview */}
+        <div>
+          <label className="block text-sm font-medium text-slate-700 mb-2">
+            Current Image
+          </label>
+          {artwork && (
+            <img
+              src={artwork.imageUrl}
+              alt={artwork.title}
+              className="w-full h-48 object-contain bg-slate-100 rounded-xl"
+            />
+          )}
+          <p className="text-xs text-slate-500 mt-1">
+            Image cannot be changed. Delete and re-upload to use a different
+            image.
+          </p>
+        </div>
+
+        <ArtworkFormBody
+          title={title}
+          onTitleChange={setTitle}
+          description={description}
+          onDescriptionChange={setDescription}
+          style={style}
+          onStyleChange={setStyle}
+          medium={medium}
+          onMediumChange={setMedium}
+          tags={tags}
+          onTagsChange={setTags}
+          isPublished={isPublished}
+          onIsPublishedChange={setIsPublished}
         />
 
-        <motion.div
-          className="relative bg-slate-50 rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-auto"
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.95 }}
+        <button
+          type="submit"
+          disabled={saving || !title.trim()}
+          className="btn btn-gradient w-full"
         >
-          {/* Header */}
-          <div className="p-6 border-b border-slate-200">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-bold text-slate-800">Edit Artwork</h2>
-              <button
-                onClick={onClose}
-                className="p-2 hover:bg-slate-100 rounded-lg"
-                aria-label="Close edit modal"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-          </div>
-
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="p-6 space-y-4">
-            {/* Current Image Preview */}
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
-                Current Image
-              </label>
-              <img
-                src={artwork.imageUrl}
-                alt={artwork.title}
-                className="w-full h-48 object-contain bg-slate-100 rounded-xl"
-              />
-              <p className="text-xs text-slate-500 mt-1">
-                Image cannot be changed. Delete and re-upload to use a different
-                image.
-              </p>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
-                Title *
-              </label>
-              <input
-                type="text"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                className="input"
-                placeholder="Artwork title"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
-                Description
-              </label>
-              <textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                className="input"
-                rows={3}
-                placeholder="Tell us about this artwork..."
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
-                  Style
-                </label>
-                <select
-                  value={style}
-                  onChange={(e) => setStyle(e.target.value)}
-                  className="input"
-                >
-                  <option value="">Select style</option>
-                  {STYLES.map((s) => (
-                    <option key={s} value={s}>
-                      {s}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
-                  Medium
-                </label>
-                <input
-                  type="text"
-                  value={medium}
-                  onChange={(e) => setMedium(e.target.value)}
-                  className="input"
-                  placeholder="e.g., Procreate, Pencil"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
-                Tags
-              </label>
-              <input
-                type="text"
-                value={tags}
-                onChange={(e) => setTags(e.target.value)}
-                className="input"
-                placeholder="Comma separated: fantasy, character, etc."
-              />
-            </div>
-
-            {/* Publish toggle */}
-            <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
-              <div>
-                <p className="font-medium text-slate-800">Published</p>
-                <p className="text-sm text-slate-500">
-                  Make this artwork visible in your public gallery
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={() => setIsPublished(!isPublished)}
-                className={`w-12 h-7 rounded-full transition-colors ${
-                  isPublished ? "bg-success-500" : "bg-slate-300"
-                }`}
-              >
-                <div
-                  className={`w-5 h-5 bg-slate-50 rounded-full shadow transition-transform ${
-                    isPublished ? "translate-x-6" : "translate-x-1"
-                  }`}
-                />
-              </button>
-            </div>
-
-            <button
-              type="submit"
-              disabled={saving || !title.trim()}
-              className="btn btn-gradient w-full"
-            >
-              {saving ? (
-                <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                  Saving...
-                </>
-              ) : (
-                <>
-                  <Pencil className="w-5 h-5" />
-                  Save Changes
-                </>
-              )}
-            </button>
-          </form>
-        </motion.div>
-      </div>
-    </AnimatePresence>
+          {saving ? (
+            <>
+              <Loader2 className="w-5 h-5 animate-spin" />
+              Saving...
+            </>
+          ) : (
+            <>
+              <Pencil className="w-5 h-5" />
+              Save Changes
+            </>
+          )}
+        </button>
+      </form>
+    </ArtworkModalShell>
   );
 };
 
@@ -567,208 +459,225 @@ const AddArtworkModal: React.FC<AddArtworkModalProps> = ({
     }
   };
 
-  if (!isOpen) return null;
-
   return (
-    <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-        <motion.div
-          className="absolute inset-0 bg-slate-900/50"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          onClick={onClose}
-        />
+    <ArtworkModalShell
+      isOpen={isOpen}
+      title="Upload Artwork"
+      closeLabel="Close upload modal"
+      onClose={onClose}
+    >
+      <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        {/* Image Upload */}
+        <div>
+          <label className="block text-sm font-medium text-slate-700 mb-2">
+            Artwork Image *
+          </label>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            className="hidden"
+          />
 
-        <motion.div
-          className="relative bg-slate-50 rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-auto"
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.95 }}
-        >
-          {/* Header */}
-          <div className="p-6 border-b border-slate-200">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-bold text-slate-800">
-                Upload Artwork
-              </h2>
-              <button
-                onClick={onClose}
-                className="p-2 hover:bg-slate-100 rounded-lg"
-                aria-label="Close upload modal"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-          </div>
-
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="p-6 space-y-4">
-            {/* Image Upload */}
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
-                Artwork Image *
-              </label>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                onChange={handleFileChange}
-                className="hidden"
+          {imagePreview ? (
+            <div className="relative">
+              <img
+                src={imagePreview}
+                alt="Preview"
+                className="w-full h-64 object-contain bg-slate-100 rounded-xl"
               />
-
-              {imagePreview ? (
-                <div className="relative">
-                  <img
-                    src={imagePreview}
-                    alt="Preview"
-                    className="w-full h-64 object-contain bg-slate-100 rounded-xl"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setImagePreview(null);
-                      setImageUrl("");
-                    }}
-                    className="absolute top-2 right-2 p-2 bg-error-500 text-white rounded-lg"
-                    aria-label="Remove image preview"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                </div>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  className="w-full h-48 border-2 border-dashed border-slate-300 hover:border-accent-400 rounded-xl flex flex-col items-center justify-center gap-2 transition-colors"
-                >
-                  <ImageIcon className="w-10 h-10 text-slate-400" />
-                  <span className="text-slate-500">Click to upload image</span>
-                  <span className="text-xs text-slate-400">
-                    PNG, JPG up to 5MB
-                  </span>
-                </button>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
-                Title *
-              </label>
-              <input
-                type="text"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                className="input"
-                placeholder="Artwork title"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
-                Description
-              </label>
-              <textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                className="input"
-                rows={3}
-                placeholder="Tell us about this artwork..."
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
-                  Style
-                </label>
-                <select
-                  value={style}
-                  onChange={(e) => setStyle(e.target.value)}
-                  className="input"
-                >
-                  <option value="">Select style</option>
-                  {STYLES.map((s) => (
-                    <option key={s} value={s}>
-                      {s}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
-                  Medium
-                </label>
-                <input
-                  type="text"
-                  value={medium}
-                  onChange={(e) => setMedium(e.target.value)}
-                  className="input"
-                  placeholder="e.g., Procreate, Pencil"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
-                Tags
-              </label>
-              <input
-                type="text"
-                value={tags}
-                onChange={(e) => setTags(e.target.value)}
-                className="input"
-                placeholder="Comma separated: fantasy, character, etc."
-              />
-            </div>
-
-            {/* Publish toggle */}
-            <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
-              <div>
-                <p className="font-medium text-slate-800">
-                  Publish immediately
-                </p>
-                <p className="text-sm text-slate-500">
-                  Make this artwork visible in your public gallery
-                </p>
-              </div>
               <button
                 type="button"
-                onClick={() => setIsPublished(!isPublished)}
-                className={`w-12 h-7 rounded-full transition-colors ${
-                  isPublished ? "bg-success-500" : "bg-slate-300"
-                }`}
+                onClick={() => {
+                  setImagePreview(null);
+                  setImageUrl("");
+                }}
+                className="absolute top-2 right-2 p-2 bg-error-500 text-white rounded-lg"
+                aria-label="Remove image preview"
               >
-                <div
-                  className={`w-5 h-5 bg-slate-50 rounded-full shadow transition-transform ${
-                    isPublished ? "translate-x-6" : "translate-x-1"
-                  }`}
-                />
+                <X className="w-4 h-4" />
               </button>
             </div>
-
+          ) : (
             <button
-              type="submit"
-              disabled={saving || !title.trim() || !imageUrl}
-              className="btn btn-gradient w-full"
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="w-full h-48 border-2 border-dashed border-slate-300 hover:border-accent-400 rounded-xl flex flex-col items-center justify-center gap-2 transition-colors"
             >
-              {saving ? (
-                <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                  Uploading...
-                </>
-              ) : (
-                <>
-                  <Upload className="w-5 h-5" />
-                  Upload Artwork
-                </>
-              )}
+              <ImageIcon className="w-10 h-10 text-slate-400" />
+              <span className="text-slate-500">Click to upload image</span>
+              <span className="text-xs text-slate-400">
+                PNG, JPG up to 5MB
+              </span>
             </button>
-          </form>
-        </motion.div>
+          )}
+        </div>
+
+        <ArtworkFormBody
+          title={title}
+          onTitleChange={setTitle}
+          description={description}
+          onDescriptionChange={setDescription}
+          style={style}
+          onStyleChange={setStyle}
+          medium={medium}
+          onMediumChange={setMedium}
+          tags={tags}
+          onTagsChange={setTags}
+          isPublished={isPublished}
+          onIsPublishedChange={setIsPublished}
+        />
+
+        <button
+          type="submit"
+          disabled={saving || !title.trim() || !imageUrl}
+          className="btn btn-gradient w-full"
+        >
+          {saving ? (
+            <>
+              <Loader2 className="w-5 h-5 animate-spin" />
+              Uploading...
+            </>
+          ) : (
+            <>
+              <Upload className="w-5 h-5" />
+              Upload Artwork
+            </>
+          )}
+        </button>
+      </form>
+    </ArtworkModalShell>
+  );
+};
+
+// Shared form fields between add and edit modals
+interface ArtworkFormBodyProps {
+  title: string;
+  onTitleChange: (value: string) => void;
+  description: string;
+  onDescriptionChange: (value: string) => void;
+  style: string;
+  onStyleChange: (value: string) => void;
+  medium: string;
+  onMediumChange: (value: string) => void;
+  tags: string;
+  onTagsChange: (value: string) => void;
+  isPublished: boolean;
+  onIsPublishedChange: (value: boolean) => void;
+}
+
+const ArtworkFormBody: React.FC<ArtworkFormBodyProps> = ({
+  title,
+  onTitleChange,
+  description,
+  onDescriptionChange,
+  style,
+  onStyleChange,
+  medium,
+  onMediumChange,
+  tags,
+  onTagsChange,
+  isPublished,
+  onIsPublishedChange,
+}) => {
+  return (
+    <>
+      <div>
+        <label className="block text-sm font-medium text-slate-700 mb-1">
+          Title *
+        </label>
+        <input
+          type="text"
+          value={title}
+          onChange={(e) => onTitleChange(e.target.value)}
+          className="input"
+          placeholder="Artwork title"
+          required
+        />
       </div>
-    </AnimatePresence>
+
+      <div>
+        <label className="block text-sm font-medium text-slate-700 mb-1">
+          Description
+        </label>
+        <textarea
+          value={description}
+          onChange={(e) => onDescriptionChange(e.target.value)}
+          className="input"
+          rows={3}
+          placeholder="Tell us about this artwork..."
+        />
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-slate-700 mb-1">
+            Style
+          </label>
+          <select
+            value={style}
+            onChange={(e) => onStyleChange(e.target.value)}
+            className="input"
+          >
+            <option value="">Select style</option>
+            {STYLES.map((s) => (
+              <option key={s} value={s}>
+                {s}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-slate-700 mb-1">
+            Medium
+          </label>
+          <input
+            type="text"
+            value={medium}
+            onChange={(e) => onMediumChange(e.target.value)}
+            className="input"
+            placeholder="e.g., Procreate, Pencil"
+          />
+        </div>
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-slate-700 mb-1">
+          Tags
+        </label>
+        <input
+          type="text"
+          value={tags}
+          onChange={(e) => onTagsChange(e.target.value)}
+          className="input"
+          placeholder="Comma separated: fantasy, character, etc."
+        />
+      </div>
+
+      {/* Publish toggle */}
+      <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
+        <div>
+          <p className="font-medium text-slate-800">Published</p>
+          <p className="text-sm text-slate-500">
+            Make this artwork visible in your public gallery
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={() => onIsPublishedChange(!isPublished)}
+          className={`w-12 h-7 rounded-full transition-colors ${
+            isPublished ? "bg-success-500" : "bg-slate-300"
+          }`}
+        >
+          <div
+            className={`w-5 h-5 bg-slate-50 rounded-full shadow transition-transform ${
+              isPublished ? "translate-x-6" : "translate-x-1"
+            }`}
+          />
+        </button>
+      </div>
+    </>
   );
 };
 

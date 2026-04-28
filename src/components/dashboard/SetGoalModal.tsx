@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { X, Loader2, Target } from "lucide-react";
 
-export interface SetGoalModalProps {
+interface SetGoalModalProps {
   isOpen: boolean;
   onClose: () => void;
   currentGoal?: { targetBooks: number; targetPages?: number } | null;

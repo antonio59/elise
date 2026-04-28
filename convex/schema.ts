@@ -232,10 +232,10 @@ export default defineSchema(
       .index("by_identifier_action", ["identifier", "action"])
       .index("by_window", ["windowStart"]),
 
-    // Reactions (emoji reactions on books, writings, artworks)
+    // Reactions (emoji reactions on books, writings, artworks, photos)
     reactions: defineTable({
-      targetType: v.union(v.literal("book"), v.literal("writing"), v.literal("artwork")),
-      targetId: v.string(), // ID of the book/writing/artwork
+      targetType: v.union(v.literal("book"), v.literal("writing"), v.literal("artwork"), v.literal("photo")),
+      targetId: v.string(), // ID of the book/writing/artwork/photo
       emoji: v.string(), // the emoji used
       visitorId: v.string(), // anonymous visitor identifier (from sessionStorage)
       createdAt: v.number(),
@@ -301,5 +301,40 @@ export default defineSchema(
       .index("by_user", ["userId"])
       .index("by_user_name", ["userId", "name"])
       .index("by_createdAt", ["createdAt"]),
+
+    // Photos (photography gallery)
+    photos: defineTable({
+      userId: v.id("users"),
+      title: v.string(),
+      description: v.optional(v.string()),
+      imageUrl: v.string(),
+      storageId: v.optional(v.id("_storage")),
+      location: v.optional(v.string()),
+      tags: v.optional(v.array(v.string())),
+      albumId: v.optional(v.id("photoAlbums")),
+      isPublished: v.boolean(),
+      likes: v.optional(v.number()),
+      createdAt: v.number(),
+    })
+      .index("by_user", ["userId"])
+      .index("by_published", ["isPublished"])
+      .index("by_album", ["albumId"])
+      .index("by_createdAt", ["createdAt"]),
+
+    // Photo Albums (boards / collections)
+    photoAlbums: defineTable({
+      userId: v.id("users"),
+      title: v.string(),
+      description: v.optional(v.string()),
+      coverImageUrl: v.optional(v.string()),
+      createdAt: v.number(),
+    }).index("by_user", ["userId"]),
+
+    // Feature announcements (tracks which feature emails have been sent)
+    featureAnnouncements: defineTable({
+      featureName: v.string(),
+      sentAt: v.number(),
+      sentTo: v.optional(v.string()),
+    }).index("by_feature", ["featureName"]),
   },
 );

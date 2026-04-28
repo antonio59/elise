@@ -3,7 +3,7 @@ export interface Prompt {
   category: string;
 }
 
-export const WRITING_PROMPTS: Prompt[] = [
+const WRITING_PROMPTS: Prompt[] = [
   // Poetry
   { text: "Write about the color of silence", category: "poetry" },
   { text: "Describe a thunderstorm from the perspective of a houseplant", category: "poetry" },
@@ -39,7 +39,7 @@ export const WRITING_PROMPTS: Prompt[] = [
   { text: "What did you learn about yourself this week?", category: "journal" },
 ];
 
-export const ART_PROMPTS: Prompt[] = [
+const ART_PROMPTS: Prompt[] = [
   { text: "Draw your favorite book character as a cat", category: "art" },
   { text: "Redesign the cover of the last book you read", category: "art" },
   { text: "Draw a self-portrait as your favorite fictional character", category: "art" },

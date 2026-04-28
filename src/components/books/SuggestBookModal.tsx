@@ -1,47 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  X,
-  Loader2,
-  Send,
-  CheckCircle,
-  AlertCircle,
-  Search,
-} from "lucide-react";
+import { X, CheckCircle } from "lucide-react";
 import { useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
-import CoverImage from "../CoverImage";
 import { getVisitorId } from "../../lib/visitorId";
+import SuggestionForm from "../wishlist/SuggestionForm";
+import BookSearchResults from "./BookSearchResults";
+import type { BookSearchResult } from "./BookSearchResults";
 
 interface SuggestBookModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
-
-interface BookSearchResult {
-  title: string;
-  author: string;
-  coverUrl?: string;
-  genre?: string;
-  pageCount?: number;
-}
-
-const GENRES = [
-  "Manga",
-  "Manhwa",
-  "Webtoon",
-  "Light Novel",
-  "Fantasy",
-  "Sci-Fi",
-  "Romance",
-  "Mystery",
-  "Horror",
-  "Slice of Life",
-  "Action",
-  "Comedy",
-  "Drama",
-  "Other",
-];
 
 const SuggestBookModal: React.FC<SuggestBookModalProps> = ({
   isOpen,
@@ -64,6 +34,7 @@ const SuggestBookModal: React.FC<SuggestBookModalProps> = ({
   const [coverUrl, setCoverUrl] = useState("");
   const [genre, setGenre] = useState("");
   const [suggestedBy, setSuggestedBy] = useState("");
+  const [email, setEmail] = useState("");
   const [reason, setReason] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -147,6 +118,7 @@ const SuggestBookModal: React.FC<SuggestBookModalProps> = ({
         coverUrl: coverUrl.trim() || undefined,
         genre: genre || undefined,
         suggestedBy: suggestedBy.trim(),
+        suggestedByEmail: email.trim() || undefined,
         reason: reason.trim() || undefined,
         visitorId: getVisitorId(),
       });
@@ -171,6 +143,7 @@ const SuggestBookModal: React.FC<SuggestBookModalProps> = ({
       setCoverUrl("");
       setGenre("");
       setSuggestedBy("");
+      setEmail("");
       setReason("");
       setSubmitted(false);
       setError(null);
@@ -227,210 +200,44 @@ const SuggestBookModal: React.FC<SuggestBookModalProps> = ({
                 Thank you!
               </h3>
               <p className="text-slate-600 mb-6">
-                Your book suggestion has been submitted. I&apos;ll check it out soon!
+                Your book suggestion has been submitted. I&apos;ll check it out
+                soon!
               </p>
               <button onClick={handleClose} className="btn btn-primary">
                 Close
               </button>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="p-6 space-y-4">
-              {/* Book Search */}
-              {!selectedBook && (
-                <div className="relative">
-                  <label className="block text-sm font-medium text-slate-700 mb-1">
-                    Search for a book
-                  </label>
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-                    <input
-                      type="text"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="input pl-10"
-                      placeholder="Type a book title to search..."
-                      autoFocus
-                    />
-                    {searching && (
-                      <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-primary-500 animate-spin" />
-                    )}
-                  </div>
-
-                  {/* Search Results Dropdown */}
-                  {showResults && (
-                    <div className="absolute z-10 w-full mt-1 bg-slate-50 border border-slate-200 rounded-xl shadow-lg max-h-64 overflow-auto">
-                      {searchResults.map((book, index) => (
-                        <button
-                          key={index}
-                          type="button"
-                          onClick={() => selectBook(book)}
-                          className="w-full flex items-center gap-3 p-3 hover:bg-primary-50 transition-colors text-left border-b border-slate-100 last:border-0"
-                        >
-                          <CoverImage
-                            book={book}
-                            className="w-10 h-14 object-cover rounded"
-                          />
-                          <div className="flex-1 min-w-0">
-                            <p className="font-medium text-slate-800 truncate">
-                              {book.title}
-                            </p>
-                            <p className="text-sm text-slate-500 truncate">
-                              {book.author}
-                            </p>
-                          </div>
-                        </button>
-                      ))}
-                    </div>
-                  )}
-
-                  <p className="text-xs text-slate-500 mt-2">
-                    Can&apos;t find your book? Fill in the details below manually.
-                  </p>
-                </div>
-              )}
-
-              {/* Selected Book Preview */}
-              {selectedBook && (
-                <div className="flex items-start gap-4 p-4 bg-primary-50 rounded-xl border-2 border-primary-200">
-                  <div className="w-16 h-24 rounded-lg overflow-hidden flex-shrink-0">
-                    <CoverImage
-                      book={selectedBook}
-                      className="w-full h-full object-cover rounded-lg shadow"
-                    />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-bold text-slate-800 truncate">
-                      {selectedBook.title}
-                    </h3>
-                    <p className="text-sm text-slate-600">
-                      by {selectedBook.author}
-                    </p>
-                    {selectedBook.genre && (
-                      <span className="inline-block mt-2 px-2 py-1 bg-slate-50 text-xs font-medium text-primary-600 rounded-full">
-                        {selectedBook.genre}
-                      </span>
-                    )}
-                  </div>
-                  <button
-                    type="button"
-                    onClick={clearSelection}
-                    className="p-1 hover:bg-primary-100 rounded-lg transition-colors"
-                    aria-label="Clear selection"
-                  >
-                    <X className="w-4 h-4 text-slate-500" />
-                  </button>
-                </div>
-              )}
-
-              {/* Manual Entry Fields (collapsed if book selected) */}
-              {!selectedBook && (
-                <>
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">
-                      Book Title *
-                    </label>
-                    <input
-                      type="text"
-                      value={title}
-                      onChange={(e) => setTitle(e.target.value)}
-                      className="input"
-                      placeholder="The name of the book"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">
-                      Author *
-                    </label>
-                    <input
-                      type="text"
-                      value={author}
-                      onChange={(e) => setAuthor(e.target.value)}
-                      className="input"
-                      placeholder="Who wrote it?"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">
-                      Genre
-                    </label>
-                    <select
-                      value={genre}
-                      onChange={(e) => setGenre(e.target.value)}
-                      className="input"
-                    >
-                      <option value="">Select genre</option>
-                      {GENRES.map((g) => (
-                        <option key={g} value={g}>
-                          {g}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </>
-              )}
-
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
-                  Your Name *
-                </label>
-                <input
-                  type="text"
-                  value={suggestedBy}
-                  onChange={(e) => setSuggestedBy(e.target.value)}
-                  className="input"
-                  placeholder="What should I call you?"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
-                  Why should I read it? (optional)
-                </label>
-                <textarea
-                  value={reason}
-                  onChange={(e) => setReason(e.target.value)}
-                  className="input"
-                  rows={2}
-                  placeholder="Tell me why you think I'd like this book!"
-                />
-              </div>
-
-              {/* Error message */}
-              {error && (
-                <div className="flex items-center gap-2 p-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-700">
-                  <AlertCircle className="w-5 h-5 flex-shrink-0" />
-                  <p className="text-sm">{error}</p>
-                </div>
-              )}
-
-              <button
-                type="submit"
-                disabled={
-                  submitting ||
-                  !title.trim() ||
-                  !author.trim() ||
-                  !suggestedBy.trim()
-                }
-                className="btn btn-primary w-full"
-              >
-                {submitting ? (
-                  <>
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                    Submitting...
-                  </>
-                ) : (
-                  <>
-                    <Send className="w-5 h-5" />
-                    Submit Suggestion
-                  </>
-                )}
-              </button>
-            </form>
+            <SuggestionForm
+              title={title}
+              setTitle={setTitle}
+              author={author}
+              setAuthor={setAuthor}
+              genre={genre}
+              setGenre={setGenre}
+              suggestedBy={suggestedBy}
+              setSuggestedBy={setSuggestedBy}
+              reason={reason}
+              setReason={setReason}
+              email={email}
+              setEmail={setEmail}
+              showBookFields={!selectedBook}
+              submitting={submitting}
+              error={error}
+              onSubmit={handleSubmit}
+              submitButtonClassName="btn btn-primary w-full"
+            >
+              <BookSearchResults
+                query={searchQuery}
+                setQuery={setSearchQuery}
+                results={searchResults}
+                showResults={showResults}
+                searching={searching}
+                onSelect={selectBook}
+                selectedBook={selectedBook}
+                onClearSelection={clearSelection}
+              />
+            </SuggestionForm>
           )}
         </motion.div>
       </div>

@@ -1,63 +1,12 @@
-import CoverImage from "../components/CoverImage";
-import StickerSection from "../components/StickerSection";
-import ShareButton from "../components/ShareButton";
 import React, { useMemo, useState } from "react";
-import { motion } from "framer-motion";
-import {
-  Star,
-  Search,
-  LayoutGrid,
-  List,
-  SlidersHorizontal,
-  Check,
-} from "lucide-react";
 import { BookGridSkeleton } from "../components/Skeleton";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import PageHeader from "../components/PageHeader";
-import { Button } from "../components/ui/Button";
 import { usePageAnnouncement } from "../components/AccessibleAnnouncer";
 import { usePageMeta } from "../components/PageMeta";
-
-const RATING_LABELS: Record<number, string> = {
-  1: "not it",
-  2: "meh",
-  3: "solid read",
-  4: "obsessed",
-  5: "all-time fav",
-};
-
-const GENRES = [
-  "Manga",
-  "Manhwa",
-  "Webtoon",
-  "Light Novel",
-  "Fantasy",
-  "Sci-Fi",
-  "Romance",
-  "Mystery",
-  "Horror",
-  "Slice of Life",
-  "Action",
-  "Comedy",
-  "Drama",
-];
-
-const genreColors: Record<string, string> = {
-  Manga: "bg-error-50 text-error-600 border-error-200",
-  Manhwa: "bg-blue-50 text-accent-600 border-blue-200",
-  Webtoon: "bg-purple-50 text-purple-600 border-purple-200",
-  "Light Novel": "bg-amber-50 text-amber-600 border-amber-200",
-  Fantasy: "bg-violet-50 text-violet-600 border-violet-200",
-  "Sci-Fi": "bg-cyan-50 text-cyan-600 border-cyan-200",
-  Romance: "bg-pink-50 text-primary-600 border-pink-200",
-  Mystery: "bg-slate-50 text-slate-600 border-slate-200",
-  Horror: "bg-orange-50 text-orange-700 border-orange-200",
-  "Slice of Life": "bg-success-50 text-success-600 border-success-200",
-  Action: "bg-error-50 text-red-700 border-error-200",
-  Comedy: "bg-yellow-50 text-yellow-700 border-yellow-200",
-  Drama: "bg-indigo-50 text-indigo-600 border-indigo-200",
-};
+import BookSearchBar from "../components/books/BookSearchBar";
+import PublicBookGrid from "../components/books/PublicBookGrid";
 
 const PublicBooks: React.FC = () => {
   usePageAnnouncement("Books");
@@ -73,10 +22,26 @@ const PublicBooks: React.FC = () => {
 
   const genresWithCounts = useMemo(
     () =>
-      GENRES.map((g) => ({
-        name: g,
-        count: books.filter((b) => b.genre === g).length,
-      })).filter((g) => g.count > 0),
+      [
+        "Manga",
+        "Manhwa",
+        "Webtoon",
+        "Light Novel",
+        "Fantasy",
+        "Sci-Fi",
+        "Romance",
+        "Mystery",
+        "Horror",
+        "Slice of Life",
+        "Action",
+        "Comedy",
+        "Drama",
+      ]
+        .map((g) => ({
+          name: g,
+          count: books.filter((b) => b.genre === g).length,
+        }))
+        .filter((g) => g.count > 0),
     [books],
   );
 
@@ -103,270 +68,53 @@ const PublicBooks: React.FC = () => {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-10 sm:py-12">
-      <>
-          <PageHeader
-            badge="Book Shelf"
-            title="Books I've Read"
-            subtitle="everything I've read"
-            breadcrumbs={[{ label: "Books" }]}
-          />
+      <PageHeader
+        badge="Book Shelf"
+        title="Books I've Read"
+        subtitle="everything I've read"
+        breadcrumbs={[{ label: "Books" }]}
+      />
 
-          {/* Search + Filter + View Toggle */}
-          <div className="flex flex-wrap gap-3 mb-4">
-            <div className="relative flex-1 min-w-[200px]">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-              <input
-                type="text"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="input pl-9"
-                placeholder="Search books..."
-              />
-            </div>
-            <Button
-              variant={filter === "all" ? "primary" : "secondary"}
-              size="sm"
-              onClick={() => setFilter("all")}
-            >
-              All ({books.length})
-            </Button>
-            <Button
-              variant={filter === "favorites" ? "primary" : "secondary"}
-              size="sm"
-              onClick={() => setFilter("favorites")}
-            >
-              <Star className="w-3.5 h-3.5" />
-              {" "}(
-              {
-                books.filter((b: { isFavorite?: boolean }) => b.isFavorite)
-                  .length
-              }
-              )
-            </Button>
-            <Button
-              variant={showGenres ? "primary" : "secondary"}
-              size="sm"
-              onClick={() => setShowGenres(!showGenres)}
-            >
-              <SlidersHorizontal className="w-4 h-4" />
-            </Button>
-            <div className="flex rounded-lg overflow-hidden border border-slate-200">
-              <button
-                onClick={() => setViewMode("grid")}
-                aria-label="Grid view"
-                aria-pressed={viewMode === "grid"}
-                className={`px-3 py-1.5 text-sm ${viewMode === "grid" ? "bg-primary-500 text-white" : "bg-slate-50 text-slate-500 hover:bg-slate-50"}`}
-              >
-                <LayoutGrid className="w-4 h-4" />
-              </button>
-              <button
-                onClick={() => setViewMode("list")}
-                aria-label="List view"
-                aria-pressed={viewMode === "list"}
-                className={`px-3 py-1.5 text-sm ${viewMode === "list" ? "bg-primary-500 text-white" : "bg-slate-50 text-slate-500 hover:bg-slate-50"}`}
-              >
-                <List className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
+      <BookSearchBar
+        search={search}
+        onSearchChange={setSearch}
+        filter={filter}
+        onFilterChange={setFilter}
+        booksCount={books.length}
+        favoritesCount={
+          books.filter((b: { isFavorite?: boolean }) => b.isFavorite).length
+        }
+        showGenres={showGenres}
+        onToggleGenres={() => setShowGenres(!showGenres)}
+        genreFilter={genreFilter}
+        onGenreFilterChange={setGenreFilter}
+        genresWithCounts={genresWithCounts}
+        viewMode={viewMode}
+        onViewModeChange={setViewMode}
+      />
 
-          {/* Genre Filter Pills */}
-          {showGenres && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              className="flex flex-wrap gap-2 mb-6"
+      {filtered.length === 0 ? (
+        <div className="text-center py-16 bg-gradient-to-br from-primary-50 to-violet-50 rounded-2xl">
+          <div className="text-4xl mb-3">📚</div>
+          <p className="text-slate-600 font-medium">
+            {genreFilter
+              ? `No ${genreFilter} books yet`
+              : search
+                ? "No books match your search"
+                : "No books yet"}
+          </p>
+          {genreFilter && (
+            <button
+              onClick={() => setGenreFilter(null)}
+              className="text-sm text-primary-500 mt-2 underline"
             >
-              <button
-                onClick={() => setGenreFilter(null)}
-                aria-pressed={!genreFilter}
-                className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
-                  !genreFilter
-                    ? "bg-primary-500 text-white"
-                    : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-                }`}
-              >
-                {!genreFilter && <Check className="w-3 h-3" />}
-                All
-              </button>
-              {genresWithCounts.map((g) => (
-                <button
-                  key={g.name}
-                  onClick={() =>
-                    setGenreFilter(genreFilter === g.name ? null : g.name)
-                  }
-                  aria-pressed={genreFilter === g.name}
-                  className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
-                    genreFilter === g.name
-                      ? "bg-primary-500 text-white"
-                      : genreColors[g.name] || "bg-slate-100 text-slate-600"
-                  }`}
-                >
-                  {genreFilter === g.name && <Check className="w-3 h-3" />}
-                  {g.name} ({g.count})
-                </button>
-              ))}
-            </motion.div>
+              Clear filter
+            </button>
           )}
-
-          {/* Empty State */}
-          {filtered.length === 0 ? (
-            <div className="text-center py-16 bg-gradient-to-br from-primary-50 to-violet-50 rounded-2xl">
-              <div className="text-4xl mb-3">📚</div>
-              <p className="text-slate-600 font-medium">
-                {genreFilter
-                  ? `No ${genreFilter} books yet`
-                  : search
-                    ? "No books match your search"
-                    : "No books yet"}
-              </p>
-              {genreFilter && (
-                <button
-                  onClick={() => setGenreFilter(null)}
-                  className="text-sm text-primary-500 mt-2 underline"
-                >
-                  Clear filter
-                </button>
-              )}
-            </div>
-          ) : viewMode === "grid" ? (
-            /* Grid View */
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
-              {filtered.map(
-                (
-                  book: {
-                    _id: string;
-                    title: string;
-                    author: string;
-                    coverUrl?: string;
-                    coverImageUrl?: string | null;
-                    coverStorageId?: string;
-                    genre?: string;
-                    rating?: number;
-                  },
-                  index: number,
-                ) => (
-                  <motion.div
-                    key={book._id}
-                    className="group relative book-card"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.03 }}
-                  >
-                    <div className="relative aspect-[2/3] rounded-xl overflow-hidden bg-slate-100 shadow-sm group-hover:shadow-lg group-hover:-translate-y-1 transition-all duration-200">
-                      <CoverImage
-                        book={book}
-                        className="w-full h-full object-cover"
-                      />
-                      {book.rating && book.rating > 0 && (
-                        <div className="absolute top-2 right-2 px-2 py-0.5 bg-slate-900/50 backdrop-blur-sm rounded-full flex items-center gap-0.5">
-                          {Array.from({ length: book.rating }).map((_, i) => (
-                            <Star
-                              key={i}
-                              className="w-2.5 h-2.5 text-star fill-star"
-                            />
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                    <h3 className="mt-2 text-sm font-medium text-slate-800 line-clamp-1">
-                      {book.title}
-                    </h3>
-                    <p className="text-xs text-slate-500 line-clamp-1">
-                      {book.author}
-                    </p>
-                    <div className="flex flex-wrap items-center gap-1 mt-1">
-                      {book.genre && book.genre !== "Other" && (
-                        <span
-                          className={`text-[10px] px-1.5 py-0.5 rounded-full border ${genreColors[book.genre] || "bg-slate-50 text-slate-500 border-slate-200"}`}
-                        >
-                          {book.genre}
-                        </span>
-                      )}
-                      {book.rating && book.rating > 0 && (
-                        <span className="text-[10px] text-slate-400">
-                          {RATING_LABELS[book.rating]}
-                        </span>
-                      )}
-                      <ShareButton
-                        title={book.title}
-                        author={book.author}
-                        path="/books"
-                      />
-                    </div>
-                    <StickerSection bookId={book._id} />
-                  </motion.div>
-                ),
-              )}
-            </div>
-          ) : (
-            /* List View */
-            <div className="space-y-3">
-              {filtered.map(
-                (
-                  book: {
-                    _id: string;
-                    title: string;
-                    author: string;
-                    coverUrl?: string;
-                    coverImageUrl?: string | null;
-                    coverStorageId?: string;
-                    genre?: string;
-                    rating?: number;
-                  },
-                  index: number,
-                ) => (
-                  <motion.div
-                    key={book._id}
-                    className="card p-4 flex gap-4 items-center hover:shadow-md transition-shadow"
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.03 }}
-                  >
-                    <div className="w-14 h-20 rounded-lg overflow-hidden bg-slate-100 flex-shrink-0">
-                      <CoverImage
-                        book={book}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-medium text-slate-800 truncate">
-                        {book.title}
-                      </h3>
-                      <p className="text-sm text-slate-500">{book.author}</p>
-                      <div className="flex items-center gap-2 mt-1">
-                        {book.genre && book.genre !== "Other" && (
-                          <span
-                            className={`text-[10px] px-1.5 py-0.5 rounded-full border ${genreColors[book.genre] || "bg-slate-50 text-slate-500 border-slate-200"}`}
-                          >
-                            {book.genre}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-0.5 flex-shrink-0">
-                      {book.rating && book.rating > 0 ? (
-                        <>
-                          {Array.from({ length: 5 }).map((_, i) => (
-                            <Star
-                              key={i}
-                              className={`w-4 h-4 ${i < (book.rating ?? 0) ? "text-star fill-star" : "text-slate-200"}`}
-                            />
-                          ))}
-                        </>
-                      ) : (
-                        <span className="text-xs text-slate-500">unrated</span>
-                      )}
-                    </div>
-                  </motion.div>
-                ),
-              )}
-            </div>
-          )}
-        </>
+        </div>
+      ) : (
+        <PublicBookGrid books={filtered} viewMode={viewMode} />
+      )}
     </div>
   );
 };

@@ -18,6 +18,7 @@ import {
   Gift,
   Compass,
   Users,
+  Camera,
 } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import { useQuery } from "convex/react";
@@ -35,6 +36,7 @@ const NAV_ITEMS = [
   { path: "/dashboard/reviews", label: "Reviews", icon: Star },
   { path: "/dashboard/writing", label: "My Writing", icon: PenTool },
   { path: "/dashboard/art", label: "My Art", icon: Palette },
+  { path: "/dashboard/photos", label: "My Photos", icon: Camera },
   { path: "/dashboard/characters", label: "Characters", icon: Users },
   { path: "/dashboard/discover", label: "Discover", icon: Compass },
   { path: "/dashboard/suggestions", label: "Suggestions", icon: MessageSquare },
@@ -191,6 +193,7 @@ export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
     { label: "Reviews", to: "/reviews", icon: Star },
     { label: "Writing", to: "/writing", icon: PenTool },
     { label: "Art", to: "/art", icon: Palette },
+    { label: "Photos", to: "/photos", icon: Camera },
     { label: "Wishlist", to: "/wishlist", icon: Gift },
     { label: "About", to: "/about", icon: User },
   ];

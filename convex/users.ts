@@ -183,7 +183,7 @@ export const getStats = query({
       };
     }
 
-    const [readBooks, readingBooks, wishlistBooks, favoriteBooks, allArtworks] = await Promise.all([
+    const [readBooks, readingBooks, wishlistBooks, favoriteBooks, allArtworks, allPhotos] = await Promise.all([
       ctx.db
         .query("books")
         .withIndex("by_user_status", (q) => q.eq("userId", userId).eq("status", "read"))
@@ -201,6 +201,7 @@ export const getStats = query({
         .withIndex("by_user_favorite", (q) => q.eq("userId", userId).eq("isFavorite", true))
         .collect(),
       ctx.db.query("artworks").collect(),
+      ctx.db.query("photos").collect(),
     ]);
 
     const totalBooks = readBooks.length + readingBooks.length + wishlistBooks.length;
@@ -218,6 +219,8 @@ export const getStats = query({
       favorites: favoriteBooks.length,
       totalArtworks: allArtworks.length,
       publishedArtworks: allArtworks.filter((a) => a.isPublished).length,
+      totalPhotos: allPhotos.length,
+      publishedPhotos: allPhotos.filter((p) => p.isPublished).length,
     };
   },
 });

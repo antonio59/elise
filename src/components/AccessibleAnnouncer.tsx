@@ -15,7 +15,7 @@ const AnnouncerContext = createContext<AnnouncerContextType | undefined>(
   undefined,
 );
 
-export const useAnnouncer = () => {
+const useAnnouncer = () => {
   const context = useContext(AnnouncerContext);
   if (context === undefined) {
     throw new Error(
@@ -81,29 +81,3 @@ export const usePageAnnouncement = (pageTitle: string) => {
   }, [pageTitle, announce]);
 };
 
-export const useLoadingAnnouncement = (
-  isLoading: boolean,
-  itemName: string,
-) => {
-  const { announce } = useAnnouncer();
-
-  useEffect(() => {
-    if (isLoading) {
-      announce(`Loading ${itemName}...`);
-    } else {
-      announce(`${itemName} loaded`);
-    }
-  }, [isLoading, itemName, announce]);
-};
-
-export const useActionAnnouncement = () => {
-  const { announce } = useAnnouncer();
-
-  return {
-    announceSuccess: (action: string) =>
-      announce(`${action} completed successfully`),
-    announceError: (action: string) =>
-      announce(`${action} failed`, "assertive"),
-    announceInfo: (message: string) => announce(message),
-  };
-};

@@ -15,4 +15,15 @@ crons.weekly(
   {},
 );
 
+// Send photo feature announcement once (checks flag internally)
+crons.daily(
+  "send photo feature announcement if not sent",
+  {
+    hourUTC: 10,
+    minuteUTC: 0,
+  },
+  internal.photos.sendFeatureAnnouncement,
+  {},
+);
+
 export default crons;

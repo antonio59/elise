@@ -15,6 +15,7 @@ import { ToastProvider } from "./components/ui/Toast";
 // Eager load public pages
 import PublicHome from "./pages/PublicHome";
 import PublicGallery from "./pages/PublicGallery";
+import PublicPhotos from "./pages/PublicPhotos";
 import PublicWishlist from "./pages/PublicWishlist";
 import PublicBooks from "./pages/PublicBooks";
 import PublicReviews from "./pages/PublicReviews";
@@ -31,6 +32,7 @@ const Signup = lazy(() => import("./pages/Signup"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const MyBooks = lazy(() => import("./pages/MyBooks"));
 const MyArt = lazy(() => import("./pages/MyArt"));
+const MyPhotos = lazy(() => import("./pages/MyPhotos"));
 const MyWritings = lazy(() => import("./pages/MyWritings"));
 const Suggestions = lazy(() => import("./pages/Suggestions"));
 const Settings = lazy(() => import("./pages/Settings"));
@@ -66,6 +68,7 @@ function App() {
             <Route path="/reviews" element={<PublicLayout><PublicReviews /></PublicLayout>} />
             <Route path="/writing" element={<PublicLayout><PublicWritings /></PublicLayout>} />
             <Route path="/art" element={<PublicLayout><PublicGallery /></PublicLayout>} />
+            <Route path="/photos" element={<PublicLayout><PublicPhotos /></PublicLayout>} />
             <Route path="/wishlist" element={<PublicLayout><PublicWishlist /></PublicLayout>} />
             <Route path="/about" element={<PublicLayout><About /></PublicLayout>} />
             <Route path="/login" element={<AuthLayout><Suspense fallback={<PageLoader />}><Login /></Suspense></AuthLayout>} />
@@ -76,6 +79,7 @@ function App() {
             <Route path="/dashboard/books" element={<Suspense fallback={<PageLoader />}><ProtectedRoute><Layout><MyBooks /></Layout></ProtectedRoute></Suspense>} />
             <Route path="/dashboard/reviews" element={<Suspense fallback={<PageLoader />}><ProtectedRoute><Layout><Reviews /></Layout></ProtectedRoute></Suspense>} />
             <Route path="/dashboard/art" element={<Suspense fallback={<PageLoader />}><ProtectedRoute><Layout><MyArt /></Layout></ProtectedRoute></Suspense>} />
+            <Route path="/dashboard/photos" element={<Suspense fallback={<PageLoader />}><ProtectedRoute><Layout><MyPhotos /></Layout></ProtectedRoute></Suspense>} />
             <Route path="/dashboard/writing" element={<Suspense fallback={<PageLoader />}><ProtectedRoute><Layout><MyWritings /></Layout></ProtectedRoute></Suspense>} />
             <Route path="/dashboard/discover" element={<Suspense fallback={<PageLoader />}><ProtectedRoute><Layout><Discover /></Layout></ProtectedRoute></Suspense>} />
             <Route path="/dashboard/characters" element={<Suspense fallback={<PageLoader />}><ProtectedRoute><Layout><Characters /></Layout></ProtectedRoute></Suspense>} />

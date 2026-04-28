@@ -6,7 +6,7 @@ import { getVisitorId } from "../lib/visitorId";
 const DEFAULT_EMOJIS = ["❤️", "📚", "✨", "🔥", "😭", "💀", "🤯", "👀"];
 
 interface ReactionBarProps {
-  targetType: "book" | "writing" | "artwork";
+  targetType: "book" | "writing" | "artwork" | "photo";
   targetId: string;
   className?: string;
 }

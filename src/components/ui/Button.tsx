@@ -3,14 +3,14 @@ import { motion, useReducedMotion, type HTMLMotionProps } from "framer-motion";
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
-export type ButtonVariant =
+type ButtonVariant =
   | "primary"
   | "secondary"
   | "ghost"
   | "accent"
   | "success"
   | "danger";
-export type ButtonSize = "sm" | "md" | "lg";
+type ButtonSize = "sm" | "md" | "lg";
 
 interface ButtonProps extends Omit<HTMLMotionProps<"button">, "children"> {
   variant?: ButtonVariant;
@@ -133,35 +133,3 @@ function LoadingSpinner({ size }: { size: ButtonSize }) {
   );
 }
 
-interface IconButtonProps extends Omit<
-  ButtonProps,
-  "children" | "icon" | "iconPosition"
-> {
-  icon: React.ReactNode;
-  "aria-label": string;
-}
-
-export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
-  ({ icon, size = "md", className, ...props }, ref) => {
-    const sizeClasses: Record<ButtonSize, string> = {
-      sm: "p-1.5",
-      md: "p-2",
-      lg: "p-3",
-    };
-
-    return (
-      <Button
-        ref={ref}
-        size={size}
-        className={cn(sizeClasses[size], className)}
-        {...props}
-      >
-        {icon}
-      </Button>
-    );
-  },
-);
-
-IconButton.displayName = "IconButton";
-
-export default Button;

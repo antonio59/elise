@@ -5,7 +5,7 @@ import { query, mutation } from "./_generated/server";
 // Toggle a reaction (add if not exists, remove if exists)
 export const toggle = mutation({
   args: {
-    targetType: v.union(v.literal("book"), v.literal("writing"), v.literal("artwork")),
+    targetType: v.union(v.literal("book"), v.literal("writing"), v.literal("artwork"), v.literal("photo")),
     targetId: v.string(),
     emoji: v.string(),
     visitorId: v.string(),
@@ -52,7 +52,7 @@ export const toggle = mutation({
 // Get all reactions for a target, grouped by emoji with counts
 export const getReactions = query({
   args: {
-    targetType: v.union(v.literal("book"), v.literal("writing"), v.literal("artwork")),
+    targetType: v.union(v.literal("book"), v.literal("writing"), v.literal("artwork"), v.literal("photo")),
     targetId: v.string(),
   },
   handler: async (ctx, args) => {
@@ -85,7 +85,7 @@ export const getReactions = query({
 // Get reactions for a specific visitor on a target
 export const getUserReactions = query({
   args: {
-    targetType: v.union(v.literal("book"), v.literal("writing"), v.literal("artwork")),
+    targetType: v.union(v.literal("book"), v.literal("writing"), v.literal("artwork"), v.literal("photo")),
     targetId: v.string(),
     visitorId: v.string(),
   },

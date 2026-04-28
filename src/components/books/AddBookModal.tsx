@@ -1,21 +1,13 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  Plus,
-  X,
-  Loader2,
-  Star,
-  AlertCircle,
-  Heart,
-  CheckCircle2,
-  BookMarked,
-} from "lucide-react";
+import { X } from "lucide-react";
 import { useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
 import GoogleBookSearch from "../GoogleBookSearch";
 import CoverImage from "../CoverImage";
 import CoverUpload from "../CoverUpload";
+import BookFormFooter from "./BookFormFooter";
 
 const GENRES = [
   "Manga",
@@ -131,20 +123,12 @@ const AddBookModal: React.FC<AddBookModalProps> = ({
         },
         destination,
       );
-      // Reset form
-      setTitle("");
-      setAuthor("");
-      setCoverUrl("");
-      setGenre("Manga");
-      setPageCount("");
-      setRating(0);
-      setDestination("read");
+      resetForm();
       handleClose();
     } catch (err) {
       const message =
         err instanceof Error ? err.message : "Something went wrong";
 
-      // Check if it's a duplicate error with move option
       if (message.startsWith("DUPLICATE:")) {
         const parts = message.split(":");
         const bookId = parts[1];
@@ -168,15 +152,7 @@ const AddBookModal: React.FC<AddBookModalProps> = ({
         status: destination,
         rating: destination === "read" && rating > 0 ? rating : undefined,
       });
-      // Reset and close
-      setTitle("");
-      setAuthor("");
-      setCoverUrl("");
-      setGenre("Manga");
-      setPageCount("");
-      setRating(0);
-      setDestination("read");
-      setDuplicateInfo(null);
+      resetForm();
       onClose();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to update book");
@@ -185,28 +161,11 @@ const AddBookModal: React.FC<AddBookModalProps> = ({
     }
   };
 
-  if (!isOpen) return null;
+  const handleClearDuplicate = () => setDuplicateInfo(null);
 
-  const destinations = [
-    {
-      key: "read" as const,
-      label: "Finished",
-      icon: CheckCircle2,
-      color: "bg-success-500",
-    },
-    {
-      key: "reading" as const,
-      label: "Reading",
-      icon: BookMarked,
-      color: "bg-accent-500",
-    },
-    {
-      key: "wishlist" as const,
-      label: "Wishlist",
-      icon: Heart,
-      color: "bg-primary-500",
-    },
-  ];
+  const canSubmit = title.trim() && author.trim();
+
+  if (!isOpen) return null;
 
   return (
     <AnimatePresence>
@@ -262,132 +221,19 @@ const AddBookModal: React.FC<AddBookModalProps> = ({
                   </div>
                 </div>
 
-                {/* Destination */}
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
-                    Where does this go?
-                  </label>
-                  <div className="grid grid-cols-3 gap-2">
-                    {destinations.map((dest) => {
-                      const Icon = dest.icon;
-                      return (
-                        <button
-                          key={dest.key}
-                          type="button"
-                          onClick={() => setDestination(dest.key)}
-                          className={`p-3 rounded-xl border-2 transition-all flex flex-col items-center gap-1 ${
-                            destination === dest.key
-                              ? "border-primary-500 bg-primary-50"
-                              : "border-slate-200 hover:border-slate-300"
-                          }`}
-                        >
-                          <Icon
-                            className={`w-5 h-5 ${destination === dest.key ? "text-primary-600" : "text-slate-400"}`}
-                          />
-                          <span
-                            className={`text-sm font-medium ${destination === dest.key ? "text-primary-600" : "text-slate-600"}`}
-                          >
-                            {dest.label}
-                          </span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Rating (only for finished) */}
-                {destination === "read" && (
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">
-                      Rating
-                    </label>
-                    <div className="flex gap-1">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <button
-                          key={star}
-                          type="button"
-                          onClick={() => setRating(star)}
-                          aria-label={`Rate ${star} star${star > 1 ? "s" : ""}`}
-                          aria-pressed={star <= rating}
-                          className="p-1 focus:outline-none focus:ring-2 focus:ring-star rounded"
-                        >
-                          <Star
-                            className={`w-8 h-8 transition-colors ${
-                              star <= rating
-                                ? "text-star fill-star"
-                                : "text-slate-200"
-                            }`}
-                          />
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Error message */}
-                {error && (
-                  <div className="flex items-center gap-2 p-3 bg-error-50 border border-error-200 rounded-xl text-red-700">
-                    <AlertCircle className="w-5 h-5 flex-shrink-0" />
-                    <p className="text-sm">{error}</p>
-                  </div>
-                )}
-
-                {/* Duplicate found */}
-                {duplicateInfo && (
-                  <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl">
-                    <div className="flex items-start gap-3">
-                      <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
-                      <div className="flex-1">
-                        <p className="text-sm text-amber-800 font-medium">
-                          This book is {getStatusLabel(duplicateInfo.currentStatus)}
-                        </p>
-                        <p className="text-sm text-amber-700 mt-1">
-                          Would you like to move it to {getStatusLabel(destination)}{" "}
-                          instead?
-                        </p>
-                        <div className="flex gap-2 mt-3">
-                          <button
-                            type="button"
-                            onClick={handleMoveBook}
-                            disabled={saving}
-                            className="btn btn-primary text-sm py-2"
-                          >
-                            {saving ? (
-                              <Loader2 className="w-4 h-4 animate-spin" />
-                            ) : (
-                              <>Yes, move it</>
-                            )}
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => setDuplicateInfo(null)}
-                            className="btn btn-secondary text-sm py-2"
-                          >
-                            Cancel
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                <button
-                  type="submit"
-                  disabled={saving || !title.trim() || !author.trim() || !!duplicateInfo}
-                  className="btn btn-primary w-full"
-                >
-                  {saving ? (
-                    <>
-                      <Loader2 className="w-5 h-5 animate-spin" />
-                      Adding...
-                    </>
-                  ) : (
-                    <>
-                      <Plus className="w-5 h-5" />
-                      Add Book
-                    </>
-                  )}
-                </button>
+                <BookFormFooter
+                  destination={destination}
+                  onDestinationChange={setDestination}
+                  rating={rating}
+                  onRatingChange={setRating}
+                  error={error}
+                  duplicateInfo={duplicateInfo}
+                  onMoveBook={handleMoveBook}
+                  onClearDuplicate={handleClearDuplicate}
+                  saving={saving}
+                  canSubmit={!!canSubmit}
+                  getStatusLabel={getStatusLabel}
+                />
 
                 <p className="text-center text-xs text-slate-400">
                   Not the right book?{" "}
@@ -493,130 +339,19 @@ const AddBookModal: React.FC<AddBookModalProps> = ({
                       </div>
                     </div>
 
-                    {/* Destination */}
-                    <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-2">
-                        Add to:
-                      </label>
-                      <div className="grid grid-cols-3 gap-2">
-                        {destinations.map((dest) => {
-                          const Icon = dest.icon;
-                          return (
-                            <button
-                              key={dest.key}
-                              type="button"
-                              onClick={() => setDestination(dest.key)}
-                              className={`p-3 rounded-xl border-2 transition-all flex flex-col items-center gap-1 ${
-                                destination === dest.key
-                                  ? "border-primary-500 bg-primary-50"
-                                  : "border-slate-200 hover:border-slate-300"
-                              }`}
-                            >
-                              <Icon
-                                className={`w-5 h-5 ${destination === dest.key ? "text-primary-600" : "text-slate-400"}`}
-                              />
-                              <span
-                                className={`text-sm font-medium ${destination === dest.key ? "text-primary-600" : "text-slate-600"}`}
-                              >
-                                {dest.label}
-                              </span>
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </div>
-
-                    {/* Rating (only for finished) */}
-                    {destination === "read" && (
-                      <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">
-                          Rating
-                        </label>
-                        <div className="flex gap-1">
-                          {[1, 2, 3, 4, 5].map((star) => (
-                            <button
-                              key={star}
-                              type="button"
-                              onClick={() => setRating(star)}
-                              className="p-1"
-                            >
-                              <Star
-                                className={`w-8 h-8 transition-colors ${
-                                  star <= rating
-                                    ? "text-star fill-star"
-                                    : "text-slate-200"
-                                }`}
-                              />
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Error message */}
-                    {error && (
-                      <div className="flex items-center gap-2 p-3 bg-error-50 border border-error-200 rounded-xl text-red-700">
-                        <AlertCircle className="w-5 h-5 flex-shrink-0" />
-                        <p className="text-sm">{error}</p>
-                      </div>
-                    )}
-
-                    {/* Duplicate found */}
-                    {duplicateInfo && (
-                      <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl">
-                        <div className="flex items-start gap-3">
-                          <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
-                          <div className="flex-1">
-                            <p className="text-sm text-amber-800 font-medium">
-                              This book is {getStatusLabel(duplicateInfo.currentStatus)}
-                            </p>
-                            <p className="text-sm text-amber-700 mt-1">
-                              Would you like to move it to {getStatusLabel(destination)}{" "}
-                              instead?
-                            </p>
-                            <div className="flex gap-2 mt-3">
-                              <button
-                                type="button"
-                                onClick={handleMoveBook}
-                                disabled={saving}
-                                className="btn btn-primary text-sm py-2"
-                              >
-                                {saving ? (
-                                  <Loader2 className="w-4 h-4 animate-spin" />
-                                ) : (
-                                  <>Yes, move it</>
-                                )}
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => setDuplicateInfo(null)}
-                                className="btn btn-secondary text-sm py-2"
-                              >
-                                Cancel
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    <button
-                      type="submit"
-                      disabled={saving || !title.trim() || !author.trim() || !!duplicateInfo}
-                      className="btn btn-primary w-full"
-                    >
-                      {saving ? (
-                        <>
-                          <Loader2 className="w-5 h-5 animate-spin" />
-                          Adding...
-                        </>
-                      ) : (
-                        <>
-                          <Plus className="w-5 h-5" />
-                          Add Book
-                        </>
-                      )}
-                    </button>
+                    <BookFormFooter
+                      destination={destination}
+                      onDestinationChange={setDestination}
+                      rating={rating}
+                      onRatingChange={setRating}
+                      error={error}
+                      duplicateInfo={duplicateInfo}
+                      onMoveBook={handleMoveBook}
+                      onClearDuplicate={handleClearDuplicate}
+                      saving={saving}
+                      canSubmit={!!canSubmit}
+                      getStatusLabel={getStatusLabel}
+                    />
                   </>
                 )}
               </>

@@ -10,7 +10,7 @@ interface SectionHeaderProps {
   className?: string;
 }
 
-export const SectionHeader: React.FC<SectionHeaderProps> = ({
+const SectionHeader: React.FC<SectionHeaderProps> = ({
   title,
   action,
   className = "",

@@ -1,7 +1,13 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 import { auth } from "./auth";
-import { checkRateLimit } from "./lib/rateLimit";
+import {
+  requireAuth,
+  requireOwnership,
+  cleanupStorage,
+  checkLikeRateLimit,
+  filterUndefinedUpdates,
+} from "./lib/crud";
 
 // Get all published artworks (for public gallery)
 export const getPublished = query({
@@ -64,12 +70,11 @@ export const create = mutation({
     isPublished: v.boolean(),
   },
   handler: async (ctx, args) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) throw new Error("Not authenticated");
+    const userId = await requireAuth(ctx);
 
     return await ctx.db.insert("artworks", {
       ...args,
-      userId, // Track who added it
+      userId,
       likes: 0,
       createdAt: Date.now(),
     });
@@ -89,18 +94,10 @@ export const update = mutation({
     isPublished: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) throw new Error("Not authenticated");
-
-    const artwork = await ctx.db.get(args.id);
-    if (!artwork) throw new Error("Artwork not found");
-    if (artwork.userId !== userId) throw new Error("Not authorized");
+    await requireOwnership(ctx, "artworks", args.id);
 
     const { id, ...updates } = args;
-    const filteredUpdates = Object.fromEntries(
-      Object.entries(updates).filter(([, value]) => value !== undefined),
-    );
-    await ctx.db.patch(id, filteredUpdates);
+    await ctx.db.patch(id, filterUndefinedUpdates(updates));
   },
 });
 
@@ -108,18 +105,8 @@ export const update = mutation({
 export const remove = mutation({
   args: { id: v.id("artworks") },
   handler: async (ctx, args) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) throw new Error("Not authenticated");
-
-    const artwork = await ctx.db.get(args.id);
-    if (!artwork) throw new Error("Artwork not found");
-    if (artwork.userId !== userId) throw new Error("Not authorized");
-
-    // Delete from storage if exists
-    if (artwork.storageId) {
-      await ctx.storage.delete(artwork.storageId);
-    }
-
+    const artwork = await requireOwnership(ctx, "artworks", args.id);
+    await cleanupStorage(ctx, artwork.storageId);
     await ctx.db.delete(args.id);
   },
 });
@@ -128,16 +115,7 @@ export const remove = mutation({
 export const like = mutation({
   args: { id: v.id("artworks"), visitorId: v.string() },
   handler: async (ctx, args) => {
-    const allowed = await checkRateLimit(
-      ctx,
-      `like_${args.visitorId}`,
-      "likeArtwork",
-      10,
-      60 * 60 * 1000,
-    );
-    if (!allowed) {
-      throw new Error("Rate limit exceeded. Please try again later.");
-    }
+    await checkLikeRateLimit(ctx, args.visitorId, "likeArtwork");
 
     const artwork = await ctx.db.get(args.id);
     if (!artwork) throw new Error("Artwork not found");
@@ -162,8 +140,7 @@ export const createSeries = mutation({
     coverImageUrl: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) throw new Error("Not authenticated");
+    const userId = await requireAuth(ctx);
 
     return await ctx.db.insert("artSeries", {
       ...args,

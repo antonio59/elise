@@ -43,9 +43,4 @@ export function usePageMeta({
   }, [fullTitle, description, image, url]);
 }
 
-export const PageMeta: React.FC<PageMetaProps> = (props) => {
-  usePageMeta(props);
-  return null;
-};
 
-export default PageMeta;

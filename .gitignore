@@ -39,3 +39,4 @@ dist-ssr
 # Seed data (generated)
 seed-books*.json
 all-books.json
+.fallow/
