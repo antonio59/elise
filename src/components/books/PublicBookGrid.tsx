@@ -50,20 +50,7 @@ const PublicBookGrid: React.FC<PublicBookGridProps> = ({
   if (viewMode === "grid") {
     return (
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
-        {books.map(
-          (
-            book: {
-              _id: string;
-              title: string;
-              author: string;
-              coverUrl?: string;
-              coverImageUrl?: string | null;
-              coverStorageId?: string;
-              genre?: string;
-              rating?: number;
-            },
-            index: number,
-          ) => (
+        {books.map((book, index) => (
             <motion.div
               key={book._id}
               className="group relative book-card"
@@ -126,20 +113,7 @@ const PublicBookGrid: React.FC<PublicBookGridProps> = ({
 
   return (
     <div className="space-y-3">
-      {books.map(
-        (
-          book: {
-            _id: string;
-            title: string;
-            author: string;
-            coverUrl?: string;
-            coverImageUrl?: string | null;
-            coverStorageId?: string;
-            genre?: string;
-            rating?: number;
-          },
-          index: number,
-        ) => (
+      {books.map((book, index) => (
           <motion.div
             key={book._id}
             className="card p-4 flex gap-4 items-center hover:shadow-md transition-shadow"
