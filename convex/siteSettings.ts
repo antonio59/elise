@@ -1,6 +1,6 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
-import { isAdmin } from "./users";
+import { requireAdmin } from "./lib/crud";
 
 // Get site settings (public)
 export const get = query({
@@ -31,9 +31,7 @@ export const update = mutation({
     footerNote: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const admin = await isAdmin(ctx);
-    if (!admin) throw new Error("Not authorized");
-
+    await requireAdmin(ctx);
     const existing = await ctx.db.query("siteSettings").first();
 
     if (existing) {

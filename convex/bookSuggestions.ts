@@ -1,7 +1,7 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 import { auth } from "./auth";
-import { isAdmin } from "./users";
+import { requireAdmin } from "./lib/crud";
 import { checkRateLimit } from "./lib/rateLimit";
 import { findUserBookByTitleAuthor, findPendingSuggestion } from "./lib/books";
 
@@ -177,9 +177,7 @@ export const submit = mutation({
 export const approve = mutation({
   args: { id: v.id("bookSuggestions") },
   handler: async (ctx, args) => {
-    const admin = await isAdmin(ctx);
-    if (!admin) throw new Error("Not authorized");
-
+    await requireAdmin(ctx);
     await ctx.db.patch(args.id, {
       status: "approved",
       reviewedAt: Date.now(),
@@ -191,9 +189,7 @@ export const approve = mutation({
 export const reject = mutation({
   args: { id: v.id("bookSuggestions") },
   handler: async (ctx, args) => {
-    const admin = await isAdmin(ctx);
-    if (!admin) throw new Error("Not authorized");
-
+    await requireAdmin(ctx);
     await ctx.db.patch(args.id, {
       status: "rejected",
       reviewedAt: Date.now(),
@@ -205,9 +201,7 @@ export const reject = mutation({
 export const remove = mutation({
   args: { id: v.id("bookSuggestions") },
   handler: async (ctx, args) => {
-    const admin = await isAdmin(ctx);
-    if (!admin) throw new Error("Not authorized");
-
+    await requireAdmin(ctx);
     await ctx.db.delete(args.id);
   },
 });
@@ -216,8 +210,7 @@ export const remove = mutation({
 export const addToBooks = mutation({
   args: { id: v.id("bookSuggestions") },
   handler: async (ctx, args) => {
-    const admin = await isAdmin(ctx);
-    if (!admin) throw new Error("Not authorized");
+    await requireAdmin(ctx);
 
     const suggestion = await ctx.db.get(args.id);
     if (!suggestion) throw new Error("Suggestion not found");

@@ -2,6 +2,7 @@ import type { QueryCtx, MutationCtx } from "../_generated/server";
 import { auth } from "../auth";
 import { checkRateLimit } from "./rateLimit";
 import type { Id } from "../_generated/dataModel";
+import { isAdmin } from "../users";
 
 export async function requireAuth(
   ctx: QueryCtx | MutationCtx,
@@ -21,6 +22,11 @@ export async function requireOwnership(
   const userId = await requireAuth(ctx);
   if (item.userId !== userId) throw new Error("Not authorized");
   return item as { userId: Id<"users">; storageId?: Id<"_storage"> };
+}
+
+export async function requireAdmin(ctx: QueryCtx): Promise<void> {
+  const admin = await isAdmin(ctx);
+  if (!admin) throw new Error("Not authorized");
 }
 
 export async function cleanupStorage(
