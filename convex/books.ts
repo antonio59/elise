@@ -1,20 +1,15 @@
-import { query, mutation, type QueryCtx } from "./_generated/server";
-import { findUserBookByTitleAuthor, requireBookOwner } from "./lib/books";
+import { query, mutation } from "./_generated/server";
+import {
+  findUserBookByTitleAuthor,
+  requireBookOwner,
+  getUserBooks,
+  withCoverUrls,
+  getAllBooks,
+} from "./lib/books";
 import { v } from "convex/values";
 import { auth } from "./auth";
-import type { Doc } from "./_generated/dataModel";
 import { checkRateLimit } from "./lib/rateLimit";
-
-async function withCoverUrls(ctx: QueryCtx, books: Doc<"books">[]) {
-  return Promise.all(
-    books.map(async (b) => ({
-      ...b,
-      coverImageUrl: b.coverStorageId
-        ? await ctx.storage.getUrl(b.coverStorageId)
-        : null,
-    })),
-  );
-}
+import { bookBaseFields, bookDetailFields, bookStatusField } from "./lib/validators";
 
 // Get all books for authenticated user
 export const getMyBooks = query({
@@ -22,11 +17,7 @@ export const getMyBooks = query({
   handler: async (ctx) => {
     const userId = await auth.getUserId(ctx);
     if (!userId) return [];
-    const books = await ctx.db
-      .query("books")
-      .withIndex("by_user", (q) => q.eq("userId", userId))
-      .order("desc")
-      .collect();
+    const books = await getUserBooks(ctx, userId);
     return withCoverUrls(ctx, books);
   },
 });
@@ -58,8 +49,8 @@ export const getByStatus = query({
 export const getReadBooks = query({
   args: {},
   handler: async (ctx) => {
-    const allBooks = await ctx.db.query("books").collect();
-    return withCoverUrls(ctx, allBooks.filter((b) => b.status === "read" || b.status === "reading"));
+    const books = await getAllBooks(ctx);
+    return withCoverUrls(ctx, books.filter((b) => b.status === "read" || b.status === "reading"));
   },
 });
 
@@ -67,8 +58,8 @@ export const getReadBooks = query({
 export const getWishlist = query({
   args: {},
   handler: async (ctx) => {
-    const allBooks = await ctx.db.query("books").order("desc").collect();
-    return withCoverUrls(ctx, allBooks.filter((b) => b.status === "wishlist"));
+    const books = await getAllBooks(ctx);
+    return withCoverUrls(ctx, books.filter((b) => b.status === "wishlist"));
   },
 });
 
@@ -76,8 +67,8 @@ export const getWishlist = query({
 export const getFavorites = query({
   args: {},
   handler: async (ctx) => {
-    const allBooks = await ctx.db.query("books").collect();
-    return withCoverUrls(ctx, allBooks.filter((b) => b.isFavorite));
+    const books = await getAllBooks(ctx);
+    return withCoverUrls(ctx, books.filter((b) => b.isFavorite));
   },
 });
 
@@ -132,22 +123,9 @@ export const add = mutation({
   args: {
     title: v.string(),
     author: v.string(),
-    coverUrl: v.optional(v.string()),
-    isbn: v.optional(v.string()),
-    genre: v.optional(v.string()),
-    series: v.optional(v.string()),
-    pageCount: v.optional(v.number()),
-    description: v.optional(v.string()),
-    status: v.union(
-      v.literal("reading"),
-      v.literal("read"),
-      v.literal("wishlist"),
-    ),
-    rating: v.optional(v.number()),
-    review: v.optional(v.string()),
-    isFavorite: v.optional(v.boolean()),
-    giftedBy: v.optional(v.string()),
-    moodTags: v.optional(v.array(v.string())),
+    ...bookBaseFields,
+    ...bookDetailFields,
+    ...bookStatusField,
   },
   handler: async (ctx, args) => {
     const userId = await auth.getUserId(ctx);
@@ -194,20 +172,12 @@ export const update = mutation({
     id: v.id("books"),
     title: v.optional(v.string()),
     author: v.optional(v.string()),
-    coverUrl: v.optional(v.string()),
-    genre: v.optional(v.string()),
-    series: v.optional(v.string()),
-    pageCount: v.optional(v.number()),
+    ...bookBaseFields,
     pagesRead: v.optional(v.number()),
-    description: v.optional(v.string()),
+    ...bookDetailFields,
     status: v.optional(
       v.union(v.literal("reading"), v.literal("read"), v.literal("wishlist")),
     ),
-    rating: v.optional(v.number()),
-    review: v.optional(v.string()),
-    isFavorite: v.optional(v.boolean()),
-    giftedBy: v.optional(v.string()),
-    moodTags: v.optional(v.array(v.string())),
   },
   handler: async (ctx, args) => {
     const book = await requireBookOwner(ctx, args.id);

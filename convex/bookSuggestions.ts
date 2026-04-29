@@ -4,6 +4,7 @@ import { auth } from "./auth";
 import { requireAdmin } from "./lib/crud";
 import { checkRateLimit } from "./lib/rateLimit";
 import { findUserBookByTitleAuthor, findPendingSuggestion } from "./lib/books";
+import { bookSuggestionFields } from "./lib/validators";
 
 // Get all suggestions (for admin)
 export const getAll = query({
@@ -90,13 +91,7 @@ export const checkDuplicate = query({
 // Submit a book suggestion (public - no auth required)
 export const submit = mutation({
   args: {
-    title: v.string(),
-    author: v.string(),
-    coverUrl: v.optional(v.string()),
-    suggestedBy: v.string(),
-    suggestedByEmail: v.optional(v.string()),
-    reason: v.optional(v.string()),
-    genre: v.optional(v.string()),
+    ...bookSuggestionFields,
     visitorId: v.string(),
   },
   handler: async (ctx, args) => {

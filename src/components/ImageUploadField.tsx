@@ -1,5 +1,6 @@
 import React, { useRef } from "react";
 import { X, Image as ImageIcon } from "lucide-react";
+import { validateImageFile } from "../lib/imageValidation";
 
 interface ImageUploadFieldProps {
   preview: string | null;
@@ -19,12 +20,9 @@ const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    if (!file.type.startsWith("image/")) {
-      alert("Please select an image file (JPG, PNG, or WebP).");
-      return;
-    }
-    if (file.size > maxSizeMB * 1024 * 1024) {
-      alert(`Image must be less than ${maxSizeMB}MB`);
+    const error = validateImageFile(file, maxSizeMB);
+    if (error) {
+      alert(error);
       return;
     }
     const reader = new FileReader();

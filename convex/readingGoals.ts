@@ -1,6 +1,7 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 import { auth } from "./auth";
+import { getReadBooksForUser } from "./lib/books";
 
 // Get current year's reading goal
 export const getCurrentGoal = query({
@@ -41,10 +42,7 @@ export const getGoalProgress = query({
       .first();
 
     // Get read books for this user
-    const readBooks = await ctx.db
-      .query("books")
-      .withIndex("by_user_status", (q) => q.eq("userId", userId).eq("status", "read"))
-      .collect();
+    const readBooks = await getReadBooksForUser(ctx, userId);
     const booksThisYear = readBooks.filter(
       (b) =>
         b.finishedAt &&

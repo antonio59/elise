@@ -21,18 +21,13 @@ import { usePageAnnouncement } from "../components/AccessibleAnnouncer";
 import { usePageMeta } from "../components/PageMeta";
 import ImageUploadField from "../components/ImageUploadField";
 import ModalShell from "../components/ModalShell";
-import PhotoFormBody from "../components/photos/PhotoFormBody";
-import { useTagInput } from "../hooks/useTagInput";
+import PhotoEditorForm from "../components/photos/PhotoEditorForm";
 import GalleryFilterTabs from "../components/GalleryFilterTabs";
 
 type Photo = Doc<"photos">;
 type PhotoAlbum = Doc<"photoAlbums">;
 
-const POPULAR_TAGS = [
-  "animals", "nature", "portrait", "landscape", "architecture",
-  "food", "travel", "sunset", "flowers", "birds", "cats", "dogs",
-  "ocean", "mountains", "city", "macro", "black & white", "street",
-];
+
 
 const MyPhotos: React.FC = () => {
   usePageAnnouncement("My Photos");
@@ -403,44 +398,6 @@ const EditPhotoModal: React.FC<EditPhotoModalProps> = ({
   onClose,
   onSave,
 }) => {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [location, setLocation] = useState("");
-  const [albumId, setAlbumId] = useState<string | "">("");
-  const [isPublished, setIsPublished] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const { tags, setTags, tagInput, setTagInput, addTag, removeTag } = useTagInput();
-
-  React.useEffect(() => {
-    if (photo) {
-      setTitle(photo.title);
-      setDescription(photo.description || "");
-      setLocation(photo.location || "");
-      setTags(photo.tags || []);
-      setAlbumId(photo.albumId || "");
-      setIsPublished(photo.isPublished);
-    }
-  }, [photo]);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!title.trim()) return;
-
-    setSaving(true);
-    try {
-      await onSave({
-        title: title.trim(),
-        description: description.trim() || undefined,
-        location: location.trim() || undefined,
-        tags: tags.length > 0 ? tags : undefined,
-        albumId: (albumId as Id<"photoAlbums">) || undefined,
-        isPublished,
-      });
-    } finally {
-      setSaving(false);
-    }
-  };
-
   if (!photo) return null;
 
   return (
@@ -450,45 +407,25 @@ const EditPhotoModal: React.FC<EditPhotoModalProps> = ({
       closeLabel="Close edit modal"
       onClose={onClose}
     >
-      <form onSubmit={handleSubmit} className="p-6 space-y-4">
+      <PhotoEditorForm
+        initialValues={{
+          title: photo.title,
+          description: photo.description || undefined,
+          location: photo.location || undefined,
+          tags: photo.tags,
+          albumId: photo.albumId || undefined,
+          isPublished: photo.isPublished,
+        }}
+        albums={albums}
+        onSubmit={(data) => onSave(data as Parameters<typeof onSave>[0])}
+        actionLabel="Save Changes"
+      >
         <img
           src={photo.imageUrl}
           alt={photo.title}
           className="w-full h-48 object-contain bg-slate-100 rounded-xl"
         />
-        <PhotoFormBody
-          title={title}
-          onTitleChange={setTitle}
-          description={description}
-          onDescriptionChange={setDescription}
-          location={location}
-          onLocationChange={setLocation}
-          tags={tags}
-          tagInput={tagInput}
-          onTagInputChange={setTagInput}
-          onAddTag={addTag}
-          onRemoveTag={removeTag}
-          onSelectPopularTag={(tag) => setTags((prev) => [...prev, tag])}
-          albumId={albumId}
-          onAlbumIdChange={setAlbumId}
-          albums={albums}
-          isPublished={isPublished}
-          onIsPublishedChange={setIsPublished}
-          popularTags={POPULAR_TAGS}
-        />
-        <button
-          type="submit"
-          disabled={saving || !title.trim()}
-          className="btn btn-gradient w-full"
-        >
-          {saving ? (
-            <Loader2 className="w-5 h-5 animate-spin" />
-          ) : (
-            <Pencil className="w-5 h-5" />
-          )}
-          {saving ? "Saving..." : "Save Changes"}
-        </button>
-      </form>
+      </PhotoEditorForm>
     </ModalShell>
   );
 };
@@ -515,43 +452,8 @@ const AddPhotoModal: React.FC<AddPhotoModalProps> = ({
   albums,
   onAdd,
 }) => {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [location, setLocation] = useState("");
-  const [albumId, setAlbumId] = useState("");
-  const [isPublished, setIsPublished] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const { tags, setTags, tagInput, setTagInput, addTag, removeTag } = useTagInput();
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!title.trim() || !imageUrl) return;
-
-    setSaving(true);
-    try {
-      await onAdd({
-        title: title.trim(),
-        description: description.trim() || undefined,
-        imageUrl,
-        location: location.trim() || undefined,
-        tags: tags.length > 0 ? tags : undefined,
-        albumId: (albumId as Id<"photoAlbums">) || undefined,
-        isPublished,
-      });
-      setTitle("");
-      setDescription("");
-      setImageUrl("");
-      setImagePreview(null);
-      setLocation("");
-      setTags([]);
-      setAlbumId("");
-      setIsPublished(true);
-    } finally {
-      setSaving(false);
-    }
-  };
 
   if (!isOpen) return null;
 
@@ -562,7 +464,24 @@ const AddPhotoModal: React.FC<AddPhotoModalProps> = ({
       closeLabel="Close upload modal"
       onClose={onClose}
     >
-      <form onSubmit={handleSubmit} className="p-6 space-y-4">
+      <PhotoEditorForm
+        albums={albums}
+        onSubmit={(data) =>
+          onAdd({
+            ...data,
+            imageUrl,
+            albumId: data.albumId as Id<"photoAlbums"> | undefined,
+          })
+        }
+        actionLabel="Upload Photo"
+        actionIcon="upload"
+        submitDisabled={!imageUrl}
+        onValidate={() => !!imageUrl}
+        onSuccess={() => {
+          setImageUrl("");
+          setImagePreview(null);
+        }}
+      >
         <div>
           <label className="block text-sm font-medium text-slate-700 mb-2">
             Photo Image *
@@ -579,42 +498,7 @@ const AddPhotoModal: React.FC<AddPhotoModalProps> = ({
             }}
           />
         </div>
-        <PhotoFormBody
-          title={title}
-          onTitleChange={setTitle}
-          description={description}
-          onDescriptionChange={setDescription}
-          location={location}
-          onLocationChange={setLocation}
-          tags={tags}
-          tagInput={tagInput}
-          onTagInputChange={setTagInput}
-          onAddTag={addTag}
-          onRemoveTag={removeTag}
-          onSelectPopularTag={(tag) => setTags((prev) => [...prev, tag])}
-          albumId={albumId}
-          onAlbumIdChange={setAlbumId}
-          albums={albums}
-          isPublished={isPublished}
-          onIsPublishedChange={setIsPublished}
-          popularTags={POPULAR_TAGS}
-        />
-        <button
-          type="submit"
-          disabled={saving || !title.trim() || !imageUrl}
-          className="btn btn-gradient w-full"
-        >
-          {saving ? (
-            <>
-              <Loader2 className="w-5 h-5 animate-spin" /> Uploading...
-            </>
-          ) : (
-            <>
-              <Upload className="w-5 h-5" /> Upload Photo
-            </>
-          )}
-        </button>
-      </form>
+      </PhotoEditorForm>
     </ModalShell>
   );
 };

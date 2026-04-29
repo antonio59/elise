@@ -1,16 +1,7 @@
 import { internalQuery, internalAction } from "./_generated/server";
 import { internal } from "./_generated/api";
 import { Resend } from "resend";
-import { getEmailConfig } from "./lib/email";
-
-function escapeHtml(text: string): string {
-  return text
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
-}
+import { getEmailConfig, escapeHtml } from "./lib/email";
 
 function msAgo(days: number): number {
   return Date.now() - days * 24 * 60 * 60 * 1000;

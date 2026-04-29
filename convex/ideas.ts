@@ -1,6 +1,7 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 import { auth } from "./auth";
+import { requireOwnership } from "./lib/crud";
 
 export const create = mutation({
   args: {
@@ -36,12 +37,9 @@ export const update = mutation({
     isArchived: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) throw new Error("Not authenticated");
-    const idea = await ctx.db.get(args.id);
-    if (!idea || idea.userId !== userId) throw new Error("Not found");
+    await requireOwnership(ctx, "ideas", args.id);
 
-    const updates: Partial<typeof idea> = {};
+    const updates: Record<string, unknown> = {};
     if (args.title !== undefined) updates.title = args.title.trim();
     if (args.content !== undefined) updates.content = args.content.trim();
     if (args.type !== undefined) updates.type = args.type;
@@ -55,10 +53,7 @@ export const update = mutation({
 export const remove = mutation({
   args: { id: v.id("ideas") },
   handler: async (ctx, args) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) throw new Error("Not authenticated");
-    const idea = await ctx.db.get(args.id);
-    if (!idea || idea.userId !== userId) throw new Error("Not found");
+    await requireOwnership(ctx, "ideas", args.id);
     await ctx.db.delete(args.id);
   },
 });

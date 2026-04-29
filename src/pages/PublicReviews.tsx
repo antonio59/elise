@@ -4,11 +4,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Star, MessageCircle } from "lucide-react";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
-import ReactionBar from "../components/ReactionBar";
 import PageHeader from "../components/PageHeader";
 import { usePageAnnouncement } from "../components/AccessibleAnnouncer";
 import { usePageMeta } from "../components/PageMeta";
 import StarRating from "../components/StarRating";
+import BookMoodTags from "../components/books/BookMoodTags";
 
 interface Book {
   _id: string;
@@ -162,21 +162,7 @@ const PublicReviews: React.FC = () => {
                         No written review — just a rating.
                       </p>
                     )}
-                    {book.moodTags && book.moodTags.length > 0 && (
-                      <div className="flex flex-wrap gap-1 mt-2">
-                        {book.moodTags.map((tag: string) => (
-                          <span
-                            key={tag}
-                            className="text-[10px] px-1.5 py-0.5 bg-slate-100 text-slate-500 rounded-full"
-                          >
-                            #{tag}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                    <div className="mt-3 pt-3 border-t border-slate-100">
-                      <ReactionBar targetType="book" targetId={book._id} />
-                    </div>
+                    <BookMoodTags moodTags={book.moodTags} bookId={book._id} />
                   </div>
                 </div>
               </div>
@@ -270,21 +256,7 @@ const PublicReviews: React.FC = () => {
                           No written review — just a rating.
                         </p>
                       )}
-                      {book.moodTags && book.moodTags.length > 0 && (
-                        <div className="flex flex-wrap gap-1 mt-3">
-                          {book.moodTags.map((tag: string) => (
-                            <span
-                              key={tag}
-                              className="text-[10px] px-1.5 py-0.5 bg-slate-100 text-slate-500 rounded-full"
-                            >
-                              #{tag}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-                      <div className="mt-3 pt-3 border-t border-slate-100">
-                        <ReactionBar targetType="book" targetId={book._id} />
-                      </div>
+                      <BookMoodTags moodTags={book.moodTags} bookId={book._id} />
                     </motion.div>
                   )}
                 </AnimatePresence>

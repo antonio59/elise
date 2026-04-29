@@ -1,6 +1,6 @@
 import { query, mutation } from "./_generated/server";
-import { v } from "convex/values";
 import { requireAdmin } from "./lib/crud";
+import { siteSettingFields } from "./lib/validators";
 
 // Get site settings (public)
 export const get = query({
@@ -23,12 +23,7 @@ export const get = query({
 // Update site settings (admin only)
 export const update = mutation({
   args: {
-    siteName: v.optional(v.string()),
-    heroTitle: v.optional(v.string()),
-    heroSubtitle: v.optional(v.string()),
-    heroDescription: v.optional(v.string()),
-    footerTagline: v.optional(v.string()),
-    footerNote: v.optional(v.string()),
+    ...siteSettingFields,
   },
   handler: async (ctx, args) => {
     await requireAdmin(ctx);

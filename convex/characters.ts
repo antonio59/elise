@@ -1,6 +1,7 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 import { auth } from "./auth";
+import { requireOwnership } from "./lib/crud";
 
 export const create = mutation({
   args: {
@@ -43,12 +44,9 @@ export const update = mutation({
     writingIds: v.optional(v.array(v.id("writings"))),
   },
   handler: async (ctx, args) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) throw new Error("Not authenticated");
-    const char = await ctx.db.get(args.id);
-    if (!char || char.userId !== userId) throw new Error("Not found");
+    await requireOwnership(ctx, "characters", args.id);
 
-    const updates: Partial<typeof char> = { updatedAt: Date.now() };
+    const updates: Record<string, unknown> = { updatedAt: Date.now() };
     if (args.name !== undefined) updates.name = args.name.trim();
     if (args.description !== undefined) updates.description = args.description.trim();
     if (args.personality !== undefined) updates.personality = args.personality?.trim();
@@ -64,10 +62,7 @@ export const update = mutation({
 export const remove = mutation({
   args: { id: v.id("characters") },
   handler: async (ctx, args) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) throw new Error("Not authenticated");
-    const char = await ctx.db.get(args.id);
-    if (!char || char.userId !== userId) throw new Error("Not found");
+    await requireOwnership(ctx, "characters", args.id);
     await ctx.db.delete(args.id);
   },
 });

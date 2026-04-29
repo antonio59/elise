@@ -1,16 +1,10 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 import { auth } from "./auth";
+import { quoteFields } from "./lib/validators";
 
 export const create = mutation({
-  args: {
-    bookId: v.optional(v.id("books")),
-    bookTitle: v.optional(v.string()),
-    text: v.string(),
-    page: v.optional(v.number()),
-    chapter: v.optional(v.string()),
-    isPublic: v.boolean(),
-  },
+  args: quoteFields,
   handler: async (ctx, args) => {
     const userId = await auth.getUserId(ctx);
     if (!userId) throw new Error("Not authenticated");

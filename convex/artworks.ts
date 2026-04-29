@@ -1,6 +1,7 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 import { auth } from "./auth";
+import type { Id } from "./_generated/dataModel";
 import {
   requireAuth,
   requireOwnership,
@@ -8,6 +9,7 @@ import {
   checkLikeRateLimit,
   filterUndefinedUpdates,
 } from "./lib/crud";
+import { artworkFields, seriesAlbumFields } from "./lib/validators";
 
 // Get all published artworks (for public gallery)
 export const getPublished = query({
@@ -58,17 +60,7 @@ export const getById = query({
 
 // Create artwork (requires auth)
 export const create = mutation({
-  args: {
-    title: v.string(),
-    description: v.optional(v.string()),
-    imageUrl: v.string(),
-    storageId: v.optional(v.id("_storage")),
-    style: v.optional(v.string()),
-    medium: v.optional(v.string()),
-    seriesId: v.optional(v.id("artSeries")),
-    tags: v.optional(v.array(v.string())),
-    isPublished: v.boolean(),
-  },
+  args: artworkFields,
   handler: async (ctx, args) => {
     const userId = await requireAuth(ctx);
 
@@ -106,7 +98,7 @@ export const remove = mutation({
   args: { id: v.id("artworks") },
   handler: async (ctx, args) => {
     const artwork = await requireOwnership(ctx, "artworks", args.id);
-    await cleanupStorage(ctx, artwork.storageId);
+    await cleanupStorage(ctx, artwork.storageId as Id<"_storage"> | undefined);
     await ctx.db.delete(args.id);
   },
 });
@@ -134,11 +126,7 @@ export const getMySeries = query({
 
 // Create art series (requires auth)
 export const createSeries = mutation({
-  args: {
-    title: v.string(),
-    description: v.optional(v.string()),
-    coverImageUrl: v.optional(v.string()),
-  },
+  args: seriesAlbumFields,
   handler: async (ctx, args) => {
     const userId = await requireAuth(ctx);
 

@@ -1,8 +1,8 @@
 import type { QueryCtx, MutationCtx } from "../_generated/server";
 import { auth } from "../auth";
 import { checkRateLimit } from "./rateLimit";
-import type { Id } from "../_generated/dataModel";
-import { isAdmin } from "../users";
+import type { Doc, Id } from "../_generated/dataModel";
+import { isAdmin } from "./admin";
 
 export async function requireAuth(
   ctx: QueryCtx | MutationCtx,
@@ -14,14 +14,14 @@ export async function requireAuth(
 
 export async function requireOwnership(
   ctx: MutationCtx,
-  tableName: "artworks" | "photos" | "photoAlbums",
+  tableName: "artworks" | "photos" | "photoAlbums" | "characters" | "writings" | "ideas",
   id: Id<typeof tableName>,
-): Promise<{ userId: Id<"users">; storageId?: Id<"_storage"> }> {
+): Promise<Record<string, unknown> & { userId: Id<"users"> }> {
   const item = await ctx.db.get(id);
   if (!item) throw new Error(`${tableName.slice(0, -1)} not found`);
   const userId = await requireAuth(ctx);
   if (item.userId !== userId) throw new Error("Not authorized");
-  return item as { userId: Id<"users">; storageId?: Id<"_storage"> };
+  return item as Record<string, unknown> & { userId: Id<"users"> };
 }
 
 export async function requireAdmin(ctx: QueryCtx): Promise<void> {
@@ -108,4 +108,17 @@ export async function computeStreak(dates: Set<string>): Promise<{
   }
 
   return { currentStreak, bestStreak, checkedInToday, totalDays: dates.size };
+}
+
+
+export async function requireProfile(
+  ctx: QueryCtx | MutationCtx,
+): Promise<Doc<"userProfiles">> {
+  const userId = await requireAuth(ctx);
+  const profile = await ctx.db
+    .query("userProfiles")
+    .withIndex("by_userId", (q) => q.eq("userId", userId))
+    .first();
+  if (!profile) throw new Error("Profile not found");
+  return profile;
 }

@@ -3,51 +3,7 @@ import { useConvex } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Search, Loader2, BookOpen, Plus } from "lucide-react";
 
-// Google Books categories → our genres
-const CATEGORY_MAP: Record<string, string> = {
-  // Fiction subgenres
-  "fantasy": "Fantasy",
-  "science fiction": "Sci-Fi",
-  "sci-fi": "Sci-Fi",
-  "romance": "Romance",
-  "mystery": "Mystery",
-  "horror": "Horror",
-  "action": "Action",
-  "adventure": "Action",
-  "comedy": "Comedy",
-  "humor": "Comedy",
-  "drama": "Drama",
-  "slice of life": "Slice of Life",
-  "manga": "Manga",
-  "manhwa": "Manhwa",
-  "webtoon": "Webtoon",
-  "light novel": "Light Novel",
-  "graphic novel": "Manga",
-  "comic": "Manga",
-  // Broad → specific
-  "young adult fiction": "Drama",
-  "young adult romance": "Romance",
-  "young adult fantasy": "Fantasy",
-  "juvenile fiction": "Drama",
-  "juvenile fantasy": "Fantasy",
-  "paranormal": "Horror",
-  "thriller": "Mystery",
-  "suspense": "Mystery",
-  "detective": "Mystery",
-  "crime": "Mystery",
-  "cozy": "Slice of Life",
-  "coming of age": "Drama",
-  "contemporary": "Slice of Life",
-  "literary fiction": "Drama",
-  "historical": "Drama",
-  "dark fantasy": "Fantasy",
-  "urban fantasy": "Fantasy",
-  "paranormal romance": "Romance",
-  "romantic comedy": "Romance",
-  "romantasy": "Romance",
-  "psychological": "Drama",
-  "realistic fiction": "Slice of Life",
-};
+
 
 // Keyword-based genre detection from description
 function detectGenreFromText(text: string): string {
@@ -97,18 +53,11 @@ function detectGenreFromText(text: string): string {
   return "Other";
 }
 
+import { mapCategoryToGenre as baseMapCategoryToGenre } from "./discover/discoverHelpers";
+
 function mapCategoryToGenre(categories: string[] | undefined, description?: string): string {
-  // First try exact category match
-  if (categories) {
-    for (const cat of categories) {
-      const lower = cat.toLowerCase().trim();
-      if (CATEGORY_MAP[lower]) return CATEGORY_MAP[lower];
-      for (const [key, genre] of Object.entries(CATEGORY_MAP)) {
-        if (lower.includes(key)) return genre;
-      }
-    }
-  }
-  // Fall back to description keyword detection
+  const genre = baseMapCategoryToGenre(categories ?? []);
+  if (genre !== "Other") return genre;
   if (description) {
     return detectGenreFromText(description);
   }

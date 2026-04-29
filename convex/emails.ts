@@ -1,15 +1,7 @@
 import { action } from "./_generated/server";
 import { v } from "convex/values";
 import { Resend } from "resend";
-
-function escapeHtml(text: string): string {
-  return text
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
-}
+import { escapeHtml } from "./lib/email";
 
 // Send notification email when a book is suggested
 export const sendSuggestionNotification = action({

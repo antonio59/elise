@@ -1,20 +1,12 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 import { auth } from "./auth";
-
-// Helper: check if current user has admin role
-export async function isAdmin(ctx: { db: unknown }): Promise<boolean> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const userId = await auth.getUserId(ctx as any);
-  if (!userId) return false;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const profile = await (ctx as any).db
-    .query("userProfiles")
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    .withIndex("by_userId", (q: any) => q.eq(q.field("userId"), userId))
-    .first();
-  return profile?.role === "admin";
-}
+import {
+  userProfileOptionalFields,
+  userProfileExtendedFields,
+} from "./lib/validators";
+import { requireProfile } from "./lib/crud";
+export { isAdmin } from "./lib/admin";
 
 // Get current authenticated user
 export const getCurrentUser = query({
@@ -60,11 +52,9 @@ export const getProfile = query({
 export const createProfile = mutation({
   args: {
     name: v.string(),
-    username: v.optional(v.string()),
+    ...userProfileOptionalFields,
     isParent: v.boolean(),
-    theme: v.optional(v.string()),
-    yearlyBookGoal: v.optional(v.number()),
-    notifications: v.optional(v.boolean()),
+    ...userProfileExtendedFields,
   },
   handler: async (ctx, args) => {
     const userId = await auth.getUserId(ctx);
@@ -99,44 +89,11 @@ export const createProfile = mutation({
 export const updateProfile = mutation({
   args: {
     name: v.optional(v.string()),
-    username: v.optional(v.string()),
-    avatarUrl: v.optional(v.string()),
-    avatarStorageId: v.optional(v.id("_storage")),
-    bio: v.optional(v.string()),
-    favoriteGenres: v.optional(v.array(v.string())),
-    readingGoal: v.optional(v.string()),
-    theme: v.optional(
-      v.union(
-        v.literal("editorial"),
-        v.literal("sakura"),
-        v.literal("lavender"),
-        v.literal("midnight"),
-        v.literal("sunset"),
-        v.literal("botanical"),
-        v.literal("berry"),
-        v.literal("light"),
-        v.literal("dark"),
-        v.literal("kawaii"),
-      ),
-    ),
-    yearlyBookGoal: v.optional(v.number()),
-    notifications: v.optional(v.boolean()),
-    favoriteBook: v.optional(v.string()),
-    rereads: v.optional(v.array(v.string())),
-    favoriteQuote: v.optional(v.string()),
-    funFact: v.optional(v.string()),
-    currentlyReading: v.optional(v.string()),
+    ...userProfileOptionalFields,
+    ...userProfileExtendedFields,
   },
   handler: async (ctx, args) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) throw new Error("Not authenticated");
-
-    const profile = await ctx.db
-      .query("userProfiles")
-      .withIndex("by_userId", (q) => q.eq("userId", userId))
-      .first();
-
-    if (!profile) throw new Error("Profile not found");
+    const profile = await requireProfile(ctx);
 
     const filteredUpdates = Object.fromEntries(
       Object.entries(args).filter(([, value]) => value !== undefined),
@@ -149,15 +106,7 @@ export const updateProfile = mutation({
 export const setOnboardingSeen = mutation({
   args: {},
   handler: async (ctx) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) throw new Error("Not authenticated");
-
-    const profile = await ctx.db
-      .query("userProfiles")
-      .withIndex("by_userId", (q) => q.eq("userId", userId))
-      .first();
-
-    if (!profile) throw new Error("Profile not found");
+    const profile = await requireProfile(ctx);
 
     await ctx.db.patch(profile._id, { hasSeenOnboarding: true });
   },

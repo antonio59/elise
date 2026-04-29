@@ -2,6 +2,45 @@ import type { QueryCtx } from "../_generated/server";
 import type { Doc, Id } from "../_generated/dataModel";
 import { requireAuth } from "./crud";
 
+export async function withCoverUrls(
+  ctx: QueryCtx,
+  books: Doc<"books">[],
+): Promise<(Doc<"books"> & { coverImageUrl: string | null })[]> {
+  return Promise.all(
+    books.map(async (b) => ({
+      ...b,
+      coverImageUrl: b.coverStorageId
+        ? await ctx.storage.getUrl(b.coverStorageId)
+        : null,
+    })),
+  );
+}
+
+export async function getUserBooks(
+  ctx: QueryCtx,
+  userId: Id<"users">,
+): Promise<Doc<"books">[]> {
+  return ctx.db
+    .query("books")
+    .withIndex("by_user", (q) => q.eq("userId", userId))
+    .order("desc")
+    .collect();
+}
+
+export async function getAllBooks(ctx: QueryCtx): Promise<Doc<"books">[]> {
+  return ctx.db.query("books").collect();
+}
+
+export async function getReadBooksForUser(
+  ctx: QueryCtx,
+  userId: Id<"users">,
+): Promise<Doc<"books">[]> {
+  return ctx.db
+    .query("books")
+    .withIndex("by_user_status", (q) => q.eq("userId", userId).eq("status", "read"))
+    .collect();
+}
+
 export async function findUserBookByTitleAuthor(
   ctx: QueryCtx,
   userId: Id<"users">,

@@ -5,6 +5,8 @@ import {
   parseGoogleBooksCoverUrl,
   type GoogleBooksItem,
 } from "./lib/googleBooks";
+import { getUserBooks, getReadBooksForUser } from "./lib/books";
+import { bookSwipeFields } from "./lib/validators";
 
 // Get user's reading profile for recommendations
 export const getReadingProfile = query({
@@ -13,10 +15,7 @@ export const getReadingProfile = query({
     const userId = await auth.getUserId(ctx);
     if (!userId) return null;
 
-    const readBooks = await ctx.db
-      .query("books")
-      .withIndex("by_user_status", (q) => q.eq("userId", userId).eq("status", "read"))
-      .collect();
+    const readBooks = await getReadBooksForUser(ctx, userId);
     const favoriteBooks = await ctx.db
       .query("books")
       .withIndex("by_user_favorite", (q) => q.eq("userId", userId).eq("isFavorite", true))
@@ -105,10 +104,7 @@ export const getExistingBookKeys = query({
     const userId = await auth.getUserId(ctx);
     if (!userId) return [];
 
-    const books = await ctx.db
-      .query("books")
-      .withIndex("by_user", (q) => q.eq("userId", userId))
-      .collect();
+    const books = await getUserBooks(ctx, userId);
 
     return books.map(
       (b) =>
@@ -164,13 +160,7 @@ export const fetchRecommendations = action({
 // Record a swipe decision
 export const recordSwipe = mutation({
   args: {
-    googleBookId: v.string(),
-    title: v.string(),
-    author: v.string(),
-    coverUrl: v.optional(v.string()),
-    genre: v.optional(v.string()),
-    pageCount: v.optional(v.number()),
-    description: v.optional(v.string()),
+    ...bookSwipeFields,
     action: v.union(v.literal("liked"), v.literal("passed")),
   },
   handler: async (ctx, args) => {
@@ -189,14 +179,7 @@ export const recordSwipe = mutation({
 
     const swipeId = await ctx.db.insert("bookSwipes", {
       userId,
-      googleBookId: args.googleBookId,
-      title: args.title,
-      author: args.author,
-      coverUrl: args.coverUrl,
-      genre: args.genre,
-      pageCount: args.pageCount,
-      description: args.description,
-      action: args.action,
+      ...args,
       addedToWishlist: false,
       createdAt: Date.now(),
     });

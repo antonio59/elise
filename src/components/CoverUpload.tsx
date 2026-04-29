@@ -1,5 +1,6 @@
 import React, { useRef } from "react";
 import { Upload, X, Image as ImageIcon } from "lucide-react";
+import { validateImageFile } from "../lib/imageValidation";
 
 interface CoverUploadProps {
   value: string;
@@ -12,16 +13,12 @@ const CoverUpload: React.FC<CoverUploadProps> = ({ value, onChange }) => {
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    if (!file.type.startsWith("image/")) {
-      alert("Please select an image file (JPG, PNG, or WebP).");
-      return;
-    }
-    if (file.size > 5 * 1024 * 1024) {
-      alert("Image must be smaller than 5MB.");
+    const error = validateImageFile(file, 5);
+    if (error) {
+      alert(error);
       return;
     }
 
-    // Read as data URL for preview + storage
     const reader = new FileReader();
     reader.onload = () => {
       onChange(reader.result as string);

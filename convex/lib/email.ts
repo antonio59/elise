@@ -1,3 +1,12 @@
+export function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 export function getEmailConfig(env: Record<string, string | undefined> | undefined, context: string): { apiKey: string; allowedEmails: string[] } | null {
   const apiKey = env?.RESEND_API_KEY;
   if (!apiKey) {

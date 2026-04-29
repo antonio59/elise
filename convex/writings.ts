@@ -1,6 +1,9 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 import { auth } from "./auth";
+import { writingBaseFields } from "./lib/validators";
+import { requireAuth, requireOwnership } from "./lib/crud";
+import type { Id } from "./_generated/dataModel";
 
 // Get all published writings (for public page)
 export const getPublished = query({
@@ -98,18 +101,13 @@ export const getStats = query({
 // Create writing
 export const create = mutation({
   args: {
-    title: v.string(),
-    content: v.string(),
-    type: v.union(v.literal("poetry"), v.literal("story"), v.literal("journal")),
-    genre: v.optional(v.string()),
-    tags: v.optional(v.array(v.string())),
+    ...writingBaseFields,
     isPublished: v.boolean(),
     coverUrl: v.optional(v.string()),
     coverStorageId: v.optional(v.id("_storage")),
   },
   handler: async (ctx, args) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) throw new Error("Not authenticated");
+    const userId = await requireAuth(ctx);
 
     const wordCount = args.content.trim().split(/\s+/).filter(Boolean).length;
 
@@ -139,11 +137,7 @@ export const update = mutation({
     coverStorageId: v.optional(v.id("_storage")),
   },
   handler: async (ctx, args) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) throw new Error("Not authenticated");
-
-    const writing = await ctx.db.get(args.id);
-    if (!writing) throw new Error("Writing not found");
+    await requireOwnership(ctx, "writings", args.id);
 
     const { id, ...updates } = args;
     const patch: Record<string, unknown> = { updatedAt: Date.now() };
@@ -167,16 +161,10 @@ export const update = mutation({
 export const remove = mutation({
   args: { id: v.id("writings") },
   handler: async (ctx, args) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) throw new Error("Not authenticated");
-
-    const writing = await ctx.db.get(args.id);
-    if (!writing) throw new Error("Writing not found");
-
+    const writing = await requireOwnership(ctx, "writings", args.id);
     if (writing.coverStorageId) {
-      await ctx.storage.delete(writing.coverStorageId);
+      await ctx.storage.delete(writing.coverStorageId as Id<"_storage">);
     }
-
     await ctx.db.delete(args.id);
   },
 });
@@ -185,14 +173,9 @@ export const remove = mutation({
 export const toggleFavorite = mutation({
   args: { id: v.id("writings") },
   handler: async (ctx, args) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) throw new Error("Not authenticated");
-
-    const writing = await ctx.db.get(args.id);
-    if (!writing) throw new Error("Writing not found");
-
+    const writing = await requireOwnership(ctx, "writings", args.id);
     await ctx.db.patch(args.id, { 
-      isFavorite: !writing.isFavorite,
+      isFavorite: !(writing.isFavorite as boolean),
       updatedAt: Date.now(),
     });
   },

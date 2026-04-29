@@ -1,15 +1,24 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { v } from "convex/values";
 import { query, mutation } from "./_generated/server";
+import { reactionFields } from "./lib/validators";
+
+function getVisitorReactions(
+  ctx: { db: { query: (table: "reactions") => any } },
+  visitorId: string,
+  targetType: string,
+  targetId: string,
+) {
+  return ctx.db
+    .query("reactions")
+    .withIndex("by_visitor", (q: any) =>
+      q.eq("visitorId", visitorId).eq("targetType", targetType).eq("targetId", targetId),
+    );
+}
 
 // Toggle a reaction (add if not exists, remove if exists)
 export const toggle = mutation({
-  args: {
-    targetType: v.union(v.literal("book"), v.literal("writing"), v.literal("artwork"), v.literal("photo")),
-    targetId: v.string(),
-    emoji: v.string(),
-    visitorId: v.string(),
-  },
+  args: reactionFields,
   handler: async (ctx, args) => {
     // Rate limit: max 30 reactions per minute per visitor
     const oneMinuteAgo = Date.now() - 60_000;
@@ -23,12 +32,8 @@ export const toggle = mutation({
     }
 
     // Check if reaction already exists
-    const existing = await ctx.db
-      .query("reactions")
-      .withIndex("by_visitor", (q) =>
-        q.eq("visitorId", args.visitorId).eq("targetType", args.targetType).eq("targetId", args.targetId)
-      )
-      .filter((q) => q.eq(q.field("emoji"), args.emoji))
+    const existing = await getVisitorReactions(ctx, args.visitorId, args.targetType, args.targetId)
+      .filter((q: any) => q.eq(q.field("emoji"), args.emoji))
       .first();
 
     if (existing) {
@@ -90,14 +95,9 @@ export const getUserReactions = query({
     visitorId: v.string(),
   },
   handler: async (ctx, args) => {
-    const reactions = await ctx.db
-      .query("reactions")
-      .withIndex("by_visitor", (q) =>
-        q.eq("visitorId", args.visitorId).eq("targetType", args.targetType).eq("targetId", args.targetId)
-      )
-      .collect();
+    const reactions = await getVisitorReactions(ctx, args.visitorId, args.targetType, args.targetId).collect();
 
-    return reactions.map((r) => r.emoji);
+    return reactions.map((r: { emoji: string }) => r.emoji);
   },
 });
 

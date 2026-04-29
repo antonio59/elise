@@ -8,6 +8,7 @@ import {
 import { internal } from "./_generated/api";
 import { v } from "convex/values";
 import { auth } from "./auth";
+import type { Id } from "./_generated/dataModel";
 import { getEmailConfig } from "./lib/email";
 import {
   requireAuth,
@@ -16,6 +17,7 @@ import {
   checkLikeRateLimit,
   filterUndefinedUpdates,
 } from "./lib/crud";
+import { photoFields, seriesAlbumFields } from "./lib/validators";
 import { Resend } from "resend";
 
 // Get all published photos (for public gallery)
@@ -77,16 +79,7 @@ export const getById = query({
 
 // Create photo (requires auth)
 export const create = mutation({
-  args: {
-    title: v.string(),
-    description: v.optional(v.string()),
-    imageUrl: v.string(),
-    storageId: v.optional(v.id("_storage")),
-    location: v.optional(v.string()),
-    tags: v.optional(v.array(v.string())),
-    albumId: v.optional(v.id("photoAlbums")),
-    isPublished: v.boolean(),
-  },
+  args: photoFields,
   handler: async (ctx, args) => {
     const userId = await requireAuth(ctx);
 
@@ -123,7 +116,7 @@ export const remove = mutation({
   args: { id: v.id("photos") },
   handler: async (ctx, args) => {
     const photo = await requireOwnership(ctx, "photos", args.id);
-    await cleanupStorage(ctx, photo.storageId);
+    await cleanupStorage(ctx, photo.storageId as Id<"_storage"> | undefined);
     await ctx.db.delete(args.id);
   },
 });
@@ -165,11 +158,7 @@ export const getAlbums = query({
 
 // Create album (requires auth)
 export const createAlbum = mutation({
-  args: {
-    title: v.string(),
-    description: v.optional(v.string()),
-    coverImageUrl: v.optional(v.string()),
-  },
+  args: seriesAlbumFields,
   handler: async (ctx, args) => {
     const userId = await requireAuth(ctx);
 

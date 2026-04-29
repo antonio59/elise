@@ -18,6 +18,7 @@ import { usePageAnnouncement } from "../components/AccessibleAnnouncer";
 import { usePageMeta } from "../components/PageMeta";
 import ArtworkModalShell from "../components/artwork/ArtworkModalShell";
 import GalleryFilterTabs from "../components/GalleryFilterTabs";
+import { useArtworkFormState } from "../hooks/useArtworkFormState";
 import ImageUploadField from "../components/ImageUploadField";
 
 type Artwork = Doc<"artworks">;
@@ -240,13 +241,15 @@ const EditArtworkModal: React.FC<EditArtworkModalProps> = ({
   onClose,
   onSave,
 }) => {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [style, setStyle] = useState("");
-  const [medium, setMedium] = useState("");
-  const [tags, setTags] = useState("");
-  const [isPublished, setIsPublished] = useState(true);
-  const [saving, setSaving] = useState(false);
+  const {
+    title, setTitle,
+    description, setDescription,
+    style, setStyle,
+    medium, setMedium,
+    tags, setTags,
+    isPublished, setIsPublished,
+    saving, setSaving,
+  } = useArtworkFormState();
 
   React.useEffect(() => {
     if (artwork) {
@@ -364,15 +367,17 @@ const AddArtworkModal: React.FC<AddArtworkModalProps> = ({
   onClose,
   onAdd,
 }) => {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [style, setStyle] = useState("");
-  const [medium, setMedium] = useState("");
-  const [tags, setTags] = useState("");
-  const [isPublished, setIsPublished] = useState(true);
-  const [saving, setSaving] = useState(false);
+  const {
+    title, setTitle,
+    description, setDescription,
+    style, setStyle,
+    medium, setMedium,
+    tags, setTags,
+    isPublished, setIsPublished,
+    saving, setSaving,
+  } = useArtworkFormState();
 
   const handleImageChange = (dataUrl: string) => {
     setImagePreview(dataUrl);
