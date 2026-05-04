@@ -575,6 +575,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Chores
 
+- Remove redundant weekly dep update workflow (Dependabot covers this)
 - **deps**: Bump @sentry/react from 9.47.1 to 10.50.0 (#32)
 - Remove guestbook feature
 - **deps**: Bump the minor-patch group with 18 updates (#28)
@@ -600,6 +601,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
