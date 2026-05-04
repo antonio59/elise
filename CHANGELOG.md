@@ -575,6 +575,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Chores
 
+- **deps**: Bump @sentry/react from 9.47.1 to 10.50.0 (#32)
 - Remove guestbook feature
 - **deps**: Bump the minor-patch group with 18 updates (#28)
 - Remove old Claude worktrees after branch cleanup
@@ -599,6 +600,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
