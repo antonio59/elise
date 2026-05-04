@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- Sharper book covers + lint cleanup
 - GetById query uses normalizeId + error handling
 - UI/UX improvements for Elise Reads
 - Add missing @sentry/react and @sentry/vite-plugin dependencies
@@ -604,6 +605,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
