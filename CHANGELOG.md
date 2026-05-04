@@ -632,6 +632,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
+- Update changelog [skip ci]
 - Add DESIGN.md following google-labs-code/design.md spec
 - Update changelog [skip ci]
 - Update changelog [skip ci]
@@ -679,6 +680,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Features
 
+- Public book detail pages + clickable book cards
 - Creative features + UI/UX improvements for Elise
 - Weekly summary email, global search, theme toggle, OG meta, and security hardening
 - Bring elise up to izzy-reads coding and design standards
