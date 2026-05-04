@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Moon, Sun, Palette } from "lucide-react";
 
 const THEMES = [
-  { value: "editorial", label: "Editorial", icon: Sun },
-  { value: "sakura", label: "Sakura", icon: Palette },
-  { value: "lavender", label: "Lavender", icon: Palette },
-  { value: "midnight", label: "Midnight", icon: Moon },
-  { value: "sunset", label: "Sunset", icon: Palette },
-  { value: "botanical", label: "Botanical", icon: Palette },
-  { value: "berry", label: "Berry", icon: Palette },
+  { value: "editorial", label: "Book Mode", icon: Sun },
+  { value: "sakura", label: "Pink Bloom", icon: Palette },
+  { value: "lavender", label: "Purple Vibes", icon: Palette },
+  { value: "midnight", label: "Dark Mode", icon: Moon },
+  { value: "sunset", label: "Sunset Glow", icon: Palette },
+  { value: "botanical", label: "Nature Mode", icon: Palette },
+  { value: "berry", label: "Berry Pop", icon: Palette },
 ];
 
 const STORAGE_KEY = "elise-public-theme";

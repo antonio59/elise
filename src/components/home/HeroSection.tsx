@@ -75,10 +75,10 @@ const HeroSection: React.FC<{
             <Camera className="w-4 h-4" />
             Photos
           </Link>
-          <a href="#writing" className="btn btn-secondary">
+          <Link to="/writing" className="btn btn-secondary">
             <Feather className="w-4 h-4" />
             Writing
-          </a>
+          </Link>
           <Button
             variant="secondary"
             icon={<MessageSquarePlus className="w-4 h-4" />}

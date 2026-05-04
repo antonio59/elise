@@ -281,16 +281,20 @@ export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
               exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.2 }}
             >
-              {navLinks.map((link) => (
+              {navLinks.map((link) => {
+                const Icon = link.icon;
+                return (
                 <Link
                   key={link.label}
                   to={link.to}
-                  className="block px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 font-medium"
+                  className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 font-medium"
                   onClick={() => setMobileMenuOpen(false)}
                 >
+                  <Icon className="w-4 h-4" />
                   {link.label}
                 </Link>
-              ))}
+                );
+              })}
               <div className="pt-2">
                 {user ? (
                   <Link
