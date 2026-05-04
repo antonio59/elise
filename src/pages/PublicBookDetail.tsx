@@ -41,9 +41,8 @@ const RATING_LABELS: Record<number, string> = {
 
 const PublicBookDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const bookId = id as unknown as string;
   const book = useQuery(api.books.getById, {
-    id: bookId as never,
+    id: id ?? "",
   }) as Book | undefined | null;
 
   usePageAnnouncement(book?.title || "Book");

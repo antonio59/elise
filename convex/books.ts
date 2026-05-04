@@ -83,12 +83,18 @@ export const getFavorites = query({
 
 // Get a single book by ID (public — no auth, single-user site)
 export const getById = query({
-  args: { id: v.id("books") },
+  args: { id: v.string() },
   handler: async (ctx, args) => {
-    const book = await ctx.db.get(args.id);
-    if (!book) return null;
-    const [withCover] = await withCoverUrls(ctx, [book]);
-    return withCover;
+    try {
+      const bookId = ctx.db.normalizeId("books", args.id);
+      if (!bookId) return null;
+      const book = await ctx.db.get(bookId);
+      if (!book) return null;
+      const [withCover] = await withCoverUrls(ctx, [book]);
+      return withCover;
+    } catch {
+      return null;
+    }
   },
 });
 
