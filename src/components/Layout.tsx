@@ -25,6 +25,7 @@ import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import ThemeToggle from "./ThemeToggle";
 import GlobalSearch from "./GlobalSearch";
+import BackToTop from "./BackToTop";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -323,10 +324,10 @@ export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
       <main id="main-content" className="flex-1">{children}</main>
 
       {/* Footer */}
-      <footer className="bg-gradient-to-br from-primary-50 to-violet-50 border-t border-slate-200 py-10">
+      <footer className="bg-gradient-to-br from-primary-50 to-violet-50 border-t border-slate-200 py-8">
         <div className="max-w-6xl mx-auto px-4">
           <div className="flex flex-col items-center text-center">
-            <Link to="/" className="inline-flex items-center gap-2 mb-4">
+            <Link to="/" className="inline-flex items-center gap-2 mb-3">
               <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-primary-500 to-violet-500 flex items-center justify-center">
                 <BookOpen className="w-4 h-4 text-white" />
               </div>
@@ -335,30 +336,19 @@ export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
               </span>
             </Link>
 
-            {/* Page Links */}
-            <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2 mb-6">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.label}
-                  to={link.to}
-                  className="text-sm text-slate-500 hover:text-primary-600 transition-colors font-medium"
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
-
             <p className="text-sm text-slate-500 italic">
               {(siteSettings as { footerTagline?: string })?.footerTagline ||
                 "books I've read, art I make, and words I write"}
             </p>
-            <p className="text-xs text-slate-400 mt-3">
+            <p className="text-xs text-slate-400 mt-2">
               {(siteSettings as { footerNote?: string })?.footerNote ||
                 "Made with love for Elise 💜"}
             </p>
           </div>
         </div>
       </footer>
+
+      <BackToTop />
     </div>
   );
 };

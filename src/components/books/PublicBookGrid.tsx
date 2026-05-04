@@ -103,7 +103,7 @@ const PublicBookGrid: React.FC<PublicBookGridProps> = ({
                 <ShareButton
                   title={book.title}
                   author={book.author}
-                  path="/books"
+                  bookId={book._id}
                 />
               </div>
               <StickerSection bookId={book._id} />

@@ -4,22 +4,31 @@ import { Share2, Check } from "lucide-react";
 interface ShareButtonProps {
   title: string;
   author?: string;
-  path?: string; // e.g. "/books"
+  bookId?: string; // for linking to /books/:id
+  path?: string; // fallback, e.g. "/books"
 }
 
-const ShareButton: React.FC<ShareButtonProps> = ({ title, author, path }) => {
+const ShareButton: React.FC<ShareButtonProps> = ({
+  title,
+  author,
+  bookId,
+  path,
+}) => {
   const [copied, setCopied] = useState(false);
 
-  const url = path
-    ? `${window.location.origin}${path}`
-    : window.location.href;
+  const url = bookId
+    ? `${window.location.origin}/books/${bookId}`
+    : path
+      ? `${window.location.origin}${path}`
+      : window.location.href;
 
   const text = author
-    ? `Check out "${title}" by ${author} on Elise Reads! 📚`
-    : `Check out "${title}" on Elise Reads! 📚`;
+    ? `"${title}" by ${author} — on Elise Reads! 📚`
+    : `${title} — on Elise Reads! 📚`;
 
   const handleShare = async (e: React.MouseEvent) => {
     e.stopPropagation();
+    e.preventDefault();
     if (navigator.share) {
       try {
         await navigator.share({ title, text, url });
@@ -29,7 +38,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({ title, author, path }) => {
       return;
     }
     // Desktop fallback: copy URL to clipboard
-    await navigator.clipboard.writeText(url);
+    await navigator.clipboard.writeText(`${text} ${url}`);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -38,8 +47,8 @@ const ShareButton: React.FC<ShareButtonProps> = ({ title, author, path }) => {
     <button
       onClick={handleShare}
       className="flex items-center gap-1 text-[10px] text-slate-400 hover:text-primary-500 transition-colors"
-      title="Share"
-      aria-label="Share"
+      title="Share this book"
+      aria-label={`Share ${title}`}
     >
       {copied ? (
         <Check className="w-3 h-3 text-success-500" />
