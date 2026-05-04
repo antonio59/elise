@@ -19,6 +19,7 @@ import PublicPhotos from "./pages/PublicPhotos";
 import PublicWishlist from "./pages/PublicWishlist";
 import PublicBooks from "./pages/PublicBooks";
 import PublicReviews from "./pages/PublicReviews";
+import PublicBookDetail from "./pages/PublicBookDetail";
 import PublicWritings from "./pages/PublicWritings";
 import About from "./pages/About";
 import NotFound from "./pages/NotFound";
@@ -65,6 +66,7 @@ function App() {
             {/* Public Routes */}
             <Route path="/" element={<PublicLayout><PublicHome /></PublicLayout>} />
             <Route path="/books" element={<PublicLayout><PublicBooks /></PublicLayout>} />
+            <Route path="/books/:id" element={<PublicLayout><PublicBookDetail /></PublicLayout>} />
             <Route path="/reviews" element={<PublicLayout><PublicReviews /></PublicLayout>} />
             <Route path="/writing" element={<PublicLayout><PublicWritings /></PublicLayout>} />
             <Route path="/art" element={<PublicLayout><PublicGallery /></PublicLayout>} />

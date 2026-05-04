@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { BookOpen, Star } from "lucide-react";
 import CoverImage from "../CoverImage";
@@ -106,18 +107,20 @@ const FeaturedBooks: React.FC<{
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ type: "spring", stiffness: 200, damping: 20 }}
                   >
+                    <Link to={`/books/${book._id}`}>
                     <div className="aspect-[2/3] rounded-xl overflow-hidden bg-slate-100 shadow-md hover:shadow-xl transition-shadow">
                       <CoverImage
                         book={book}
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <p className="mt-2 text-sm font-medium text-slate-800 line-clamp-1">
+                    <p className="mt-2 text-sm font-medium text-slate-800 line-clamp-1 hover:text-primary-600 transition-colors">
                       {book.title}
                     </p>
                     <p className="text-xs text-slate-500 line-clamp-1">
                       {book.author}
                     </p>
+                    </Link>
                   </motion.div>
                 ),
               )}
@@ -144,15 +147,17 @@ const FeaturedBooks: React.FC<{
                   coverStorageId?: string;
                 }) => (
                   <div key={book._id} className="w-28 sm:w-32">
+                    <Link to={`/books/${book._id}`}>
                     <div className="aspect-[2/3] rounded-lg overflow-hidden bg-slate-100 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg">
                       <CoverImage
                         book={book}
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <p className="mt-1.5 text-xs font-medium text-slate-700 line-clamp-1">
+                    <p className="mt-1.5 text-xs font-medium text-slate-700 line-clamp-1 hover:text-primary-600 transition-colors">
                       {book.title}
                     </p>
+                    </Link>
                   </div>
                 ),
               )}
@@ -223,18 +228,20 @@ const FeaturedBooks: React.FC<{
                     viewport={{ once: true }}
                     transition={{ delay: Math.min(index * 0.05, 0.3) }}
                   >
+                    <Link to={`/books/${book._id}`}>
                     <div className="aspect-[2/3] rounded-xl overflow-hidden bg-slate-100 shadow-md book-spine transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
                       <CoverImage
                         book={book}
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <h3 className="mt-2 text-sm font-medium text-slate-800 line-clamp-1">
+                    <h3 className="mt-2 text-sm font-medium text-slate-800 line-clamp-1 hover:text-primary-600 transition-colors">
                       {book.title}
                     </h3>
                     <p className="text-xs text-slate-500 line-clamp-1">
                       {book.author}
                     </p>
+                    </Link>
                     {book.rating && (
                       <div className="flex items-center gap-0.5 mt-1">
                         {Array.from({ length: 5 }).map((_, i) => (
@@ -330,6 +337,7 @@ const FeaturedBooks: React.FC<{
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                   >
+                    <Link to={`/books/${book._id}`}>
                     <div className="relative aspect-[2/3] rounded-xl overflow-hidden bg-slate-100 shadow-sm group-hover:shadow-xl transition-all">
                       <CoverImage
                         book={book}
@@ -346,6 +354,7 @@ const FeaturedBooks: React.FC<{
                       author={book.author}
                       genre={book.genre}
                     />
+                    </Link>
                   </motion.div>
                 ),
               )}

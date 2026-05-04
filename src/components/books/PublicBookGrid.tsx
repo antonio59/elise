@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Star } from "lucide-react";
 import CoverImage from "../CoverImage";
@@ -59,6 +60,7 @@ const PublicBookGrid: React.FC<PublicBookGridProps> = ({
               viewport={{ once: true }}
               transition={{ delay: index * 0.03 }}
             >
+              <Link to={`/books/${book._id}`} className="block">
               <div className="relative aspect-[2/3] rounded-xl overflow-hidden bg-slate-100 shadow-sm group-hover:shadow-lg group-hover:-translate-y-1 transition-all duration-200">
                 <CoverImage
                   book={book}
@@ -75,12 +77,13 @@ const PublicBookGrid: React.FC<PublicBookGridProps> = ({
                   </div>
                 )}
               </div>
-              <h3 className="mt-2 text-sm font-medium text-slate-800 line-clamp-1">
+              <h3 className="mt-2 text-sm font-medium text-slate-800 line-clamp-1 group-hover:text-primary-600 transition-colors">
                 {book.title}
               </h3>
               <p className="text-xs text-slate-500 line-clamp-1">
                 {book.author}
               </p>
+              </Link>
               <div className="flex flex-wrap items-center gap-1 mt-1">
                 {book.genre && book.genre !== "Other" && (
                   <span
@@ -122,6 +125,7 @@ const PublicBookGrid: React.FC<PublicBookGridProps> = ({
             viewport={{ once: true }}
             transition={{ delay: index * 0.03 }}
           >
+            <Link to={`/books/${book._id}`} className="flex gap-4 items-center flex-1 min-w-0">
             <div className="w-14 h-20 rounded-lg overflow-hidden bg-slate-100 flex-shrink-0">
               <CoverImage
                 book={book}
@@ -129,7 +133,7 @@ const PublicBookGrid: React.FC<PublicBookGridProps> = ({
               />
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="font-medium text-slate-800 truncate">
+              <h3 className="font-medium text-slate-800 truncate hover:text-primary-600 transition-colors">
                 {book.title}
               </h3>
               <p className="text-sm text-slate-500">{book.author}</p>
@@ -146,6 +150,7 @@ const PublicBookGrid: React.FC<PublicBookGridProps> = ({
                 )}
               </div>
             </div>
+            </Link>
             <div className="flex items-center gap-0.5 flex-shrink-0">
               {book.rating && book.rating > 0 ? (
                 <>

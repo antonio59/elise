@@ -1,4 +1,5 @@
 import React, { useMemo } from "react";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Star, Heart } from "lucide-react";
 import CoverImage from "../CoverImage";
@@ -43,9 +44,9 @@ const ReviewStrip: React.FC<{
   return (
     <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
       {reviewed.map((book) => (
+        <Link to={`/books/${book._id}`} key={book._id}>
         <motion.div
-          key={book._id}
-          className="card p-4 min-w-[260px] flex-shrink-0 hover:shadow-lg transition-shadow"
+          className="card p-4 min-w-[260px] flex-shrink-0 hover:shadow-lg transition-shadow cursor-pointer"
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -88,6 +89,7 @@ const ReviewStrip: React.FC<{
             </div>
           </div>
         </motion.div>
+        </Link>
       ))}
     </div>
   );

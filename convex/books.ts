@@ -81,6 +81,17 @@ export const getFavorites = query({
   },
 });
 
+// Get a single book by ID (public — no auth, single-user site)
+export const getById = query({
+  args: { id: v.id("books") },
+  handler: async (ctx, args) => {
+    const book = await ctx.db.get(args.id);
+    if (!book) return null;
+    const [withCover] = await withCoverUrls(ctx, [book]);
+    return withCover;
+  },
+});
+
 // Check if a book already exists
 export const checkDuplicate = query({
   args: {
