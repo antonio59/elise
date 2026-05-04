@@ -16,7 +16,6 @@
     "@rollup/*",
     "@tailwindcss/oxide-*",
     "lightningcss-*",
-    "@sentry/vite-plugin"
   ],
   "rules": {
     "unused-dependencies": "warn",
