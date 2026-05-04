@@ -43,11 +43,7 @@ const SuggestBookModal: React.FC<SuggestBookModalProps> = ({
 
   // Debounced search using Open Library API
   useEffect(() => {
-    if (searchQuery.length < 2) {
-      setSearchResults([]);
-      setShowResults(false);
-      return;
-    }
+    if (searchQuery.length < 2) return;
 
     const timer = setTimeout(async () => {
       setSearching(true);
@@ -68,7 +64,7 @@ const SuggestBookModal: React.FC<SuggestBookModalProps> = ({
             title: doc.title || "Unknown Title",
             author: doc.author_name?.[0] || "Unknown Author",
             coverUrl: doc.cover_i
-              ? `https://covers.openlibrary.org/b/id/${doc.cover_i}-M.jpg`
+              ? `https://covers.openlibrary.org/b/id/${doc.cover_i}-L.jpg`
               : undefined,
             genre: doc.subject?.[0] || undefined,
             pageCount: doc.number_of_pages_median || undefined,
@@ -208,7 +204,7 @@ const SuggestBookModal: React.FC<SuggestBookModalProps> = ({
                 query={searchQuery}
                 setQuery={setSearchQuery}
                 results={searchResults}
-                showResults={showResults}
+                showResults={showResults && searchQuery.length >= 2}
                 searching={searching}
                 onSelect={selectBook}
                 selectedBook={selectedBook}

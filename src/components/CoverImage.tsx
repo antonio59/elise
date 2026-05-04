@@ -62,7 +62,7 @@ const GradientCard: React.FC<{ title: string; author?: string }> = ({
 };
 
 /** Upgrade a Google Books cover URL to the largest available zoom level. */
-function upgradeGoogleZoom(url: string, zoom = 3): string {
+function upgradeGoogleZoom(url: string, zoom = 5): string {
   try {
     const cleaned = url.replace(/&amp;/g, "&").replace("http://", "https://");
     const u = new URL(cleaned);
@@ -72,6 +72,7 @@ function upgradeGoogleZoom(url: string, zoom = 3): string {
     ) {
       u.searchParams.set("zoom", String(zoom));
       u.searchParams.delete("edge"); // Remove curl effect for cleaner images
+      u.searchParams.delete("pg");  // Remove page marker — get full cover
     }
     return u.toString();
   } catch {
@@ -111,8 +112,9 @@ const CoverImage: React.FC<CoverImageProps> = ({
       className={className}
       loading="lazy"
       decoding="async"
-      width={400}
-      height={600}
+      width={600}
+      height={900}
+      sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
       style={{ aspectRatio: "2/3" }}
       onError={() => setIndex((i) => i + 1)}
     />
