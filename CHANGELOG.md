@@ -57,6 +57,9 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
+- Merge pull request #36 from antonio59/dependabot/npm_and_yarn/minor-patch-fcc20be0ee
+
+chore(deps): bump the minor-patch group across 1 directory with 12 updates
 - Refactor OSV Scanner setup and execution steps
 - Add OSV Scanner workflow for vulnerability scanning
 
@@ -578,6 +581,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Chores
 
+- **deps**: Bump the minor-patch group across 1 directory with 12 updates
 - Remove Sentry integration
 - Remove redundant weekly dep update workflow (Dependabot covers this)
 - **deps**: Bump @sentry/react from 9.47.1 to 10.50.0 (#32)
@@ -605,6 +609,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
