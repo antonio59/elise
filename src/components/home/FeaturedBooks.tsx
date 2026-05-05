@@ -82,48 +82,50 @@ const FeaturedBooks: React.FC<{
     <>
       {/* Now Reading */}
       {nowReading.length > 0 && (
-        <section className="py-6 px-4">
+        <section className="py-8 px-4">
           <div className="max-w-6xl mx-auto">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-              <span className="text-sm font-semibold text-slate-600 uppercase tracking-wide">
-                Now Reading
-              </span>
-            </div>
-            <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
-              {nowReading.map(
-                (book: {
-                  _id: string;
-                  title: string;
-                  author: string;
-                  coverUrl?: string;
-                  coverImageUrl?: string | null;
-                  coverStorageId?: string;
-                }) => (
-                  <motion.div
-                    key={book._id}
-                    className="flex-shrink-0 w-36"
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ type: "spring", stiffness: 200, damping: 20 }}
-                  >
-                    <Link to={`/books/${book._id}`}>
-                    <div className="aspect-[2/3] rounded-xl overflow-hidden bg-slate-100 shadow-md hover:shadow-xl transition-shadow">
-                      <CoverImage
-                        book={book}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <p className="mt-2 text-sm font-medium text-slate-800 line-clamp-1 hover:text-primary-600 transition-colors">
-                      {book.title}
-                    </p>
-                    <p className="text-xs text-slate-500 line-clamp-1">
-                      {book.author}
-                    </p>
-                    </Link>
-                  </motion.div>
-                ),
-              )}
+            <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-100 rounded-2xl p-6">
+              <div className="flex items-center gap-2 mb-5">
+                <div className="w-2.5 h-2.5 bg-green-400 rounded-full animate-pulse" />
+                <span className="text-sm font-bold text-green-700 uppercase tracking-widest">
+                  Currently Reading
+                </span>
+              </div>
+              <div className="flex gap-5 overflow-x-auto pb-2 scrollbar-hide">
+                {nowReading.map(
+                  (book: {
+                    _id: string;
+                    title: string;
+                    author: string;
+                    coverUrl?: string;
+                    coverImageUrl?: string | null;
+                    coverStorageId?: string;
+                  }) => (
+                    <motion.div
+                      key={book._id}
+                      className="flex-shrink-0 w-36"
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ type: "spring", stiffness: 200, damping: 20 }}
+                    >
+                      <Link to={`/books/${book._id}`}>
+                        <div className="aspect-[2/3] rounded-xl overflow-hidden bg-white shadow-md hover:shadow-xl transition-all hover:-translate-y-1 duration-200">
+                          <CoverImage
+                            book={book}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <p className="mt-2 text-sm font-semibold text-slate-800 line-clamp-1 hover:text-primary-600 transition-colors">
+                          {book.title}
+                        </p>
+                        <p className="text-xs text-slate-500 line-clamp-1">
+                          {book.author}
+                        </p>
+                      </Link>
+                    </motion.div>
+                  ),
+                )}
+              </div>
             </div>
           </div>
         </section>
@@ -255,7 +257,7 @@ const FeaturedBooks: React.FC<{
                           />
                         ))}
                         <span className="text-xs text-primary-500 ml-1">
-                          {RATING_LABELS[book.rating - 1]}
+                          {RATING_LABELS[book.rating]}
                         </span>
                       </div>
                     )}

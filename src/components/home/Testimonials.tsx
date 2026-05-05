@@ -72,7 +72,7 @@ const ReviewStrip: React.FC<{
                   />
                 ))}
                 <span className="text-xs text-slate-500 ml-1">
-                  {RATING_LABELS[book.rating ?? 0]}
+                  {RATING_LABELS[book.rating ?? 1]}
                 </span>
               </div>
               {book.review && (
