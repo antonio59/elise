@@ -71,9 +71,9 @@ A personal book tracking, art gallery, and writing site for Elise. Built with a 
 ## Getting Started
 
 ```bash
-npm install
-npx convex dev        # Start Convex backend
-npm run dev           # Start Vite dev server (in another terminal)
+pnpm install
+pnpm exec convex dev        # Start Convex backend
+pnpm run dev           # Start Vite dev server (in another terminal)
 ```
 
 ### Environment Variables
@@ -94,8 +94,8 @@ VITE_CONVEX_URL=https://your-deployment.convex.cloud
 
 ### Convex
 ```bash
-npx convex dev        # Regenerate _generated types
-npx convex deploy     # Push to production
+pnpm exec convex dev        # Regenerate _generated types
+pnpm exec convex deploy     # Push to production
 ```
 
 ### Frontend
@@ -106,7 +106,7 @@ Netlify auto-deploys on push to `main`.
 - `convex/_generated/` **must be committed** — it's how Convex types work
 - Never use `as any` on action function references — breaks deploy
 - Platform packages go in `optionalDependencies` only
-- Always `npx convex dev` after pulling to regenerate types
+- Always `pnpm exec convex dev` after pulling to regenerate types
 
 ## License
 

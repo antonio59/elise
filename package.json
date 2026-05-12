@@ -12,7 +12,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest run",
-    "deploy:production": "npx convex deploy --cmd 'npm run build'"
+    "deploy:production": "pnpm convex deploy --cmd 'pnpm run build'"
   },
   "dependencies": {
     "@auth/core": "^0.37.4",

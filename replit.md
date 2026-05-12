@@ -4,11 +4,11 @@ A personal book tracking, art gallery, and writing site built with React + Conve
 
 ## Run & Operate
 
-- `npm run dev:frontend` — start the Vite dev server (port 5000)
-- `npm run dev:backend` — start the Convex dev backend (requires Convex login)
-- `npm run dev` — start both frontend and backend concurrently
-- `npm run build` — TypeScript check + Vite production build
-- `npm test` — run Vitest unit tests
+- `pnpm run dev:frontend` — start the Vite dev server (port 5000)
+- `pnpm run dev:backend` — start the Convex dev backend (requires Convex login)
+- `pnpm run dev` — start both frontend and backend concurrently
+- `pnpm run build` — TypeScript check + Vite production build
+- `pnpm test` — run Vitest unit tests
 
 Required env vars:
 - `VITE_CONVEX_URL` — Convex deployment URL (e.g. `https://xxx.convex.cloud`)
@@ -20,7 +20,7 @@ Required env vars:
 - **Auth:** `@convex-dev/auth` with Convex Auth Provider
 - **Email:** Resend
 - **Language:** TypeScript
-- **Package manager:** npm
+- **Package manager:** pnpm
 
 ## Where things live
 
