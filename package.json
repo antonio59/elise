@@ -53,5 +53,6 @@
   "overrides": {
     "uuid": "^14.0.0"
   },
-  "optionalDependencies": {}
+  "optionalDependencies": {},
+  "packageManager": "pnpm@10.33.0"
 }
