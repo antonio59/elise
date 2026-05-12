@@ -57,6 +57,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
+- Migrate to pnpm
 - Enhance home page sections with vibrant visuals and fix rating display bug
 
 Updates the HeroSection with gradient text and floating emojis. Refactors FeaturedArt cards with distinct color schemes and gradients. Improves the FeaturedBooks "Now Reading" section with a new card design. Revamps FooterCTA with a gradient background and animated sparkles. Fixes an off-by-one error in rating display logic across FeaturedBooks and Testimonials components.
@@ -628,6 +629,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
