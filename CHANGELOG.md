@@ -601,6 +601,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Chores
 
+- Migrate to pnpm v11
 - **deps**: Bump the minor-patch group across 1 directory with 12 updates
 - Remove Sentry integration
 - Remove redundant weekly dep update workflow (Dependabot covers this)
@@ -629,6 +630,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update npm references to pnpm
 - Update changelog [skip ci]
 - Update changelog [skip ci]
