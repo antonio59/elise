@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- Remove --frozen-lockfile for pnpm v11 compatibility
 - Migrate CI from npm/bun to pnpm
 - Correct pnpm-workspace.yaml format for v11
 - Sharper book covers + lint cleanup
@@ -632,6 +633,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
