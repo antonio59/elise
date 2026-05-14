@@ -53,6 +53,7 @@ All notable changes to this project will be documented in this file.
 
 ### CI/CD
 
+- Fix pnpm v11 ignored builds for esbuild
 - Fix pnpm v11 setup, remove replit files, clean unused deps
 - Remove invalid --severity flag from OSV Scanner workflow
 - Fix OSV Scanner workflow action paths and upgrade upload-sarif to v4
@@ -636,6 +637,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
