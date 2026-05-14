@@ -5,10 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
-<<<<<<< Updated upstream
-=======
 - Correct pnpm typo in corepack workflow
->>>>>>> Stashed changes
 - Use corepack instead of pnpm/action-setup for v11 compatibility
 - Remove --frozen-lockfile for pnpm v11 compatibility
 - Migrate CI from npm/bun to pnpm
@@ -56,6 +53,7 @@ All notable changes to this project will be documented in this file.
 
 ### CI/CD
 
+- Fix pnpm v11 setup, remove replit files, clean unused deps
 - Remove invalid --severity flag from OSV Scanner workflow
 - Fix OSV Scanner workflow action paths and upgrade upload-sarif to v4
 - Fix changelog workflow race condition, add security parser, backfill #30
@@ -643,6 +641,8 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
+- Update changelog [skip ci]
+- Update changelog [skip ci]
 - Update npm references to pnpm
 - Update changelog [skip ci]
 - Update changelog [skip ci]
@@ -743,6 +743,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Refactoring
 
+- Eliminate fallow debt — extract shared validators, helpers, and components
 - Extract getEmailConfig helper for convex email modules
 - Extract AnimatedForm component for IdeasVault and QuoteCollection
 - Extract CardHeader component for IdeasVault and QuoteCollection
