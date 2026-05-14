@@ -1,9 +1,10 @@
 packages:
   - .
 
+onlyBuiltDependencies:
+  - esbuild
+
 pnpm:
   autoInstallPeers: true
   strictPeerDependencies: false
-  allowBuilds:
-    esbuild: true
   packageImportMethod: clone-or-copy

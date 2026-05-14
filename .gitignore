@@ -40,3 +40,10 @@ dist-ssr
 seed-books*.json
 all-books.json
 .fallow/
+
+# Replit
+.replit
+replit.md
+
+# npm lockfile (project uses pnpm)
+package-lock.json

@@ -15,7 +15,7 @@
     "@esbuild/*",
     "@rollup/*",
     "@tailwindcss/oxide-*",
-    "lightningcss-*",
+    "lightningcss-*"
   ],
   "rules": {
     "unused-dependencies": "warn",
