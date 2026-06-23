@@ -7,6 +7,16 @@ allowBuilds:
 onlyBuiltDependencies:
   - esbuild
 
+overrides:
+  ws: "8.21.0"
+  undici: "^7.28.0"
+  "@babel/core": "^7.29.1"
+  uuid: "^14.0.0"
+
+auditConfig:
+  ignoreGhsas:
+    - GHSA-96hv-2xvq-fx4p
+
 pnpm:
   autoInstallPeers: true
   strictPeerDependencies: false

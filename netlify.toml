@@ -1,9 +1,10 @@
 [build]
-  command = "npm ci && npm run build"
+  command = "pnpm install --frozen-lockfile && pnpm run build"
   publish = "dist"
 
 [build.environment]
   NODE_VERSION = "22"
+  NETLIFY_NEXT_PLUGIN_SKIP = "true"
 
 [[redirects]]
   from = "/*"
