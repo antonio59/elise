@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- Resolve security vulnerabilities in dependencies
 - Correct pnpm typo in corepack workflow
 - Use corepack instead of pnpm/action-setup for v11 compatibility
 - Remove --frozen-lockfile for pnpm v11 compatibility
@@ -637,6 +638,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
