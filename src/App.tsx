@@ -27,7 +27,7 @@ import { Layout, PublicLayout, AuthLayout } from "./components/Layout";
 
 // Lazy load auth pages
 const Login = lazy(() => import("./pages/Login"));
-const Signup = lazy(() => import("./pages/Signup"));
+// Signup removed — single-owner site (Izzy pattern); keep route redirect below
 
 // Lazy load protected pages
 const Dashboard = lazy(() => import("./pages/Dashboard"));
@@ -74,7 +74,7 @@ function App() {
             <Route path="/wishlist" element={<PublicLayout><PublicWishlist /></PublicLayout>} />
             <Route path="/about" element={<PublicLayout><About /></PublicLayout>} />
             <Route path="/login" element={<AuthLayout><Suspense fallback={<PageLoader />}><Login /></Suspense></AuthLayout>} />
-            <Route path="/signup" element={<AuthLayout><Suspense fallback={<PageLoader />}><Signup /></Suspense></AuthLayout>} />
+            <Route path="/signup" element={<Navigate to="/login" replace />} />
 
             {/* Dashboard Routes */}
             <Route path="/dashboard" element={<Suspense fallback={<PageLoader />}><ProtectedRoute><Layout><Dashboard /></Layout></ProtectedRoute></Suspense>} />

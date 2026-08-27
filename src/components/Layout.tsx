@@ -408,21 +408,7 @@ export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
   );
 };
 
-// Auth layout (centered card)
+// Auth layout — full-bleed shell for the personalised sign-in page
 export const AuthLayout: React.FC<LayoutProps> = ({ children }) => {
-  return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        <Link to="/" className="flex items-center justify-center gap-2 mb-8">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center">
-            <Sparkles className="w-6 h-6 text-white" />
-          </div>
-          <span className="text-2xl font-bold bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent">
-            Elise Reads
-          </span>
-        </Link>
-        {children}
-      </div>
-    </div>
-  );
+  return <div className="min-h-screen">{children}</div>;
 };
