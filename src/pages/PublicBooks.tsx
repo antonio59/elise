@@ -5,12 +5,13 @@ import { api } from "../../convex/_generated/api";
 import PageHeader from "../components/PageHeader";
 import { usePageAnnouncement } from "../components/AccessibleAnnouncer";
 import { usePageMeta } from "../components/PageMeta";
+import { pageMeta } from "../lib/seo";
 import BookSearchBar from "../components/books/BookSearchBar";
 import PublicBookGrid from "../components/books/PublicBookGrid";
 
 const PublicBooks: React.FC = () => {
   usePageAnnouncement("Books");
-  usePageMeta({ title: "Books", description: "Everything I've read" });
+  usePageMeta(pageMeta.books);
   const booksRaw = useQuery(api.books.getReadBooks);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<"all" | "favorites">("all");

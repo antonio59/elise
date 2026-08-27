@@ -11,20 +11,77 @@ import {
 import CoverImage from "../components/CoverImage";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
-import PageHeader from "../components/PageHeader";
 import { usePageAnnouncement } from "../components/AccessibleAnnouncer";
 import { usePageMeta } from "../components/PageMeta";
 import { getVisitorId } from "../lib/visitorId";
 import { BookGridSkeleton } from "../components/Skeleton";
 import WishlistGrid from "../components/wishlist/WishlistGrid";
 import type { WishlistBook } from "../components/wishlist/WishlistGrid";
-import WishlistFilterBar from "../components/wishlist/WishlistFilterBar";
 import WishlistEmptyState from "../components/wishlist/WishlistEmptyState";
+import { pageMeta } from "../lib/seo";
 import SuggestBookModal from "../components/books/SuggestBookModal";
+
+function WishlistHero({
+  bookCount,
+  totalPages,
+  onSuggest,
+  onShare,
+  shareStatus,
+}: {
+  bookCount: number;
+  totalPages: number;
+  onSuggest: () => void;
+  onShare: () => void;
+  shareStatus: "idle" | "copied";
+}) {
+  return (
+    <header className="relative overflow-hidden rounded-3xl mb-10 bg-gradient-to-br from-primary-100 via-violet-50 to-accent-50 border border-primary-100 px-6 py-10 sm:px-10 sm:py-12 text-center">
+      <p className="text-sm font-semibold tracking-wide text-primary-600 mb-2">
+        wishlist
+      </p>
+      <h1 className="font-display text-3xl sm:text-4xl text-slate-900 mb-3">
+        Next on my nightstand
+      </h1>
+      <p className="text-slate-600 max-w-lg mx-auto mb-6">
+        Books I&apos;d love to read next — suggest one, or grab something from
+        the list as a gift.
+      </p>
+      <div className="flex flex-wrap items-center justify-center gap-3 mb-6 text-sm text-slate-600">
+        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/80 border border-slate-200">
+          <BookOpen className="w-4 h-4 text-primary-500" />
+          {bookCount} {bookCount === 1 ? "book" : "books"}
+        </span>
+        {totalPages > 0 && (
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/80 border border-slate-200">
+            ~{totalPages.toLocaleString()} pages
+          </span>
+        )}
+      </div>
+      <div className="flex flex-wrap justify-center gap-3">
+        <button
+          type="button"
+          onClick={onSuggest}
+          className="btn btn-primary min-h-11"
+        >
+          <Sparkles className="w-4 h-4" />
+          Suggest a book
+        </button>
+        <button
+          type="button"
+          onClick={onShare}
+          className="btn btn-secondary min-h-11"
+        >
+          <Gift className="w-4 h-4" />
+          {shareStatus === "copied" ? "Link copied!" : "Share wishlist"}
+        </button>
+      </div>
+    </header>
+  );
+}
 
 const PublicWishlist: React.FC = () => {
   usePageAnnouncement("Wishlist");
-  usePageMeta({ title: "Wishlist", description: "Books I'd love to read" });
+  usePageMeta(pageMeta.wishlist);
   const wishlistBooksRaw = useQuery(api.books.getWishlist);
   const wishlistBooks = (wishlistBooksRaw ?? []) as WishlistBook[];
 
@@ -95,11 +152,12 @@ const PublicWishlist: React.FC = () => {
   if (wishlistBooksRaw === undefined) {
     return (
       <div className="max-w-6xl mx-auto px-4 py-10 sm:py-12">
-        <PageHeader
-          badge="Wishlist"
-          title="My Reading Wishlist"
-          subtitle="Books I can't wait to read!"
-          breadcrumbs={[{ label: "Wishlist" }]}
+        <WishlistHero
+          bookCount={0}
+          totalPages={0}
+          onSuggest={() => setShowSuggestModal(true)}
+          onShare={handleShare}
+          shareStatus={shareStatus}
         />
         <BookGridSkeleton />
       </div>
@@ -108,20 +166,12 @@ const PublicWishlist: React.FC = () => {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-10 sm:py-12">
-      <PageHeader
-        badge="Wishlist"
-        title="My Reading Wishlist"
-        subtitle="Books I can't wait to read!"
-        breadcrumbs={[{ label: "Wishlist" }]}
-        actions={
-          <WishlistFilterBar
-            bookCount={wishlistBooks.length}
-            totalPages={totalPages}
-            onSuggestClick={() => setShowSuggestModal(true)}
-            onShare={handleShare}
-            shareStatus={shareStatus}
-          />
-        }
+      <WishlistHero
+        bookCount={wishlistBooks.length}
+        totalPages={totalPages}
+        onSuggest={() => setShowSuggestModal(true)}
+        onShare={handleShare}
+        shareStatus={shareStatus}
       />
 
       {sortedWishlist.length > 0 ? (

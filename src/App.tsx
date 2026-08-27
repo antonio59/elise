@@ -42,6 +42,8 @@ const DashboardAbout = lazy(() => import("./pages/DashboardAbout"));
 const Discover = lazy(() => import("./pages/Discover"));
 const Characters = lazy(() => import("./pages/Characters"));
 const ProtectedRoute = lazy(() => import("./components/ProtectedRoute"));
+const PublicWritingDetail = lazy(() => import("./pages/PublicWritingDetail"));
+const PublicReviewDetail = lazy(() => import("./pages/PublicReviewDetail"));
 
 // Loading spinner
 const PageLoader = () => (
@@ -68,7 +70,9 @@ function App() {
             <Route path="/books" element={<PublicLayout><PublicBooks /></PublicLayout>} />
             <Route path="/books/:id" element={<PublicLayout><PublicBookDetail /></PublicLayout>} />
             <Route path="/reviews" element={<PublicLayout><PublicReviews /></PublicLayout>} />
+            <Route path="/reviews/:bookId" element={<PublicLayout><Suspense fallback={<PageLoader />}><PublicReviewDetail /></Suspense></PublicLayout>} />
             <Route path="/writing" element={<PublicLayout><PublicWritings /></PublicLayout>} />
+            <Route path="/writing/:id" element={<PublicLayout><Suspense fallback={<PageLoader />}><PublicWritingDetail /></Suspense></PublicLayout>} />
             <Route path="/art" element={<PublicLayout><PublicGallery /></PublicLayout>} />
             <Route path="/photos" element={<PublicLayout><PublicPhotos /></PublicLayout>} />
             <Route path="/wishlist" element={<PublicLayout><PublicWishlist /></PublicLayout>} />
