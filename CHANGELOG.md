@@ -67,6 +67,14 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
+- Merge pull request #60 from antonio59/feat/elise-personal-login
+
+Izzy-inspired Elise upgrades: login, stats, writing/reviews, wishlist, SEO
+- Merge main into feat/elise-personal-login
+
+Resolve AuthLayout (keep full-bleed login) and About (redesign + SEO meta).
+
+Co-authored-by: Cursor <cursoragent@cursor.com>
 - Merge pull request #59 from antonio59/fix/about-page-and-colour
 
 Improve About page and brand colour contrast
@@ -78,6 +86,20 @@ Co-authored-by: Cursor <cursoragent@cursor.com>
 Replace fragile gradient-clipped headings with solid primary text,
 sync the default palette (clearer teal/indigo, stronger neutrals),
 and rebuild About as a personality-first page with coloured sections.
+
+Co-authored-by: Cursor <cursoragent@cursor.com>
+- Port Izzy product decisions into Elise’s public surfaces
+
+Quiet home stats, writing + review detail routes, nightstand wishlist
+hero, first-person SEO copy, and shelf peek → full review — kept in
+Elise’s studio voice rather than cloning Izzy’s look.
+
+Co-authored-by: Cursor <cursoragent@cursor.com>
+- Add personalised Elise login and close public signup
+
+Port Izzy’s niece-addressed coaching login pattern with Elise voice:
+avatar welcome, studio reminders, post-sign-in map, and public browse
+links — without looking like Izzy’s cream shelf.
 
 Co-authored-by: Cursor <cursoragent@cursor.com>
 - Merge pull request #58 from antonio59/fix/elise-engagement-and-design
@@ -675,6 +697,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
