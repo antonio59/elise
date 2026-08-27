@@ -1,12 +1,20 @@
 User-agent: *
 Allow: /
-Allow: /gallery
+Allow: /books
+Allow: /reviews
+Allow: /writing
+Allow: /art
+Allow: /photos
 Allow: /wishlist
+Allow: /about
+Allow: /og-image.jpg
 
 Disallow: /dashboard
-Disallow: /books
-Disallow: /art
 Disallow: /settings
 Disallow: /suggestions
 Disallow: /login
 Disallow: /signup
+Disallow: /discover
+Disallow: /characters
+
+Sitemap: https://elisereads.com/sitemap.xml
