@@ -10,10 +10,11 @@ import GalleryEmptyState from "../components/GalleryEmptyState";
 import { usePhotoLikes } from "../hooks/useGalleryLikes";
 import { usePageAnnouncement } from "../components/AccessibleAnnouncer";
 import { usePageMeta } from "../components/PageMeta";
+import { pageMeta } from "../lib/seo";
 
 const PublicPhotos: React.FC = () => {
   usePageAnnouncement("Photos");
-  usePageMeta({ title: "Photos", description: "My photography gallery" });
+  usePageMeta(pageMeta.photos);
 
   const photos = useQuery(api.photos.getPublished, { limit: 100 }) ?? [];
   const albums = useQuery(api.photos.getAlbums) ?? [];

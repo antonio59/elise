@@ -14,6 +14,7 @@ import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { usePageAnnouncement } from "../components/AccessibleAnnouncer";
 import { usePageMeta } from "../components/PageMeta";
+import { pageMeta } from "../lib/seo";
 import CoverImage from "../components/CoverImage";
 
 interface CurrentlyReading {
@@ -41,7 +42,7 @@ interface PublicProfile {
 
 const About: React.FC = () => {
   usePageAnnouncement("About");
-  usePageMeta({ title: "About", description: "About Elise" });
+  usePageMeta(pageMeta.about);
   const profile = useQuery(api.users.getPublicProfile) as
     | PublicProfile
     | undefined

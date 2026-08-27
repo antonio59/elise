@@ -6,14 +6,16 @@ import { usePageAnnouncement } from "../components/AccessibleAnnouncer";
 import { usePageMeta } from "../components/PageMeta";
 import HeroSection from "../components/home/HeroSection";
 import FeaturedBooks from "../components/home/FeaturedBooks";
+import HomeStatsStrip from "../components/home/HomeStatsStrip";
 import Testimonials from "../components/home/Testimonials";
 import FeaturedPhotos from "../components/home/FeaturedPhotos";
 import FeaturedArt from "../components/home/FeaturedArt";
 import FooterCTA from "../components/home/FooterCTA";
+import { pageMeta } from "../lib/seo";
 
 const PublicHome: React.FC = () => {
   usePageAnnouncement("Home");
-  usePageMeta({ title: "Home", description: "Books, art & things I think about" });
+  usePageMeta(pageMeta.home);
   const books = useQuery(api.books.getReadBooks);
   const photos = useQuery(api.photos.getPublished, { limit: 6 });
   const writings = useQuery(api.writings.getPublished, {});
@@ -37,6 +39,11 @@ const PublicHome: React.FC = () => {
     return books.filter((b: { status: string }) => b.status !== "reading");
   }, [books]);
 
+  const booksReadCount = useMemo(() => {
+    if (!books) return 0;
+    return books.filter((b: { status: string }) => b.status === "read").length;
+  }, [books]);
+
   return (
     <div className="min-h-screen">
       <HeroSection
@@ -44,6 +51,12 @@ const PublicHome: React.FC = () => {
         heroSubtitle={siteSettings?.heroSubtitle as string | undefined}
         nowReading={nowReading}
         onSuggestClick={() => setShowSuggestModal(true)}
+      />
+
+      <HomeStatsStrip
+        booksRead={booksReadCount}
+        writings={writings?.length ?? 0}
+        photos={photos?.length ?? 0}
       />
 
       <FeaturedBooks

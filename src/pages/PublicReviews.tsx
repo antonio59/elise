@@ -1,14 +1,17 @@
 import CoverImage from "../components/CoverImage";
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Star, MessageCircle } from "lucide-react";
+import { Star, MessageCircle, ArrowRight } from "lucide-react";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import PageHeader from "../components/PageHeader";
 import { usePageAnnouncement } from "../components/AccessibleAnnouncer";
 import { usePageMeta } from "../components/PageMeta";
+import { pageMeta } from "../lib/seo";
 import StarRating from "../components/StarRating";
 import BookMoodTags from "../components/books/BookMoodTags";
+import BookPeekModal, { type PeekBook } from "../components/books/BookPeekModal";
 
 interface Book {
   _id: string;
@@ -33,10 +36,11 @@ const RATING_LABELS: Record<number, string> = {
 
 const PublicReviews: React.FC = () => {
   usePageAnnouncement("Reviews");
-  usePageMeta({ title: "Reviews", description: "Books I've rated and reviewed" });
+  usePageMeta(pageMeta.reviews);
   const books = useQuery(api.books.getReadBooks) ?? [];
   const [flippedId, setFlippedId] = useState<string | null>(null);
   const [ratingFilter, setRatingFilter] = useState<number | null>(null);
+  const [peekBook, setPeekBook] = useState<PeekBook | null>(null);
 
   const reviewedBooks = books.filter(
     (b: Book) =>
@@ -50,6 +54,7 @@ const PublicReviews: React.FC = () => {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-10 sm:py-12">
+      <BookPeekModal book={peekBook} onClose={() => setPeekBook(null)} />
       <PageHeader
         badge="Book Reviews"
         title="What I Thought..."
@@ -163,6 +168,13 @@ const PublicReviews: React.FC = () => {
                       </p>
                     )}
                     <BookMoodTags moodTags={book.moodTags} bookId={book._id} />
+                    <Link
+                      to={`/reviews/${book._id}`}
+                      className="inline-flex items-center gap-1 text-sm font-semibold text-primary-600 mt-3 min-h-11"
+                    >
+                      Full review
+                      <ArrowRight className="w-4 h-4" />
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -217,10 +229,17 @@ const PublicReviews: React.FC = () => {
                               {book.genre}
                             </span>
                           )}
-                          <span className="text-xs text-slate-500 flex items-center gap-1">
+                          <button
+                            type="button"
+                            className="text-xs text-slate-500 flex items-center gap-1 hover:text-primary-600"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setPeekBook(book);
+                            }}
+                          >
                             <MessageCircle className="w-3 h-3" />
-                            tap for review
-                          </span>
+                            peek / review
+                          </button>
                         </div>
                       </div>
                     </motion.div>
@@ -248,7 +267,7 @@ const PublicReviews: React.FC = () => {
                         </span>
                       </div>
                       {book.review ? (
-                        <blockquote className="text-slate-600 text-sm leading-relaxed border-l-4 border-primary-300 pl-4 flex-1 line-clamp-4">
+                        <blockquote className="text-slate-600 text-sm leading-relaxed border-l-4 border-primary-300 pl-4 flex-1 line-clamp-3">
                           "{book.review}"
                         </blockquote>
                       ) : (
@@ -256,7 +275,17 @@ const PublicReviews: React.FC = () => {
                           No written review — just a rating.
                         </p>
                       )}
-                      <BookMoodTags moodTags={book.moodTags} bookId={book._id} />
+                      <div className="flex items-center justify-between mt-2">
+                        <BookMoodTags moodTags={book.moodTags} bookId={book._id} />
+                        <Link
+                          to={`/reviews/${book._id}`}
+                          onClick={(e) => e.stopPropagation()}
+                          className="text-xs font-semibold text-primary-600 inline-flex items-center gap-1"
+                        >
+                          Full review
+                          <ArrowRight className="w-3 h-3" />
+                        </Link>
+                      </div>
                     </motion.div>
                   )}
                 </AnimatePresence>

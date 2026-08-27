@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { BookOpen, Star } from "lucide-react";
 import CoverImage from "../CoverImage";
 import BookMeta from "../books/BookMeta";
+import BookPeekModal, { type PeekBook } from "../books/BookPeekModal";
 import SectionHeader from "../SectionHeader";
 import { BookGridSkeleton } from "../Skeleton";
 
@@ -78,8 +79,11 @@ const FeaturedBooks: React.FC<{
   wishlist,
   onSuggestClick,
 }) => {
+  const [peekBook, setPeekBook] = useState<PeekBook | null>(null);
+
   return (
     <>
+      <BookPeekModal book={peekBook} onClose={() => setPeekBook(null)} />
       {/* Now Reading */}
       {nowReading.length > 0 && (
         <section className="py-8 px-4">
@@ -230,20 +234,25 @@ const FeaturedBooks: React.FC<{
                     viewport={{ once: true }}
                     transition={{ delay: Math.min(index * 0.05, 0.3) }}
                   >
-                    <Link to={`/books/${book._id}`}>
-                    <div className="aspect-[2/3] rounded-xl overflow-hidden bg-slate-100 shadow-md book-spine transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
-                      <CoverImage
-                        book={book}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <h3 className="mt-2 text-sm font-medium text-slate-800 line-clamp-1 hover:text-primary-600 transition-colors">
-                      {book.title}
-                    </h3>
-                    <p className="text-xs text-slate-500 line-clamp-1">
-                      {book.author}
-                    </p>
-                    </Link>
+                    <button
+                      type="button"
+                      className="w-full text-left"
+                      onClick={() => setPeekBook(book)}
+                      aria-label={`Peek at ${book.title}`}
+                    >
+                      <div className="aspect-[2/3] rounded-xl overflow-hidden bg-slate-100 shadow-md book-spine transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+                        <CoverImage
+                          book={book}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <h3 className="mt-2 text-sm font-medium text-slate-800 line-clamp-1 group-hover:text-primary-600 transition-colors">
+                        {book.title}
+                      </h3>
+                      <p className="text-xs text-slate-500 line-clamp-1">
+                        {book.author}
+                      </p>
+                    </button>
                     {book.rating && (
                       <div className="flex items-center gap-0.5 mt-1">
                         {Array.from({ length: 5 }).map((_, i) => (
@@ -293,7 +302,7 @@ const FeaturedBooks: React.FC<{
         <div className="max-w-6xl mx-auto">
           <div className="mb-8">
             <SectionHeader
-              title="Wishlist"
+              title="Nightstand"
               action={
                 wishlist && wishlist.length > 0
                   ? { label: "See all", to: "/wishlist" }
@@ -301,7 +310,7 @@ const FeaturedBooks: React.FC<{
               }
             />
             <p className="text-slate-500 mt-1">
-              books I&apos;d love to read next ✨
+              next books I&apos;d love to read
             </p>
           </div>
 

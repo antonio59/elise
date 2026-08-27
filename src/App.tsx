@@ -27,7 +27,7 @@ import { Layout, PublicLayout, AuthLayout } from "./components/Layout";
 
 // Lazy load auth pages
 const Login = lazy(() => import("./pages/Login"));
-const Signup = lazy(() => import("./pages/Signup"));
+// Signup removed — single-owner site (Izzy pattern); keep route redirect below
 
 // Lazy load protected pages
 const Dashboard = lazy(() => import("./pages/Dashboard"));
@@ -42,6 +42,8 @@ const DashboardAbout = lazy(() => import("./pages/DashboardAbout"));
 const Discover = lazy(() => import("./pages/Discover"));
 const Characters = lazy(() => import("./pages/Characters"));
 const ProtectedRoute = lazy(() => import("./components/ProtectedRoute"));
+const PublicWritingDetail = lazy(() => import("./pages/PublicWritingDetail"));
+const PublicReviewDetail = lazy(() => import("./pages/PublicReviewDetail"));
 
 // Loading spinner
 const PageLoader = () => (
@@ -68,13 +70,15 @@ function App() {
             <Route path="/books" element={<PublicLayout><PublicBooks /></PublicLayout>} />
             <Route path="/books/:id" element={<PublicLayout><PublicBookDetail /></PublicLayout>} />
             <Route path="/reviews" element={<PublicLayout><PublicReviews /></PublicLayout>} />
+            <Route path="/reviews/:bookId" element={<PublicLayout><Suspense fallback={<PageLoader />}><PublicReviewDetail /></Suspense></PublicLayout>} />
             <Route path="/writing" element={<PublicLayout><PublicWritings /></PublicLayout>} />
+            <Route path="/writing/:id" element={<PublicLayout><Suspense fallback={<PageLoader />}><PublicWritingDetail /></Suspense></PublicLayout>} />
             <Route path="/art" element={<PublicLayout><PublicGallery /></PublicLayout>} />
             <Route path="/photos" element={<PublicLayout><PublicPhotos /></PublicLayout>} />
             <Route path="/wishlist" element={<PublicLayout><PublicWishlist /></PublicLayout>} />
             <Route path="/about" element={<PublicLayout><About /></PublicLayout>} />
             <Route path="/login" element={<AuthLayout><Suspense fallback={<PageLoader />}><Login /></Suspense></AuthLayout>} />
-            <Route path="/signup" element={<AuthLayout><Suspense fallback={<PageLoader />}><Signup /></Suspense></AuthLayout>} />
+            <Route path="/signup" element={<Navigate to="/login" replace />} />
 
             {/* Dashboard Routes */}
             <Route path="/dashboard" element={<Suspense fallback={<PageLoader />}><ProtectedRoute><Layout><Dashboard /></Layout></ProtectedRoute></Suspense>} />

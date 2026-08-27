@@ -9,6 +9,7 @@ import ReactionBar from "../components/ReactionBar";
 import PageHeader from "../components/PageHeader";
 import { usePageAnnouncement } from "../components/AccessibleAnnouncer";
 import { usePageMeta } from "../components/PageMeta";
+import { pageMeta } from "../lib/seo";
 
 interface Book {
   _id: string;
@@ -46,10 +47,17 @@ const PublicBookDetail: React.FC = () => {
   }) as Book | undefined | null;
 
   usePageAnnouncement(book?.title || "Book");
-  usePageMeta({
-    title: book?.title || "Book",
-    description: book?.review || `${book?.title} by ${book?.author}`,
-  });
+  usePageMeta(
+    book
+      ? {
+          ...pageMeta.bookDetail(book.title, book.author),
+          description:
+            book.review?.slice(0, 155) ||
+            pageMeta.bookDetail(book.title, book.author).description,
+          image: book.coverUrl,
+        }
+      : { title: "Book", description: pageMeta.books.description },
+  );
 
   // Loading
   if (book === undefined) {
@@ -211,9 +219,17 @@ const PublicBookDetail: React.FC = () => {
             {/* Review */}
             {book.review && (
               <div className="card p-5 bg-gradient-to-br from-violet-50/50 to-white">
-                <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wider mb-2">
-                  Elise's Review
-                </h3>
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wider">
+                    Elise&apos;s Review
+                  </h3>
+                  <Link
+                    to={`/reviews/${book._id}`}
+                    className="text-xs font-semibold text-primary-600 hover:text-primary-700"
+                  >
+                    Open review article →
+                  </Link>
+                </div>
                 <blockquote className="text-slate-700 leading-relaxed border-l-4 border-primary-300 pl-4 italic">
                   &ldquo;{book.review}&rdquo;
                 </blockquote>

@@ -9,10 +9,11 @@ import GalleryEmptyState from "../components/GalleryEmptyState";
 import { useGalleryLikes } from "../hooks/useGalleryLikes";
 import { usePageAnnouncement } from "../components/AccessibleAnnouncer";
 import { usePageMeta } from "../components/PageMeta";
+import { pageMeta } from "../lib/seo";
 
 const PublicGallery: React.FC = () => {
   usePageAnnouncement("Gallery");
-  usePageMeta({ title: "Art", description: "My artwork gallery" });
+  usePageMeta(pageMeta.art);
   const artworks = useQuery(api.artworks.getPublished, { limit: 50 }) ?? [];
   const { likedIds, likingId, handleLike } = useGalleryLikes();
   const [selectedArt, setSelectedArt] = useState<(typeof artworks)[0] | null>(
