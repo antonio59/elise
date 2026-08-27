@@ -67,6 +67,14 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
+- Merge pull request #63 from antonio59/feat/share-meta
+
+Share previews: OG meta, logo card, and icons
+- Add Open Graph share card, icons, and richer link previews.
+
+Static meta in index.html so crawlers see description + branded image; apple-touch/favicon assets; PageMeta fills Twitter/OG defaults and uses cover art on book pages.
+
+Co-authored-by: Cursor <cursoragent@cursor.com>
 - Merge pull request #62 from antonio59/fix/cover-placeholder-repair
 
 Fix missing covers (reject Google placeholders)
@@ -721,6 +729,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
