@@ -67,6 +67,17 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
+- Merge pull request #62 from antonio59/fix/cover-placeholder-repair
+
+Fix missing covers (reject Google placeholders)
+- Update Convex generated API for repairBadCovers.
+
+Co-authored-by: Cursor <cursoragent@cursor.com>
+- Reject Google “image not available” placeholders and repair bad covers.
+
+Stop storing the fife-upscaled gray PNG (800×1043), fall back via Open Library, and add covers:repairBadCovers to replace or clear misleading stored art.
+
+Co-authored-by: Cursor <cursoragent@cursor.com>
 - Fix ActionCtx typing for cover store helper.
 
 Use Convex ActionCtx instead of a narrowed runMutation signature that rejected the real action context under tsc -b.
@@ -710,6 +721,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
