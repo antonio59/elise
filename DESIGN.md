@@ -190,9 +190,9 @@ components:
 
 ## Overview
 
-Elise Reads is a personal book tracking, art gallery, and writing site with a warm editorial aesthetic that blends cozy bookstore vibes with anime/kawaii playfulness. The design philosophy centers on **tactile warmth** — everything should feel like flipping through a well-loved journal or browsing a curated indie bookshelf.
+Elise Reads is a personal book tracking, art gallery, and writing site with a warm editorial aesthetic that blends cozy bookstore vibes with anime/kawaii playfulness. The design philosophy centers on **tactile warmth** - everything should feel like flipping through a well-loved journal or browsing a curated indie bookshelf.
 
-The default "Editorial" theme evokes a dusty-rose café at golden hour: warm creams, terracotta accents, and soft navy ink. Six additional theme personalities let the owner re-skin the entire experience — from Sakura pink kawaii mode to Midnight dark academia.
+The default "Editorial" theme evokes a dusty-rose café at golden hour: warm creams, terracotta accents, and soft navy ink. Six additional theme personalities let the owner re-skin the entire experience - from Sakura pink kawaii mode to Midnight dark academia.
 
 ## Colors
 
@@ -201,20 +201,20 @@ The palette is organized around four semantic color roles that remain consistent
 - **Primary (#c4856c):** Dusty rose / terracotta. The emotional heart of the design. Used for primary actions, active states, ratings emphasis, and warm highlights. In Editorial it's a muted clay; in Sakura it becomes hot pink; in Botanical it shifts to sage green.
 - **Accent (#22d3ee):** Electric teal. Used sparingly for badges, secondary highlights, and energetic moments. Provides playful contrast against the warm primary.
 - **Violet (#4361ee):** Ink blue / anime purple. Used for decorative flourishes, nav active indicators, star-burst accents, and gradient pairing. The "special" color.
-- **Slate (#3a342a):** Warm neutral scale. Backgrounds, text, borders, and structural elements. Notably warmer than a standard gray — it carries a brown undertone in Editorial to match the paper-like aesthetic.
+- **Slate (#3a342a):** Warm neutral scale. Backgrounds, text, borders, and structural elements. Notably warmer than a standard gray - it carries a brown undertone in Editorial to match the paper-like aesthetic.
 - **Star (#d4a853):** Warm gold reserved exclusively for ratings, achievements, and celebratory moments.
 
 ### Theme System
 
 The entire palette swaps via a `data-theme` attribute on `<html>`. The seven available personalities are:
 
-1. **Editorial** (default) — warm beige, dusty rose, navy ink
-2. **Sakura** — kawaii pink, electric teal, soft neutrals
-3. **Lavender** — soft purple, mint green, dreamy neutrals
-4. **Midnight** — dark navy, gold accents, inverted slate scale for true dark mode
-5. **Sunset** — warm coral, cream, golden tones
-6. **Botanical** — sage green, earth tones, amber accents
-7. **Berry** — raspberry, plum, rich pink-purple
+1. **Editorial** (default) - warm beige, dusty rose, navy ink
+2. **Sakura** - kawaii pink, electric teal, soft neutrals
+3. **Lavender** - soft purple, mint green, dreamy neutrals
+4. **Midnight** - dark navy, gold accents, inverted slate scale for true dark mode
+5. **Sunset** - warm coral, cream, golden tones
+6. **Botanical** - sage green, earth tones, amber accents
+7. **Berry** - raspberry, plum, rich pink-purple
 
 All components reference CSS custom properties that re-map under each theme, ensuring complete palette coherence without per-theme component overrides.
 
@@ -232,7 +232,7 @@ Headings are always bold (700), tight-leading (1.25), and colored in the deepest
 
 The layout follows a cozy, content-dense approach:
 
-- **Page background:** Soft cream (`slate-50`) with a subtle geometric SVG pattern at 6% opacity — barely visible but adds paper-like texture.
+- **Page background:** Soft cream (`slate-50`) with a subtle geometric SVG pattern at 6% opacity - barely visible but adds paper-like texture.
 - **Surface cards:** White with soft shadows (`shadow-soft`) and 1px warm borders (`slate-200`). Cards lift on hover with increased shadow and a 2px translateY.
 - **Spacing scale:** Compact but breathable. Cards use `24px` padding internally. Grid gaps are typically `16px`. The shelf-scroll pattern (horizontal book carousels) uses `16px` gaps with snap scrolling.
 - **Book cards:** A signature 3D perspective tilt on hover (`rotateY(-5deg) rotateX(2deg) translateY(-8px) scale(1.03)`) that makes covers feel physical. A subtle spine gradient runs down the left edge.
@@ -242,18 +242,18 @@ The layout follows a cozy, content-dense approach:
 
 Elevation is expressed through shadow warmth rather than darkness:
 
-- **shadow-soft:** The default — barely-there warmth for cards and surfaces.
+- **shadow-soft:** The default - barely-there warmth for cards and surfaces.
 - **shadow-primary / shadow-accent:** Colored glows (e.g., `0 4px 14px rgba(176, 107, 80, 0.15)`) that emanate from primary/accent buttons, making CTAs feel luminous.
 - **Hover elevation:** Cards gain larger shadows and physical lift. Buttons scale slightly and translate up 1px.
 
-No hard drop shadows — everything diffuses softly, matching the paper-and-ink metaphor.
+No hard drop shadows - everything diffuses softly, matching the paper-and-ink metaphor.
 
 ## Shapes
 
 - **Primary radius:** `12px` (`rounded-xl`) for cards, modals, and major containers.
 - **Secondary radius:** `8px` (`rounded-lg`) for buttons and smaller controls.
 - **Pills:** `9999px` (`rounded-full`) for badges, mood tags, and genre tags.
-- **Input radius:** `16px` (`rounded-2xl`) — slightly more rounded than buttons to feel inviting.
+- **Input radius:** `16px` (`rounded-2xl`) - slightly more rounded than buttons to feel inviting.
 
 Corners are consistently rounded; there are no sharp rectangles except for full-bleed images and the writing editor textarea.
 
@@ -273,10 +273,10 @@ All buttons use Framer Motion `whileHover` (scale 1.01, translateY -1) and `whil
 ### Cards
 
 - **Default:** White, soft shadow, `12px` radius.
-- **Elevated:** White, medium shadow — for featured content.
-- **Interactive:** Adds hover lift and shadow expansion — for clickable grids.
-- **Outlined:** White, border only, no shadow — for subtle grouping.
-- **Gradient:** Soft primary-to-accent gradient background — for calls-to-attention.
+- **Elevated:** White, medium shadow - for featured content.
+- **Interactive:** Adds hover lift and shadow expansion - for clickable grids.
+- **Outlined:** White, border only, no shadow - for subtle grouping.
+- **Gradient:** Soft primary-to-accent gradient background - for calls-to-attention.
 
 Stat cards feature a decorative corner gradient overlay for subtle visual interest.
 
@@ -303,15 +303,15 @@ Rounded, inviting, and heavily focused. All inputs have:
 ## Do's and Don'ts
 
 **Do:**
-- Use the theme system — never hardcode colors when a CSS custom property exists.
+- Use the theme system - never hardcode colors when a CSS custom property exists.
 - Reserve gold (`star`) exclusively for ratings and achievements.
 - Use Framer Motion for entrances and micro-interactions; keep durations short (150–300ms).
 - Maintain the warm cream page background across all themes (Midnight inverts this intentionally).
 - Use the 3D book card tilt for any book cover grid.
 
 **Don't:**
-- Use pure black or pure white — the darkest text is `slate-900` (#252119) and surfaces are cream or white.
+- Use pure black or pure white - the darkest text is `slate-900` (#252119) and surfaces are cream or white.
 - Mix sharp corners with the rounded aesthetic; keep radii consistent within a component type.
-- Overuse gradients — the gradient card variant is for special emphasis only.
-- Ignore `prefers-reduced-motion` — all animations respect this media query.
+- Overuse gradients - the gradient card variant is for special emphasis only.
+- Ignore `prefers-reduced-motion` - all animations respect this media query.
 - Use the accent teal for primary CTAs unless the context specifically calls for energetic contrast.
