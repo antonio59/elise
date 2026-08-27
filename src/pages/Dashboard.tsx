@@ -1,6 +1,8 @@
 import React, { useState, useCallback, useMemo } from "react";
-import { useQuery, useMutation } from "convex/react";
+import confetti from "canvas-confetti";
+import { useQuery, useMutation, useAction } from "convex/react";
 import { api } from "../../convex/_generated/api";
+import type { Id } from "../../convex/_generated/dataModel";
 import { usePageAnnouncement } from "../components/AccessibleAnnouncer";
 import { usePageMeta } from "../components/PageMeta";
 import ReadingStreak from "../components/ReadingStreak";
@@ -21,6 +23,7 @@ import QuickActions from "../components/dashboard/QuickActions";
 import RecentBooks from "../components/dashboard/RecentBooks";
 import RecentArtworks from "../components/dashboard/RecentArtworks";
 import RecentPhotos from "../components/dashboard/RecentPhotos";
+import AddBookModal from "../components/books/AddBookModal";
 
 const Dashboard: React.FC = () => {
   usePageAnnouncement("Dashboard");
@@ -34,13 +37,15 @@ const Dashboard: React.FC = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const reactionStats = useQuery((api as any).reactions.getDashboardStats);
   const setGoal = useMutation(api.readingGoals.setGoal);
+  const addBook = useMutation(api.books.add);
+  const storeCover = useAction(api.covers.storeFromUrl);
   const userProfile = useQuery(api.users.getProfile);
   const setOnboardingSeen = useMutation(api.users.setOnboardingSeen);
 
   const [showGoalModal, setShowGoalModal] = useState(false);
   const [showTour, setShowTour] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
 
-  // Show onboarding on first visit
   const shouldShowOnboarding =
     userProfile !== undefined &&
     userProfile !== null &&
@@ -73,60 +78,55 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="space-y-8">
-      {/* Welcome Header */}
-      <DashboardHeader onStartTour={() => setShowTour(true)} />
+      <DashboardHeader
+        onStartTour={() => setShowTour(true)}
+        onAddBook={() => setShowAddModal(true)}
+      />
 
-      {/* Streaks */}
+      {/* Habit loop first: reading + primary actions */}
+      <CurrentlyReading books={currentlyReading} />
+
+      <QuickActions
+        stats={stats}
+        writingStats={writingStats}
+        onAddBook={() => setShowAddModal(true)}
+      />
+
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <ReadingStreak />
       </div>
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <WritingStreak />
-      </div>
 
-      {/* Daily Prompts */}
-      <DailyPrompts />
-
-      {/* Ideas & Quotes */}
-      <div className="grid md:grid-cols-2 gap-6">
-        <IdeasVault />
-        <QuoteCollection />
-      </div>
-
-      {/* Stats Grid */}
-      <DashboardStats stats={stats} writingStats={writingStats} />
-
-      {/* Currently Reading */}
-      <CurrentlyReading books={currentlyReading} />
-
-      {/* Reactions Stats */}
-      <ReactionsStats reactionStats={reactionStats} />
-
-      {/* Reading Goal Progress */}
       <ReadingGoalProgress
         goalProgress={goalProgress}
         onSetGoal={() => setShowGoalModal(true)}
       />
 
-      {/* Quick Actions */}
-      <QuickActions stats={stats} writingStats={writingStats} />
+      <DashboardStats stats={stats} writingStats={writingStats} />
 
-      {/* Recent Books */}
       <RecentBooks books={books} recentBooks={recentBooks} />
 
-      {/* Monthly Wrapped */}
+      <ReactionsStats reactionStats={reactionStats} />
+
+      {/* Creative / secondary tools */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <WritingStreak />
+      </div>
+
+      <DailyPrompts />
+
+      <div className="grid md:grid-cols-2 gap-6">
+        <IdeasVault />
+        <QuoteCollection />
+      </div>
+
       <MonthlyWrapped />
 
-      {/* Art Progress */}
       <ArtProgressTimeline />
 
-      {/* Recent Artworks */}
       <RecentArtworks artworks={artworks} recentArtworks={recentArtworks} />
 
-      {/* Recent Photos */}
       <RecentPhotos photos={photos} recentPhotos={recentPhotos} />
 
-      {/* Onboarding Tour */}
       {showTour && (
         <OnboardingTour
           onComplete={handleTourComplete}
@@ -134,7 +134,6 @@ const Dashboard: React.FC = () => {
         />
       )}
 
-      {/* Set Goal Modal */}
       <SetGoalModal
         isOpen={showGoalModal}
         onClose={() => setShowGoalModal(false)}
@@ -147,6 +146,34 @@ const Dashboard: React.FC = () => {
             targetPages: targetPages || undefined,
           });
           setShowGoalModal(false);
+        }}
+      />
+
+      <AddBookModal
+        isOpen={showAddModal}
+        onClose={() => setShowAddModal(false)}
+        onAdd={async (book, destination) => {
+          const bookId = (await addBook({
+            title: book.title,
+            author: book.author,
+            coverUrl: book.coverUrl,
+            isbn: book.isbn,
+            genre: book.genre,
+            pageCount: book.pageCount,
+            status: destination,
+            rating: destination === "read" ? book.rating : undefined,
+            isFavorite: false,
+          })) as Id<"books">;
+          storeCover({ bookId }).catch(() => {});
+          setShowAddModal(false);
+          if (destination === "read") {
+            confetti({
+              particleCount: 100,
+              spread: 70,
+              origin: { y: 0.6 },
+              colors: ["#a855f7", "#ec4899", "#f59e0b", "#10b981"],
+            });
+          }
         }}
       />
     </div>

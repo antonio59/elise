@@ -3,138 +3,128 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   BookOpen,
-  Palette,
   MessageSquarePlus,
-  Feather,
-  Camera,
 } from "lucide-react";
 import { Button } from "../ui/Button";
+import CoverImage from "../CoverImage";
 
-const FLOATING_EMOJIS = [
-  { emoji: "📚", x: "8%", y: "20%", delay: 0, duration: 3.2 },
-  { emoji: "⭐", x: "92%", y: "18%", delay: 0.5, duration: 2.8 },
-  { emoji: "🎨", x: "5%", y: "72%", delay: 1, duration: 3.5 },
-  { emoji: "✍️", x: "88%", y: "68%", delay: 0.3, duration: 3.0 },
-  { emoji: "🌸", x: "20%", y: "85%", delay: 0.8, duration: 2.6 },
-  { emoji: "💜", x: "78%", y: "88%", delay: 1.2, duration: 3.3 },
-];
+type HeroBook = {
+  _id: string;
+  title: string;
+  author: string;
+  coverUrl?: string;
+  coverImageUrl?: string | null;
+  coverStorageId?: string;
+};
 
 const HeroSection: React.FC<{
   heroTitle?: string;
   heroSubtitle?: string;
+  nowReading?: HeroBook[];
   onSuggestClick: () => void;
-}> = ({ heroTitle, heroSubtitle, onSuggestClick }) => {
+}> = ({ heroTitle, heroSubtitle, nowReading = [], onSuggestClick }) => {
   const title = heroTitle ?? "Elise Reads";
   const subtitle =
     heroSubtitle ?? "books I've read, art I make, and words I write";
-  const subtitleWords = subtitle.split(" ");
+  const covers = nowReading.slice(0, 3);
 
   return (
-    <section className="relative py-16 sm:py-24 px-4 overflow-hidden">
-      {/* Gradient background */}
+    <section className="relative py-12 sm:py-20 px-4 overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-primary-50 via-violet-50 to-accent-50" />
-
-      {/* Decorative blobs */}
       <div className="absolute top-0 left-1/4 w-64 h-64 bg-primary-200/30 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-violet-200/25 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute top-1/2 left-0 w-48 h-48 bg-accent-200/20 rounded-full blur-2xl pointer-events-none" />
 
-      {/* Floating emojis */}
-      {FLOATING_EMOJIS.map((item, i) => (
-        <motion.span
-          key={i}
-          className="absolute text-2xl select-none pointer-events-none hidden sm:block"
-          style={{ left: item.x, top: item.y }}
-          animate={{ y: [0, -12, 0] }}
-          transition={{
-            duration: item.duration,
-            delay: item.delay,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
+      <div className="relative max-w-5xl mx-auto">
+        <div
+          className={`flex flex-col ${covers.length > 0 ? "lg:flex-row lg:items-center lg:gap-12" : ""} gap-10`}
         >
-          {item.emoji}
-        </motion.span>
-      ))}
-
-      {/* Content */}
-      <div className="relative max-w-3xl mx-auto text-center">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5 }}
-        >
-          <span className="inline-block px-4 py-1.5 rounded-full bg-primary-100 text-primary-700 text-sm font-semibold mb-5 tracking-wide">
-            ✨ welcome to my little corner of the internet
-          </span>
-        </motion.div>
-
-        <motion.h1
-          className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold mb-4"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-        >
-          <span className="bg-gradient-to-r from-primary-600 via-violet-500 to-accent-500 bg-clip-text text-transparent">
-            {title}
-          </span>
-        </motion.h1>
-
-        {/* Word-stagger subtitle */}
-        <motion.p
-          className="text-xl md:text-2xl text-slate-600 max-w-lg mx-auto mb-10 font-medium italic flex flex-wrap justify-center gap-x-1.5"
-          initial="hidden"
-          animate="visible"
-          variants={{
-            visible: {
-              transition: { staggerChildren: 0.07, delayChildren: 0.5 },
-            },
-          }}
-        >
-          {subtitleWords.map((word, i) => (
-            <motion.span
-              key={i}
-              variants={{
-                hidden: { opacity: 0, y: 8 },
-                visible: { opacity: 1, y: 0 },
-              }}
-              transition={{ duration: 0.35 }}
+          <div className={`text-center ${covers.length > 0 ? "lg:text-left lg:flex-1" : ""}`}>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.4 }}
             >
-              {word}
-            </motion.span>
-          ))}
-        </motion.p>
+              <span className="inline-block px-4 py-1.5 rounded-full bg-primary-100 text-primary-700 text-sm font-semibold mb-5 tracking-wide">
+                my little corner of the internet
+              </span>
+            </motion.div>
 
-        <motion.div
-          className="flex flex-wrap justify-center gap-3"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.0 }}
-        >
-          <a href="#books" className="btn btn-primary">
-            <BookOpen className="w-4 h-4" />
-            Books
-          </a>
-          <Link to="/art" className="btn btn-secondary">
-            <Palette className="w-4 h-4" />
-            Art
-          </Link>
-          <Link to="/photos" className="btn btn-secondary">
-            <Camera className="w-4 h-4" />
-            Photos
-          </Link>
-          <Link to="/writing" className="btn btn-secondary">
-            <Feather className="w-4 h-4" />
-            Writing
-          </Link>
-          <Button
-            variant="secondary"
-            icon={<MessageSquarePlus className="w-4 h-4" />}
-            onClick={onSuggestClick}
-          >
-            Suggest a Book
-          </Button>
-        </motion.div>
+            <motion.h1
+              className="text-5xl sm:text-6xl md:text-7xl font-bold mb-4"
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.45, delay: 0.05 }}
+            >
+              <span className="bg-gradient-to-r from-primary-600 via-violet-500 to-accent-500 bg-clip-text text-transparent">
+                {title}
+              </span>
+            </motion.h1>
+
+            <motion.p
+              className="text-lg md:text-xl text-slate-600 max-w-lg mx-auto lg:mx-0 mb-8 font-medium italic"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.15 }}
+            >
+              {subtitle}
+            </motion.p>
+
+            <motion.div
+              className="flex flex-wrap justify-center lg:justify-start gap-3"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.25 }}
+            >
+              <a href="#books" className="btn btn-primary min-h-11 px-6">
+                <BookOpen className="w-4 h-4" />
+                Browse books
+              </a>
+              <Button
+                variant="secondary"
+                className="min-h-11"
+                icon={<MessageSquarePlus className="w-4 h-4" />}
+                onClick={onSuggestClick}
+              >
+                Suggest a book
+              </Button>
+            </motion.div>
+          </div>
+
+          {covers.length > 0 && (
+            <motion.div
+              className="flex justify-center lg:justify-end gap-3 sm:gap-4 lg:flex-1"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+              role="region"
+              aria-label="Currently reading"
+            >
+              {covers.map((book, i) => (
+                <Link
+                  key={book._id}
+                  to={`/books/${book._id}`}
+                  className="block w-28 sm:w-36 md:w-40 flex-shrink-0 group"
+                  style={{ zIndex: covers.length - i }}
+                >
+                  <div
+                    className="transition-transform group-hover:-translate-y-1"
+                    style={{ transform: `rotate(${(i - 1) * 4}deg)` }}
+                  >
+                    <div className="aspect-[2/3] rounded-xl overflow-hidden bg-white shadow-lg ring-1 ring-slate-200/80">
+                      <CoverImage
+                        book={book}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <p className="mt-2 text-xs sm:text-sm font-semibold text-slate-700 line-clamp-1 text-center">
+                      {book.title}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </motion.div>
+          )}
+        </div>
       </div>
     </section>
   );

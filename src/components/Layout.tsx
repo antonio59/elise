@@ -32,17 +32,20 @@ interface LayoutProps {
 }
 
 const NAV_ITEMS = [
-  { path: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { path: "/dashboard", label: "Home", icon: LayoutDashboard },
   { path: "/dashboard/books", label: "My Books", icon: BookOpen },
-  { path: "/dashboard/reviews", label: "Reviews", icon: Star },
-  { path: "/dashboard/writing", label: "My Writing", icon: PenTool },
-  { path: "/dashboard/art", label: "My Art", icon: Palette },
-  { path: "/dashboard/photos", label: "My Photos", icon: Camera },
-  { path: "/dashboard/characters", label: "Characters", icon: Users },
+  { path: "/dashboard/writing", label: "Writing", icon: PenTool },
+  { path: "/dashboard/art", label: "Art", icon: Palette },
+  { path: "/dashboard/photos", label: "Photos", icon: Camera },
   { path: "/dashboard/discover", label: "Discover", icon: Compass },
   { path: "/dashboard/suggestions", label: "Suggestions", icon: MessageSquare },
-  { path: "/dashboard/about", label: "About Me", icon: User },
   { path: "/dashboard/settings", label: "Settings", icon: Settings },
+];
+
+const SECONDARY_NAV_ITEMS = [
+  { path: "/dashboard/reviews", label: "Reviews", icon: Star },
+  { path: "/dashboard/characters", label: "Characters", icon: Users },
+  { path: "/dashboard/about", label: "About Me", icon: User },
 ];
 
 // Main layout for protected pages (with sidebar)
@@ -67,7 +70,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       </Link>
 
       {/* Navigation */}
-      <nav className="flex-1 space-y-2">
+      <nav className="flex-1 space-y-1">
         {NAV_ITEMS.map((item) => {
           const Icon = item.icon;
           const isActive = location.pathname === item.path;
@@ -77,7 +80,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
               key={item.path}
               to={item.path}
               onClick={onItemClick}
-              className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all ${
+              className={`flex items-center gap-3 px-4 min-h-11 py-3 rounded-xl font-medium transition-all ${
                 isActive
                   ? "bg-gradient-to-r from-primary-500 to-accent-500 text-white shadow-md"
                   : "text-slate-600 hover:bg-slate-100"
@@ -88,6 +91,33 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
             </Link>
           );
         })}
+        <div role="group" aria-label="More" className="pt-3 mt-2 border-t border-slate-200">
+          <p
+            aria-hidden="true"
+            className="px-4 pb-1 text-[11px] font-semibold uppercase tracking-wider text-slate-400"
+          >
+            More
+          </p>
+          {SECONDARY_NAV_ITEMS.map((item) => {
+            const Icon = item.icon;
+            const isActive = location.pathname === item.path;
+            return (
+              <Link
+                key={item.path}
+                to={item.path}
+                onClick={onItemClick}
+                className={`flex items-center gap-3 px-4 min-h-11 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                  isActive
+                    ? "bg-primary-100 text-primary-700"
+                    : "text-slate-500 hover:bg-slate-100"
+                }`}
+              >
+                <Icon className="w-4 h-4" />
+                {item.label}
+              </Link>
+            );
+          })}
+        </div>
       </nav>
 
       {/* Public Site Link */}
@@ -185,19 +215,44 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
 // Public layout (with header/footer)
 export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
   const siteSettings = useQuery(api.siteSettings.get);
+  const writings = useQuery(api.writings.getPublished, { limit: 1 });
+  const artworks = useQuery(api.artworks.getPublished, { limit: 1 });
+  const photos = useQuery(api.photos.getPublished, { limit: 1 });
   const { user } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const location = useLocation();
 
+  const hasWriting = (writings?.length ?? 0) > 0;
+  const hasArt = (artworks?.length ?? 0) > 0;
+  const hasPhotos = (photos?.length ?? 0) > 0;
+  // While loading, hide creative sections so empty rooms don't flash
+  const creativeReady =
+    writings !== undefined && artworks !== undefined && photos !== undefined;
+
   const navLinks = [
-    { label: "Books", to: "/books", icon: BookOpen },
-    { label: "Reviews", to: "/reviews", icon: Star },
-    { label: "Writing", to: "/writing", icon: PenTool },
-    { label: "Art", to: "/art", icon: Palette },
-    { label: "Photos", to: "/photos", icon: Camera },
-    { label: "Wishlist", to: "/wishlist", icon: Gift },
-    { label: "About", to: "/about", icon: User },
-  ];
+    { label: "Books", to: "/books", icon: BookOpen, show: true },
+    { label: "Reviews", to: "/reviews", icon: Star, show: true },
+    {
+      label: "Writing",
+      to: "/writing",
+      icon: PenTool,
+      show: creativeReady && hasWriting,
+    },
+    {
+      label: "Art",
+      to: "/art",
+      icon: Palette,
+      show: creativeReady && hasArt,
+    },
+    {
+      label: "Photos",
+      to: "/photos",
+      icon: Camera,
+      show: creativeReady && hasPhotos,
+    },
+    { label: "Wishlist", to: "/wishlist", icon: Gift, show: true },
+    { label: "About", to: "/about", icon: User, show: true },
+  ].filter((link) => link.show);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -226,7 +281,7 @@ export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
                 <Link
                   key={link.label}
                   to={link.to}
-                  className={`flex items-center gap-1.5 font-medium transition-colors ${
+                  className={`flex items-center gap-1.5 min-h-11 px-1 font-medium transition-colors ${
                     isActive
                       ? "text-violet-500"
                       : "text-slate-500 hover:text-primary-600"
@@ -288,7 +343,7 @@ export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
                 <Link
                   key={link.label}
                   to={link.to}
-                  className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 font-medium"
+                  className="flex items-center gap-3 px-4 min-h-11 py-3 rounded-xl text-slate-600 hover:bg-slate-50 font-medium"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   <Icon className="w-4 h-4" />
@@ -342,7 +397,7 @@ export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
             </p>
             <p className="text-xs text-slate-400 mt-2">
               {(siteSettings as { footerNote?: string })?.footerNote ||
-                "Made with love for Elise 💜"}
+                "made by me ✨"}
             </p>
           </div>
         </div>

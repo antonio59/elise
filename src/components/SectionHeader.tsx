@@ -26,7 +26,7 @@ const SectionHeader: React.FC<SectionHeaderProps> = ({
       {action && (
         <Link
           to={action.to}
-          className="text-sm text-primary-600 hover:text-primary-700 font-medium"
+          className="inline-flex items-center min-h-11 px-2 text-sm text-primary-600 hover:text-primary-700 font-medium"
         >
           {action.label} →
         </Link>

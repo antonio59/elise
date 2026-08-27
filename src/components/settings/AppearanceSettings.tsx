@@ -208,7 +208,7 @@ const AppearanceSettings: React.FC<AppearanceSettingsProps> = ({
               value={footerNote}
               onChange={(e) => setFooterNote(e.target.value)}
               className="input"
-              placeholder="Made with love for Elise 💜"
+              placeholder="made by me ✨"
             />
           </div>
         </div>
