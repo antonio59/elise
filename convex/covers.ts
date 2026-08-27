@@ -1,4 +1,5 @@
 import { query, internalMutation, action } from "./_generated/server";
+import type { ActionCtx } from "./_generated/server";
 import { v } from "convex/values";
 import { api, internal } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
@@ -108,10 +109,7 @@ type CoverBook = {
 };
 
 async function storeCoverForBook(
-  ctx: {
-    runMutation: (ref: unknown, args: unknown) => Promise<unknown>;
-    storage: { store: (b: Blob) => Promise<Id<"_storage">> };
-  },
+  ctx: ActionCtx,
   book: CoverBook,
   options?: { replaceExisting?: boolean },
 ): Promise<"stored" | "skip"> {
