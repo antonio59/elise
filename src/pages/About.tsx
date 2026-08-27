@@ -213,7 +213,7 @@ const About: React.FC = () => {
               {/* Genres */}
               {display?.favoriteGenres && display.favoriteGenres.length > 0 && (
                 <section className="rounded-3xl bg-white/80 border border-slate-200 p-5 sm:p-6">
-                  <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-500 mb-3">
+                  <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-600 mb-3">
                     Favourite genres
                   </h2>
                   <div className="flex flex-wrap gap-2">
@@ -235,7 +235,7 @@ const About: React.FC = () => {
                 <section className="rounded-3xl bg-white/80 border border-slate-200 p-5 sm:p-6 space-y-5">
                   {display?.favoriteBook && (
                     <div>
-                      <h2 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-slate-500 mb-2">
+                      <h2 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-slate-600 mb-2">
                         <Heart
                           className="w-4 h-4 text-primary-500"
                           aria-hidden="true"
@@ -249,7 +249,7 @@ const About: React.FC = () => {
                   )}
                   {display?.rereads && display.rereads.length > 0 && (
                     <div>
-                      <h2 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-slate-500 mb-3">
+                      <h2 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-slate-600 mb-3">
                         <RefreshCw className="w-4 h-4" aria-hidden="true" />
                         Worth reading again
                       </h2>
