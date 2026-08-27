@@ -86,11 +86,7 @@ const Dashboard: React.FC = () => {
       {/* Habit loop first: reading + primary actions */}
       <CurrentlyReading books={currentlyReading} />
 
-      <QuickActions
-        stats={stats}
-        writingStats={writingStats}
-        onAddBook={() => setShowAddModal(true)}
-      />
+      <QuickActions stats={stats} writingStats={writingStats} />
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <ReadingStreak />

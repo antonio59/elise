@@ -45,7 +45,7 @@ const ReactionBar: React.FC<ReactionBarProps> = ({ targetType, targetId, classNa
             aria-label={`${emoji} reaction${count > 0 ? `, ${count}` : ""}${hasReacted ? " (active, click to remove)" : ""}`}
             aria-pressed={hasReacted}
             className={`
-              flex items-center gap-1 px-2 py-1 rounded-full text-sm
+              inline-flex items-center justify-center gap-1 min-h-11 min-w-11 px-2.5 rounded-full text-sm
               transition-all duration-200 hover:scale-105 active:scale-95
               ${hasReacted
                 ? "bg-primary-100 text-primary-700 ring-1 ring-primary-300"

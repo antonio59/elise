@@ -15,19 +15,19 @@ const RATING_LABELS: Record<number, string> = {
 };
 
 const genreColors: Record<string, string> = {
-  Manga: "bg-error-50 text-error-600 border-error-200",
-  Manhwa: "bg-blue-50 text-accent-600 border-blue-200",
-  Webtoon: "bg-purple-50 text-purple-600 border-purple-200",
-  "Light Novel": "bg-amber-50 text-amber-600 border-amber-200",
-  Fantasy: "bg-violet-50 text-violet-600 border-violet-200",
-  "Sci-Fi": "bg-cyan-50 text-cyan-600 border-cyan-200",
-  Romance: "bg-pink-50 text-primary-600 border-pink-200",
-  Mystery: "bg-slate-50 text-slate-600 border-slate-200",
-  Horror: "bg-orange-50 text-orange-700 border-orange-200",
-  "Slice of Life": "bg-success-50 text-success-600 border-success-200",
-  Action: "bg-error-50 text-red-700 border-error-200",
-  Comedy: "bg-yellow-50 text-yellow-700 border-yellow-200",
-  Drama: "bg-indigo-50 text-indigo-600 border-indigo-200",
+  Manga: "bg-slate-100 text-slate-600 border-slate-200",
+  Manhwa: "bg-slate-100 text-slate-600 border-slate-200",
+  Webtoon: "bg-slate-100 text-slate-600 border-slate-200",
+  "Light Novel": "bg-slate-100 text-slate-600 border-slate-200",
+  Fantasy: "bg-slate-100 text-slate-600 border-slate-200",
+  "Sci-Fi": "bg-slate-100 text-slate-600 border-slate-200",
+  Romance: "bg-slate-100 text-slate-600 border-slate-200",
+  Mystery: "bg-slate-100 text-slate-600 border-slate-200",
+  Horror: "bg-slate-100 text-slate-600 border-slate-200",
+  "Slice of Life": "bg-slate-100 text-slate-600 border-slate-200",
+  Action: "bg-slate-100 text-slate-600 border-slate-200",
+  Comedy: "bg-slate-100 text-slate-600 border-slate-200",
+  Drama: "bg-slate-100 text-slate-600 border-slate-200",
 };
 
 interface PublicBookGridProps {

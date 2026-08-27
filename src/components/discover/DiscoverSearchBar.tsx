@@ -13,11 +13,11 @@ const DiscoverSearchBar: React.FC<DiscoverSearchBarProps> = ({
   return (
     <div className="mb-6">
       <div className="flex items-center gap-3 mb-2">
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-pink-500 flex items-center justify-center">
+        <div className="w-10 h-10 rounded-xl bg-primary-500 flex items-center justify-center">
           <Compass className="w-5 h-5 text-white" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-slate-800">Discover</h1>
+          <h1 className="font-display text-3xl font-bold text-slate-900">Discover</h1>
           <p className="text-sm text-slate-500">
             Swipe to find your next read
           </p>
@@ -52,7 +52,7 @@ const DiscoverSearchBar: React.FC<DiscoverSearchBarProps> = ({
           {profile.topGenres.slice(0, 4).map((genre: string) => (
             <span
               key={genre}
-              className="px-2.5 py-1 rounded-full bg-primary-50 text-primary-600 text-xs font-medium"
+              className="px-2.5 py-1 rounded-full bg-primary-50 text-primary-700 text-xs font-medium"
             >
               {genre}
             </span>
@@ -60,7 +60,7 @@ const DiscoverSearchBar: React.FC<DiscoverSearchBarProps> = ({
           {profile.topMoods.slice(0, 2).map((mood: string) => (
             <span
               key={mood}
-              className="px-2.5 py-1 rounded-full bg-violet-50 text-violet-600 text-xs font-medium"
+              className="px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 text-xs font-medium"
             >
               {mood}
             </span>

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
-import { Lightbulb, Plus, X, Archive, Trash2, Sparkles } from "lucide-react";
+import { Lightbulb, Plus, X, Archive, Trash2 } from "lucide-react";
 import CardHeader from "./CardHeader";
 import AnimatedForm from "./AnimatedForm";
 import type { Doc } from "../../convex/_generated/dataModel";
@@ -67,7 +67,7 @@ const IdeasVault: React.FC = () => {
   return (
     <motion.div className="card p-6" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
       <CardHeader
-        icon={Sparkles}
+        icon={Lightbulb}
         title="Ideas Vault"
         description="Capture creative sparks before they fade"
         gradientFrom="from-amber-400"

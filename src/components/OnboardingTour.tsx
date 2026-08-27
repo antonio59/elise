@@ -4,7 +4,6 @@ import {
   ChevronRight,
   ChevronLeft,
   BookOpen,
-  Sparkles,
   Palette,
   PenTool,
   Heart,
@@ -32,9 +31,9 @@ const TOUR_STEPS: TourStep[] = [
     title: "Welcome, Elise!",
     content:
       "As your uncle I created this site to give you an outlet to share the things you love to do -- read, write, and draw! This is YOUR special place on the internet. Let me show you around so you can make the most of it.",
-    emoji: "💜",
-    icon: <Sparkles className="w-8 h-8" />,
-    color: "from-primary-500 to-accent-500",
+    emoji: "📖",
+    icon: <Heart className="w-8 h-8" />,
+    color: "from-primary-500 to-primary-700",
   },
   {
     title: "Your Bookshelf",
@@ -96,22 +95,17 @@ const TOUR_STEPS: TourStep[] = [
     title: "You are All Set!",
     content:
       "That is everything! Remember, this is YOUR space. Read books, write stories, create art, and have fun. I am so proud of you and excited to see what you share. Now go explore!",
-    emoji: "🚀",
-    icon: <Sparkles className="w-8 h-8" />,
+    emoji: "⭐",
+    icon: <Star className="w-8 h-8" />,
     color: "from-primary-500 to-accent-500",
   },
 ];
 
 const FLOATING_EMOJIS = [
   "📚",
-  "✨",
   "🎨",
   "✍️",
-  "💜",
   "⭐",
-  "🦋",
-  "🌸",
-  "💫",
   "📖",
 ];
 
@@ -248,7 +242,7 @@ const OnboardingTour: React.FC<OnboardingTourProps> = ({
               {/* Celebration confetti on last step */}
               {isLastStep && (
                 <div className="mt-6 flex justify-center gap-3">
-                  {["📚", "🎨", "✍️", "⭐", "💜"].map((emoji, i) => (
+                  {["📚", "🎨", "✍️", "⭐", "📖"].map((emoji, i) => (
                     <motion.span
                       key={i}
                       className="text-2xl"

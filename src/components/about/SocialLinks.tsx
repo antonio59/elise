@@ -1,5 +1,5 @@
 import React from "react";
-import { Quote, Sparkles } from "lucide-react";
+import { Quote, Heart } from "lucide-react";
 
 interface SocialLinksProps {
   favoriteQuote: string;
@@ -17,7 +17,7 @@ const SocialLinks: React.FC<SocialLinksProps> = ({
   return (
     <div className="card p-6">
       <h2 className="font-bold text-slate-800 mb-4 flex items-center gap-2">
-        <Sparkles className="w-5 h-5 text-amber-500" />
+        <Heart className="w-5 h-5 text-primary-500" />
         Personal Touches
       </h2>
       <div className="space-y-4">

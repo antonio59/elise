@@ -44,7 +44,7 @@ const GlobalSearch: React.FC = () => {
           type: "book",
           title: b.title,
           subtitle: b.author,
-          url: `/books`,
+          url: `/books/${b._id}`,
           image: b,
         });
       }
@@ -60,7 +60,7 @@ const GlobalSearch: React.FC = () => {
           type: "writing",
           title: w.title,
           subtitle: w.type,
-          url: `/writing`,
+          url: `/writing/${w._id}`,
         });
       }
     }

@@ -23,8 +23,8 @@ const ShareButton: React.FC<ShareButtonProps> = ({
       : window.location.href;
 
   const text = author
-    ? `"${title}" by ${author} - on Elise Reads! 📚`
-    : `${title} - on Elise Reads! 📚`;
+    ? `"${title}" by ${author} - on Elise Reads`
+    : `${title} - on Elise Reads`;
 
   const handleShare = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -46,14 +46,14 @@ const ShareButton: React.FC<ShareButtonProps> = ({
   return (
     <button
       onClick={handleShare}
-      className="flex items-center gap-1 text-[10px] text-slate-400 hover:text-primary-500 transition-colors"
+      className="inline-flex items-center gap-1.5 min-h-11 px-2 text-xs text-slate-400 hover:text-primary-500 transition-colors"
       title="Share this book"
       aria-label={`Share ${title}`}
     >
       {copied ? (
-        <Check className="w-3 h-3 text-success-500" />
+        <Check className="w-3.5 h-3.5 text-success-500" />
       ) : (
-        <Share2 className="w-3 h-3" />
+        <Share2 className="w-3.5 h-3.5" />
       )}
       {copied ? "Copied!" : "Share"}
     </button>

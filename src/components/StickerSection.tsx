@@ -64,7 +64,7 @@ const StickerSection: React.FC<StickerSectionProps> = ({ bookId }) => {
       {/* Toggle button */}
       <button
         onClick={(e) => { e.stopPropagation(); setOpen((o) => !o); setError(null); }}
-        className="text-[10px] text-slate-400 hover:text-primary-500 transition-colors flex items-center gap-0.5"
+        className="min-h-11 px-2 -ml-2 text-xs text-slate-400 hover:text-primary-500 transition-colors inline-flex items-center gap-0.5"
       >
         {atLimit ? "Your reactions" : "React"}
       </button>
@@ -91,7 +91,7 @@ const StickerSection: React.FC<StickerSectionProps> = ({ bookId }) => {
                     key={s}
                     onClick={(e) => handlePick(s, e)}
                     disabled={!!placing}
-                    className={`text-xl leading-none rounded-lg p-1 transition-all hover:bg-primary-50 hover:scale-110 active:scale-95 ${
+                    className={`text-xl leading-none rounded-lg min-h-11 min-w-11 inline-flex items-center justify-center transition-all hover:bg-primary-50 hover:scale-110 active:scale-95 ${
                       placing === s ? "animate-pulse" : ""
                     } ${visitorStickers.includes(s) ? "opacity-40" : ""}`}
                     title={s}

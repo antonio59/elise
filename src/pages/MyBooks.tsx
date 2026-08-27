@@ -85,8 +85,8 @@ const MyBooks: React.FC = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-slate-800">My Books</h1>
-          <p className="text-slate-500 mt-1">Track your reading adventures</p>
+          <h1 className="font-display text-3xl font-bold text-slate-900">My Books</h1>
+          <p className="text-slate-500 mt-1">Track what you&apos;re reading</p>
         </div>
         <Button
           icon={<Plus className="w-5 h-5" />}
@@ -205,7 +205,7 @@ const MyBooks: React.FC = () => {
               exit={{ opacity: 0, scale: 0.95 }}
             >
               <h2 className="text-xl font-bold text-slate-800 mb-2">
-                Write a Review ✨
+                Write a review
               </h2>
               <p className="text-sm text-slate-500 mb-4">
                 Share your thoughts about this book
