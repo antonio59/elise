@@ -25,7 +25,7 @@ const PublicGallery: React.FC = () => {
       <PageHeader
         badge="Art board"
         title="My Creations"
-        subtitle="pins from the studio — art inspired by what I read"
+        subtitle="pins from the studio - art inspired by what I read"
         breadcrumbs={[{ label: "Art" }]}
       />
 

@@ -156,7 +156,7 @@ const PublicReviews: React.FC = () => {
                       )}
                     </div>
                   </div>
-                  {/* Review text — always visible on mobile */}
+                  {/* Review text - always visible on mobile */}
                   <div className="px-4 pb-3">
                     {book.review ? (
                       <blockquote className="text-slate-600 text-sm leading-relaxed border-l-2 border-primary-300 pl-3">
@@ -164,7 +164,7 @@ const PublicReviews: React.FC = () => {
                       </blockquote>
                     ) : (
                       <p className="text-sm text-slate-500 italic">
-                        No written review — just a rating.
+                        No written review - just a rating.
                       </p>
                     )}
                     <BookMoodTags moodTags={book.moodTags} bookId={book._id} />
@@ -272,7 +272,7 @@ const PublicReviews: React.FC = () => {
                         </blockquote>
                       ) : (
                         <p className="text-sm text-slate-500 italic flex-1">
-                          No written review — just a rating.
+                          No written review - just a rating.
                         </p>
                       )}
                       <div className="flex items-center justify-between mt-2">

@@ -45,7 +45,7 @@ export const getByStatus = query({
   },
 });
 
-// Get all read books (for public display — no auth, single-user site)
+// Get all read books (for public display - no auth, single-user site)
 export const getReadBooks = query({
   args: {},
   handler: async (ctx) => {
@@ -72,7 +72,7 @@ export const getFavorites = query({
   },
 });
 
-// Get a single book by ID (public — no auth, single-user site)
+// Get a single book by ID (public - no auth, single-user site)
 export const getById = query({
   args: { id: v.string() },
   handler: async (ctx, args) => {

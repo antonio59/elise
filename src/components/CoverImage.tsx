@@ -17,7 +17,7 @@ interface CoverImageProps {
   fallback?: React.ReactNode;
 }
 
-/** Muted studio gradients — less rainbow / kawaii than the old pack. */
+/** Muted studio gradients - less rainbow / kawaii than the old pack. */
 const GRADIENTS: [string, string][] = [
   ["#c4a4a8", "#6b3d45"],
   ["#a8b4c0", "#3d4f5f"],

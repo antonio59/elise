@@ -23,8 +23,8 @@ const ShareButton: React.FC<ShareButtonProps> = ({
       : window.location.href;
 
   const text = author
-    ? `"${title}" by ${author} — on Elise Reads! 📚`
-    : `${title} — on Elise Reads! 📚`;
+    ? `"${title}" by ${author} - on Elise Reads! 📚`
+    : `${title} - on Elise Reads! 📚`;
 
   const handleShare = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -33,7 +33,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({
       try {
         await navigator.share({ title, text, url });
       } catch {
-        // user cancelled — fine
+        // user cancelled - fine
       }
       return;
     }

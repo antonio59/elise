@@ -10,7 +10,7 @@ export function escapeHtml(text: string): string {
 export function getEmailConfig(env: Record<string, string | undefined> | undefined, context: string): { apiKey: string; allowedEmails: string[] } | null {
   const apiKey = env?.RESEND_API_KEY;
   if (!apiKey) {
-    console.warn(`RESEND_API_KEY not set — skipping ${context}`);
+    console.warn(`RESEND_API_KEY not set - skipping ${context}`);
     return null;
   }
 
@@ -20,7 +20,7 @@ export function getEmailConfig(env: Record<string, string | undefined> | undefin
     .filter(Boolean);
 
   if (allowedEmails.length === 0) {
-    console.warn(`ALLOWED_EMAILS not set — skipping ${context}`);
+    console.warn(`ALLOWED_EMAILS not set - skipping ${context}`);
     return null;
   }
 

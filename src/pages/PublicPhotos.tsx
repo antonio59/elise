@@ -39,7 +39,7 @@ const PublicPhotos: React.FC = () => {
       <PageHeader
         badge="Photo board"
         title="Through My Lens"
-        subtitle="moments pinned — scroll like a moodboard"
+        subtitle="moments pinned - scroll like a moodboard"
         breadcrumbs={[{ label: "Photos" }]}
       />
 

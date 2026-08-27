@@ -5,12 +5,12 @@
 @source "../index.html";
 @source "./**/*.{js,ts,jsx,tsx}";
 
-/* Theme system — alternative palettes */
+/* Theme system - alternative palettes */
 @import "./styles/themes.css";
 
-/* Theme configuration — DEFAULT (Studio): cooler teen aesthetic */
+/* Theme configuration - DEFAULT (Studio): cooler teen aesthetic */
 @theme {
-  /* Font families — Outfit feels fashion/Pinterest; Figtree for readable body */
+  /* Font families - Outfit feels fashion/Pinterest; Figtree for readable body */
   --font-display: "Outfit", system-ui, sans-serif;
   --font-body: "Figtree", system-ui, sans-serif;
 

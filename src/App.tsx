@@ -27,7 +27,7 @@ import { Layout, PublicLayout, AuthLayout } from "./components/Layout";
 
 // Lazy load auth pages
 const Login = lazy(() => import("./pages/Login"));
-// Signup removed — single-owner site (Izzy pattern); keep route redirect below
+// Signup removed - single-owner site (Izzy pattern); keep route redirect below
 
 // Lazy load protected pages
 const Dashboard = lazy(() => import("./pages/Dashboard"));

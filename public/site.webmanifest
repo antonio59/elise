@@ -1,7 +1,7 @@
 {
   "name": "Elise Reads",
   "short_name": "Elise Reads",
-  "description": "Hi — I'm Elise. Browse books I've finished, art I make, photos I keep, and words I write.",
+  "description": "Hi - I'm Elise. Browse books I've finished, art I make, photos I keep, and words I write.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#f7f7f6",

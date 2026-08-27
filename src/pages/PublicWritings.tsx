@@ -120,7 +120,7 @@ const PublicWritings: React.FC = () => {
             Stories, poems & random thoughts
           </p>
           <p className="text-sm text-slate-500 mt-1">
-            Dropping soon — watch this space.
+            Dropping soon - watch this space.
           </p>
         </div>
       ) : (

@@ -55,7 +55,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const createUserProfile = useMutation(api.users.createProfile);
 
-  // Fix #1: Properly gate loading — wait for currentUser to resolve after auth.
+  // Fix #1: Properly gate loading - wait for currentUser to resolve after auth.
   // We check !currentUser (not === undefined) because auth.getUserId can return
   // null briefly right after sign-in before the session propagates, causing
   // getCurrentUser to return null even though isAuthenticated is true.
@@ -76,12 +76,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
         yearlyBookGoal: 24,
         notifications: true,
       }).catch(() => {
-        // Profile may already exist — ignore silently
+        // Profile may already exist - ignore silently
       });
     }
   }, [isAuthenticated, currentUser, createUserProfile]);
 
-  // Fix #2: No more placeholder user — return null while data is still loading
+  // Fix #2: No more placeholder user - return null while data is still loading
   const user = useMemo<AuthUser | null>(() => {
     if (currentUser) {
       return {

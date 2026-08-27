@@ -135,7 +135,7 @@ const FeaturedBooks: React.FC<{
         </section>
       )}
 
-      {/* 5-Star Shelf — horizontal scroll of top-rated books */}
+      {/* 5-Star Shelf - horizontal scroll of top-rated books */}
       {fiveStarBooks.length > 0 && (
         <section className="py-8 px-4">
           <div className="max-w-6xl mx-auto">
@@ -207,7 +207,7 @@ const FeaturedBooks: React.FC<{
           ) : books.length === 0 ? (
             <div className="text-center py-12 bg-slate-50 rounded-2xl">
               <BookOpen className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-              <p className="text-slate-500">The shelf is empty — books will show up here soon.</p>
+              <p className="text-slate-500">The shelf is empty - books will show up here soon.</p>
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">

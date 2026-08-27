@@ -408,7 +408,7 @@ export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
   );
 };
 
-// Auth layout — full-bleed shell for the personalised sign-in page
+// Auth layout - full-bleed shell for the personalised sign-in page
 export const AuthLayout: React.FC<LayoutProps> = ({ children }) => {
   return <div className="min-h-screen">{children}</div>;
 };

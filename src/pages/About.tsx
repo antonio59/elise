@@ -135,7 +135,7 @@ const About: React.FC = () => {
                 Still writing this page
               </p>
               <p className="text-sm text-slate-500 mb-6">
-                Check back soon — or start with the books.
+                Check back soon - or start with the books.
               </p>
               <Link to="/books" className="btn btn-primary min-h-11 px-6">
                 <BookOpen className="w-4 h-4" />
@@ -144,7 +144,7 @@ const About: React.FC = () => {
             </div>
           ) : (
             <div className="space-y-5">
-              {/* Currently reading — visual first */}
+              {/* Currently reading - visual first */}
               {display?.currentlyReading && (
                 <section className="rounded-3xl bg-white/80 border border-primary-100 shadow-soft p-5 sm:p-6">
                   <h2 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-primary-600 mb-4">
@@ -170,7 +170,7 @@ const About: React.FC = () => {
                 </section>
               )}
 
-              {/* Quote — color anchor */}
+              {/* Quote - color anchor */}
               {display?.favoriteQuote && (
                 <section className="rounded-3xl bg-gradient-to-br from-violet-50 to-primary-50 border border-violet-100 p-6 sm:p-8">
                   <Quote
