@@ -8,67 +8,67 @@
 /* Theme system — alternative palettes */
 @import "./styles/themes.css";
 
-/* Theme configuration — DEFAULT values (Editorial) */
+/* Theme configuration — DEFAULT (Studio): cooler teen aesthetic */
 @theme {
-  /* Font families */
-  --font-display: "Fredoka", "Nunito", system-ui, sans-serif;
-  --font-body: "Inter", system-ui, sans-serif;
+  /* Font families — Outfit feels fashion/Pinterest; Figtree for readable body */
+  --font-display: "Outfit", system-ui, sans-serif;
+  --font-body: "Figtree", system-ui, sans-serif;
 
-  /* PRIMARY - Dusty Rose */
-  --color-primary-50: #fdf6f3;
-  --color-primary-100: #f8e8e1;
-  --color-primary-200: #f0d0c4;
-  --color-primary-300: #e3b09c;
-  --color-primary-400: #c9856a;
-  --color-primary-500: #b56a4c;
-  --color-primary-600: #9a523a;
-  --color-primary-700: #7a3f2d;
-  --color-primary-800: #5f3225;
-  --color-primary-900: #46241c;
+  /* PRIMARY - Cool berry rose (less dusty-terracotta / kids-app) */
+  --color-primary-50: #faf5f6;
+  --color-primary-100: #f3e8eb;
+  --color-primary-200: #e6cfd5;
+  --color-primary-300: #d4a8b3;
+  --color-primary-400: #b87384;
+  --color-primary-500: #9a4d5c;
+  --color-primary-600: #823f4d;
+  --color-primary-700: #6a3340;
+  --color-primary-800: #552a34;
+  --color-primary-900: #3f1f27;
 
-  /* ACCENT - Clear Teal */
-  --color-accent-50: #ecfeff;
-  --color-accent-100: #cffafe;
-  --color-accent-200: #a5f3fc;
-  --color-accent-300: #67e8f9;
-  --color-accent-400: #22d3ee;
-  --color-accent-500: #06b6d4;
-  --color-accent-600: #0891b2;
-  --color-accent-700: #0e7490;
-  --color-accent-800: #155e75;
-  --color-accent-900: #164e63;
+  /* ACCENT - Cool ink slate (not cyan candy) */
+  --color-accent-50: #f4f6f8;
+  --color-accent-100: #e4e9ee;
+  --color-accent-200: #c8d2dc;
+  --color-accent-300: #a3b3c2;
+  --color-accent-400: #7a90a4;
+  --color-accent-500: #5c758c;
+  --color-accent-600: #4a5f73;
+  --color-accent-700: #3d4e5f;
+  --color-accent-800: #344250;
+  --color-accent-900: #2d3843;
 
-  /* INK - Readable indigo (not pastel purple) */
-  --color-violet-50: #eef2ff;
-  --color-violet-100: #e0e7ff;
-  --color-violet-200: #c7d2fe;
-  --color-violet-300: #a5b4fc;
-  --color-violet-400: #6366f1;
-  --color-violet-500: #4f46e5;
-  --color-violet-600: #4338ca;
-  --color-violet-700: #3730a3;
+  /* INK - Soft charcoal-rose (not pastel purple) */
+  --color-violet-50: #f7f4f5;
+  --color-violet-100: #ebe4e7;
+  --color-violet-200: #d6c8ce;
+  --color-violet-300: #b89aa5;
+  --color-violet-400: #8f6876;
+  --color-violet-500: #73505d;
+  --color-violet-600: #5f4250;
+  --color-violet-700: #4e3742;
 
-  /* STAR - Warm Gold */
-  --color-star: #d4a853;
-  --color-star-light: #f5e6c8;
+  /* STAR - Soft champagne */
+  --color-star: #c4a35a;
+  --color-star-light: #f3ebda;
 
-  /* SLATE - Warm neutrals with enough contrast for body text */
-  --color-slate-50: #faf7f4;
-  --color-slate-100: #f3eee8;
-  --color-slate-200: #e5ddd3;
-  --color-slate-300: #cfc4b6;
-  --color-slate-400: #a89886;
-  --color-slate-500: #7d6f5e;
-  --color-slate-600: #5c5246;
-  --color-slate-700: #433c34;
-  --color-slate-800: #2e2924;
-  --color-slate-900: #1a1714;
+  /* SLATE - Cool neutrals (not warm cream) */
+  --color-slate-50: #f7f7f6;
+  --color-slate-100: #efefed;
+  --color-slate-200: #e0e0dc;
+  --color-slate-300: #c8c8c2;
+  --color-slate-400: #9a9a93;
+  --color-slate-500: #6f6f69;
+  --color-slate-600: #52524d;
+  --color-slate-700: #3d3d39;
+  --color-slate-800: #2a2a27;
+  --color-slate-900: #171715;
 
   /* Shadows */
-  --shadow-soft: 0 1px 3px rgba(37, 33, 25, 0.08), 0 1px 2px rgba(37, 33, 25, 0.04);
-  --shadow-soft-lg: 0 8px 20px rgba(37, 33, 25, 0.08), 0 4px 8px rgba(37, 33, 25, 0.04);
-  --shadow-primary: 0 4px 14px rgba(181, 106, 76, 0.18);
-  --shadow-violet: 0 4px 14px rgba(79, 70, 229, 0.14);
+  --shadow-soft: 0 1px 3px rgba(23, 23, 21, 0.07), 0 1px 2px rgba(23, 23, 21, 0.04);
+  --shadow-soft-lg: 0 10px 24px rgba(23, 23, 21, 0.08), 0 4px 8px rgba(23, 23, 21, 0.04);
+  --shadow-primary: 0 4px 14px rgba(154, 77, 92, 0.18);
+  --shadow-violet: 0 4px 14px rgba(115, 80, 93, 0.14);
   --shadow-success: 0 4px 14px rgba(34, 197, 94, 0.15);
   --shadow-error: 0 4px 14px rgba(239, 68, 68, 0.15);
   --shadow-star: 0 4px 14px rgba(212, 168, 83, 0.25);
@@ -91,7 +91,7 @@
     @apply m-0 min-h-screen antialiased;
     font-family: var(--font-body);
     background-color: var(--color-slate-50);
-    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c7bfb2' fill-opacity='0.06'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239a9a93' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
     color: var(--color-slate-800);
     overflow-x: hidden;
   }
@@ -536,8 +536,12 @@
   animation: sparkle 1.5s ease-in-out infinite;
 }
 
-/* Sharp cover images */
+/* Covers: crisp downscale without optimize-contrast (which can look harsh/blurry) */
+img.cover-img,
 img[src*="googleapis.com"],
+img[src*="books.google.com"],
 img[src*="convex.cloud"] {
-  image-rendering: -webkit-optimize-contrast;
+  image-rendering: auto;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }

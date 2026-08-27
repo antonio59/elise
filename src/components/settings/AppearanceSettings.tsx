@@ -6,15 +6,15 @@ import SettingsSectionHeader from "./SettingsSectionHeader";
 const themes = [
   {
     value: "editorial",
-    label: "Editorial",
-    colors: ["#c4856c", "#102a43", "#faf8f5"],
-    desc: "Warm beige & dusty rose",
+    label: "Studio",
+    colors: ["#9a4d5c", "#5c758c", "#f7f7f6"],
+    desc: "Berry rose & cool ink",
   },
   {
     value: "sakura",
     label: "Sakura",
     colors: ["#f472b6", "#22d3ee", "#fafafa"],
-    desc: "Pink & teal kawaii",
+    desc: "Soft pink & teal",
   },
   {
     value: "lavender",
@@ -43,7 +43,7 @@ const themes = [
   {
     value: "berry",
     label: "Berry",
-    colors: ["#f472b6", "#c084fc", "#fafafa"],
+    colors: ["#ec4899", "#a855f7", "#fafafa"],
     desc: "Raspberry & plum",
   },
 ];

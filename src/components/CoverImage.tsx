@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { upgradeGoogleCoverUrl } from "../lib/coverUrl";
 
 interface CoverImageProps {
   book: {
@@ -13,16 +14,16 @@ interface CoverImageProps {
   fallback?: React.ReactNode;
 }
 
-// Eight gradient pairs that complement the dusty-rose / teal design system.
+/** Muted studio gradients — less rainbow / kawaii than the old pack. */
 const GRADIENTS: [string, string][] = [
-  ["#e0b8a8", "#9a5640"], // dusty rose
-  ["#9fb3c8", "#06b6d4"], // slate → teal
-  ["#d8b4fe", "#7c3aed"], // lavender → violet
-  ["#fcd34d", "#f97316"], // amber → orange
-  ["#6ee7b7", "#0d9488"], // mint → teal
-  ["#fda4af", "#e11d48"], // blush → crimson
-  ["#93c5fd", "#2563eb"], // sky → blue
-  ["#f0abfc", "#a21caf"], // pink → fuchsia
+  ["#c4a4a8", "#6b3d45"], // rose stone
+  ["#a8b4c0", "#3d4f5f"], // cool slate
+  ["#b8a99a", "#5c4a3a"], // warm taupe
+  ["#9aadb8", "#2f4550"], // ink teal
+  ["#c9b0b8", "#5a3a48"], // mauve
+  ["#adb5a0", "#3f4a38"], // olive
+  ["#b0a8c0", "#3d3550"], // dusk
+  ["#c4b8a8", "#4a4034"], // sand
 ];
 
 function pickGradient(title: string): [string, string] {
@@ -39,46 +40,19 @@ const GradientCard: React.FC<{ title: string; author?: string }> = ({
   return (
     <div
       className="w-full h-full relative overflow-hidden"
-      style={{ background: `linear-gradient(135deg, ${from}, ${to})` }}
+      style={{ background: `linear-gradient(145deg, ${from}, ${to})` }}
     >
-      {/* Decorative circles for depth */}
-      <div className="absolute -top-6 -right-6 w-20 h-20 rounded-full bg-white/15" />
-      <div className="absolute top-4 -left-4 w-12 h-12 rounded-full bg-slate-900/10" />
-      <div className="absolute -bottom-6 -right-2 w-16 h-16 rounded-full bg-slate-900/10" />
-
-      {/* Title + author pinned to the bottom with a scrim */}
-      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent pt-6 pb-2 px-2">
-        <p className="text-white text-[11px] font-bold leading-tight line-clamp-3 drop-shadow">
+      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/55 to-transparent pt-8 pb-2.5 px-2.5">
+        <p className="text-white text-[11px] font-semibold leading-tight line-clamp-3">
           {title}
         </p>
         {author && (
-          <p className="text-white/70 text-[9px] mt-0.5 line-clamp-1 drop-shadow">
-            {author}
-          </p>
+          <p className="text-white/75 text-[9px] mt-0.5 line-clamp-1">{author}</p>
         )}
       </div>
     </div>
   );
 };
-
-/** Upgrade a Google Books cover URL to the largest available zoom level. */
-function upgradeGoogleZoom(url: string, zoom = 5): string {
-  try {
-    const cleaned = url.replace(/&amp;/g, "&").replace("http://", "https://");
-    const u = new URL(cleaned);
-    if (
-      u.hostname === "books.google.com" ||
-      u.hostname.endsWith(".books.google.com")
-    ) {
-      u.searchParams.set("zoom", String(zoom));
-      u.searchParams.delete("edge"); // Remove curl effect for cleaner images
-      u.searchParams.delete("pg");  // Remove page marker — get full cover
-    }
-    return u.toString();
-  } catch {
-    return url.replace(/&amp;/g, "&").replace("http://", "https://");
-  }
-}
 
 const CoverImage: React.FC<CoverImageProps> = ({
   book,
@@ -87,7 +61,7 @@ const CoverImage: React.FC<CoverImageProps> = ({
 }) => {
   const storageUrl = book.coverImageUrl ?? undefined;
   const googleUrl = book.coverUrl
-    ? upgradeGoogleZoom(book.coverUrl)
+    ? upgradeGoogleCoverUrl(book.coverUrl, 800)
     : undefined;
   const openLibraryUrl = book.isbn
     ? `https://covers.openlibrary.org/b/isbn/${book.isbn}-L.jpg`
