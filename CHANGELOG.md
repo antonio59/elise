@@ -36,7 +36,7 @@ All notable changes to this project will be documented in this file.
 - Resolve eslint no-explicit-any in migrations.ts
 - Re-enable schema validation on elise production
 - Prioritize high-res Google Books URLs over blurry storage thumbnails
-- Upgrade cover art to high-res - add migration + remove curl effect
+- Upgrade cover art to high-res — add migration + remove curl effect
 - Add auth cleanup migration, guard empty allowlist, temp disable validation
 - Replace v.any() with v.id('users'), re-enable schema validation, use indexes
 - Add coverImageUrl to all Book type interfaces across pages
@@ -46,7 +46,7 @@ All notable changes to this project will be documented in this file.
 - Resolve brace-expansion security vulnerability
 - Strict hostname validation for Google Books URLs (CodeQL #5, #6)
 - Pin eslint to ^9.x (react-hooks plugin incompatible with eslint 10), add missing canvas-confetti + vitest deps
-- Sharper covers - upgrade Google Books zoom to 3/5, lazy loading
+- Sharper covers — upgrade Google Books zoom to 3/5, lazy loading
 - Add canvas-confetti to package.json and regenerate lock file
 - Resolve merge conflicts with main (keep concurrent storeAll + env-var CONVEX_DEPLOYMENT)
 - Address codebase review findings across backend and frontend
@@ -67,6 +67,22 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
+- Merge pull request #64 from antonio59/feat/share-meta
+
+Remove em dashes from product copy
+- Remove remaining em dashes from docs and config.
+
+Leave email-to-elise.md alone as personal writing.
+
+Co-authored-by: Cursor <cursoragent@cursor.com>
+- Tidy hyphen spacing after emdash sweep.
+
+Co-authored-by: Cursor <cursoragent@cursor.com>
+- Replace em dashes in product copy with plain hyphens.
+
+Keep user-authored writing untouched; only app UI, meta, prompts, and comments.
+
+Co-authored-by: Cursor <cursoragent@cursor.com>
 - Merge pull request #63 from antonio59/feat/share-meta
 
 Share previews: OG meta, logo card, and icons
@@ -123,7 +139,7 @@ Co-authored-by: Cursor <cursoragent@cursor.com>
 - Port Izzy product decisions into Elise’s public surfaces
 
 Quiet home stats, writing + review detail routes, nightstand wishlist
-hero, first-person SEO copy, and shelf peek → full review - kept in
+hero, first-person SEO copy, and shelf peek → full review — kept in
 Elise’s studio voice rather than cloning Izzy’s look.
 
 Co-authored-by: Cursor <cursoragent@cursor.com>
@@ -131,7 +147,7 @@ Co-authored-by: Cursor <cursoragent@cursor.com>
 
 Port Izzy’s niece-addressed coaching login pattern with Elise voice:
 avatar welcome, studio reminders, post-sign-in map, and public browse
-links - without looking like Izzy’s cream shelf.
+links — without looking like Izzy’s cream shelf.
 
 Co-authored-by: Cursor <cursoragent@cursor.com>
 - Merge pull request #58 from antonio59/fix/elise-engagement-and-design
@@ -425,8 +441,8 @@ Fix cover images, codebase review improvements
 - Fix lint: eslint-disable in googleBooks.ts
 - Netlify build: add npx convex codegen to generate _generated types
 - Use convex.action not convex.query for googleBooks search
-- Stop tracking convex/_generated - it's stale and blocks deploy
-- Rewrite googleBooks.ts - clean up to match covers.ts pattern, no eslint-disable
+- Stop tracking convex/_generated — it's stale and blocks deploy
+- Rewrite googleBooks.ts — clean up to match covers.ts pattern, no eslint-disable
 - Google Books: change query to action (actions can use fetch in Convex)
 - Fix lint: eslint-disable in googleBooks.ts
 - Google Books: proxy through Convex to keep API key server-side
@@ -438,7 +454,7 @@ Fix cover images, codebase review improvements
 - Resend email notification on book suggestion + Elise intro email draft
 - Avatar character creator: 13 DiceBear styles, shuffle, live preview, save to Convex
 - Giphy/emoji in reviews popup + writing editor, remove name/username from Settings, footer customisation, notifications note
-- Remove Edit profile button from public /about page - editing only on /dashboard/about
+- Remove Edit profile button from public /about page — editing only on /dashboard/about
 - Fix header layout: separate Back link from title block on Books, Reviews, Writing pages
 - Full feature set: genre filter + grid/list on Books, editorial review cards + rating filter, category filter on Writing, footer with logo, dashboard hero editor
 - Comprehensive polish: tighter hero, warmer placeholders, toned CTA, fixed page padding, better empty states
@@ -452,10 +468,10 @@ Fix cover images, codebase review improvements
 - Fix seed script: pass JSON as CLI argument instead of stdin
 - Add --prod flag to seed script
 - Update seed script to use seed:seedBooks
-- Move seedBooks to its own file convex/seed.ts - fix silent deploy skip
+- Move seedBooks to its own file convex/seed.ts — fix silent deploy skip
 - Remove duplicate functions from books.ts (kept in covers.ts)
 - Fix covers.ts self-referencing via api.covers.*
-- Split cover actions into convex/covers.ts - fix silent deploy failure
+- Split cover actions into convex/covers.ts — fix silent deploy failure
 - Permanent cover storage: download Google Books covers into Convex, use storageId instead of expiring URLs
 - Add seed script + combined all-books.json (26 books)
 - Fix CI: remove unused useAuth import, add node types for process.env
@@ -469,14 +485,14 @@ Fix cover images, codebase review improvements
 - Public pages for Books, Reviews, Writings with See All links
 - Review editing on Reviews page, update README to npm, verify routes
 - Fix GitHub Actions: add permissions block, switch to npm
-- Add Wishlist section to public site - books people can gift
+- Add Wishlist section to public site — books people can gift
 - Fix book covers on MyBooks page, show genre on cards
 - Smarter genre detection from descriptions, clear form on close
 - Smart add: search → preview card → pick shelf. Manual only if not found
 - Auto-genre from Google Books, cover upload for manual entry
 - Fix GiphyPicker to work without generated types, fix build
 - Wire GiphyPicker into review textarea, fix lint errors
-- Giphy proxy through Convex - no API key in client
+- Giphy proxy through Convex — no API key in client
 - Fix lint, cover URLs on dashboard, add edit button, start emoji/giphy wiring
 - Review popup after adding book, genre fix, lint fix
 - Signup lockout: email allowlist, admin role, auth-aware getMyBooks
@@ -515,7 +531,7 @@ script checks what's missing and installs it directly with
 
 npm bug (cli#4828) causes optional platform deps to not install on
 Mac. force=true tells npm to install all packages regardless of
-platform - unused binaries are small and harmless.
+platform — unused binaries are small and harmless.
 - Fix deps: darwin packages in dependencies, linux in optionalDependencies
 
 Darwin packages (needed on Mac) go in dependencies so npm always
@@ -550,7 +566,7 @@ legacy-peer-deps=true.
 - Fix netlify.toml: remove duplicate [build] section
 - Move darwin-arm64 packages to optionalDependencies for Netlify compatibility
 - Fix Netlify build: use npm install --force (bun not available)
-- Remove codegen from CI - types already committed
+- Remove codegen from CI — types already committed
 - Fix codegen command (remove invalid --once flag)
 - Merge branch 'upgrade/dependencies'
 - Upgrade to Vite 8, ESLint 10, and latest deps
@@ -558,7 +574,7 @@ legacy-peer-deps=true.
 - Revert @auth/core to 0.37.2 (0.41 breaks @convex-dev/auth peer dep)
 - Remove package.json overrides (conflicts with npm)
 - Re-add codegen to CI now that deploy key is set
-- Remove codegen from CI - types already committed
+- Remove codegen from CI — types already committed
 - Bump @auth/core from 0.37.2 to 0.41.1 (#3)
 
 Bumps [@auth/core](https://github.com/nextauthjs/next-auth) from 0.37.2 to 0.41.1.
@@ -600,7 +616,7 @@ Co-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.c
 - CI runs on main only
 - Convex deploy runs on main only
 - Added Dependabot for weekly dependency checks
-- Revert auth.config.ts - empty providers is correct for @convex-dev/auth CLI
+- Revert auth.config.ts — empty providers is correct for @convex-dev/auth CLI
 
 The Password provider is configured in auth.ts (server-side).
 auth.config.ts with empty providers is the expected format.
@@ -748,6 +764,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
+- Update changelog [skip ci]
 - Update npm references to pnpm
 - Update changelog [skip ci]
 - Update changelog [skip ci]
@@ -848,7 +865,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Refactoring
 
-- Eliminate fallow debt - extract shared validators, helpers, and components
+- Eliminate fallow debt — extract shared validators, helpers, and components
 - Extract getEmailConfig helper for convex email modules
 - Extract AnimatedForm component for IdeasVault and QuoteCollection
 - Extract CardHeader component for IdeasVault and QuoteCollection
@@ -881,8 +898,8 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Styling
 
-- Continue DESIGN.md alignment - bg-white, aria-labels, stats, gradients
-- Align codebase with DESIGN.md - theme tokens, reduced-motion a11y, color consistency
+- Continue DESIGN.md alignment — bg-white, aria-labels, stats, gradients
+- Align codebase with DESIGN.md — theme tokens, reduced-motion a11y, color consistency
 
 ### Testing
 
