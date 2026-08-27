@@ -1,5 +1,8 @@
 import React, { useState } from "react";
-import { upgradeGoogleCoverUrl } from "../lib/coverUrl";
+import {
+  upgradeGoogleCoverUrl,
+  isGoogleUnavailableSize,
+} from "../lib/coverUrl";
 
 interface CoverImageProps {
   book: {
@@ -16,14 +19,14 @@ interface CoverImageProps {
 
 /** Muted studio gradients — less rainbow / kawaii than the old pack. */
 const GRADIENTS: [string, string][] = [
-  ["#c4a4a8", "#6b3d45"], // rose stone
-  ["#a8b4c0", "#3d4f5f"], // cool slate
-  ["#b8a99a", "#5c4a3a"], // warm taupe
-  ["#9aadb8", "#2f4550"], // ink teal
-  ["#c9b0b8", "#5a3a48"], // mauve
-  ["#adb5a0", "#3f4a38"], // olive
-  ["#b0a8c0", "#3d3550"], // dusk
-  ["#c4b8a8", "#4a4034"], // sand
+  ["#c4a4a8", "#6b3d45"],
+  ["#a8b4c0", "#3d4f5f"],
+  ["#b8a99a", "#5c4a3a"],
+  ["#9aadb8", "#2f4550"],
+  ["#c9b0b8", "#5a3a48"],
+  ["#adb5a0", "#3f4a38"],
+  ["#b0a8c0", "#3d3550"],
+  ["#c4b8a8", "#4a4034"],
 ];
 
 function pickGradient(title: string): [string, string] {
@@ -54,14 +57,34 @@ const GradientCard: React.FC<{ title: string; author?: string }> = ({
   );
 };
 
+function isUnusableCover(width: number, height: number): boolean {
+  if (width > 0 && width < 200) return true;
+  return isGoogleUnavailableSize(width, height);
+}
+
 const CoverImage: React.FC<CoverImageProps> = ({
   book,
   className = "w-full h-full object-cover",
   fallback,
 }) => {
   const storageUrl = book.coverImageUrl ?? undefined;
+  // Client fallback: do NOT use fife=w800 — that upscales Google's gray
+  // “image not available” PNG. zoom=1 keeps a real thumb or a tiny stub we skip.
   const googleUrl = book.coverUrl
-    ? upgradeGoogleCoverUrl(book.coverUrl, 800)
+    ? (() => {
+        try {
+          const u = new URL(
+            book.coverUrl.replace(/&amp;/g, "&").replace(/^http:\/\//i, "https://"),
+          );
+          u.searchParams.delete("edge");
+          u.searchParams.delete("pg");
+          u.searchParams.delete("fife");
+          u.searchParams.set("zoom", "1");
+          return u.toString();
+        } catch {
+          return upgradeGoogleCoverUrl(book.coverUrl, 400);
+        }
+      })()
     : undefined;
   const openLibraryUrl = book.isbn
     ? `https://covers.openlibrary.org/b/isbn/${book.isbn}-L.jpg`
@@ -73,8 +96,9 @@ const CoverImage: React.FC<CoverImageProps> = ({
 
   const [index, setIndex] = useState(0);
   const src = urls[index];
+  const advance = () => setIndex((i) => i + 1);
 
-  if (!src) {
+  if (!src || index >= urls.length) {
     return fallback ?? <GradientCard title={book.title} author={book.author} />;
   }
 
@@ -90,7 +114,11 @@ const CoverImage: React.FC<CoverImageProps> = ({
       height={900}
       sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
       style={{ aspectRatio: "2/3" }}
-      onError={() => setIndex((i) => i + 1)}
+      onError={advance}
+      onLoad={(e) => {
+        const { naturalWidth, naturalHeight } = e.currentTarget;
+        if (isUnusableCover(naturalWidth, naturalHeight)) advance();
+      }}
     />
   );
 };

@@ -36,19 +36,33 @@ export function upgradeGoogleCoverUrl(url: string, width = 800): string {
   }
 }
 
+/** Google “image not available” placeholder when upscaled via fife=w800. */
+export const GOOGLE_UNAVAILABLE_PLACEHOLDER = {
+  width: 800,
+  height: 1043,
+} as const;
+
+export function isGoogleUnavailableSize(
+  width: number,
+  height: number,
+): boolean {
+  return (
+    width === GOOGLE_UNAVAILABLE_PLACEHOLDER.width &&
+    height === GOOGLE_UNAVAILABLE_PLACEHOLDER.height
+  );
+}
+
 export function googleCoverCandidates(coverUrl: string): string[] {
-  const cleaned = coverUrl.replace(/&amp;/g, "&").replace(/^http:\/\//i, "https://");
+  const cleaned = coverUrl
+    .replace(/&amp;/g, "&")
+    .replace(/^http:\/\//i, "https://");
   const volumeId = extractGoogleVolumeId(cleaned);
   const urls: string[] = [];
   if (volumeId) {
     urls.push(
       `https://books.google.com/books/publisher/content/images/frontcover/${volumeId}?fife=w800-h1200&source=gbs_api`,
-      `https://books.google.com/books/content?id=${volumeId}&printsec=frontcover&img=1&zoom=3&source=gbs_api&fife=w800`,
     );
   }
-  urls.push(
-    upgradeGoogleCoverUrl(cleaned, 800),
-    upgradeGoogleCoverUrl(cleaned, 400),
-  );
+  urls.push(upgradeGoogleCoverUrl(cleaned, 400));
   return [...new Set(urls)];
 }
