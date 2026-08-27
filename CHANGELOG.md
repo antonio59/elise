@@ -67,6 +67,9 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
+- Merge pull request #65 from antonio59/dependabot/npm_and_yarn/minor-patch-603516f24f
+
+chore(deps-dev): bump @types/node from 26.2.0 to 26.3.0 in the minor-patch group
 - Merge pull request #64 from antonio59/feat/share-meta
 
 Remove em dashes from product copy
@@ -713,6 +716,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Chores
 
+- **deps-dev**: Bump @types/node in the minor-patch group
 - **deps**: Bump framer-motion from 12.43.0 to 13.1.1
 - **deps-dev**: Bump @testing-library/jest-dom from 6.9.1 to 7.0.1
 - **deps-dev**: Bump @types/node from 25.9.5 to 26.2.0
@@ -745,6 +749,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
