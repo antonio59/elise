@@ -58,13 +58,11 @@ const PageHeader: React.FC<PageHeaderProps> = ({
       {/* Title row */}
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <span className="inline-block px-3 py-1 bg-primary-100 text-primary-600 rounded-full text-xs font-semibold uppercase tracking-wider mb-3">
+          <span className="inline-block px-3 py-1 bg-primary-100 text-primary-800 rounded-full text-xs font-semibold uppercase tracking-wider mb-3">
             {badge}
           </span>
-          <h1 className="text-3xl sm:text-4xl font-bold">
-            <span className="bg-gradient-to-r from-primary-600 to-violet-500 bg-clip-text text-transparent">
-              {title}
-            </span>
+          <h1 className="text-3xl sm:text-4xl font-display font-bold text-primary-700">
+            {title}
           </h1>
           <p className="text-slate-500 mt-1">{subtitle}</p>
         </div>

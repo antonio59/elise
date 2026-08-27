@@ -1,15 +1,28 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { BookOpen, User, Target } from "lucide-react";
+import {
+  BookOpen,
+  User,
+  Target,
+  Quote,
+  Heart,
+  Sparkles,
+  RefreshCw,
+} from "lucide-react";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { usePageAnnouncement } from "../components/AccessibleAnnouncer";
 import { usePageMeta } from "../components/PageMeta";
 import { pageMeta } from "../lib/seo";
+import CoverImage from "../components/CoverImage";
 
 interface CurrentlyReading {
   title: string;
   author: string;
+  coverUrl?: string;
+  coverImageUrl?: string | null;
+  coverStorageId?: string;
 }
 
 interface PublicProfile {
@@ -30,165 +43,242 @@ interface PublicProfile {
 const About: React.FC = () => {
   usePageAnnouncement("About");
   usePageMeta(pageMeta.about);
-  const profile = useQuery(api.users.getPublicProfile) as PublicProfile | undefined | null;
+  const profile = useQuery(api.users.getPublicProfile) as
+    | PublicProfile
+    | undefined
+    | null;
   const isLoading = profile === undefined;
-
   const display = profile;
 
+  const hasContent = Boolean(
+    display?.name ||
+      display?.bio ||
+      display?.currentlyReading ||
+      display?.readingGoal ||
+      (display?.favoriteGenres && display.favoriteGenres.length > 0) ||
+      display?.favoriteBook ||
+      (display?.rereads && display.rereads.length > 0) ||
+      display?.favoriteQuote ||
+      display?.funFact,
+  );
+
   return (
-    <div className="min-h-screen py-12 px-4">
-      <div className="max-w-3xl mx-auto">
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Atmosphere */}
+      <div
+        className="pointer-events-none absolute inset-0 bg-gradient-to-b from-primary-100/80 via-slate-50 to-accent-50/40"
+        aria-hidden="true"
+      />
+      <div
+        className="pointer-events-none absolute -top-24 right-0 w-[28rem] h-[28rem] rounded-full bg-violet-200/30 blur-3xl"
+        aria-hidden="true"
+      />
+      <div
+        className="pointer-events-none absolute top-40 -left-20 w-72 h-72 rounded-full bg-primary-200/40 blur-3xl"
+        aria-hidden="true"
+      />
+
+      <div className="relative max-w-3xl mx-auto px-4 py-12 sm:py-16">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.45 }}
         >
-          {/* Header */}
-          <div className="flex items-center justify-between mb-8">
-            <span className="inline-block px-3 py-1 bg-primary-100 text-primary-600 rounded-full text-xs font-semibold uppercase tracking-wider mb-3">About Me</span>
-            <h1 className="text-3xl sm:text-4xl font-bold">
-              <span className="bg-gradient-to-r from-primary-600 to-violet-500 bg-clip-text text-transparent">Hi, I'm Elise</span>
+          {/* Hero */}
+          <header className="text-center mb-10 sm:mb-12">
+            <p className="text-sm font-semibold tracking-wide text-primary-600 mb-4">
+              about me
+            </p>
+            <div className="mx-auto mb-5 w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden ring-4 ring-white shadow-lg bg-gradient-to-br from-primary-200 to-violet-200 flex items-center justify-center">
+              {display?.avatarUrl ? (
+                <img
+                  src={display.avatarUrl}
+                  alt=""
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <User className="w-12 h-12 text-primary-600" aria-hidden="true" />
+              )}
+            </div>
+            <h1 className="font-display text-4xl sm:text-5xl text-slate-900 mb-3">
+              Hi, I&apos;m{" "}
+              <span className="text-primary-600">
+                {display?.name || "Elise"}
+              </span>
             </h1>
-          </div>
+            {display?.bio ? (
+              <p className="text-lg text-slate-600 leading-relaxed max-w-xl mx-auto">
+                {display.bio}
+              </p>
+            ) : (
+              !isLoading && (
+                <p className="text-lg text-slate-600 leading-relaxed max-w-xl mx-auto">
+                  books I&apos;ve read, art I make, and words I write
+                </p>
+              )
+            )}
+          </header>
 
           {isLoading ? (
-            /* Loading skeleton */
-            <div className="space-y-6 animate-pulse">
-              <div className="card p-6 sm:p-8">
-                <div className="flex flex-col sm:flex-row gap-6">
-                  <div className="w-24 h-24 rounded-full bg-slate-200" />
-                  <div className="flex-1 space-y-3">
-                    <div className="h-7 bg-slate-200 rounded w-32" />
-                    <div className="h-4 bg-slate-100 rounded w-full" />
-                    <div className="h-4 bg-slate-100 rounded w-3/4" />
-                  </div>
-                </div>
-              </div>
+            <div className="space-y-4 animate-pulse" aria-busy="true">
+              <div className="h-36 rounded-2xl bg-white/70 border border-slate-200" />
+              <div className="h-24 rounded-2xl bg-white/70 border border-slate-200" />
+              <div className="h-24 rounded-2xl bg-white/70 border border-slate-200" />
+            </div>
+          ) : !hasContent ? (
+            <div className="text-center py-16 px-6 rounded-3xl bg-white/70 border border-primary-100 shadow-soft">
+              <Sparkles
+                className="w-10 h-10 text-primary-400 mx-auto mb-4"
+                aria-hidden="true"
+              />
+              <p className="text-lg font-display text-slate-800 mb-1">
+                Still writing this page
+              </p>
+              <p className="text-sm text-slate-500 mb-6">
+                Check back soon — or start with the books.
+              </p>
+              <Link to="/books" className="btn btn-primary min-h-11 px-6">
+                <BookOpen className="w-4 h-4" />
+                Browse books
+              </Link>
             </div>
           ) : (
-            <>
-              {/* Profile Card */}
-              <div className="card p-6 sm:p-8 mb-6">
-                <div className="flex flex-col sm:flex-row gap-6">
-                  {/* Avatar */}
-                  <div className="self-center sm:self-start">
-                    <div className="w-24 h-24 rounded-full overflow-hidden bg-primary-50 flex items-center justify-center">
-                      {display?.avatarUrl ? (
-                        <img src={display.avatarUrl} alt={display.name || "Profile"} className="w-full h-full object-cover" />
-                      ) : (
-                        <User className="w-10 h-10 text-primary-300" />
-                      )}
+            <div className="space-y-5">
+              {/* Currently reading — visual first */}
+              {display?.currentlyReading && (
+                <section className="rounded-3xl bg-white/80 border border-primary-100 shadow-soft p-5 sm:p-6">
+                  <h2 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-primary-600 mb-4">
+                    <BookOpen className="w-4 h-4" aria-hidden="true" />
+                    Currently reading
+                  </h2>
+                  <div className="flex gap-4 items-start">
+                    <div className="w-20 sm:w-24 flex-shrink-0 aspect-[2/3] rounded-xl overflow-hidden bg-slate-100 shadow-md ring-1 ring-slate-200/80">
+                      <CoverImage
+                        book={display.currentlyReading}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="min-w-0 pt-1">
+                      <p className="font-display text-xl text-slate-900 leading-snug">
+                        {display.currentlyReading.title}
+                      </p>
+                      <p className="text-slate-500 mt-1">
+                        {display.currentlyReading.author}
+                      </p>
                     </div>
                   </div>
+                </section>
+              )}
 
-                  {/* Info */}
-                  <div className="flex-1 text-center sm:text-left">
-                    <h2 className="text-2xl font-bold text-slate-800">
-                      {display?.name || "Elise"}
-                    </h2>
-                    {display?.bio && (
-                      <p className="text-slate-600 mt-2 leading-relaxed">{display.bio}</p>
-                    )}
-                  </div>
-                </div>
-              </div>
+              {/* Quote — color anchor */}
+              {display?.favoriteQuote && (
+                <section className="rounded-3xl bg-gradient-to-br from-violet-50 to-primary-50 border border-violet-100 p-6 sm:p-8">
+                  <Quote
+                    className="w-8 h-8 text-violet-400 mb-3"
+                    aria-hidden="true"
+                  />
+                  <blockquote className="font-display text-xl sm:text-2xl text-slate-800 leading-snug">
+                    &ldquo;{display.favoriteQuote}&rdquo;
+                  </blockquote>
+                </section>
+              )}
 
-              {/* Currently Reading */}
-              {display?.currentlyReading && (
-                <div className="card p-6 mb-6">
-                  <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wider mb-3">
-                    <BookOpen className="w-4 h-4 inline mr-1" />
-                    Currently Reading
-                  </h3>
-                  <p className="text-slate-800 font-medium">{display.currentlyReading.title}</p>
-                  <p className="text-sm text-slate-500">{display.currentlyReading.author}</p>
+              {/* Goal + fun fact row */}
+              {(display?.readingGoal || display?.funFact) && (
+                <div className="grid sm:grid-cols-2 gap-4">
+                  {display?.readingGoal && (
+                    <section className="rounded-3xl bg-accent-50/80 border border-accent-100 p-5">
+                      <h2 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-accent-700 mb-2">
+                        <Target className="w-4 h-4" aria-hidden="true" />
+                        Reading goal
+                      </h2>
+                      <p className="text-slate-800 font-medium leading-relaxed">
+                        {display.readingGoal}
+                      </p>
+                    </section>
+                  )}
+                  {display?.funFact && (
+                    <section className="rounded-3xl bg-star-light/60 border border-star/30 p-5">
+                      <h2 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-primary-700 mb-2">
+                        <Sparkles className="w-4 h-4" aria-hidden="true" />
+                        Fun fact
+                      </h2>
+                      <p className="text-slate-800 font-medium leading-relaxed">
+                        {display.funFact}
+                      </p>
+                    </section>
+                  )}
                 </div>
               )}
 
-              {/* Reading Goal */}
-              {display?.readingGoal && (
-                <div className="card p-6 mb-6">
-                  <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wider mb-3">
-                    <Target className="w-4 h-4 inline mr-1" />
-                    Reading Goal
-                  </h3>
-                  <p className="text-slate-700">{display.readingGoal}</p>
-                </div>
-              )}
-
-              {/* Favourite Genres */}
+              {/* Genres */}
               {display?.favoriteGenres && display.favoriteGenres.length > 0 && (
-                <div className="card p-6 mb-6">
-                  <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wider mb-3">
-                    Favourite Genres
-                  </h3>
+                <section className="rounded-3xl bg-white/80 border border-slate-200 p-5 sm:p-6">
+                  <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-600 mb-3">
+                    Favourite genres
+                  </h2>
                   <div className="flex flex-wrap gap-2">
                     {display.favoriteGenres.map((genre: string) => (
-                      <span key={genre} className="px-3 py-1 bg-primary-50 text-primary-600 rounded-full text-sm">
+                      <span
+                        key={genre}
+                        className="inline-flex items-center min-h-9 px-3.5 py-1.5 rounded-full text-sm font-semibold bg-primary-100 text-primary-800"
+                      >
                         {genre}
                       </span>
                     ))}
                   </div>
-                </div>
+                </section>
               )}
 
-              {/* Favourite Book */}
-              {display?.favoriteBook && (
-                <div className="card p-6 mb-6">
-                  <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wider mb-2">
-                    <span aria-hidden="true">📖</span> Favourite Book of All Time
-                  </h3>
-                  <p className="text-slate-800 font-medium">{display.favoriteBook}</p>
-                </div>
+              {/* Favourites */}
+              {(display?.favoriteBook ||
+                (display?.rereads && display.rereads.length > 0)) && (
+                <section className="rounded-3xl bg-white/80 border border-slate-200 p-5 sm:p-6 space-y-5">
+                  {display?.favoriteBook && (
+                    <div>
+                      <h2 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-slate-600 mb-2">
+                        <Heart
+                          className="w-4 h-4 text-primary-500"
+                          aria-hidden="true"
+                        />
+                        Favourite book of all time
+                      </h2>
+                      <p className="font-display text-lg text-slate-900">
+                        {display.favoriteBook}
+                      </p>
+                    </div>
+                  )}
+                  {display?.rereads && display.rereads.length > 0 && (
+                    <div>
+                      <h2 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-slate-600 mb-3">
+                        <RefreshCw className="w-4 h-4" aria-hidden="true" />
+                        Worth reading again
+                      </h2>
+                      <div className="flex flex-wrap gap-2">
+                        {display.rereads.map((book: string) => (
+                          <span
+                            key={book}
+                            className="inline-flex items-center min-h-9 px-3.5 py-1.5 rounded-full text-sm font-medium bg-violet-100 text-violet-800"
+                          >
+                            {book}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </section>
               )}
 
-              {/* Books Read Multiple Times */}
-              {display?.rereads && display.rereads.length > 0 && (
-                <div className="card p-6 mb-6">
-                  <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wider mb-3">
-                    <span aria-hidden="true">🔄</span> Books I've Read More Than Once
-                  </h3>
-                  <div className="flex flex-wrap gap-2">
-                    {display.rereads.map((book: string) => (
-                      <span key={book} className="px-3 py-1 bg-slate-100 text-slate-700 rounded-full text-sm">
-                        {book}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Favourite Quote */}
-              {display?.favoriteQuote && (
-                <div className="card p-6 mb-6">
-                  <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wider mb-2">
-                    Favourite Quote
-                  </h3>
-                  <blockquote className="border-l-4 border-primary-300 pl-4 italic text-slate-700">
-                    &ldquo;{display.favoriteQuote}&rdquo;
-                  </blockquote>
-                </div>
-              )}
-
-              {/* Fun Fact */}
-              {display?.funFact && (
-                <div className="card p-6 mb-6">
-                  <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wider mb-2">
-                    Fun Fact
-                  </h3>
-                  <p className="text-slate-700">{display.funFact}</p>
-                </div>
-              )}
-
-              {/* Empty state — only when data has loaded and there's no profile */}
-              {!display?.name && !display?.bio && (
-                <div className="text-center py-16 bg-gradient-to-br from-primary-50 to-violet-50 rounded-2xl">
-                  <div className="text-5xl mb-4" aria-hidden="true">📚✨</div>
-                  <p className="text-lg font-medium text-slate-700">Profile coming soon!</p>
-                  <p className="text-sm text-slate-500 mt-1">Elise is still setting up her about page</p>
-                </div>
-              )}
-            </>
+              <div className="pt-4 text-center">
+                <Link
+                  to="/books"
+                  className="inline-flex items-center gap-2 min-h-11 px-2 text-primary-600 font-semibold hover:text-primary-700"
+                >
+                  <BookOpen className="w-4 h-4" />
+                  See my books →
+                </Link>
+              </div>
+            </div>
           )}
         </motion.div>
       </div>

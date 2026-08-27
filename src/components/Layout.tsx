@@ -64,7 +64,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center">
           <BookOpen className="w-5 h-5 text-white" />
         </div>
-        <span className="text-xl font-bold bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent">
+        <span className="text-xl font-display font-bold text-primary-700">
           Elise Reads
         </span>
       </Link>
@@ -152,7 +152,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center">
             <Sparkles className="w-4 h-4 text-white" />
           </div>
-          <span className="text-lg font-bold bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent">
+          <span className="text-lg font-display font-bold text-primary-700">
             Elise Reads
           </span>
         </Link>
@@ -263,7 +263,7 @@ export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center">
               <BookOpen className="w-5 h-5 text-white" />
             </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent">
+            <span className="text-xl font-display font-bold text-primary-700">
               Elise Reads
             </span>
           </Link>
@@ -386,7 +386,7 @@ export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
               <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-primary-500 to-violet-500 flex items-center justify-center">
                 <BookOpen className="w-4 h-4 text-white" />
               </div>
-              <span className="text-lg font-bold bg-gradient-to-r from-primary-600 to-violet-500 bg-clip-text text-transparent">
+              <span className="text-lg font-display font-bold text-primary-700">
                 Elise Reads
               </span>
             </Link>
