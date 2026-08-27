@@ -1,9 +1,9 @@
 /* ===== Theme System =====
- * Default tokens live in src/index.css @theme (Fredoka + dusty rose + teal/ink).
+ * Default tokens live in src/index.css @theme (Outfit + berry rose + cool ink).
  * This file only overrides via [data-theme] on <html>.
  */
 
-/* ===== Sakura (kawaii pink + teal) ===== */
+/* ===== Sakura (soft pink + cool teal) ===== */
 [data-theme="sakura"] {
   --color-primary-50: #fdf2f8;
   --color-primary-100: #fce7f3;

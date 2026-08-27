@@ -23,9 +23,9 @@ const PublicGallery: React.FC = () => {
   return (
     <div className="max-w-6xl mx-auto px-4 py-10 sm:py-12">
       <PageHeader
-        badge="Art Gallery"
+        badge="Art board"
         title="My Creations"
-        subtitle="art inspired by the stories I read"
+        subtitle="pins from the studio — art inspired by what I read"
         breadcrumbs={[{ label: "Art" }]}
       />
 

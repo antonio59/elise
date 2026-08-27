@@ -40,7 +40,7 @@ const Settings: React.FC = () => {
       setName(profile.name || "");
       setUsername(profile.username || "");
       setBio(profile.bio || "");
-      setTheme(profile.theme || "kawaii");
+      setTheme(profile.theme || "editorial");
       setYearlyBookGoal(profile.yearlyBookGoal?.toString() || "");
       setNotifications(profile.notifications ?? true);
     }

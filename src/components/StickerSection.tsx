@@ -5,11 +5,11 @@ import { api } from "../../convex/_generated/api";
 import { getVisitorId } from "../lib/visitorId";
 
 const STICKER_PACK = [
-  "🌸", "✨", "💜", "📚", "⭐", "💫", "🌙", "🦋",
-  "🎭", "🍀", "🎨", "💌", "🌈", "🔥", "💎", "🌺",
-  "🎀", "🦄", "🍓", "🌟", "👑", "🩷", "🫧", "🧁",
-  "🍭", "💝", "🌻", "🎵", "🐾", "🌊",
+  "✨", "💜", "📚", "⭐", "🌙", "🦋", "🎨", "💌",
+  "🔥", "💎", "🌺", "🎵", "🌊", "🖤", "🤍", "🌹",
+  "🎭", "📖", "💭", "🌸", "💫", "🫶", "👑", "🖊️",
 ];
+
 
 interface StickerSectionProps {
   bookId: string;
@@ -66,7 +66,7 @@ const StickerSection: React.FC<StickerSectionProps> = ({ bookId }) => {
         onClick={(e) => { e.stopPropagation(); setOpen((o) => !o); setError(null); }}
         className="text-[10px] text-slate-400 hover:text-primary-500 transition-colors flex items-center gap-0.5"
       >
-        🎀 {atLimit ? "Your stickers" : "Leave a sticker"}
+        {atLimit ? "Your reactions" : "React"}
       </button>
 
       {/* Sticker picker popover */}

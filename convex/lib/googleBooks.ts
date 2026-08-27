@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { upgradeGoogleCoverUrl } from "./coverUrl";
+
 export interface GoogleBooksImageLinks {
   extraLarge?: string;
   large?: string;
@@ -35,23 +37,8 @@ export function parseGoogleBooksCoverUrl(
     ""
   ).replace("http://", "https://");
 
-  let coverUrl = rawCoverUrl;
-  try {
-    if (rawCoverUrl) {
-      const u = new URL(rawCoverUrl);
-      if (
-        u.hostname === "books.google.com" ||
-        u.hostname.endsWith(".books.google.com")
-      ) {
-        u.searchParams.set("zoom", "3");
-        coverUrl = u.toString();
-      }
-    }
-  } catch {
-    /* leave as-is */
-  }
-
-  return coverUrl;
+  if (!rawCoverUrl) return "";
+  return upgradeGoogleCoverUrl(rawCoverUrl, 800);
 }
 
 export function extractIsbn(

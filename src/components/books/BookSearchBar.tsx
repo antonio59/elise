@@ -6,6 +6,7 @@ import {
   SlidersHorizontal,
   LayoutGrid,
   List,
+  LayoutTemplate,
   Check,
 } from "lucide-react";
 import { Button } from "../ui/Button";
@@ -43,8 +44,8 @@ interface BookSearchBarProps {
   genreFilter: string | null;
   onGenreFilterChange: (genre: string | null) => void;
   genresWithCounts: GenreCount[];
-  viewMode: "grid" | "list";
-  onViewModeChange: (mode: "grid" | "list") => void;
+  viewMode: "grid" | "list" | "board";
+  onViewModeChange: (mode: "grid" | "list" | "board") => void;
 }
 
 const BookSearchBar: React.FC<BookSearchBarProps> = ({
@@ -108,6 +109,18 @@ const BookSearchBar: React.FC<BookSearchBarProps> = ({
             }`}
           >
             <LayoutGrid className="w-4 h-4" />
+          </button>
+          <button
+            onClick={() => onViewModeChange("board")}
+            aria-label="Board view"
+            aria-pressed={viewMode === "board"}
+            className={`px-3 py-1.5 text-sm ${
+              viewMode === "board"
+                ? "bg-primary-500 text-white"
+                : "bg-slate-50 text-slate-500 hover:bg-slate-50"
+            }`}
+          >
+            <LayoutTemplate className="w-4 h-4" />
           </button>
           <button
             onClick={() => onViewModeChange("list")}

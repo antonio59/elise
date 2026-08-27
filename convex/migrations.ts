@@ -9,6 +9,7 @@ import { internal } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
 import { auth } from "./auth";
 import type { MutationCtx } from "./_generated/server";
+import { googleCoverCandidates, upgradeGoogleCoverUrl } from "./lib/coverUrl";
 
 async function reassignUserIds(
   ctx: MutationCtx,
@@ -69,7 +70,7 @@ export const cleanupBadAuthRecords = internalMutation({
   },
 });
 
-// One-time migration: upgrade all Google Books cover URLs to zoom=3 for high-res.
+// One-time migration: sharpen stored Google Books cover URLs (fife on API URL).
 // Run via: npx convex run migrations:upgradeCoverUrls
 export const upgradeCoverUrls = internalMutation({
   args: {},
@@ -79,17 +80,11 @@ export const upgradeCoverUrls = internalMutation({
     for (const book of books) {
       if (!book.coverUrl) continue;
       try {
-        const raw = book.coverUrl.replace(/&amp;/g, "&");
-        const u = new URL(raw);
-        if (
-          (u.hostname === "books.google.com" ||
-            u.hostname.endsWith(".books.google.com")) &&
-          u.searchParams.get("zoom") !== "3"
-        ) {
-          u.searchParams.set("zoom", "3");
-          // Also remove edge=curl for cleaner images
-          u.searchParams.delete("edge");
-          await ctx.db.patch(book._id, { coverUrl: u.toString() });
+        // Prefer upgrading the original API URL shape — more stable than
+        // publisher CDN frontcover paths as a stored reference.
+        const next = upgradeGoogleCoverUrl(book.coverUrl, 800);
+        if (next && next !== book.coverUrl) {
+          await ctx.db.patch(book._id, { coverUrl: next });
           upgraded++;
         }
       } catch {
@@ -172,19 +167,15 @@ export const swapCoverStorage = internalMutation({
   },
 });
 
-// Placeholder images Google Books returns when no cover exists are tiny (< 5 KB).
-const MIN_IMAGE_BYTES = 5_000;
+/** Reject tiny Google thumbnails (~128px). Real covers are usually >> 20KB. */
+const MIN_IMAGE_BYTES = 20_000;
 
 /**
- * One-time migration: re-download all covers at high resolution (zoom=3)
- * and replace the low-res thumbnails currently in Convex storage.
+ * One-time migration: re-download covers at high resolution (fife=w800)
+ * and replace low-res thumbnails in Convex storage.
  *
- * Run via:
- *   npx convex run migrations:redownloadCoversHighRes
- *
- * Safe to run repeatedly — only processes books that have both a Google Books
- * coverUrl and an existing coverStorageId (i.e., books whose stored image
- * needs upgrading).
+ * Prefer `covers:refreshAllHighRes` for a full force-refresh.
+ * Run via: npx convex run migrations:redownloadCoversHighRes
  */
 export const redownloadCoversHighRes = internalAction({
   args: {},
@@ -214,7 +205,6 @@ export const redownloadCoversHighRes = internalAction({
     let skipped = 0;
     let failed = 0;
 
-    // Process in small batches to stay within Convex action limits.
     const BATCH = 3;
     for (let i = 0; i < eligible.length; i += BATCH) {
       const batch = eligible.slice(i, i + BATCH);
@@ -226,28 +216,28 @@ export const redownloadCoversHighRes = internalAction({
             coverUrl?: string;
             coverStorageId?: Id<"_storage">;
           }) => {
-            // Ensure zoom=3 on the URL
-            const raw = (book.coverUrl ?? "").replace(/&amp;/g, "&");
-            const u = new URL(raw);
-            u.searchParams.set("zoom", "3");
-            u.searchParams.delete("edge"); // cleaner images without curl
-            const highResUrl = u.toString();
-
-            const res = await fetch(highResUrl);
-            if (!res.ok) {
-              console.warn(
-                `[redownloadCoversHighRes] HTTP ${res.status} for "${book.title}" — skipping`,
-              );
-              return "skip";
+            const candidates = googleCoverCandidates(book.coverUrl ?? "");
+            let blob: Blob | null = null;
+            for (const url of candidates) {
+              try {
+                const res = await fetch(url);
+                if (!res.ok) continue;
+                const candidate = await res.blob();
+                if (
+                  candidate.type.startsWith("image/") &&
+                  candidate.size >= MIN_IMAGE_BYTES
+                ) {
+                  blob = candidate;
+                  break;
+                }
+              } catch {
+                continue;
+              }
             }
 
-            const blob = await res.blob();
-            if (
-              !blob.type.startsWith("image/") ||
-              blob.size < MIN_IMAGE_BYTES
-            ) {
+            if (!blob) {
               console.warn(
-                `[redownloadCoversHighRes] Invalid/placeholder image for "${book.title}" (${blob.size} bytes) — skipping`,
+                `[redownloadCoversHighRes] No high-res image for "${book.title}" — skipping`,
               );
               return "skip";
             }

@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Heart, Tag } from "lucide-react";
+import { Heart, Pin } from "lucide-react";
 import ReactionBar from "./ReactionBar";
 
 interface GalleryItem {
@@ -22,6 +22,9 @@ interface GalleryGridProps {
   onSelect: (item: GalleryItem) => void;
 }
 
+/**
+ * Pinterest-style masonry pin wall — cover-forward, Save on hover, tight gaps.
+ */
 const GalleryGrid: React.FC<GalleryGridProps> = ({
   items,
   targetType,
@@ -31,18 +34,17 @@ const GalleryGrid: React.FC<GalleryGridProps> = ({
   onSelect,
 }) => {
   return (
-    <div className="columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
+    <div className="columns-2 md:columns-3 lg:columns-4 gap-3 space-y-3">
       {items.map((item, index: number) => (
         <motion.div
           key={item._id}
           className="group relative break-inside-avoid cursor-pointer"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: index * 0.05 }}
+          transition={{ delay: Math.min(index * 0.04, 0.4) }}
           onClick={() => onSelect(item)}
-          whileHover={{ scale: 1.01 }}
         >
-          <div className="rounded-2xl overflow-hidden bg-slate-50 shadow-sm hover:shadow-xl transition-all">
+          <div className="relative overflow-hidden rounded-xl bg-slate-100 shadow-sm group-hover:shadow-lg transition-shadow duration-200">
             <img
               src={item.imageUrl}
               alt={item.title}
@@ -50,65 +52,53 @@ const GalleryGrid: React.FC<GalleryGridProps> = ({
               loading="lazy"
             />
 
-            {/* Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
-              <div className="absolute bottom-0 left-0 right-0 p-4">
-                <h3 className="text-white font-bold text-lg">{item.title}</h3>
-                {item.location && (
-                  <p className="text-white/80 text-xs mt-1">{item.location}</p>
-                )}
-              </div>
-            </div>
+            {/* Soft hover scrim */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
 
-            {/* Like button */}
+            {/* Save (pin) — Pinterest-like primary action */}
             <button
+              type="button"
               onClick={(e) => {
                 e.stopPropagation();
                 onLike(item._id);
               }}
               disabled={likingId === item._id}
-              aria-label={likedIds.has(item._id) ? "Unlike" : "Like"}
+              aria-label={likedIds.has(item._id) ? "Unsave pin" : "Save pin"}
               aria-pressed={likedIds.has(item._id)}
-              className={`absolute top-3 right-3 p-2 rounded-full transition-all ${
+              className={`absolute top-2.5 right-2.5 inline-flex items-center gap-1.5 min-h-9 px-3 rounded-lg text-xs font-semibold shadow-md transition-all ${
                 likedIds.has(item._id)
-                  ? "bg-primary-500 text-white"
-                  : "bg-white/90 text-slate-600 hover:text-primary-500"
-              } disabled:opacity-50 disabled:cursor-not-allowed`}
+                  ? "bg-primary-600 text-white"
+                  : "bg-primary-500 text-white opacity-0 group-hover:opacity-100 hover:bg-primary-600"
+              } disabled:opacity-50`}
             >
-              <Heart
-                className={`w-4 h-4 ${likedIds.has(item._id) ? "fill-current" : ""}`}
+              <Pin
+                className={`w-3.5 h-3.5 ${likedIds.has(item._id) ? "fill-current" : ""}`}
               />
+              {likedIds.has(item._id) ? "Saved" : "Save"}
             </button>
 
-            {/* Like count */}
-            {item.likes && item.likes > 0 && (
-              <div className="absolute bottom-3 right-3 flex items-center gap-1 px-2 py-1 bg-slate-900/50 rounded-full text-white text-xs">
-                <Heart className="w-3 h-3 fill-current" />
-                {item.likes + (likedIds.has(item._id) ? 1 : 0)}
-              </div>
-            )}
+            {/* Title + count */}
+            <div className="absolute bottom-0 left-0 right-0 p-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+              <h3 className="text-white font-semibold text-sm leading-snug line-clamp-2 drop-shadow">
+                {item.title}
+              </h3>
+              {item.location && (
+                <p className="text-white/80 text-[11px] mt-0.5">{item.location}</p>
+              )}
+              {(item.likes ?? 0) > 0 && (
+                <div className="mt-1.5 inline-flex items-center gap-1 text-white/90 text-[11px]">
+                  <Heart className="w-3 h-3 fill-current" />
+                  {(item.likes ?? 0) + (likedIds.has(item._id) ? 1 : 0)}
+                </div>
+              )}
+            </div>
 
-            {/* Tags on hover */}
-            {item.tags && item.tags.length > 0 && (
-              <div className="absolute top-3 left-3 flex flex-wrap gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                {item.tags.slice(0, 3).map((tag) => (
-                  <span
-                    key={tag}
-                    className="px-2 py-0.5 bg-white/90 backdrop-blur-sm rounded-full text-xs text-slate-700 flex items-center gap-0.5"
-                  >
-                    <Tag className="w-2.5 h-2.5" />
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            )}
-
-            {/* Reaction Bar */}
-            <div className="absolute bottom-3 left-3 right-16 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
+            {/* Reactions — desktop hover only */}
+            <div className="absolute bottom-2.5 left-2.5 right-20 hidden md:block opacity-0 group-hover:opacity-100 transition-opacity">
               <ReactionBar
                 targetType={targetType}
                 targetId={item._id}
-                className="bg-white/90 backdrop-blur-sm rounded-full px-2 py-1 shadow-sm"
+                className="bg-white/95 backdrop-blur-sm rounded-lg px-2 py-1 shadow-sm"
               />
             </div>
           </div>

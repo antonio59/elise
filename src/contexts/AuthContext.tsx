@@ -72,7 +72,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       createUserProfile({
         name: nameToUse,
         isParent: false,
-        theme: "kawaii",
+        theme: "editorial",
         yearlyBookGoal: 24,
         notifications: true,
       }).catch(() => {

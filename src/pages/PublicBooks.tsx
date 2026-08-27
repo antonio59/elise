@@ -16,7 +16,7 @@ const PublicBooks: React.FC = () => {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<"all" | "favorites">("all");
   const [genreFilter, setGenreFilter] = useState<string | null>(null);
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [viewMode, setViewMode] = useState<"grid" | "list" | "board">("grid");
   const [showGenres, setShowGenres] = useState(false);
 
   const books = useMemo(() => booksRaw ?? [], [booksRaw]);
@@ -70,9 +70,9 @@ const PublicBooks: React.FC = () => {
   return (
     <div className="max-w-6xl mx-auto px-4 py-10 sm:py-12">
       <PageHeader
-        badge="Book Shelf"
+        badge="Shelf"
         title="Books I've Read"
-        subtitle="everything I've read"
+        subtitle="covers, ratings, and the ones I can't shut up about"
         breadcrumbs={[{ label: "Books" }]}
       />
 

@@ -37,9 +37,9 @@ const PublicPhotos: React.FC = () => {
   return (
     <div className="max-w-6xl mx-auto px-4 py-10 sm:py-12">
       <PageHeader
-        badge="Photo Gallery"
+        badge="Photo board"
         title="Through My Lens"
-        subtitle="moments captured, memories kept"
+        subtitle="moments pinned — scroll like a moodboard"
         breadcrumbs={[{ label: "Photos" }]}
       />
 
