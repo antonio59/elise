@@ -1,10 +1,28 @@
-/** First-person SEO copy for public pages — Elise voice, not Izzy's. */
+/** Site identity + first-person SEO copy for public pages. */
+
+export const SITE_NAME = "Elise Reads";
+export const SITE_URL = "https://elisereads.com";
+export const SITE_TAGLINE = "books, art & things I think about";
+
+/** Default share card — crawlers need an absolute PNG/JPG (not SVG). */
+export const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.jpg`;
+
+export const DEFAULT_DESCRIPTION =
+  "Hi — I'm Elise. Browse books I've finished, art I make, photos I keep, and words I write.";
+
+/** Make a path or URL absolute against the live site origin. */
+export function absoluteUrl(pathOrUrl?: string | null): string | undefined {
+  if (!pathOrUrl) return undefined;
+  if (/^https?:\/\//i.test(pathOrUrl)) return pathOrUrl;
+  if (pathOrUrl.startsWith("//")) return `https:${pathOrUrl}`;
+  const path = pathOrUrl.startsWith("/") ? pathOrUrl : `/${pathOrUrl}`;
+  return `${SITE_URL}${path}`;
+}
 
 export const pageMeta = {
   home: {
     title: "Home",
-    description:
-      "Hi — I'm Elise. Browse books I've finished, art I make, photos I keep, and words I write.",
+    description: DEFAULT_DESCRIPTION,
   },
   books: {
     title: "My Books",

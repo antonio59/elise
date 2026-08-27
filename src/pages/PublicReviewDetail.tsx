@@ -48,7 +48,7 @@ const PublicReviewDetail: React.FC = () => {
           description:
             book.review?.slice(0, 155) ||
             pageMeta.reviewDetail(book.title).description,
-          image: book.coverUrl,
+          image: book.coverImageUrl || book.coverUrl,
         }
       : pageMeta.reviews,
   );
