@@ -43,7 +43,7 @@ function WishlistHero({
         Next on my nightstand
       </h1>
       <p className="text-slate-600 max-w-lg mx-auto mb-6">
-        Books I&apos;d love to read next — suggest one, or grab something from
+        Books I&apos;d love to read next - suggest one, or grab something from
         the list as a gift.
       </p>
       <div className="flex flex-wrap items-center justify-center gap-3 mb-6 text-sm text-slate-600">

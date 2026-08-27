@@ -4,11 +4,11 @@ export const SITE_NAME = "Elise Reads";
 export const SITE_URL = "https://elisereads.com";
 export const SITE_TAGLINE = "books, art & things I think about";
 
-/** Default share card — crawlers need an absolute PNG/JPG (not SVG). */
+/** Default share card - crawlers need an absolute PNG/JPG (not SVG). */
 export const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.jpg`;
 
 export const DEFAULT_DESCRIPTION =
-  "Hi — I'm Elise. Browse books I've finished, art I make, photos I keep, and words I write.";
+  "Hi - I'm Elise. Browse books I've finished, art I make, photos I keep, and words I write.";
 
 /** Make a path or URL absolute against the live site origin. */
 export function absoluteUrl(pathOrUrl?: string | null): string | undefined {
@@ -27,20 +27,20 @@ export const pageMeta = {
   books: {
     title: "My Books",
     description:
-      "Everything on my shelf — what I've finished, what I'm mid-way through, and favourites I keep coming back to.",
+      "Everything on my shelf - what I've finished, what I'm mid-way through, and favourites I keep coming back to.",
   },
   bookDetail: (title: string, author: string) => ({
     title,
-    description: `My notes on ${title} by ${author} — rating, mood, and what stuck with me.`,
+    description: `My notes on ${title} by ${author} - rating, mood, and what stuck with me.`,
   }),
   reviews: {
     title: "What I Thought",
     description:
-      "Honest takes on books I've read — from all-time favs to solid reads. Tap a cover to peek.",
+      "Honest takes on books I've read - from all-time favs to solid reads. Tap a cover to peek.",
   },
   reviewDetail: (title: string) => ({
     title: `Review: ${title}`,
-    description: `What I thought about ${title} — my rating and full review.`,
+    description: `What I thought about ${title} - my rating and full review.`,
   }),
   writing: {
     title: "Writing",
@@ -57,12 +57,12 @@ export const pageMeta = {
   },
   photos: {
     title: "Photos",
-    description: "Moments I want to remember — my little photo corner.",
+    description: "Moments I want to remember - my little photo corner.",
   },
   wishlist: {
     title: "Nightstand Wishlist",
     description:
-      "Next on my nightstand — books I'd love to read. Suggest one or gift from the list!",
+      "Next on my nightstand - books I'd love to read. Suggest one or gift from the list!",
   },
   about: {
     title: "About Me",

@@ -1,6 +1,6 @@
 /**
  * Shared helpers for sharpening Google Books cover URLs.
- * Low zoom thumbnails (~128px) look blurry when stretched in the UI —
+ * Low zoom thumbnails (~128px) look blurry when stretched in the UI  - 
  * prefer fife=w800 (or higher) so we store and display crisp covers.
  */
 

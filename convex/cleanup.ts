@@ -7,7 +7,7 @@
 import { internalMutation } from "./_generated/server";
 
 // Tables that exist in the DB but are no longer used.
-// "sessions" is intentionally excluded — it may contain live auth sessions.
+// "sessions" is intentionally excluded - it may contain live auth sessions.
 const LEGACY_TABLES = [
   "follows",
   "likes",

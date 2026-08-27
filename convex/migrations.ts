@@ -80,7 +80,7 @@ export const upgradeCoverUrls = internalMutation({
     for (const book of books) {
       if (!book.coverUrl) continue;
       try {
-        // Prefer upgrading the original API URL shape — more stable than
+        // Prefer upgrading the original API URL shape - more stable than
         // publisher CDN frontcover paths as a stored reference.
         const next = upgradeGoogleCoverUrl(book.coverUrl, 800);
         if (next && next !== book.coverUrl) {
@@ -161,7 +161,7 @@ export const swapCoverStorage = internalMutation({
       try {
         await ctx.storage.delete(args.oldStorageId);
       } catch {
-        // Old storage object may already be gone — not fatal.
+        // Old storage object may already be gone - not fatal.
       }
     }
   },
@@ -237,7 +237,7 @@ export const redownloadCoversHighRes = internalAction({
 
             if (!blob) {
               console.warn(
-                `[redownloadCoversHighRes] No high-res image for "${book.title}" — skipping`,
+                `[redownloadCoversHighRes] No high-res image for "${book.title}" - skipping`,
               );
               return "skip";
             }
@@ -274,7 +274,7 @@ export const redownloadCoversHighRes = internalAction({
     }
 
     const summary = `Upgraded ${upgraded}, skipped ${skipped}, failed ${failed} out of ${eligible.length} eligible`;
-    console.log(`[redownloadCoversHighRes] Done — ${summary}`);
+    console.log(`[redownloadCoversHighRes] Done - ${summary}`);
     return summary;
   },
 });

@@ -57,7 +57,7 @@ export function usePageMeta({
   url,
   type = "website",
 }: PageMetaProps = {}) {
-  const fullTitle = title ? `${title} — ${SITE_NAME}` : SITE_NAME;
+  const fullTitle = title ? `${title} - ${SITE_NAME}` : SITE_NAME;
   const pageUrl = absoluteUrl(url) ?? (typeof window !== "undefined"
     ? `${SITE_URL}${window.location.pathname}`
     : SITE_URL);

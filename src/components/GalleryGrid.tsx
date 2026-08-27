@@ -23,7 +23,7 @@ interface GalleryGridProps {
 }
 
 /**
- * Pinterest-style masonry pin wall — cover-forward, Save on hover, tight gaps.
+ * Pinterest-style masonry pin wall - cover-forward, Save on hover, tight gaps.
  */
 const GalleryGrid: React.FC<GalleryGridProps> = ({
   items,
@@ -55,7 +55,7 @@ const GalleryGrid: React.FC<GalleryGridProps> = ({
             {/* Soft hover scrim */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
 
-            {/* Save (pin) — Pinterest-like primary action */}
+            {/* Save (pin) - Pinterest-like primary action */}
             <button
               type="button"
               onClick={(e) => {
@@ -93,7 +93,7 @@ const GalleryGrid: React.FC<GalleryGridProps> = ({
               )}
             </div>
 
-            {/* Reactions — desktop hover only */}
+            {/* Reactions - desktop hover only */}
             <div className="absolute bottom-2.5 left-2.5 right-20 hidden md:block opacity-0 group-hover:opacity-100 transition-opacity">
               <ReactionBar
                 targetType={targetType}

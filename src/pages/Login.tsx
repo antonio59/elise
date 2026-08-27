@@ -27,7 +27,7 @@ const REMINDERS = [
   {
     icon: BookOpen,
     title: "Log it the day you finish",
-    body: "Even a quick rating counts — your shelf is the tracker and the brag board.",
+    body: "Even a quick rating counts - your shelf is the tracker and the brag board.",
   },
   {
     icon: Palette,
@@ -37,7 +37,7 @@ const REMINDERS = [
   {
     icon: PenTool,
     title: "Writing lives in your studio",
-    body: "Poems, stories, journal pages — capture the spark before it fades.",
+    body: "Poems, stories, journal pages - capture the spark before it fades.",
   },
   {
     icon: Compass,
@@ -49,7 +49,7 @@ const REMINDERS = [
 const Login: React.FC = () => {
   usePageAnnouncement("Login");
   usePageMeta({
-    title: "Hey Elise — Sign in",
+    title: "Hey Elise - Sign in",
     description: "Sign in to your private Elise Reads studio",
   });
   const prefersReducedMotion = useReducedMotion();
@@ -164,11 +164,11 @@ const Login: React.FC = () => {
               Your private studio
             </p>
             <h1 className="font-display text-3xl sm:text-4xl lg:text-[2.6rem] font-bold text-slate-900 leading-tight mb-3">
-              Hey {displayName} — your corner is waiting
+              Hey {displayName} - your corner is waiting
             </h1>
             <p className="text-slate-600 leading-relaxed max-w-md mx-auto lg:mx-0 mb-8">
               Log finished books, hang art and photos, write what you&apos;re
-              thinking — visitors only see what you publish on the public site.
+              thinking - visitors only see what you publish on the public site.
             </p>
 
             <ul className="space-y-4 text-left max-w-md mx-auto lg:mx-0">
@@ -223,7 +223,7 @@ const Login: React.FC = () => {
                   <div>
                     <p className="text-sm font-medium leading-snug">{error}</p>
                     <p className="text-xs text-error-600/80 mt-1 leading-snug">
-                      Double-check spelling — or ask for a password reset if
+                      Double-check spelling - or ask for a password reset if
                       you&apos;re stuck.
                     </p>
                   </div>
@@ -298,12 +298,12 @@ const Login: React.FC = () => {
                 </p>
                 <ul className="text-sm text-slate-500 space-y-1.5 leading-snug">
                   <li>
-                    <span className="font-medium text-slate-700">Home</span> —
+                    <span className="font-medium text-slate-700">Home</span>  - 
                     streaks, currently reading, add a book
                   </li>
                   <li>
                     <span className="font-medium text-slate-700">My Books</span>{" "}
-                    — finish books &amp; write reviews
+                    - finish books &amp; write reviews
                   </li>
                   <li className="flex flex-wrap gap-x-3 gap-y-1">
                     <span className="inline-flex items-center gap-1">

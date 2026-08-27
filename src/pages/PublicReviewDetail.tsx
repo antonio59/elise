@@ -138,7 +138,7 @@ const PublicReviewDetail: React.FC = () => {
               </blockquote>
             ) : (
               <p className="text-slate-500 italic mb-6">
-                No written review — just a rating for this one.
+                No written review - just a rating for this one.
               </p>
             )}
 

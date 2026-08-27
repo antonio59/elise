@@ -221,7 +221,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ book, index, onSave }) => {
               </blockquote>
             ) : (
               <p className="text-sm text-slate-400 italic">
-                No written review — just a rating.
+                No written review - just a rating.
               </p>
             )}
             <div className="mt-4 flex items-center gap-3 text-xs text-slate-400">

@@ -183,7 +183,7 @@ export const generateAvatarUploadUrl = mutation({
   },
 });
 
-// Get public profile (for About page — no auth required)
+// Get public profile (for About page - no auth required)
 export const getPublicProfile = query({
   handler: async (ctx) => {
     // Get the first user profile (since this is a single-user site)

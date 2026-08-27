@@ -36,7 +36,7 @@ const ReviewStrip: React.FC<{
     return (
       <div className="card p-8 text-center">
         <Star className="w-8 h-8 text-slate-300 mx-auto mb-3" />
-        <p className="text-sm text-slate-500">No reviews yet — stay tuned!</p>
+        <p className="text-sm text-slate-500">No reviews yet - stay tuned!</p>
       </div>
     );
   }

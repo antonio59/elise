@@ -146,7 +146,7 @@ export const storeFromUrl = action({
   },
 });
 
-/** Update book with cover storage ID (internal only — called from actions). */
+/** Update book with cover storage ID (internal only - called from actions). */
 export const updateCoverStorage = internalMutation({
   args: {
     bookId: v.id("books"),

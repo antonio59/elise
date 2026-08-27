@@ -21,7 +21,7 @@ export const sendSuggestionNotification = action({
       }
     ).process?.env?.RESEND_API_KEY;
     if (!apiKey) {
-      console.warn("RESEND_API_KEY not set — skipping email notification");
+      console.warn("RESEND_API_KEY not set - skipping email notification");
       return;
     }
 
