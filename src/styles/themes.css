@@ -1,53 +1,7 @@
 /* ===== Theme System =====
- * Themes applied via data-theme attribute on <html>
- * Each theme defines the full color palette
+ * Default tokens live in src/index.css @theme (Fredoka + dusty rose + teal/ink).
+ * This file only overrides via [data-theme] on <html>.
  */
-
-/* Default — Editorial (warm beige + dusty rose + navy) */
-@theme {
-  --font-display: "Playfair Display", Georgia, serif;
-  --font-body: "Inter", system-ui, sans-serif;
-  --color-primary-50: #fdf8f6;
-  --color-primary-100: #f5ebe6;
-  --color-primary-200: #edd5cd;
-  --color-primary-300: #e0b8a8;
-  --color-primary-400: #c4856c;
-  --color-primary-500: #b06b50;
-  --color-primary-600: #9a5640;
-  --color-primary-700: #7d4232;
-  --color-primary-800: #633427;
-  --color-primary-900: #4a271d;
-  --color-accent-50: #f0f4f8;
-  --color-accent-100: #d9e2ec;
-  --color-accent-200: #bcccdc;
-  --color-accent-300: #9fb3c8;
-  --color-accent-400: #829ab1;
-  --color-accent-500: #627d98;
-  --color-accent-600: #486581;
-  --color-accent-700: #334e68;
-  --color-accent-800: #243b53;
-  --color-accent-900: #102a43;
-  --color-violet-50: #f7f5f9;
-  --color-violet-100: #ebe5f0;
-  --color-violet-200: #d5c7e0;
-  --color-violet-300: #b9a0cc;
-  --color-violet-400: #9d7bb5;
-  --color-violet-500: #825b9e;
-  --color-violet-600: #6a4585;
-  --color-violet-700: #523469;
-  --color-star: #d4a853;
-  --color-star-light: #f5e6c8;
-  --color-slate-50: #faf8f5;
-  --color-slate-100: #f0ece5;
-  --color-slate-200: #e0d9cf;
-  --color-slate-300: #c7bfb2;
-  --color-slate-400: #a89f90;
-  --color-slate-500: #8a7f6f;
-  --color-slate-600: #6b6256;
-  --color-slate-700: #504a42;
-  --color-slate-800: #383531;
-  --color-slate-900: #1f1d1b;
-}
 
 /* ===== Sakura (kawaii pink + teal) ===== */
 [data-theme="sakura"] {
