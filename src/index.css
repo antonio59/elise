@@ -15,60 +15,60 @@
   --font-body: "Inter", system-ui, sans-serif;
 
   /* PRIMARY - Dusty Rose */
-  --color-primary-50: #fdf8f6;
-  --color-primary-100: #f5ebe6;
-  --color-primary-200: #edd5cd;
-  --color-primary-300: #e0b8a8;
-  --color-primary-400: #c4856c;
-  --color-primary-500: #b06b50;
-  --color-primary-600: #9a5640;
-  --color-primary-700: #7d4232;
-  --color-primary-800: #633427;
-  --color-primary-900: #4a271d;
+  --color-primary-50: #fdf6f3;
+  --color-primary-100: #f8e8e1;
+  --color-primary-200: #f0d0c4;
+  --color-primary-300: #e3b09c;
+  --color-primary-400: #c9856a;
+  --color-primary-500: #b56a4c;
+  --color-primary-600: #9a523a;
+  --color-primary-700: #7a3f2d;
+  --color-primary-800: #5f3225;
+  --color-primary-900: #46241c;
 
-  /* ACCENT - Splatoon Teal */
-  --color-accent-50: #f0f4f8;
-  --color-accent-100: #d9e2ec;
-  --color-accent-200: #bcccdc;
-  --color-accent-300: #9fb3c8;
+  /* ACCENT - Clear Teal */
+  --color-accent-50: #ecfeff;
+  --color-accent-100: #cffafe;
+  --color-accent-200: #a5f3fc;
+  --color-accent-300: #67e8f9;
   --color-accent-400: #22d3ee;
   --color-accent-500: #06b6d4;
   --color-accent-600: #0891b2;
-  --color-accent-700: #334e68;
-  --color-accent-800: #243b53;
-  --color-accent-900: #102a43;
+  --color-accent-700: #0e7490;
+  --color-accent-800: #155e75;
+  --color-accent-900: #164e63;
 
-  /* INK - Splatoon Ink Blue */
-  --color-violet-50: #f7f5f9;
-  --color-violet-100: #ebe5f0;
-  --color-violet-200: #d5c7e0;
-  --color-violet-300: #b9a0cc;
-  --color-violet-400: #4361ee;
-  --color-violet-500: #3a56d4;
-  --color-violet-600: #2f46b8;
-  --color-violet-700: #523469;
+  /* INK - Readable indigo (not pastel purple) */
+  --color-violet-50: #eef2ff;
+  --color-violet-100: #e0e7ff;
+  --color-violet-200: #c7d2fe;
+  --color-violet-300: #a5b4fc;
+  --color-violet-400: #6366f1;
+  --color-violet-500: #4f46e5;
+  --color-violet-600: #4338ca;
+  --color-violet-700: #3730a3;
 
   /* STAR - Warm Gold */
   --color-star: #d4a853;
   --color-star-light: #f5e6c8;
 
-  /* SLATE - Neutrals */
-  --color-slate-50: #faf8f5;
-  --color-slate-100: #f0ece5;
-  --color-slate-200: #e0d9cf;
-  --color-slate-300: #c7bfb2;
-  --color-slate-400: #a89f90;
-  --color-slate-500: #8a7f6f;
-  --color-slate-600: #6b6254;
-  --color-slate-700: #504838;
-  --color-slate-800: #3a342a;
-  --color-slate-900: #252119;
+  /* SLATE - Warm neutrals with enough contrast for body text */
+  --color-slate-50: #faf7f4;
+  --color-slate-100: #f3eee8;
+  --color-slate-200: #e5ddd3;
+  --color-slate-300: #cfc4b6;
+  --color-slate-400: #a89886;
+  --color-slate-500: #7d6f5e;
+  --color-slate-600: #5c5246;
+  --color-slate-700: #433c34;
+  --color-slate-800: #2e2924;
+  --color-slate-900: #1a1714;
 
   /* Shadows */
   --shadow-soft: 0 1px 3px rgba(37, 33, 25, 0.08), 0 1px 2px rgba(37, 33, 25, 0.04);
   --shadow-soft-lg: 0 8px 20px rgba(37, 33, 25, 0.08), 0 4px 8px rgba(37, 33, 25, 0.04);
-  --shadow-primary: 0 4px 14px rgba(176, 107, 80, 0.15);
-  --shadow-violet: 0 4px 14px rgba(130, 91, 158, 0.12);
+  --shadow-primary: 0 4px 14px rgba(181, 106, 76, 0.18);
+  --shadow-violet: 0 4px 14px rgba(79, 70, 229, 0.14);
   --shadow-success: 0 4px 14px rgba(34, 197, 94, 0.15);
   --shadow-error: 0 4px 14px rgba(239, 68, 68, 0.15);
   --shadow-star: 0 4px 14px rgba(212, 168, 83, 0.25);

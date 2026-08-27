@@ -44,20 +44,18 @@ const HeroSection: React.FC<{
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.4 }}
             >
-              <span className="inline-block px-4 py-1.5 rounded-full bg-primary-100 text-primary-700 text-sm font-semibold mb-5 tracking-wide">
+              <span className="inline-block px-4 py-1.5 rounded-full bg-primary-100 text-primary-800 text-sm font-semibold mb-5 tracking-wide">
                 my little corner of the internet
               </span>
             </motion.div>
 
             <motion.h1
-              className="text-5xl sm:text-6xl md:text-7xl font-bold mb-4"
+              className="font-display text-5xl sm:text-6xl md:text-7xl font-bold mb-4 text-slate-900"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.45, delay: 0.05 }}
             >
-              <span className="bg-gradient-to-r from-primary-600 via-violet-500 to-accent-500 bg-clip-text text-transparent">
-                {title}
-              </span>
+              <span className="text-primary-600">{title}</span>
             </motion.h1>
 
             <motion.p
