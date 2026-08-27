@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { BookOpen, Palette, PenTool, Sparkles, Plus } from "lucide-react";
+import { BookOpen, Palette, PenTool, Compass, HelpCircle, Plus } from "lucide-react";
 import { Button } from "../ui/Button";
 
 const verbs = [
   { text: "reading", icon: BookOpen },
   { text: "drawing", icon: Palette },
   { text: "writing", icon: PenTool },
-  { text: "exploring", icon: Sparkles },
+  { text: "exploring", icon: Compass },
 ];
 
 interface DashboardHeaderProps {
@@ -32,9 +32,9 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   return (
     <div className="flex items-center justify-between gap-4 flex-wrap">
       <div>
-        <h1 className="text-2xl sm:text-3xl font-bold text-slate-800">
+        <h1 className="font-display text-2xl sm:text-3xl font-bold text-slate-800">
           Hey{" "}
-          <span className="bg-gradient-to-r from-primary-400 to-accent-500 bg-clip-text text-transparent">
+          <span className="text-primary-600">
             Elise
           </span>
         </h1>
@@ -76,12 +76,12 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
         )}
         <motion.button
           onClick={onStartTour}
-          className="flex items-center gap-1.5 min-h-11 px-3 py-1.5 rounded-xl text-sm font-medium text-primary-600 bg-primary-50 hover:bg-primary-100 transition-colors"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+          className="flex items-center gap-1.5 min-h-11 px-3 py-1.5 rounded-xl text-sm font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors"
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
           title="Take the tour again"
         >
-          <Sparkles className="w-4 h-4" />
+          <HelpCircle className="w-4 h-4" />
           Tour
         </motion.button>
       </div>

@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Gift,
   BookOpen,
-  Sparkles,
+  MessageSquarePlus,
   X,
   Check,
   ShoppingBag,
@@ -63,7 +63,7 @@ function WishlistHero({
           onClick={onSuggest}
           className="btn btn-primary min-h-11"
         >
-          <Sparkles className="w-4 h-4" />
+          <MessageSquarePlus className="w-4 h-4" />
           Suggest a book
         </button>
         <button
@@ -251,7 +251,7 @@ const PublicWishlist: React.FC = () => {
                 {selectedBook.description && (
                   <div className="bg-primary-50 rounded-xl p-5 border border-primary-100 mb-6">
                     <h3 className="font-bold text-slate-700 mb-2 text-lg flex items-center gap-2">
-                      <Sparkles className="w-5 h-5 text-primary-500" />
+                      <BookOpen className="w-5 h-5 text-primary-500" />
                       About this book
                     </h3>
                     <p className="text-slate-600 leading-relaxed">

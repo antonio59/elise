@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { BookOpen, Star } from "lucide-react";
+import { BookOpen, Gift, Star } from "lucide-react";
 import CoverImage from "../CoverImage";
 import BookMeta from "../books/BookMeta";
 import BookPeekModal, { type PeekBook } from "../books/BookPeekModal";
@@ -43,14 +43,6 @@ const FeaturedBooks: React.FC<{
     review?: string;
     moodTags?: string[];
   }>;
-  nowReading: Array<{
-    _id: string;
-    title: string;
-    author: string;
-    coverUrl?: string;
-    coverImageUrl?: string | null;
-    coverStorageId?: string;
-  }>;
   fiveStarBooks: Array<{
     _id: string;
     title: string;
@@ -74,7 +66,6 @@ const FeaturedBooks: React.FC<{
 }> = ({
   books,
   booksForGrid,
-  nowReading,
   fiveStarBooks,
   wishlist,
   onSuggestClick,
@@ -84,56 +75,6 @@ const FeaturedBooks: React.FC<{
   return (
     <>
       <BookPeekModal book={peekBook} onClose={() => setPeekBook(null)} />
-      {/* Now Reading */}
-      {nowReading.length > 0 && (
-        <section className="py-8 px-4">
-          <div className="max-w-6xl mx-auto">
-            <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-100 rounded-2xl p-6">
-              <div className="flex items-center gap-2 mb-5">
-                <div className="w-2.5 h-2.5 bg-green-400 rounded-full animate-pulse" />
-                <span className="text-sm font-bold text-green-700 uppercase tracking-widest">
-                  Currently Reading
-                </span>
-              </div>
-              <div className="flex gap-5 overflow-x-auto pb-2 scrollbar-hide">
-                {nowReading.map(
-                  (book: {
-                    _id: string;
-                    title: string;
-                    author: string;
-                    coverUrl?: string;
-                    coverImageUrl?: string | null;
-                    coverStorageId?: string;
-                  }) => (
-                    <motion.div
-                      key={book._id}
-                      className="flex-shrink-0 w-36"
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ type: "spring", stiffness: 200, damping: 20 }}
-                    >
-                      <Link to={`/books/${book._id}`}>
-                        <div className="aspect-[2/3] rounded-xl overflow-hidden bg-white shadow-md hover:shadow-xl transition-all hover:-translate-y-1 duration-200">
-                          <CoverImage
-                            book={book}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                        <p className="mt-2 text-sm font-semibold text-slate-800 line-clamp-1 hover:text-primary-600 transition-colors">
-                          {book.title}
-                        </p>
-                        <p className="text-xs text-slate-500 line-clamp-1">
-                          {book.author}
-                        </p>
-                      </Link>
-                    </motion.div>
-                  ),
-                )}
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
 
       {/* 5-Star Shelf - horizontal scroll of top-rated books */}
       {fiveStarBooks.length > 0 && (
@@ -317,15 +258,15 @@ const FeaturedBooks: React.FC<{
           {wishlist === undefined ? (
             <BookGridSkeleton />
           ) : wishlist.length === 0 ? (
-            <div className="text-center py-12 bg-gradient-to-br from-primary-50 to-violet-50 rounded-2xl">
-              <div className="text-4xl mb-3">🎁</div>
-              <p className="text-slate-600 font-medium">Nothing here yet!</p>
+            <div className="text-center py-12 bg-slate-50 rounded-2xl">
+              <Gift className="w-10 h-10 text-slate-300 mx-auto mb-3" />
+              <p className="text-slate-600 font-medium">Nothing here yet</p>
               <p className="text-sm text-slate-500 mt-1">Got a suggestion?</p>
               <button
                 onClick={onSuggestClick}
                 className="mt-3 text-sm text-primary-500 hover:text-primary-600 font-medium underline underline-offset-2"
               >
-                Suggest a book →
+                Suggest a book
               </button>
             </div>
           ) : (
@@ -355,8 +296,9 @@ const FeaturedBooks: React.FC<{
                         className="w-full h-full object-cover"
                       />
                       {book.giftedBy && (
-                        <div className="absolute top-2 left-2 px-2 py-1 bg-success-500 text-white text-xs rounded-full font-medium">
-                          🎁 Gifted by {book.giftedBy}
+                        <div className="absolute top-2 left-2 inline-flex items-center gap-1 px-2 py-1 bg-success-500 text-white text-xs rounded-md font-medium">
+                          <Gift className="w-3 h-3" />
+                          Gifted by {book.giftedBy}
                         </div>
                       )}
                     </div>

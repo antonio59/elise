@@ -89,8 +89,8 @@ const Settings: React.FC = () => {
   return (
     <div className="max-w-2xl mx-auto space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-slate-800">Settings</h1>
-        <p className="text-slate-500 mt-1">Manage your profile and preferences</p>
+        <h1 className="font-display text-3xl font-bold text-slate-900">Settings</h1>
+        <p className="text-slate-500 mt-1">Profile, appearance, and site copy</p>
       </div>
 
       <form onSubmit={handleSave} className="space-y-6">

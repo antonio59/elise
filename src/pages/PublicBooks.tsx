@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from "react";
+import { BookOpen } from "lucide-react";
 import { BookGridSkeleton } from "../components/Skeleton";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
@@ -16,7 +17,7 @@ const PublicBooks: React.FC = () => {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<"all" | "favorites">("all");
   const [genreFilter, setGenreFilter] = useState<string | null>(null);
-  const [viewMode, setViewMode] = useState<"grid" | "list" | "board">("grid");
+  const [viewMode, setViewMode] = useState<"grid" | "list" | "board">("board");
   const [showGenres, setShowGenres] = useState(false);
 
   const books = useMemo(() => booksRaw ?? [], [booksRaw]);
@@ -95,8 +96,8 @@ const PublicBooks: React.FC = () => {
       />
 
       {filtered.length === 0 ? (
-        <div className="text-center py-16 bg-gradient-to-br from-primary-50 to-violet-50 rounded-2xl">
-          <div className="text-4xl mb-3">📚</div>
+        <div className="text-center py-16 bg-slate-50 rounded-2xl">
+          <BookOpen className="w-12 h-12 text-slate-300 mx-auto mb-3" />
           <p className="text-slate-600 font-medium">
             {genreFilter
               ? `No ${genreFilter} books yet`
@@ -107,7 +108,7 @@ const PublicBooks: React.FC = () => {
           {genreFilter && (
             <button
               onClick={() => setGenreFilter(null)}
-              className="text-sm text-primary-500 mt-2 underline"
+              className="text-sm text-primary-500 mt-2 underline min-h-11"
             >
               Clear filter
             </button>

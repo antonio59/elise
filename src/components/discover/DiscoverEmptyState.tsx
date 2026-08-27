@@ -1,5 +1,5 @@
 import React from "react";
-import { Loader2, Sparkles, RefreshCw } from "lucide-react";
+import { Loader2, Compass, RefreshCw } from "lucide-react";
 
 interface DiscoverEmptyStateProps {
   loading: boolean;
@@ -24,8 +24,8 @@ const DiscoverEmptyState: React.FC<DiscoverEmptyStateProps> = ({
 
   return (
     <div className="flex flex-col items-center justify-center h-full text-center">
-      <div className="w-16 h-16 rounded-full bg-violet-100 flex items-center justify-center mb-4">
-        <Sparkles className="w-8 h-8 text-violet-500" />
+      <div className="w-16 h-16 rounded-full bg-primary-100 flex items-center justify-center mb-4">
+        <Compass className="w-8 h-8 text-primary-600" />
       </div>
       <h3 className="text-lg font-bold text-slate-700 mb-2">All caught up!</h3>
       <p className="text-sm text-slate-500 mb-6 max-w-xs">
@@ -34,7 +34,7 @@ const DiscoverEmptyState: React.FC<DiscoverEmptyStateProps> = ({
       {onRefresh && (
         <button
           onClick={onRefresh}
-          className="btn btn-primary flex items-center gap-2"
+          className="btn btn-primary flex items-center gap-2 min-h-11"
         >
           <RefreshCw className="w-4 h-4" />
           Find more books

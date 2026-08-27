@@ -11,21 +11,8 @@ import {
 } from "lucide-react";
 import { Button } from "../ui/Button";
 
-const genreColors: Record<string, string> = {
-  Manga: "bg-error-50 text-error-600 border-error-200",
-  Manhwa: "bg-blue-50 text-accent-600 border-blue-200",
-  Webtoon: "bg-purple-50 text-purple-600 border-purple-200",
-  "Light Novel": "bg-amber-50 text-amber-600 border-amber-200",
-  Fantasy: "bg-violet-50 text-violet-600 border-violet-200",
-  "Sci-Fi": "bg-cyan-50 text-cyan-600 border-cyan-200",
-  Romance: "bg-pink-50 text-primary-600 border-pink-200",
-  Mystery: "bg-slate-50 text-slate-600 border-slate-200",
-  Horror: "bg-orange-50 text-orange-700 border-orange-200",
-  "Slice of Life": "bg-success-50 text-success-600 border-success-200",
-  Action: "bg-error-50 text-red-700 border-error-200",
-  Comedy: "bg-yellow-50 text-yellow-700 border-yellow-200",
-  Drama: "bg-indigo-50 text-indigo-600 border-indigo-200",
-};
+const genreChipIdle = "bg-slate-100 text-slate-600";
+const genreChipActive = "bg-primary-50 text-primary-700";
 
 interface GenreCount {
   name: string;
@@ -147,10 +134,10 @@ const BookSearchBar: React.FC<BookSearchBarProps> = ({
           <button
             onClick={() => onGenreFilterChange(null)}
             aria-pressed={!genreFilter}
-            className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+            className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium transition-colors min-h-11 ${
               !genreFilter
-                ? "bg-primary-500 text-white"
-                : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                ? genreChipActive
+                : `${genreChipIdle} hover:bg-slate-200`
             }`}
           >
             {!genreFilter && <Check className="w-3 h-3" />}
@@ -163,10 +150,10 @@ const BookSearchBar: React.FC<BookSearchBarProps> = ({
                 onGenreFilterChange(genreFilter === g.name ? null : g.name)
               }
               aria-pressed={genreFilter === g.name}
-              className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+              className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium transition-colors min-h-11 ${
                 genreFilter === g.name
-                  ? "bg-primary-500 text-white"
-                  : genreColors[g.name] || "bg-slate-100 text-slate-600"
+                  ? genreChipActive
+                  : `${genreChipIdle} hover:bg-slate-200`
               }`}
             >
               {genreFilter === g.name && <Check className="w-3 h-3" />}

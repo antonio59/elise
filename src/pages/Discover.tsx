@@ -156,7 +156,7 @@ const Discover: React.FC = () => {
         <div className="w-20 h-20 rounded-full bg-primary-100 flex items-center justify-center mx-auto mb-6">
           <BookOpen className="w-10 h-10 text-primary-500" />
         </div>
-        <h2 className="text-2xl font-bold text-slate-800 mb-3">
+        <h2 className="font-display text-2xl font-bold text-slate-900 mb-3">
           Read more to unlock Discover
         </h2>
         <p className="text-slate-500">

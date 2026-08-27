@@ -12,7 +12,6 @@ import {
   PenTool,
   Compass,
   Heart,
-  Sparkles,
   User,
   Camera,
 } from "lucide-react";
@@ -355,7 +354,7 @@ const Login: React.FC = () => {
 
       <footer className="relative z-10 pb-6 text-center">
         <p className="inline-flex items-center gap-1.5 text-xs text-slate-400">
-          <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
+          <BookOpen className="w-3.5 h-3.5" aria-hidden="true" />
           made for reading, drawing &amp; writing
         </p>
       </footer>

@@ -7,7 +7,7 @@ import {
   Target,
   Quote,
   Heart,
-  Sparkles,
+  Lightbulb,
   RefreshCw,
 } from "lucide-react";
 import { useQuery } from "convex/react";
@@ -127,7 +127,7 @@ const About: React.FC = () => {
             </div>
           ) : !hasContent ? (
             <div className="text-center py-16 px-6 rounded-3xl bg-white/70 border border-primary-100 shadow-soft">
-              <Sparkles
+              <User
                 className="w-10 h-10 text-primary-400 mx-auto mb-4"
                 aria-hidden="true"
               />
@@ -200,7 +200,7 @@ const About: React.FC = () => {
                   {display?.funFact && (
                     <section className="rounded-3xl bg-star-light/60 border border-star/30 p-5">
                       <h2 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-primary-700 mb-2">
-                        <Sparkles className="w-4 h-4" aria-hidden="true" />
+                        <Lightbulb className="w-4 h-4" aria-hidden="true" />
                         Fun fact
                       </h2>
                       <p className="text-slate-800 font-medium leading-relaxed">

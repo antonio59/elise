@@ -52,10 +52,10 @@ const GalleryGrid: React.FC<GalleryGridProps> = ({
               loading="lazy"
             />
 
-            {/* Soft hover scrim */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+            {/* Soft scrim: always light on touch, stronger on hover devices */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/5 to-transparent opacity-80 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100 transition-opacity duration-200" />
 
-            {/* Save (pin) - Pinterest-like primary action */}
+            {/* Save (pin) - always visible on touch; hover-reveal on pointer devices */}
             <button
               type="button"
               onClick={(e) => {
@@ -65,10 +65,10 @@ const GalleryGrid: React.FC<GalleryGridProps> = ({
               disabled={likingId === item._id}
               aria-label={likedIds.has(item._id) ? "Unsave pin" : "Save pin"}
               aria-pressed={likedIds.has(item._id)}
-              className={`absolute top-2.5 right-2.5 inline-flex items-center gap-1.5 min-h-9 px-3 rounded-lg text-xs font-semibold shadow-md transition-all ${
+              className={`absolute top-2.5 right-2.5 inline-flex items-center gap-1.5 min-h-11 px-3 rounded-lg text-xs font-semibold shadow-md transition-all ${
                 likedIds.has(item._id)
                   ? "bg-primary-600 text-white"
-                  : "bg-primary-500 text-white opacity-0 group-hover:opacity-100 hover:bg-primary-600"
+                  : "bg-primary-500 text-white opacity-100 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100 hover:bg-primary-600"
               } disabled:opacity-50`}
             >
               <Pin
@@ -78,7 +78,7 @@ const GalleryGrid: React.FC<GalleryGridProps> = ({
             </button>
 
             {/* Title + count */}
-            <div className="absolute bottom-0 left-0 right-0 p-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+            <div className="absolute bottom-0 left-0 right-0 p-3 opacity-100 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100 transition-opacity duration-200">
               <h3 className="text-white font-semibold text-sm leading-snug line-clamp-2 drop-shadow">
                 {item.title}
               </h3>
@@ -93,8 +93,8 @@ const GalleryGrid: React.FC<GalleryGridProps> = ({
               )}
             </div>
 
-            {/* Reactions - desktop hover only */}
-            <div className="absolute bottom-2.5 left-2.5 right-20 hidden md:block opacity-0 group-hover:opacity-100 transition-opacity">
+            {/* Reactions - desktop pointer hover only (Save is the touch primary) */}
+            <div className="absolute bottom-2.5 left-2.5 right-20 hidden md:block opacity-0 [@media(hover:hover)]:group-hover:opacity-100 transition-opacity">
               <ReactionBar
                 targetType={targetType}
                 targetId={item._id}

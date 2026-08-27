@@ -7,7 +7,6 @@ import {
   Palette,
   LayoutDashboard,
   LogOut,
-  Sparkles,
   MessageSquare,
   Settings,
   Menu,
@@ -61,7 +60,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         className="flex items-center gap-2 mb-8"
         onClick={onItemClick}
       >
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center">
+        <div className="w-10 h-10 rounded-xl bg-primary-500 flex items-center justify-center">
           <BookOpen className="w-5 h-5 text-white" />
         </div>
         <span className="text-xl font-display font-bold text-primary-700">
@@ -82,7 +81,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
               onClick={onItemClick}
               className={`flex items-center gap-3 px-4 min-h-11 py-3 rounded-xl font-medium transition-all ${
                 isActive
-                  ? "bg-gradient-to-r from-primary-500 to-accent-500 text-white shadow-md"
+                  ? "bg-primary-100 text-primary-800"
                   : "text-slate-600 hover:bg-slate-100"
               }`}
             >
@@ -108,7 +107,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                 onClick={onItemClick}
                 className={`flex items-center gap-3 px-4 min-h-11 py-2.5 rounded-xl text-sm font-medium transition-all ${
                   isActive
-                    ? "bg-primary-100 text-primary-700"
+                    ? "bg-primary-100 text-primary-800"
                     : "text-slate-500 hover:bg-slate-100"
                 }`}
               >
@@ -120,11 +119,15 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         </div>
       </nav>
 
-      {/* Public Site Link */}
+      {/* Theme + Public Site Link */}
+        <div className="mb-2 flex items-center px-1">
+          <ThemeToggle />
+        </div>
+
       <Link
         to="/"
         onClick={onItemClick}
-        className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 hover:bg-slate-100 mb-2"
+        className="flex items-center gap-3 px-4 min-h-11 py-3 rounded-xl text-slate-500 hover:bg-slate-100 mb-2"
       >
         <Home className="w-5 h-5" />
         View Public Site
@@ -136,7 +139,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           onItemClick?.();
           signOut();
         }}
-        className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 hover:bg-error-50 hover:text-error-600 transition-colors w-full"
+        className="flex items-center gap-3 px-4 min-h-11 py-3 rounded-xl text-slate-500 hover:bg-error-50 hover:text-error-600 transition-colors w-full"
       >
         <LogOut className="w-5 h-5" />
         Sign Out
@@ -149,8 +152,8 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       {/* Mobile Header */}
       <header className="md:hidden bg-slate-50 border-b border-slate-200 p-4 flex items-center justify-between sticky top-0 z-40">
         <Link to="/dashboard" className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center">
-            <Sparkles className="w-4 h-4 text-white" />
+          <div className="w-8 h-8 rounded-lg bg-primary-500 flex items-center justify-center">
+            <BookOpen className="w-4 h-4 text-white" />
           </div>
           <span className="text-lg font-display font-bold text-primary-700">
             Elise Reads
@@ -158,7 +161,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         </Link>
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="p-2 hover:bg-slate-100 rounded-lg"
+          className="inline-flex items-center justify-center min-h-11 min-w-11 hover:bg-slate-100 rounded-lg"
           aria-label="Toggle navigation menu"
         >
           {mobileMenuOpen ? (
@@ -260,7 +263,7 @@ export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
       <header className="bg-slate-50/80 backdrop-blur-md border-b border-slate-200/70 shadow-sm sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-primary-500 flex items-center justify-center">
               <BookOpen className="w-5 h-5 text-white" />
             </div>
             <span className="text-xl font-display font-bold text-primary-700">
@@ -283,19 +286,19 @@ export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
                   to={link.to}
                   className={`flex items-center gap-1.5 min-h-11 px-1 font-medium transition-colors ${
                     isActive
-                      ? "text-violet-500"
+                      ? "text-primary-700"
                       : "text-slate-500 hover:text-primary-600"
                   }`}
                 >
                   <Icon className="w-4 h-4" />
                   {link.label}
                   {isActive && (
-                    <span className="w-1.5 h-1.5 rounded-full bg-violet-400"></span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-primary-500"></span>
                   )}
                 </Link>
               );
             })}
-            <div className="hidden md:flex items-center gap-3">
+            <div className="flex items-center gap-3">
               <ThemeToggle />
               {user && (
                 <Link to="/dashboard" className="btn btn-secondary text-sm">
@@ -313,7 +316,7 @@ export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
           {/* Mobile hamburger */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 hover:bg-slate-100 rounded-lg"
+            className="md:hidden inline-flex items-center justify-center min-h-11 min-w-11 hover:bg-slate-100 rounded-lg"
             aria-label="Toggle menu"
             aria-expanded={mobileMenuOpen}
             aria-controls="mobile-menu"
@@ -351,11 +354,14 @@ export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
                 </Link>
                 );
               })}
-              <div className="pt-2">
+              <div className="pt-3 space-y-2">
+                <div className="px-1">
+                  <ThemeToggle />
+                </div>
                 {user ? (
                   <Link
                     to="/dashboard"
-                    className="btn btn-secondary w-full justify-center"
+                    className="btn btn-secondary w-full justify-center min-h-11"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Dashboard
@@ -363,7 +369,7 @@ export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
                 ) : (
                   <Link
                     to="/login"
-                    className="text-sm text-slate-400 hover:text-slate-600 px-4 py-3 block"
+                    className="btn btn-secondary w-full justify-center min-h-11"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Sign in
@@ -379,11 +385,11 @@ export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
       <main id="main-content" className="flex-1">{children}</main>
 
       {/* Footer */}
-      <footer className="bg-gradient-to-br from-primary-50 to-violet-50 border-t border-slate-200 py-8">
+      <footer className="bg-gradient-to-br from-primary-50 to-slate-50 border-t border-slate-200 py-8">
         <div className="max-w-6xl mx-auto px-4">
           <div className="flex flex-col items-center text-center">
             <Link to="/" className="inline-flex items-center gap-2 mb-3">
-              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-primary-500 to-violet-500 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-xl bg-primary-500 flex items-center justify-center">
                 <BookOpen className="w-4 h-4 text-white" />
               </div>
               <span className="text-lg font-display font-bold text-primary-700">
@@ -397,7 +403,7 @@ export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
             </p>
             <p className="text-xs text-slate-400 mt-2">
               {(siteSettings as { footerNote?: string })?.footerNote ||
-                "made by me ✨"}
+                "made by me"}
             </p>
           </div>
         </div>

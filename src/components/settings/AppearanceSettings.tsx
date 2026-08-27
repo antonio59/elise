@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Palette, Sparkles, Heart } from "lucide-react";
+import { Palette, BookOpen, Heart } from "lucide-react";
 import SettingsSectionHeader from "./SettingsSectionHeader";
 
 const themes = [
@@ -132,11 +132,11 @@ const AppearanceSettings: React.FC<AppearanceSettingsProps> = ({
         transition={{ delay: 0.15 }}
       >
         <SettingsSectionHeader
-          icon={Sparkles}
+          icon={BookOpen}
           title="Homepage Hero"
           description="Customize what visitors see first"
-          gradientFrom="from-violet-500"
-          gradientTo="to-primary-500"
+          gradientFrom="from-primary-500"
+          gradientTo="to-accent-500"
         />
 
         <div className="space-y-4">
@@ -162,12 +162,10 @@ const AppearanceSettings: React.FC<AppearanceSettingsProps> = ({
             />
             <p className="text-xs text-slate-500 mt-1">The italic subtitle under your title</p>
           </div>
-          <div className="p-4 bg-gradient-to-br from-primary-50 to-violet-50 rounded-xl">
+          <div className="p-4 bg-primary-50 rounded-xl">
             <p className="text-xs text-slate-500 font-medium mb-2">Preview:</p>
-            <h2 className="text-2xl font-bold">
-              <span className="bg-gradient-to-r from-primary-600 to-violet-500 bg-clip-text text-transparent">
-                {heroTitle || "Elise Reads"}
-              </span>
+            <h2 className="font-display text-2xl font-bold text-primary-700">
+              {heroTitle || "Elise Reads"}
             </h2>
             <p className="text-base text-slate-500 italic mt-1">
               {heroSubtitle || "books I've read, art I make, and words I write"}
@@ -187,7 +185,7 @@ const AppearanceSettings: React.FC<AppearanceSettingsProps> = ({
           title="Footer"
           description="Customise what's at the bottom"
           gradientFrom="from-primary-400"
-          gradientTo="to-violet-400"
+          gradientTo="to-accent-400"
         />
 
         <div className="space-y-4">
@@ -208,7 +206,7 @@ const AppearanceSettings: React.FC<AppearanceSettingsProps> = ({
               value={footerNote}
               onChange={(e) => setFooterNote(e.target.value)}
               className="input"
-              placeholder="made by me ✨"
+              placeholder="made by me"
             />
           </div>
         </div>

@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { Camera, Loader2, Sparkles, User } from "lucide-react";
+import { Camera, Loader2, User, Palette } from "lucide-react";
 
 interface ProfileHeaderProps {
   avatarUrl?: string;
@@ -58,7 +58,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
             title="Create avatar"
             aria-label="Create avatar"
           >
-            <Sparkles className="w-4 h-4 text-violet-500" />
+            <Palette className="w-4 h-4 text-primary-500" />
           </button>
           <button
             onClick={() => fileRef.current?.click()}

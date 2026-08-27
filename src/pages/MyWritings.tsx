@@ -358,7 +358,7 @@ const WritingEditor: React.FC<WritingEditorProps> = ({ writing, onSave, onClose 
         {/* Header */}
         <div className="p-5 border-b border-slate-200 flex items-center justify-between">
           <h2 className="text-xl font-bold text-slate-800">
-            {writing ? "Edit Piece" : "New Piece ✨"}
+            {writing ? "Edit piece" : "New piece"}
           </h2>
           <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-lg" aria-label="Close editor">
             <X className="w-5 h-5" />

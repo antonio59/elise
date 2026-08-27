@@ -50,7 +50,6 @@ const PublicHome: React.FC = () => {
         heroTitle={siteSettings?.heroTitle as string | undefined}
         heroSubtitle={siteSettings?.heroSubtitle as string | undefined}
         nowReading={nowReading}
-        onSuggestClick={() => setShowSuggestModal(true)}
       />
 
       <HomeStatsStrip
@@ -62,7 +61,6 @@ const PublicHome: React.FC = () => {
       <FeaturedBooks
         books={books}
         booksForGrid={booksForGrid}
-        nowReading={nowReading}
         fiveStarBooks={fiveStarBooks}
         wishlist={wishlist}
         onSuggestClick={() => setShowSuggestModal(true)}
