@@ -67,6 +67,14 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
+- Merge pull request #61 from antonio59/fix/covers-teen-aesthetic-pins
+
+Fix blurry covers + teen studio aesthetic + pin boards
+- Fix blurry covers and mature the teen studio aesthetic.
+
+Store Google covers at fife=w800, add a safe high-res refresh action, switch to Outfit/Figtree with cooler berry tones, and add Pinterest-style pin boards for photos, art, and books.
+
+Co-authored-by: Cursor <cursoragent@cursor.com>
 - Merge pull request #60 from antonio59/feat/elise-personal-login
 
 Izzy-inspired Elise upgrades: login, stats, writing/reviews, wishlist, SEO
@@ -697,6 +705,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
