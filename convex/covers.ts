@@ -3,12 +3,18 @@ import type { ActionCtx } from "./_generated/server";
 import { v } from "convex/values";
 import { api, internal } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
-import { googleCoverCandidates } from "./lib/coverUrl";
+import {
+  googleCoverCandidates,
+  isGoogleUnavailableSize,
+} from "./lib/coverUrl";
+import { readImageDimensions } from "./lib/imageDimensions";
 
 /** Reject tiny Google thumbnails (~128px). Real covers are usually >> 20KB. */
-const MIN_IMAGE_BYTES = 20_000;
+const MIN_IMAGE_BYTES = 8_000;
+/** Real covers should be wider than Google’s ~128px thumbs. */
+const MIN_IMAGE_WIDTH = 200;
 
-/** Try each URL in order; return the first real image blob (skips placeholders). */
+/** Try each URL in order; return the first real cover image (not a placeholder). */
 async function fetchFirstValidImage(urls: string[]): Promise<Blob | null> {
   for (const url of urls) {
     try {
@@ -17,7 +23,16 @@ async function fetchFirstValidImage(urls: string[]): Promise<Blob | null> {
       const blob = await res.blob();
       if (!blob.type.startsWith("image/")) continue;
       if (blob.size < MIN_IMAGE_BYTES) continue;
-      return blob;
+
+      const bytes = new Uint8Array(await blob.arrayBuffer());
+      const dims = readImageDimensions(bytes);
+      if (!dims) continue;
+      if (dims.width < MIN_IMAGE_WIDTH) continue;
+      // Google upscales the gray “image not available” PNG to exactly 800×1043
+      if (isGoogleUnavailableSize(dims.width, dims.height)) continue;
+
+      // Re-wrap so Convex storage gets a fresh blob with the right type
+      return new Blob([bytes], { type: blob.type || "image/jpeg" });
     } catch {
       continue;
     }
@@ -42,7 +57,7 @@ async function freshGoogleCoverUrls(
     const keyParam = apiKey ? `&key=${apiKey}` : "";
     const q = encodeURIComponent(`${title} ${author}`);
     const res = await fetch(
-      `https://www.googleapis.com/books/v1/volumes?q=${q}&maxResults=3&orderBy=relevance${keyParam}`,
+      `https://www.googleapis.com/books/v1/volumes?q=${q}&maxResults=5&orderBy=relevance${keyParam}`,
     );
     if (!res.ok) return [];
     const data = await res.json();
@@ -56,7 +71,10 @@ async function freshGoogleCoverUrls(
         links.thumbnail ??
         links.smallThumbnail
       )?.replace("http://", "https://");
-      if (best) urls.push(...googleCoverCandidates(best));
+      // Only keep volumes that actually advertise an image — otherwise the
+      // publisher frontcover endpoint returns the gray placeholder.
+      if (!best) continue;
+      urls.push(...googleCoverCandidates(best));
       if (item.id) {
         urls.push(
           `https://books.google.com/books/publisher/content/images/frontcover/${item.id}?fife=w800-h1200&source=gbs_api`,
@@ -69,11 +87,39 @@ async function freshGoogleCoverUrls(
   }
 }
 
+/** Open Library search by title+author → large cover IDs. */
+async function openLibraryCoverUrls(
+  title: string,
+  author: string,
+): Promise<string[]> {
+  try {
+    const q = encodeURIComponent(`title:${title} author:${author}`);
+    const res = await fetch(
+      `https://openlibrary.org/search.json?q=${q}&limit=3&fields=cover_i,isbn`,
+    );
+    if (!res.ok) return [];
+    const data = await res.json();
+    const urls: string[] = [];
+    for (const doc of data.docs ?? []) {
+      if (doc.cover_i) {
+        urls.push(`https://covers.openlibrary.org/b/id/${doc.cover_i}-L.jpg`);
+      }
+      const isbn = Array.isArray(doc.isbn) ? doc.isbn[0] : undefined;
+      if (isbn) {
+        urls.push(`https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`);
+      }
+    }
+    return [...new Set(urls)];
+  } catch {
+    return [];
+  }
+}
+
 /**
  * Build the full ordered candidate list for a book:
- *   1. Stored Google Books URL sharpened via fife
- *   2. Fresh Google Books search by title+author
- *   3. Open Library via ISBN (large)
+ *   1. Stored Google Books URL (publisher high-res, no fife-upscaled placeholder)
+ *   2. Fresh Google Books search by title+author (volumes with imageLinks only)
+ *   3. Open Library via ISBN / title search
  */
 async function buildCandidateUrls(book: {
   title: string;
@@ -95,6 +141,9 @@ async function buildCandidateUrls(book: {
       `https://covers.openlibrary.org/b/isbn/${book.isbn}-L.jpg`,
     );
   }
+
+  const ol = await openLibraryCoverUrls(book.title, book.author);
+  candidates.push(...ol);
 
   return [...new Set(candidates)];
 }
@@ -210,9 +259,7 @@ export const storeAll = action({
     const books = await ctx.runQuery(api.covers.getAll);
     let stored = 0;
     let skipped = 0;
-    const pending = books.filter(
-      (b: CoverBook) => !b.coverStorageId,
-    );
+    const pending = books.filter((b: CoverBook) => !b.coverStorageId);
     skipped += books.length - pending.length;
 
     const BATCH = 5;
@@ -231,10 +278,9 @@ export const storeAll = action({
 });
 
 /**
- * Force re-download every cover at high resolution (fife=w800).
- * Replaces blurry ~128px thumbnails already in Convex storage.
- * Never clears the old cover until a new image is successfully stored.
- * Run: `pnpm exec convex run covers:refreshAllHighRes`
+ * Force re-download every cover at high resolution.
+ * Never clears the old cover until a new valid image is stored.
+ * Run: `pnpm exec convex run covers:refreshAllHighRes --prod`
  */
 export const refreshAllHighRes = action({
   args: {},
@@ -257,6 +303,70 @@ export const refreshAllHighRes = action({
       }
     }
     return `Upgraded ${upgraded} covers, skipped ${skipped}`;
+  },
+});
+
+/**
+ * Re-fetch covers that look like Google’s “image not available” placeholder
+ * or tiny thumbs still in storage. Clears only after a valid replacement.
+ * Run: `pnpm exec convex run covers:repairBadCovers --prod`
+ */
+export const repairBadCovers = action({
+  args: {},
+  handler: async (ctx) => {
+    const books = await ctx.runQuery(api.covers.getAll);
+    let repaired = 0;
+    let skipped = 0;
+    let cleared = 0;
+
+    for (const book of books as CoverBook[]) {
+      if (!book.coverStorageId) {
+        const r = await storeCoverForBook(ctx, book);
+        if (r === "stored") repaired++;
+        else skipped++;
+        continue;
+      }
+
+      const url = await ctx.storage.getUrl(book.coverStorageId);
+      if (!url) {
+        const r = await storeCoverForBook(ctx, book, { replaceExisting: true });
+        if (r === "stored") repaired++;
+        else skipped++;
+        continue;
+      }
+
+      try {
+        const res = await fetch(url);
+        const blob = await res.blob();
+        const bytes = new Uint8Array(await blob.arrayBuffer());
+        const dims = readImageDimensions(bytes);
+        const bad =
+          !dims ||
+          dims.width < MIN_IMAGE_WIDTH ||
+          isGoogleUnavailableSize(dims.width, dims.height);
+
+        if (!bad) {
+          skipped++;
+          continue;
+        }
+
+        const r = await storeCoverForBook(ctx, book, { replaceExisting: true });
+        if (r === "stored") {
+          repaired++;
+        } else {
+          // Couldn't find a better cover — remove the misleading placeholder
+          // so the client can fall back to Google/Open Library URLs.
+          await ctx.runMutation(internal.covers.clearCoverStorage, {
+            bookId: book._id,
+          });
+          cleared++;
+        }
+      } catch {
+        skipped++;
+      }
+    }
+
+    return `Repaired ${repaired}, cleared placeholders ${cleared}, left alone ${skipped}`;
   },
 });
 
