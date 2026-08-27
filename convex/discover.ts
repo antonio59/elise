@@ -133,27 +133,68 @@ export const fetchRecommendations = action({
     );
     const data = await res.json();
 
-    if (data.error) {
-      return [];
+    if (!data.error && (data.items?.length ?? 0) > 0) {
+      return (data.items as GoogleBooksItem[]).map((item) => {
+        const coverUrl = parseGoogleBooksCoverUrl(
+          item.volumeInfo?.imageLinks ?? {},
+        );
+
+        return {
+          googleBookId: item.id,
+          title: item.volumeInfo?.title || "Unknown Title",
+          author:
+            (item.volumeInfo?.authors ?? []).join(", ") ||
+            "Unknown Author",
+          coverUrl,
+          pageCount: item.volumeInfo?.pageCount ?? 0,
+          description: item.volumeInfo?.description ?? "",
+          categories: item.volumeInfo?.categories ?? [],
+        };
+      });
     }
 
-    return (data.items ?? []).map((item: GoogleBooksItem) => {
-      const coverUrl = parseGoogleBooksCoverUrl(
-        item.volumeInfo?.imageLinks ?? {},
+    if (data.error) {
+      console.error(
+        "Google Books Discover error:",
+        data.error?.status || data.error,
       );
+    }
 
-      return {
-        googleBookId: item.id,
-        title: item.volumeInfo?.title || "Unknown Title",
-        author:
-          (item.volumeInfo?.authors ?? []).join(", ") ||
-          "Unknown Author",
-        coverUrl,
-        pageCount: item.volumeInfo?.pageCount ?? 0,
-        description: item.volumeInfo?.description ?? "",
-        categories: item.volumeInfo?.categories ?? [],
-      };
-    });
+    // Open Library fallback when Google is quota-limited or missing a key
+    const olRes = await fetch(
+      `https://openlibrary.org/search.json?q=${encodeURIComponent(args.searchQuery)}&limit=20&fields=key,title,author_name,cover_i,number_of_pages_median,subject,first_sentence`,
+    );
+    if (!olRes.ok) return [];
+    const olData = await olRes.json();
+    return (olData.docs ?? []).map(
+      (
+        doc: {
+          key?: string;
+          title?: string;
+          author_name?: string[];
+          cover_i?: number;
+          number_of_pages_median?: number;
+          subject?: string[];
+          first_sentence?: string[] | string;
+        },
+        index: number,
+      ) => {
+        const firstSentence = Array.isArray(doc.first_sentence)
+          ? doc.first_sentence[0]
+          : doc.first_sentence;
+        return {
+          googleBookId: doc.key || `ol-${startIndex}-${index}`,
+          title: doc.title || "Unknown Title",
+          author: (doc.author_name ?? []).join(", ") || "Unknown Author",
+          coverUrl: doc.cover_i
+            ? `https://covers.openlibrary.org/b/id/${doc.cover_i}-L.jpg`
+            : "",
+          pageCount: doc.number_of_pages_median ?? 0,
+          description: firstSentence ?? "",
+          categories: (doc.subject ?? []).slice(0, 5),
+        };
+      },
+    );
   },
 });
 
