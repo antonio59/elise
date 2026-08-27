@@ -298,12 +298,14 @@ const Login: React.FC = () => {
                 </p>
                 <ul className="text-sm text-slate-500 space-y-1.5 leading-snug">
                   <li>
-                    <span className="font-medium text-slate-700">Home</span>  - 
+                    <span className="font-medium text-slate-700">Home</span>
+                    {" - "}
                     streaks, currently reading, add a book
                   </li>
                   <li>
-                    <span className="font-medium text-slate-700">My Books</span>{" "}
-                    - finish books &amp; write reviews
+                    <span className="font-medium text-slate-700">My Books</span>
+                    {" - "}
+                    finish books &amp; write reviews
                   </li>
                   <li className="flex flex-wrap gap-x-3 gap-y-1">
                     <span className="inline-flex items-center gap-1">

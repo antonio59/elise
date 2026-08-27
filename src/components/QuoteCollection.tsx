@@ -121,7 +121,11 @@ const QuoteCollection: React.FC = () => {
                 </p>
                 <div className="flex items-center justify-between mt-2">
                   <div className="flex items-center gap-2">
-                    {q.bookTitle && <span className="text-xs text-primary-600 font-medium"> -  {q.bookTitle}</span>}
+                    {q.bookTitle && (
+                      <span className="text-xs text-primary-600 font-medium">
+                        {q.bookTitle}
+                      </span>
+                    )}
                     {q.page && <span className="text-xs text-slate-400">p. {q.page}</span>}
                     {!q.isPublic && <Lock className="w-3 h-3 text-slate-400" />}
                   </div>
