@@ -66,6 +66,15 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
+<<<<<<< Updated upstream
+=======
+- Merge pull request #53 from antonio59/dependabot/npm_and_yarn/framer-motion-13.1.1
+
+chore(deps): bump framer-motion from 12.43.0 to 13.1.1
+- Merge pull request #55 from antonio59/dependabot/npm_and_yarn/testing-library/jest-dom-7.0.1
+
+chore(deps-dev): bump @testing-library/jest-dom from 6.9.1 to 7.0.1
+>>>>>>> Stashed changes
 - Merge pull request #54 from antonio59/dependabot/npm_and_yarn/types/node-26.2.0
 
 chore(deps-dev): bump @types/node from 25.9.5 to 26.2.0
@@ -613,6 +622,11 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Chores
 
+<<<<<<< Updated upstream
+=======
+- **deps**: Bump framer-motion from 12.43.0 to 13.1.1
+- **deps-dev**: Bump @testing-library/jest-dom from 6.9.1 to 7.0.1
+>>>>>>> Stashed changes
 - **deps-dev**: Bump @types/node from 25.9.5 to 26.2.0
 - Migrate to pnpm v11
 - **deps**: Bump the minor-patch group across 1 directory with 12 updates
