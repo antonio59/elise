@@ -67,6 +67,14 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
+- Merge pull request #66 from antonio59/feat/studio-ux-polish
+
+Studio UX polish across public and owner flows
+- Polish public and owner UI toward Studio aesthetic.
+
+Align DESIGN.md with Outfit/Figtree and berry rose, calm home/dashboard CTAs, fix mobile theme and gallery Save on touch, and strip candy Sparkles/rainbow chrome across key flows.
+
+Co-authored-by: Cursor <cursoragent@cursor.com>
 - Merge pull request #65 from antonio59/dependabot/npm_and_yarn/minor-patch-603516f24f
 
 chore(deps-dev): bump @types/node from 26.2.0 to 26.3.0 in the minor-patch group
@@ -749,6 +757,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
