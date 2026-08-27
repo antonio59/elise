@@ -67,6 +67,11 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
+- Fix ActionCtx typing for cover store helper.
+
+Use Convex ActionCtx instead of a narrowed runMutation signature that rejected the real action context under tsc -b.
+
+Co-authored-by: Cursor <cursoragent@cursor.com>
 - Merge pull request #61 from antonio59/fix/covers-teen-aesthetic-pins
 
 Fix blurry covers + teen studio aesthetic + pin boards
@@ -705,6 +710,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
