@@ -203,7 +203,7 @@ const FeaturedBooks: React.FC<{
           ) : books.length === 0 ? (
             <div className="text-center py-12 bg-slate-50 rounded-2xl">
               <BookOpen className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-              <p className="text-slate-500">No books yet. Check back soon!</p>
+              <p className="text-slate-500">The shelf is empty — books will show up here soon.</p>
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">

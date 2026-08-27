@@ -29,7 +29,7 @@ const PublicGallery: React.FC = () => {
       />
 
       {artworks.length === 0 ? (
-        <GalleryEmptyState message="No artworks yet. Check back soon!" />
+        <GalleryEmptyState message="No art on the wall yet" />
       ) : (
         <GalleryGrid
           items={artworks}

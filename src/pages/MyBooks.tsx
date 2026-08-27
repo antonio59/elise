@@ -126,6 +126,7 @@ const MyBooks: React.FC = () => {
           setBookToDelete(id);
           setShowDeleteConfirm(true);
         }}
+        onAddBook={() => setShowAddModal(true)}
       />
 
       <AddBookModal

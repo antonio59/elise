@@ -16,6 +16,8 @@ const PublicHome: React.FC = () => {
   usePageMeta({ title: "Home", description: "Books, art & things I think about" });
   const books = useQuery(api.books.getReadBooks);
   const photos = useQuery(api.photos.getPublished, { limit: 6 });
+  const writings = useQuery(api.writings.getPublished, {});
+  const artworks = useQuery(api.artworks.getPublished, {});
   const siteSettings = useQuery(api.siteSettings.get);
   const wishlist = useQuery(api.books.getWishlist);
   const [showSuggestModal, setShowSuggestModal] = useState(false);
@@ -40,6 +42,7 @@ const PublicHome: React.FC = () => {
       <HeroSection
         heroTitle={siteSettings?.heroTitle as string | undefined}
         heroSubtitle={siteSettings?.heroSubtitle as string | undefined}
+        nowReading={nowReading}
         onSuggestClick={() => setShowSuggestModal(true)}
       />
 
@@ -56,7 +59,13 @@ const PublicHome: React.FC = () => {
 
       <FeaturedPhotos photos={photos ?? []} />
 
-      <FeaturedArt />
+      <FeaturedArt
+        visible={{
+          writing: (writings?.length ?? 0) > 0,
+          art: (artworks?.length ?? 0) > 0,
+          photos: (photos?.length ?? 0) > 0,
+        }}
+      />
 
       <FooterCTA onSuggestClick={() => setShowSuggestModal(true)} />
 

@@ -106,7 +106,10 @@ const PublicPhotos: React.FC = () => {
 
       {/* Masonry Grid */}
       {filteredPhotos.length === 0 ? (
-        <GalleryEmptyState message="No photos yet. Check back soon!" />
+        <GalleryEmptyState
+          message="No photos shared yet"
+          hint="Photos will appear here once they're published."
+        />
       ) : (
         <GalleryGrid
           items={filteredPhotos}

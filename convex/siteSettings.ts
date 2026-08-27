@@ -14,7 +14,7 @@ export const get = query({
         heroSubtitle: "books I've read, art I make, and words I write",
         heroDescription: "",
         footerTagline: "books I've read, art I make, and words I write",
-        footerNote: "Made with love for Elise 💜",
+        footerNote: "made by me ✨",
       }
     );
   },

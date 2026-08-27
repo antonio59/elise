@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { BookOpen, Palette, PenTool, Sparkles } from "lucide-react";
+import { BookOpen, Palette, PenTool, Sparkles, Plus } from "lucide-react";
+import { Button } from "../ui/Button";
 
 const verbs = [
   { text: "reading", icon: BookOpen },
@@ -11,9 +13,13 @@ const verbs = [
 
 interface DashboardHeaderProps {
   onStartTour: () => void;
+  onAddBook?: () => void;
 }
 
-const DashboardHeader: React.FC<DashboardHeaderProps> = ({ onStartTour }) => {
+const DashboardHeader: React.FC<DashboardHeaderProps> = ({
+  onStartTour,
+  onAddBook,
+}) => {
   const [verbIndex, setVerbIndex] = useState(0);
 
   useEffect(() => {
@@ -24,7 +30,7 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({ onStartTour }) => {
   }, []);
 
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between gap-4 flex-wrap">
       <div>
         <h1 className="text-2xl sm:text-3xl font-bold text-slate-800">
           Hey{" "}
@@ -53,9 +59,24 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({ onStartTour }) => {
         </p>
       </div>
       <div className="flex items-center gap-2">
+        {onAddBook ? (
+          <Button
+            icon={<Plus className="w-4 h-4" />}
+            onClick={onAddBook}
+            className="min-h-11"
+          >
+            Add a book
+          </Button>
+        ) : (
+          <Link to="/dashboard/books">
+            <Button icon={<Plus className="w-4 h-4" />} className="min-h-11">
+              Add a book
+            </Button>
+          </Link>
+        )}
         <motion.button
           onClick={onStartTour}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-medium text-primary-600 bg-primary-50 hover:bg-primary-100 transition-colors"
+          className="flex items-center gap-1.5 min-h-11 px-3 py-1.5 rounded-xl text-sm font-medium text-primary-600 bg-primary-50 hover:bg-primary-100 transition-colors"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           title="Take the tour again"

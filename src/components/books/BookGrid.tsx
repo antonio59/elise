@@ -11,6 +11,7 @@ interface BookGridProps {
   activeTab: string;
   onEdit: (book: Book) => void;
   onDelete: (bookId: Book["_id"]) => void;
+  onAddBook?: () => void;
 }
 
 const BookGrid: React.FC<BookGridProps> = ({
@@ -19,6 +20,7 @@ const BookGrid: React.FC<BookGridProps> = ({
   activeTab,
   onEdit,
   onDelete,
+  onAddBook,
 }) => {
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
@@ -33,7 +35,11 @@ const BookGrid: React.FC<BookGridProps> = ({
       ))}
 
       {books.length === 0 && (
-        <BookEmptyState searchQuery={searchQuery} activeTab={activeTab} />
+        <BookEmptyState
+          searchQuery={searchQuery}
+          activeTab={activeTab}
+          onAddBook={onAddBook}
+        />
       )}
     </div>
   );
