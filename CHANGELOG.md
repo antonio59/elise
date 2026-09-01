@@ -724,6 +724,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Chores
 
+- **deps**: Bump the minor-patch group with 6 updates (#67)
 - **deps-dev**: Bump @types/node in the minor-patch group
 - **deps**: Bump framer-motion from 12.43.0 to 13.1.1
 - **deps-dev**: Bump @testing-library/jest-dom from 6.9.1 to 7.0.1
@@ -757,6 +758,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
