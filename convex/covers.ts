@@ -10,7 +10,7 @@ import { internal } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
 import {
   googleCoverCandidates,
-  isGoogleUnavailableSize,
+  looksLikeGooglePlaceholder,
 } from "./lib/coverUrl";
 import { readImageDimensions } from "./lib/imageDimensions";
 
@@ -33,8 +33,8 @@ async function fetchFirstValidImage(urls: string[]): Promise<Blob | null> {
       const dims = readImageDimensions(bytes);
       if (!dims) continue;
       if (dims.width < MIN_IMAGE_WIDTH) continue;
-      // Google upscales the gray “image not available” PNG to exactly 800×1043
-      if (isGoogleUnavailableSize(dims.width, dims.height)) continue;
+      // Google upscales the gray “image not available” PNG (~0.767 aspect)
+      if (looksLikeGooglePlaceholder(dims.width, dims.height)) continue;
 
       // Re-wrap so Convex storage gets a fresh blob with the right type
       return new Blob([bytes], { type: blob.type || "image/jpeg" });
@@ -360,7 +360,7 @@ export const repairBadCovers = internalAction({
         const bad =
           !dims ||
           dims.width < MIN_IMAGE_WIDTH ||
-          isGoogleUnavailableSize(dims.width, dims.height);
+          looksLikeGooglePlaceholder(dims.width, dims.height);
 
         if (!bad) {
           skipped++;

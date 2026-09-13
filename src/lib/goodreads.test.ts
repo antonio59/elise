@@ -80,6 +80,13 @@ describe("parseGoodreadsCsv", () => {
     );
   });
 
+  it("strips nested tag fragments and unescapes entities once", () => {
+    const csv = `${HEADER}
+1,A Book,A Author,,,,,,0,4.0,,0,,,,,,,read,"<<script>alert</script> fish &amp;lt;tag&amp;gt;",,,0,0`;
+    const { rows } = parseGoodreadsCsv(csv);
+    expect(rows[0].review).toBe("alert fish &lt;tag&gt;");
+  });
+
   it("omits zero ratings and zero page counts", () => {
     const csv = `${HEADER}
 1,A Book,A Author,,,,,,0,4.0,,0,,,,,,,read,,,,0,0`;

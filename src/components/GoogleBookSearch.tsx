@@ -2,6 +2,7 @@ import React, { useState, useCallback, useRef, useEffect } from "react";
 import { useConvex } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Search, Loader2, BookOpen, Plus } from "lucide-react";
+import CoverImage from "./CoverImage";
 
 
 
@@ -194,17 +195,20 @@ const GoogleBookSearch: React.FC<GoogleBookSearchProps> = ({ onSelect }) => {
               className="w-full flex items-center gap-3 p-3 hover:bg-slate-50 transition-colors text-left border-b border-slate-100 last:border-b-0"
             >
               <div className="w-10 h-14 rounded overflow-hidden bg-slate-100 flex-shrink-0">
-                {book.coverUrl ? (
-                  <img
-                    src={book.coverUrl}
-                    alt={book.title}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center">
-                    <BookOpen className="w-4 h-4 text-slate-300" />
-                  </div>
-                )}
+                <CoverImage
+                  book={{
+                    title: book.title,
+                    author: book.authors.join(", "),
+                    coverUrl: book.coverUrl || undefined,
+                    isbn: book.isbn,
+                  }}
+                  className="w-full h-full object-cover"
+                  fallback={
+                    <div className="w-full h-full flex items-center justify-center">
+                      <BookOpen className="w-4 h-4 text-slate-300" />
+                    </div>
+                  }
+                />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-slate-800 truncate">

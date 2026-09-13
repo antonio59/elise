@@ -2,6 +2,7 @@ import { query, mutation, action } from "./_generated/server";
 import { v } from "convex/values";
 import { auth } from "./auth";
 import {
+  extractIsbn,
   parseGoogleBooksCoverUrl,
   type GoogleBooksItem,
 } from "./lib/googleBooks";
@@ -146,6 +147,7 @@ export const fetchRecommendations = action({
             (item.volumeInfo?.authors ?? []).join(", ") ||
             "Unknown Author",
           coverUrl,
+          isbn: extractIsbn(item.volumeInfo ?? {}),
           pageCount: item.volumeInfo?.pageCount ?? 0,
           description: item.volumeInfo?.description ?? "",
           categories: item.volumeInfo?.categories ?? [],
@@ -176,6 +178,7 @@ export const fetchRecommendations = action({
           number_of_pages_median?: number;
           subject?: string[];
           first_sentence?: string[] | string;
+          isbn?: string[];
         },
         index: number,
       ) => {
@@ -189,6 +192,7 @@ export const fetchRecommendations = action({
           coverUrl: doc.cover_i
             ? `https://covers.openlibrary.org/b/id/${doc.cover_i}-L.jpg`
             : "",
+          isbn: doc.isbn?.[0],
           pageCount: doc.number_of_pages_median ?? 0,
           description: firstSentence ?? "",
           categories: (doc.subject ?? []).slice(0, 5),

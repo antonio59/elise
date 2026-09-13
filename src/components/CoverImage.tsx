@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import {
   upgradeGoogleCoverUrl,
-  isGoogleUnavailableSize,
+  looksLikeGooglePlaceholder,
 } from "../lib/coverUrl";
 
 interface CoverImageProps {
@@ -59,7 +59,7 @@ const GradientCard: React.FC<{ title: string; author?: string }> = ({
 
 function isUnusableCover(width: number, height: number): boolean {
   if (width > 0 && width < 200) return true;
-  return isGoogleUnavailableSize(width, height);
+  return looksLikeGooglePlaceholder(width, height);
 }
 
 const CoverImage: React.FC<CoverImageProps> = ({

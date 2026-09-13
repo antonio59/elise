@@ -89,16 +89,22 @@ function parseGoodreadsDate(value: string | undefined): number | undefined {
   return Number.isNaN(t) ? undefined : t;
 }
 
-/** Reviews can carry light HTML (<br/>, <i>) - flatten to plain text. */
+/** Reviews can carry light HTML (<br/>, <i>) - flatten to plain text.
+ *  Tags are stripped to a fixpoint so nested fragments like <<script>>
+ *  can't survive, and &amp; is decoded last to avoid double-unescaping. */
 function cleanReview(value: string | undefined): string | undefined {
-  const v = (value ?? "")
-    .replace(/<br\s*\/?>/gi, "\n")
-    .replace(/<[^>]+>/g, "")
-    .replace(/&amp;/g, "&")
+  let v = (value ?? "").replace(/<br\s*\/?>/gi, "\n");
+  let prev: string;
+  do {
+    prev = v;
+    v = v.replace(/<[^>]*>/g, "");
+  } while (v !== prev);
+  v = v
     .replace(/&lt;/g, "<")
     .replace(/&gt;/g, ">")
     .replace(/&quot;/g, '"')
     .replace(/&#39;/g, "'")
+    .replace(/&amp;/g, "&")
     .trim();
   return v || undefined;
 }

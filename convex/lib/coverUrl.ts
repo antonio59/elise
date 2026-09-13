@@ -65,6 +65,23 @@ export function isGoogleUnavailableSize(
   );
 }
 
+/**
+ * Google’s gray “image not available” PNG keeps ~0.767 aspect at any fife
+ * size (800×1043, 400×522, 200×261…). Real book covers are almost never
+ * that wide, so matching the ratio catches the placeholder at any scale.
+ */
+export const GOOGLE_PLACEHOLDER_RATIO =
+  GOOGLE_UNAVAILABLE_PLACEHOLDER.width / GOOGLE_UNAVAILABLE_PLACEHOLDER.height;
+
+export function looksLikeGooglePlaceholder(
+  width: number,
+  height: number,
+): boolean {
+  if (width <= 0 || height <= 0) return false;
+  if (isGoogleUnavailableSize(width, height)) return true;
+  return Math.abs(width / height - GOOGLE_PLACEHOLDER_RATIO) < 0.008;
+}
+
 /** Candidate URLs from largest → smaller for fetch/store pipelines. */
 export function googleCoverCandidates(coverUrl: string): string[] {
   const cleaned = coverUrl

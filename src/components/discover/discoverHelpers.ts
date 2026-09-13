@@ -42,6 +42,7 @@ export interface BookCandidate {
   title: string;
   author: string;
   coverUrl?: string;
+  isbn?: string;
   genre?: string;
   pageCount?: number;
   description?: string;

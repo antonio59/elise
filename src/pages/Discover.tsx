@@ -93,6 +93,7 @@ const Discover: React.FC = () => {
               title: result.title,
               author: result.author,
               coverUrl: result.coverUrl,
+              isbn: result.isbn,
               genre: mapCategoryToGenre(result.categories),
               pageCount: result.pageCount,
               description: result.description,

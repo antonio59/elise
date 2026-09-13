@@ -6,12 +6,14 @@ import {
   type PanInfo,
 } from "framer-motion";
 import { BookOpen, Heart, X, ChevronDown, ChevronUp } from "lucide-react";
+import CoverImage from "./CoverImage";
 
 interface BookCandidate {
   googleBookId: string;
   title: string;
   author: string;
   coverUrl?: string;
+  isbn?: string;
   genre?: string;
   pageCount?: number;
   description?: string;
@@ -69,18 +71,15 @@ const SwipeCard: React.FC<SwipeCardProps> = ({ book, onSwipe, isTop }) => {
         <div className="relative flex-shrink-0 bg-gradient-to-br from-primary-100 to-accent-100 flex items-center justify-center"
           style={{ height: expanded ? "35%" : "55%" }}
         >
-          {book.coverUrl ? (
-            <img
-              src={book.coverUrl}
-              alt={book.title}
-              className="h-full w-auto object-contain drop-shadow-lg"
-              draggable={false}
-            />
-          ) : (
-            <div className="w-32 h-48 rounded-lg bg-slate-50/50 flex items-center justify-center">
-              <BookOpen className="w-12 h-12 text-slate-300" />
-            </div>
-          )}
+          <CoverImage
+            book={book}
+            className="h-full w-auto object-contain drop-shadow-lg"
+            fallback={
+              <div className="w-32 h-48 rounded-lg bg-slate-50/50 flex items-center justify-center">
+                <BookOpen className="w-12 h-12 text-slate-300" />
+              </div>
+            }
+          />
 
           {/* Swipe indicators */}
           {isTop && (
