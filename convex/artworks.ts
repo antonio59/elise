@@ -128,7 +128,13 @@ export const like = mutation({
 export const getMySeries = query({
   args: {},
   handler: async (ctx) => {
-    return await ctx.db.query("artSeries").order("desc").collect();
+    const userId = await auth.getUserId(ctx);
+    if (!userId) return [];
+    return await ctx.db
+      .query("artSeries")
+      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .order("desc")
+      .collect();
   },
 });
 
