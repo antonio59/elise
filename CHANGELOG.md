@@ -67,6 +67,9 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
+- Merge pull request #68 from antonio59/dependabot/npm_and_yarn/minor-patch-42dc628f53
+
+chore(deps): bump the minor-patch group with 8 updates
 - Merge pull request #66 from antonio59/feat/studio-ux-polish
 
 Studio UX polish across public and owner flows
@@ -724,6 +727,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Chores
 
+- **deps**: Bump the minor-patch group with 8 updates
 - **deps**: Bump the minor-patch group with 6 updates (#67)
 - **deps-dev**: Bump @types/node in the minor-patch group
 - **deps**: Bump framer-motion from 12.43.0 to 13.1.1
@@ -758,6 +762,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
