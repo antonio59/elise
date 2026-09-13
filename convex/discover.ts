@@ -120,7 +120,7 @@ export const fetchRecommendations = action({
     searchQuery: v.string(),
     startIndex: v.optional(v.number()),
   },
-  handler: async (_ctx, args) => {
+  handler: async (ctx, args) => {
     const apiKey = (
       globalThis as unknown as {
         process?: { env: Record<string, string | undefined> };
@@ -128,6 +128,9 @@ export const fetchRecommendations = action({
     ).process?.env?.GOOGLE_BOOKS_API_KEY;
     const keyParam = apiKey ? `&key=${apiKey}` : "";
     const startIndex = args.startIndex ?? 0;
+
+    const userId = await auth.getUserId(ctx);
+    if (!userId) return [];
 
     const res = await fetch(
       `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(args.searchQuery)}&maxResults=20&startIndex=${startIndex}&orderBy=relevance&langRestrict=en${keyParam}`,

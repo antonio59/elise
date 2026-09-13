@@ -21,6 +21,10 @@ function getVisitorReactions(
 export const toggle = mutation({
   args: reactionFields,
   handler: async (ctx, args) => {
+    if (args.emoji.length === 0 || args.emoji.length > 16) {
+      throw new Error("Invalid reaction");
+    }
+
     // Rate limit: max 30 reactions per minute per visitor
     const oneMinuteAgo = Date.now() - 60_000;
     const recentCount = await ctx.db

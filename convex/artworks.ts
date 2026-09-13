@@ -38,23 +38,31 @@ export const getMyArtworks = query({
   },
 });
 
-// Get artworks by series
+// Get artworks by series (published only for anonymous callers)
 export const getBySeries = query({
   args: { seriesId: v.id("artSeries") },
   handler: async (ctx, args) => {
-    return await ctx.db
+    const artworks = await ctx.db
       .query("artworks")
       .withIndex("by_series", (q) => q.eq("seriesId", args.seriesId))
       .order("desc")
       .collect();
+    const userId = await auth.getUserId(ctx);
+    if (userId) return artworks;
+    return artworks.filter((a) => a.isPublished);
   },
 });
 
-// Get single artwork
+// Get single artwork (published only for anonymous callers)
 export const getById = query({
   args: { id: v.id("artworks") },
   handler: async (ctx, args) => {
-    return await ctx.db.get(args.id);
+    const artwork = await ctx.db.get(args.id);
+    if (!artwork) return null;
+    if (artwork.isPublished) return artwork;
+    const userId = await auth.getUserId(ctx);
+    if (userId && artwork.userId === userId) return artwork;
+    return null;
   },
 });
 

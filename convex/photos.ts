@@ -61,19 +61,27 @@ export const getMyPhotos = query({
 export const getByAlbum = query({
   args: { albumId: v.id("photoAlbums") },
   handler: async (ctx, args) => {
-    return await ctx.db
+    const photos = await ctx.db
       .query("photos")
       .withIndex("by_album", (q) => q.eq("albumId", args.albumId))
       .order("desc")
       .collect();
+    const userId = await auth.getUserId(ctx);
+    if (userId) return photos;
+    return photos.filter((p) => p.isPublished);
   },
 });
 
-// Get single photo
+// Get single photo (published only for anonymous callers)
 export const getById = query({
   args: { id: v.id("photos") },
   handler: async (ctx, args) => {
-    return await ctx.db.get(args.id);
+    const photo = await ctx.db.get(args.id);
+    if (!photo) return null;
+    if (photo.isPublished) return photo;
+    const userId = await auth.getUserId(ctx);
+    if (userId && photo.userId === userId) return photo;
+    return null;
   },
 });
 
@@ -152,7 +160,19 @@ export const getMyAlbums = query({
 export const getAlbums = query({
   args: {},
   handler: async (ctx) => {
-    return await ctx.db.query("photoAlbums").order("desc").collect();
+    const userId = await auth.getUserId(ctx);
+    if (userId) {
+      return await ctx.db.query("photoAlbums").order("desc").collect();
+    }
+    // Anonymous callers only see albums that contain published photos —
+    // otherwise a private-only album would leak its name publicly.
+    const albums = await ctx.db.query("photoAlbums").order("desc").collect();
+    const published = await ctx.db
+      .query("photos")
+      .withIndex("by_published", (q) => q.eq("isPublished", true))
+      .collect();
+    const publicAlbumIds = new Set(published.map((p) => p.albumId));
+    return albums.filter((a) => publicAlbumIds.has(a._id));
   },
 });
 
