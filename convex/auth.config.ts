@@ -1,3 +1,9 @@
 export default {
-  providers: [],
+  providers: [
+    {
+      // CONVEX_SITE_URL is set automatically by Convex (.convex.site)
+      domain: process.env.CONVEX_SITE_URL,
+      applicationID: "convex",
+    },
+  ],
 };

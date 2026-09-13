@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { X, Image as ImageIcon } from "lucide-react";
 import { validateImageFile } from "../lib/imageValidation";
 
@@ -16,15 +16,17 @@ const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
   maxSizeMB = 8,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    const error = validateImageFile(file, maxSizeMB);
-    if (error) {
-      alert(error);
+    const validationError = validateImageFile(file, maxSizeMB);
+    if (validationError) {
+      setError(validationError);
       return;
     }
+    setError(null);
     const reader = new FileReader();
     reader.onload = (ev) => {
       onChange(ev.target?.result as string);
@@ -70,6 +72,11 @@ const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
             PNG, JPG up to {maxSizeMB}MB
           </span>
         </button>
+      )}
+      {error && (
+        <p className="mt-2 text-xs text-error-500" role="alert">
+          {error}
+        </p>
       )}
     </div>
   );

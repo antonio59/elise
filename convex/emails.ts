@@ -1,10 +1,11 @@
-import { action } from "./_generated/server";
+import { internalAction } from "./_generated/server";
 import { v } from "convex/values";
 import { Resend } from "resend";
 import { escapeHtml } from "./lib/email";
 
-// Send notification email when a book is suggested
-export const sendSuggestionNotification = action({
+// Send notification email when a book is suggested (internal only - scheduled
+// from bookSuggestions.submit; must not be publicly callable).
+export const sendSuggestionNotification = internalAction({
   args: {
     title: v.string(),
     author: v.string(),

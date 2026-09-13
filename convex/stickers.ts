@@ -11,6 +11,10 @@ export const add = mutation({
     visitorId: v.string(),
   },
   handler: async (ctx, args) => {
+    if (args.sticker.length === 0 || args.sticker.length > 16) {
+      throw new Error("Invalid sticker");
+    }
+
     const existing = await ctx.db
       .query("stickers")
       .withIndex("by_visitor_target", (q) =>

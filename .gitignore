@@ -47,3 +47,5 @@ replit.md
 
 # npm lockfile (project uses pnpm)
 package-lock.json
+.design-review/
+.pnpm-store/

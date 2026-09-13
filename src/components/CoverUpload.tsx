@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Upload, X, Image as ImageIcon } from "lucide-react";
 import { validateImageFile } from "../lib/imageValidation";
 
@@ -9,15 +9,17 @@ interface CoverUploadProps {
 
 const CoverUpload: React.FC<CoverUploadProps> = ({ value, onChange }) => {
   const fileRef = useRef<HTMLInputElement>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    const error = validateImageFile(file, 5);
-    if (error) {
-      alert(error);
+    const validationError = validateImageFile(file, 5);
+    if (validationError) {
+      setError(validationError);
       return;
     }
+    setError(null);
 
     const reader = new FileReader();
     reader.onload = () => {
@@ -83,9 +85,15 @@ const CoverUpload: React.FC<CoverUploadProps> = ({ value, onChange }) => {
             className="hidden"
           />
 
-          <p className="text-xs text-slate-400">
-            JPG, PNG, or WebP. Or paste a URL from Google Books.
-          </p>
+          {error ? (
+            <p className="text-xs text-error-500" role="alert">
+              {error}
+            </p>
+          ) : (
+            <p className="text-xs text-slate-400">
+              JPG, PNG, or WebP. Or paste a URL from Google Books.
+            </p>
+          )}
         </div>
       </div>
     </div>

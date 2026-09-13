@@ -121,6 +121,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
             cause: error,
           });
         }
+        if (
+          errMessage.includes("EMAIL_NOT_ALLOWED") ||
+          errMessage.includes("invite-only")
+        ) {
+          throw new Error(
+            "Access denied. This site is invite-only.",
+            { cause: error },
+          );
+        }
 
         throw new Error("Unable to sign in. Please check your credentials.", {
           cause: error,

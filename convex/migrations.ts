@@ -1,5 +1,4 @@
 import {
-  mutation,
   internalMutation,
   internalAction,
   internalQuery,
@@ -98,7 +97,8 @@ export const upgradeCoverUrls = internalMutation({
 // One-time migration: update all books, artworks, writings, userProfiles,
 // readingGoals, and readingStreaks to use the current auth userId.
 // This fixes the mismatch when books were created with a prior auth system.
-export const migrateUserIds = mutation({
+// Internal only - run via: npx convex run migrations:migrateUserIds
+export const migrateUserIds = internalMutation({
   args: {},
   handler: async (ctx) => {
     const userId = await auth.getUserId(ctx);

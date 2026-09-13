@@ -19,6 +19,8 @@ A personal book tracking, art gallery, and writing site for Elise. Built with a 
 - **Currently Reading** - dedicated strip showing books in progress
 - **Wishlist** - public-facing so people can see and gift books
 - **Book Suggestions** - visitors can suggest books for Elise
+- **Goodreads Import** - import a Goodreads library CSV export (ratings, reviews, shelves, ISBNs) from My Books → Import, with automatic dedupe and cover sync
+- **Goodreads Profile Link** - optional link shown on the public About page
 
 ### ✍️ Writing
 - Rich text editor with draft/publish workflow
@@ -65,7 +67,7 @@ A personal book tracking, art gallery, and writing site for Elise. Built with a 
 - **Backend:** Convex (real-time database + serverless functions)
 - **Auth:** Convex Auth (Password provider, email allowlist)
 - **Animations:** Framer Motion
-- **Hosting:** Netlify (frontend) + Convex Cloud (backend)
+- **Hosting:** Cloudflare Pages (frontend) + Convex Cloud (backend)
 - **Email:** Resend
 
 ## Getting Started
@@ -99,7 +101,20 @@ pnpm exec convex deploy     # Push to production
 ```
 
 ### Frontend
-Netlify auto-deploys on push to `main`.
+Cloudflare Pages auto-deploys on push to `main`.
+
+Build settings (Pages dashboard → elise-reads → Settings → Builds):
+- Build command: `pnpm install --frozen-lockfile && pnpm run build`
+- Build output: `dist`
+- Node version: `22` (set `NODE_VERSION=22` env var)
+- Env var: `VITE_CONVEX_URL=https://your-deployment.convex.cloud`
+
+SPA fallback and security headers live in `public/_redirects` and
+`public/_headers` (copied into `dist` at build time). Manual deploy:
+
+```bash
+pnpm run build && npx wrangler pages deploy dist --project-name=elise-reads
+```
 
 ## Important Gotchas
 

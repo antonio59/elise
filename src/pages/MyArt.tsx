@@ -13,11 +13,12 @@ import {
 } from "lucide-react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
-import type { Doc } from "../../convex/_generated/dataModel";
+import type { Doc, Id } from "../../convex/_generated/dataModel";
 import { usePageAnnouncement } from "../components/AccessibleAnnouncer";
 import { usePageMeta } from "../components/PageMeta";
 import ArtworkModalShell from "../components/artwork/ArtworkModalShell";
 import GalleryFilterTabs from "../components/GalleryFilterTabs";
+import { ConfirmModal } from "../components/ui/Modal";
 import { useArtworkFormState } from "../hooks/useArtworkFormState";
 import ImageUploadField from "../components/ImageUploadField";
 
@@ -48,6 +49,7 @@ const MyArt: React.FC = () => {
 
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingArtwork, setEditingArtwork] = useState<Artwork | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<Id<"artworks"> | null>(null);
   const [filter, setFilter] = useState<"all" | "published" | "drafts">("all");
 
   const filteredArtworks = artworks.filter((art: Artwork) => {
@@ -162,11 +164,7 @@ const MyArt: React.FC = () => {
                     )}
                   </button>
                   <button
-                    onClick={() => {
-                      if (confirm("Delete this artwork?")) {
-                        removeArtwork({ id: art._id });
-                      }
-                    }}
+                    onClick={() => setDeleteTarget(art._id)}
                     className="p-3 bg-error-500 hover:bg-error-600 text-white rounded-xl"
                     title="Delete artwork"
                     aria-label="Delete artwork"
@@ -217,6 +215,19 @@ const MyArt: React.FC = () => {
           });
           setEditingArtwork(null);
         }}
+      />
+
+      <ConfirmModal
+        isOpen={deleteTarget !== null}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={() => {
+          if (deleteTarget) removeArtwork({ id: deleteTarget });
+          setDeleteTarget(null);
+        }}
+        title="Delete Artwork"
+        message="Delete this artwork? This can't be undone."
+        confirmText="Delete"
+        variant="danger"
       />
     </div>
   );

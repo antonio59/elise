@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import {
   MessageSquare,
@@ -14,9 +14,10 @@ import {
 import { Link } from "react-router-dom";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
-import type { Doc } from "../../convex/_generated/dataModel";
+import type { Doc, Id } from "../../convex/_generated/dataModel";
 import { usePageAnnouncement } from "../components/AccessibleAnnouncer";
 import { usePageMeta } from "../components/PageMeta";
+import { ConfirmModal } from "../components/ui/Modal";
 
 type Suggestion = Doc<"bookSuggestions">;
 
@@ -28,6 +29,7 @@ const Suggestions: React.FC = () => {
   const rejectSuggestion = useMutation(api.bookSuggestions.reject);
   const removeSuggestion = useMutation(api.bookSuggestions.remove);
   const addToBooks = useMutation(api.bookSuggestions.addToBooks);
+  const [deleteTarget, setDeleteTarget] = useState<Id<"bookSuggestions"> | null>(null);
 
   const pendingCount = suggestions.filter(
     (s: Suggestion) => s.status === "pending",
@@ -206,11 +208,7 @@ const Suggestions: React.FC = () => {
                     </>
                   )}
                   <button
-                    onClick={() => {
-                      if (confirm("Delete this suggestion?")) {
-                        removeSuggestion({ id: suggestion._id });
-                      }
-                    }}
+                    onClick={() => setDeleteTarget(suggestion._id)}
                     className="p-2 bg-error-500 hover:bg-error-600 text-white rounded-lg"
                     title="Delete"
                     aria-label="Delete suggestion"
@@ -223,6 +221,19 @@ const Suggestions: React.FC = () => {
           ))}
         </div>
       )}
+
+      <ConfirmModal
+        isOpen={deleteTarget !== null}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={() => {
+          if (deleteTarget) removeSuggestion({ id: deleteTarget });
+          setDeleteTarget(null);
+        }}
+        title="Delete Suggestion"
+        message="Delete this suggestion? This can't be undone."
+        confirmText="Delete"
+        variant="danger"
+      />
     </div>
   );
 };

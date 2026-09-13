@@ -41,7 +41,7 @@ const cardDefs = [
   },
 ];
 
-export type FeaturedArtVisibility = {
+type FeaturedArtVisibility = {
   writing?: boolean;
   art?: boolean;
   photos?: boolean;

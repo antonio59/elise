@@ -1,4 +1,15 @@
+import { internalQuery } from "../_generated/server";
 import { auth } from "../auth";
+
+/**
+ * Callable from actions to check the current user is an admin.
+ * Actions can't read ctx.db directly, so they run this via
+ * `ctx.runQuery(internal.lib.admin.isCurrentUserAdmin)`.
+ */
+export const isCurrentUserAdmin = internalQuery({
+  args: {},
+  handler: async (ctx) => isAdmin(ctx),
+});
 
 export async function isAdmin(ctx: { db: unknown }): Promise<boolean> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

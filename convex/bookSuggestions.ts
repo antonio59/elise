@@ -6,18 +6,20 @@ import { checkRateLimit } from "./lib/rateLimit";
 import { findUserBookByTitleAuthor, findPendingSuggestion } from "./lib/books";
 import { bookSuggestionFields } from "./lib/validators";
 
-// Get all suggestions (for admin)
+// Get all suggestions (admin only - contains suggester emails)
 export const getAll = query({
   args: {},
   handler: async (ctx) => {
+    await requireAdmin(ctx);
     return await ctx.db.query("bookSuggestions").order("desc").collect();
   },
 });
 
-// Get pending suggestions (for admin)
+// Get pending suggestions (admin only - contains suggester emails)
 export const getPending = query({
   args: {},
   handler: async (ctx) => {
+    await requireAdmin(ctx);
     return await ctx.db
       .query("bookSuggestions")
       .withIndex("by_status", (q) => q.eq("status", "pending"))
@@ -148,7 +150,6 @@ export const submit = mutation({
       const { internal } = await import("./_generated/api");
       await ctx.scheduler.runAfter(
         0,
-        // @ts-expect-error emails may not be in generated internal api types
         internal.emails.sendSuggestionNotification,
         {
           title: args.title,

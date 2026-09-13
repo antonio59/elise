@@ -1,13 +1,16 @@
 import { action } from "./_generated/server";
 import { v } from "convex/values";
+import { auth } from "./auth";
 
-// Giphy search proxy - API key stays server-side
+// Giphy search proxy - API key stays server-side (signed-in users only)
 export const search = action({
   args: {
     query: v.string(),
     limit: v.optional(v.number()),
   },
-  handler: async (_ctx, args) => {
+  handler: async (ctx, args) => {
+    const userId = await auth.getUserId(ctx);
+    if (!userId) throw new Error("Not authenticated");
     const apiKey = (
       globalThis as unknown as {
         process?: { env: Record<string, string | undefined> };

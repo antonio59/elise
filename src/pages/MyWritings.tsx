@@ -24,6 +24,7 @@ import { api } from "../../convex/_generated/api";
 import type { Doc, Id } from "../../convex/_generated/dataModel";
 import { usePageAnnouncement } from "../components/AccessibleAnnouncer";
 import { usePageMeta } from "../components/PageMeta";
+import { ConfirmModal } from "../components/ui/Modal";
 
 type WritingType = "poetry" | "story" | "journal";
 type Writing = Doc<"writings">;
@@ -85,6 +86,7 @@ const MyWritings: React.FC = () => {
   const [showEditor, setShowEditor] = useState(false);
   const [editingWriting, setEditingWriting] = useState<Writing | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [deleteTarget, setDeleteTarget] = useState<Id<"writings"> | null>(null);
 
   const filteredWritings = writings.filter((w: Writing) =>
     w.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -108,11 +110,7 @@ const MyWritings: React.FC = () => {
     setEditingWriting(null);
   };
 
-  const handleDelete = async (id: Id<"writings">) => {
-    if (confirm("Delete this piece?")) {
-      await removeWriting({ id });
-    }
-  };
+  const handleDelete = (id: Id<"writings">) => setDeleteTarget(id);
 
   const typeTabs = [
     { key: "all" as const, label: "All", count: stats?.total ?? 0 },
@@ -296,6 +294,19 @@ const MyWritings: React.FC = () => {
           />
         )}
       </AnimatePresence>
+
+      <ConfirmModal
+        isOpen={deleteTarget !== null}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={() => {
+          if (deleteTarget) removeWriting({ id: deleteTarget });
+          setDeleteTarget(null);
+        }}
+        title="Delete Writing"
+        message="Delete this piece? This can't be undone."
+        confirmText="Delete"
+        variant="danger"
+      />
     </div>
   );
 };
