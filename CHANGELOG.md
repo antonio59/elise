@@ -67,6 +67,9 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
+- Merge pull request #69 from antonio59/dependabot/npm_and_yarn/vitest-5.0.0
+
+chore(deps-dev): bump vitest from 4.1.11 to 5.0.0
 - Merge pull request #68 from antonio59/dependabot/npm_and_yarn/minor-patch-42dc628f53
 
 chore(deps): bump the minor-patch group with 8 updates
@@ -727,6 +730,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Chores
 
+- **deps-dev**: Bump vitest from 4.1.11 to 5.0.0
 - **deps**: Bump the minor-patch group with 8 updates
 - **deps**: Bump the minor-patch group with 6 updates (#67)
 - **deps-dev**: Bump @types/node in the minor-patch group
@@ -762,6 +766,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
