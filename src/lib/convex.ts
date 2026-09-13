@@ -1,11 +1,13 @@
 import { ConvexReactClient } from "convex/react";
 
-const convexUrl = import.meta.env.VITE_CONVEX_URL;
+export const convexUrl = import.meta.env.VITE_CONVEX_URL as
+  | string
+  | undefined;
 
 if (!convexUrl && import.meta.env.DEV) {
   console.warn("VITE_CONVEX_URL not set. Add it to your .env file.");
 }
 
-export const convex = new ConvexReactClient(
-  convexUrl || "https://placeholder.convex.cloud",
-);
+export const convex = convexUrl
+  ? new ConvexReactClient(convexUrl)
+  : null;
