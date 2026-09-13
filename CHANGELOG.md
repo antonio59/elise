@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- Stop showing Google placeholder covers
 - Repair pnpm lockfile after @types/node 26 merge
 - **security**: Clear Dependabot alerts and unblock dep PRs (#57)
 - Resolve security vulnerabilities in dependencies
@@ -798,6 +799,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
