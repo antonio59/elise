@@ -1,11 +1,13 @@
 import React from "react";
-import { Quote, Heart } from "lucide-react";
+import { Quote, Heart, Link2 } from "lucide-react";
 
 interface SocialLinksProps {
   favoriteQuote: string;
   setFavoriteQuote: (quote: string) => void;
   funFact: string;
   setFunFact: (fact: string) => void;
+  goodreadsUrl: string;
+  setGoodreadsUrl: (url: string) => void;
 }
 
 const SocialLinks: React.FC<SocialLinksProps> = ({
@@ -13,6 +15,8 @@ const SocialLinks: React.FC<SocialLinksProps> = ({
   setFavoriteQuote,
   funFact,
   setFunFact,
+  goodreadsUrl,
+  setGoodreadsUrl,
 }) => {
   return (
     <div className="card p-6">
@@ -31,6 +35,16 @@ const SocialLinks: React.FC<SocialLinksProps> = ({
         <div>
           <label className="text-sm font-medium text-slate-600 mb-1 block">Fun Fact About Me</label>
           <input type="text" value={funFact} onChange={(e) => setFunFact(e.target.value)} className="input" placeholder="e.g. I once read 5 books in one week!" />
+        </div>
+        <div>
+          <label className="text-sm font-medium text-slate-600 mb-1 flex items-center gap-1.5">
+            <Link2 className="w-4 h-4" />
+            Goodreads Profile
+          </label>
+          <input type="url" value={goodreadsUrl} onChange={(e) => setGoodreadsUrl(e.target.value)} className="input" placeholder="https://www.goodreads.com/user/show/..." />
+          <p className="text-xs text-slate-400 mt-1">
+            Shows as a link on your public About page.
+          </p>
         </div>
       </div>
     </div>

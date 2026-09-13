@@ -214,6 +214,7 @@ export const getPublicProfile = query({
       rereads: profile.rereads,
       favoriteQuote: profile.favoriteQuote,
       funFact: profile.funFact,
+      goodreadsUrl: profile.goodreadsUrl,
       currentlyReading: currentlyReading
         ? {
             title: currentlyReading.title,

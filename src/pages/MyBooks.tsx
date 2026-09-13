@@ -1,15 +1,17 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import confetti from "canvas-confetti";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Search, Smile } from "lucide-react";
+import { BookUp2, Plus, Search, Smile } from "lucide-react";
 import { useQuery, useMutation, useAction } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import type { Doc, Id } from "../../convex/_generated/dataModel";
 import GiphyPicker from "../components/GiphyPicker";
 import { Button } from "../components/ui/Button";
 import { ConfirmModal } from "../components/ui/Modal";
+import { useToast } from "../components/ui/Toast";
 import { BookGridSkeleton } from "../components/Skeleton";
 import AddBookModal from "../components/books/AddBookModal";
+import ImportGoodreadsModal from "../components/books/ImportGoodreadsModal";
 import EditBookModal from "../components/books/EditBookModal";
 import BookFilterBar from "../components/books/BookFilterBar";
 import BookGrid from "../components/books/BookGrid";
@@ -28,6 +30,7 @@ const MyBooks: React.FC = () => {
   const addBook = useMutation(api.books.add);
   const updateBook = useMutation(api.books.update);
   const removeBook = useMutation(api.books.remove);
+  const { addToast } = useToast();
   const storeCover = useAction(api.covers.storeFromUrl);
   const storeAllCovers = useAction(api.covers.storeAll);
 
@@ -42,6 +45,7 @@ const MyBooks: React.FC = () => {
 
   const [activeTab, setActiveTab] = useState<TabType>("read");
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showImportModal, setShowImportModal] = useState(false);
   const [editingBook, setEditingBook] = useState<Book | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [showEditReview, setShowEditReview] = useState(false);
@@ -88,12 +92,21 @@ const MyBooks: React.FC = () => {
           <h1 className="font-display text-3xl font-bold text-slate-900">My Books</h1>
           <p className="text-slate-500 mt-1">Track what you&apos;re reading</p>
         </div>
-        <Button
-          icon={<Plus className="w-5 h-5" />}
-          onClick={() => setShowAddModal(true)}
-        >
-          Add Book
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="secondary"
+            icon={<BookUp2 className="w-5 h-5" />}
+            onClick={() => setShowImportModal(true)}
+          >
+            Import
+          </Button>
+          <Button
+            icon={<Plus className="w-5 h-5" />}
+            onClick={() => setShowAddModal(true)}
+          >
+            Add Book
+          </Button>
+        </div>
       </div>
 
       <BookFilterBar
@@ -127,6 +140,12 @@ const MyBooks: React.FC = () => {
           setShowDeleteConfirm(true);
         }}
         onAddBook={() => setShowAddModal(true)}
+      />
+
+      <ImportGoodreadsModal
+        isOpen={showImportModal}
+        onClose={() => setShowImportModal(false)}
+        onDone={() => storeAllCovers({}).catch(() => {})}
       />
 
       <AddBookModal
@@ -176,8 +195,15 @@ const MyBooks: React.FC = () => {
           setShowDeleteConfirm(false);
           setBookToDelete(null);
         }}
-        onConfirm={() => {
-          if (bookToDelete) removeBook({ id: bookToDelete });
+        onConfirm={async () => {
+          if (bookToDelete) {
+            try {
+              await removeBook({ id: bookToDelete });
+              addToast({ type: "success", title: "Book deleted" });
+            } catch {
+              addToast({ type: "error", title: "Couldn't delete book" });
+            }
+          }
           setShowDeleteConfirm(false);
           setBookToDelete(null);
         }}

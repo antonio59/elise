@@ -2,6 +2,7 @@
 import { v } from "convex/values";
 import { query, mutation } from "./_generated/server";
 import { reactionFields } from "./lib/validators";
+import { requireAdmin } from "./lib/crud";
 
 function getVisitorReactions(
   ctx: { db: { query: (table: "reactions") => any } },
@@ -101,10 +102,11 @@ export const getUserReactions = query({
   },
 });
 
-// Get dashboard stats for reactions
+// Get dashboard stats for reactions (admin only)
 export const getDashboardStats = query({
   args: {},
   handler: async (ctx) => {
+    await requireAdmin(ctx);
     const allReactions = await ctx.db.query("reactions").collect();
 
     // Total reactions count

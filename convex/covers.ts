@@ -1,7 +1,12 @@
-import { query, internalMutation, action } from "./_generated/server";
+import {
+  internalQuery,
+  internalMutation,
+  internalAction,
+  action,
+} from "./_generated/server";
 import type { ActionCtx } from "./_generated/server";
 import { v } from "convex/values";
-import { api, internal } from "./_generated/api";
+import { internal } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
 import {
   googleCoverCandidates,
@@ -182,11 +187,22 @@ async function storeCoverForBook(
   return "stored";
 }
 
+/** Throws unless the caller is a signed-in admin. */
+async function requireAdminAction(ctx: ActionCtx): Promise<void> {
+  const admin = await ctx.runQuery(
+    internal.lib.admin.isCurrentUserAdmin,
+  );
+  if (!admin) throw new Error("Not authorized");
+}
+
 /** Download and store a single book cover permanently in Convex storage. */
 export const storeFromUrl = action({
   args: { bookId: v.id("books") },
   handler: async (ctx, args) => {
-    const book = await ctx.runQuery(api.covers.getById, { id: args.bookId });
+    await requireAdminAction(ctx);
+    const book = await ctx.runQuery(internal.covers.getById, {
+      id: args.bookId,
+    });
     if (!book) throw new Error("Book not found");
     if (book.coverStorageId) return "Already stored";
 
@@ -244,8 +260,8 @@ export const clearCoverStorage = internalMutation({
   },
 });
 
-/** Get book by ID. */
-export const getById = query({
+/** Get book by ID (internal - used by cover actions). */
+export const getById = internalQuery({
   args: { id: v.id("books") },
   handler: async (ctx, args) => {
     return await ctx.db.get(args.id);
@@ -256,7 +272,8 @@ export const getById = query({
 export const storeAll = action({
   args: {},
   handler: async (ctx) => {
-    const books = await ctx.runQuery(api.covers.getAll);
+    await requireAdminAction(ctx);
+    const books = await ctx.runQuery(internal.covers.getAll);
     let stored = 0;
     let skipped = 0;
     const pending = books.filter((b: CoverBook) => !b.coverStorageId);
@@ -282,10 +299,10 @@ export const storeAll = action({
  * Never clears the old cover until a new valid image is stored.
  * Run: `pnpm exec convex run covers:refreshAllHighRes --prod`
  */
-export const refreshAllHighRes = action({
+export const refreshAllHighRes = internalAction({
   args: {},
   handler: async (ctx) => {
-    const books = await ctx.runQuery(api.covers.getAll);
+    const books = await ctx.runQuery(internal.covers.getAll);
     let upgraded = 0;
     let skipped = 0;
 
@@ -311,10 +328,10 @@ export const refreshAllHighRes = action({
  * or tiny thumbs still in storage. Clears only after a valid replacement.
  * Run: `pnpm exec convex run covers:repairBadCovers --prod`
  */
-export const repairBadCovers = action({
+export const repairBadCovers = internalAction({
   args: {},
   handler: async (ctx) => {
-    const books = await ctx.runQuery(api.covers.getAll);
+    const books = await ctx.runQuery(internal.covers.getAll);
     let repaired = 0;
     let skipped = 0;
     let cleared = 0;
@@ -370,8 +387,8 @@ export const repairBadCovers = action({
   },
 });
 
-/** Get all books (for batch operations). */
-export const getAll = query({
+/** Get all books (internal - for batch cover operations). */
+export const getAll = internalQuery({
   args: {},
   handler: async (ctx) => {
     return await ctx.db.query("books").collect();

@@ -32,6 +32,7 @@ const DashboardAbout: React.FC = () => {
   const [favoriteQuote, setFavoriteQuote] = useState("");
   const [funFact, setFunFact] = useState("");
   const [currentlyReading, setCurrentlyReading] = useState("");
+  const [goodreadsUrl, setGoodreadsUrl] = useState("");
 
   useEffect(() => {
     if (profile) {
@@ -44,6 +45,7 @@ const DashboardAbout: React.FC = () => {
       setFavoriteQuote(profile.favoriteQuote || "");
       setFunFact(profile.funFact || "");
       setCurrentlyReading(profile.currentlyReading || "");
+      setGoodreadsUrl(profile.goodreadsUrl || "");
     }
   }, [profile]);
 
@@ -60,6 +62,7 @@ const DashboardAbout: React.FC = () => {
         favoriteQuote: favoriteQuote.trim() || undefined,
         funFact: funFact.trim() || undefined,
         currentlyReading: currentlyReading.trim() || undefined,
+        goodreadsUrl: goodreadsUrl.trim() || undefined,
       });
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
@@ -100,6 +103,7 @@ const DashboardAbout: React.FC = () => {
         <SocialLinks
           favoriteQuote={favoriteQuote} setFavoriteQuote={setFavoriteQuote}
           funFact={funFact} setFunFact={setFunFact}
+          goodreadsUrl={goodreadsUrl} setGoodreadsUrl={setGoodreadsUrl}
         />
 
         <div className="flex items-center gap-3">

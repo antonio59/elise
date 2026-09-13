@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { action } from "./_generated/server";
 import { v } from "convex/values";
+import { auth } from "./auth";
 import { parseGoogleBooksCoverUrl, extractIsbn } from "./lib/googleBooks";
 
 type SearchResult = {
@@ -94,7 +95,11 @@ async function searchOpenLibrary(query: string): Promise<SearchResult[]> {
 // Search Google Books API (falls back to Open Library on quota/errors)
 export const search = action({
   args: { query: v.string() },
-  handler: async (_ctx, args) => {
+  handler: async (ctx, args) => {
+    // Signed-in users only - this proxies a metered API key.
+    const userId = await auth.getUserId(ctx);
+    if (!userId) throw new Error("Not authenticated");
+
     const apiKey = (
       globalThis as unknown as {
         process?: { env: Record<string, string | undefined> };

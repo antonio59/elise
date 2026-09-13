@@ -2,7 +2,6 @@
 
 export const SITE_NAME = "Elise Reads";
 export const SITE_URL = "https://elisereads.com";
-export const SITE_TAGLINE = "books, art & things I think about";
 
 /** Default share card - crawlers need an absolute PNG/JPG (not SVG). */
 export const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.jpg`;

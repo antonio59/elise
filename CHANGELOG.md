@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- a11y sweep confirmed complete — dialog roles, switch semantics, star-rating labels, like-button loading state (supersedes fix/a11y-ux-polish-ant14-ant15)
+- Replace native `confirm()` dialogs with accessible ConfirmModal on My Art, My Photos, My Writing, and Suggestions
+- Replace `alert()` upload errors with inline accessible error messages (role="alert")
+- Add Escape-to-close and body scroll lock to ModalShell
+- Fix unreachable toast system — export `useToast` and wire success/error feedback on book delete
 - Repair pnpm lockfile after @types/node 26 merge
 - **security**: Clear Dependabot alerts and unblock dep PRs (#57)
 - Resolve security vulnerabilities in dependencies
@@ -67,6 +72,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
+- Migrate frontend hosting from Netlify to Cloudflare Pages (`_redirects`, `_headers`, `wrangler.jsonc`); backend stays on Convex Cloud
 - Merge pull request #69 from antonio59/dependabot/npm_and_yarn/vitest-5.0.0
 
 chore(deps-dev): bump vitest from 4.1.11 to 5.0.0
@@ -730,6 +736,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Chores
 
+- Remove dead code: WishlistFilterBar, seed utilities (`convex/seed.ts`, `scripts/seed.py`), unused coverUrl/seo exports, `email-to-elise.md` draft
 - **deps-dev**: Bump vitest from 4.1.11 to 5.0.0
 - **deps**: Bump the minor-patch group with 8 updates
 - **deps**: Bump the minor-patch group with 6 updates (#67)
@@ -876,6 +883,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Features
 
+- Goodreads integration: CSV library import (ratings, reviews, shelves, ISBNs, dates) with dedupe, plus profile link on the public About page
 - Back-to-top button, trimmed footer, share with book detail URLs
 - Public book detail pages + clickable book cards
 - Creative features + UI/UX improvements for Elise
@@ -919,6 +927,8 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Security
 
+- Bump `js-yaml` override to 4.3.2 (GHSA js-yaml fix), drop unused `uuid` override — `pnpm audit` clean
+- Gate cover/book-search actions behind auth, tighten public mutation input limits (sticker length cap), admin-gate suggestion queries
 - Override uuid to ^14.0.0 to fix CVE-2025-4848 / GHSA-w5hq-g745-h8pq
 - Harden rate limits, fix Resend domain, add HSTS, filter artworks by user (#30)
 

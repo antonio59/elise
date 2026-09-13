@@ -113,6 +113,7 @@ export const userProfileExtendedFields = {
   favoriteQuote: v.optional(v.string()),
   funFact: v.optional(v.string()),
   currentlyReading: v.optional(v.string()),
+  goodreadsUrl: v.optional(v.string()),
 };
 
 export const seriesAlbumFields = {

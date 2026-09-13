@@ -9,6 +9,7 @@ import {
   Heart,
   Lightbulb,
   RefreshCw,
+  Link2,
 } from "lucide-react";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
@@ -38,6 +39,7 @@ interface PublicProfile {
   rereads?: string[];
   favoriteQuote?: string;
   funFact?: string;
+  goodreadsUrl?: string;
 }
 
 const About: React.FC = () => {
@@ -269,7 +271,7 @@ const About: React.FC = () => {
                 </section>
               )}
 
-              <div className="pt-4 text-center">
+              <div className="pt-4 flex flex-col items-center gap-2">
                 <Link
                   to="/books"
                   className="inline-flex items-center gap-2 min-h-11 px-2 text-primary-600 font-semibold hover:text-primary-700"
@@ -277,6 +279,17 @@ const About: React.FC = () => {
                   <BookOpen className="w-4 h-4" />
                   See my books →
                 </Link>
+                {display?.goodreadsUrl && (
+                  <a
+                    href={display.goodreadsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 min-h-11 px-2 text-sm text-slate-500 font-medium hover:text-primary-600"
+                  >
+                    <Link2 className="w-4 h-4" />
+                    Find me on Goodreads
+                  </a>
+                )}
               </div>
             </div>
           )}

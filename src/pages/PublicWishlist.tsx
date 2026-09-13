@@ -11,6 +11,7 @@ import {
 import CoverImage from "../components/CoverImage";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
+import type { Id } from "../../convex/_generated/dataModel";
 import { usePageAnnouncement } from "../components/AccessibleAnnouncer";
 import { usePageMeta } from "../components/PageMeta";
 import { getVisitorId } from "../lib/visitorId";
@@ -100,9 +101,8 @@ const PublicWishlist: React.FC = () => {
       return;
     }
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       await markAsBought({
-        id: bookId as any,
+        id: bookId as Id<"books">,
         boughtBy: buyerName.trim(),
         visitorId: getVisitorId(),
       });

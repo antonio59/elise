@@ -21,6 +21,7 @@ import { usePageAnnouncement } from "../components/AccessibleAnnouncer";
 import { usePageMeta } from "../components/PageMeta";
 import ImageUploadField from "../components/ImageUploadField";
 import ModalShell from "../components/ModalShell";
+import { ConfirmModal } from "../components/ui/Modal";
 import PhotoEditorForm from "../components/photos/PhotoEditorForm";
 import GalleryFilterTabs from "../components/GalleryFilterTabs";
 
@@ -44,6 +45,7 @@ const MyPhotos: React.FC = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showAlbumModal, setShowAlbumModal] = useState(false);
   const [editingPhoto, setEditingPhoto] = useState<Photo | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<Id<"photos"> | null>(null);
   const [filter, setFilter] = useState<"all" | "published" | "drafts">("all");
   const [selectedAlbum, setSelectedAlbum] = useState<string | "all">("all");
 
@@ -205,11 +207,7 @@ const MyPhotos: React.FC = () => {
                     )}
                   </button>
                   <button
-                    onClick={() => {
-                      if (confirm("Delete this photo?")) {
-                        removePhoto({ id: photo._id });
-                      }
-                    }}
+                    onClick={() => setDeleteTarget(photo._id)}
                     className="p-3 bg-error-500 hover:bg-error-600 text-white rounded-xl"
                     title="Delete photo"
                     aria-label="Delete photo"
@@ -295,6 +293,19 @@ const MyPhotos: React.FC = () => {
           await createAlbum(album);
           setShowAlbumModal(false);
         }}
+      />
+
+      <ConfirmModal
+        isOpen={deleteTarget !== null}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={() => {
+          if (deleteTarget) removePhoto({ id: deleteTarget });
+          setDeleteTarget(null);
+        }}
+        title="Delete Photo"
+        message="Delete this photo? This can't be undone."
+        confirmText="Delete"
+        variant="danger"
       />
     </div>
   );
