@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- Remediate security audit findings and accessibility issues
 - Remove redundant Pages _redirects rule
 - Default to production Convex URL when env var is unset
 - Fail gracefully when VITE_CONVEX_URL is missing at build time
@@ -71,6 +72,12 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
+<<<<<<< Updated upstream
+=======
+- Merge pull request #72 from antonio59/fix/security-audit-remediation
+
+fix: remediate security audit findings and accessibility issues
+>>>>>>> Stashed changes
 - Merge pull request #71 from antonio59/dependabot/npm_and_yarn/minor-patch-0d68577f82
 
 chore(deps): bump the minor-patch group with 4 updates
