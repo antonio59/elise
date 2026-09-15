@@ -237,7 +237,7 @@ const Login: React.FC = () => {
                   Your email
                 </label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
                   <input
                     id="email"
                     type="email"
@@ -259,7 +259,7 @@ const Login: React.FC = () => {
                   Your password
                 </label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
                   <input
                     id="password"
                     type="password"
@@ -292,7 +292,7 @@ const Login: React.FC = () => {
               </button>
 
               <div className="pt-3 border-t border-slate-200 space-y-2">
-                <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
                   After you sign in
                 </p>
                 <ul className="text-sm text-slate-500 space-y-1.5 leading-snug">
@@ -353,7 +353,7 @@ const Login: React.FC = () => {
       </main>
 
       <footer className="relative z-10 pb-6 text-center">
-        <p className="inline-flex items-center gap-1.5 text-xs text-slate-400">
+        <p className="inline-flex items-center gap-1.5 text-xs text-slate-500">
           <BookOpen className="w-3.5 h-3.5" aria-hidden="true" />
           made for reading, drawing &amp; writing
         </p>

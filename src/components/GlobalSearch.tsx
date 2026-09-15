@@ -17,7 +17,9 @@ interface SearchResult {
 const GlobalSearch: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const [activeIndex, setActiveIndex] = useState(-1);
   const inputRef = useRef<HTMLInputElement>(null);
+  const triggerRef = useRef<HTMLElement | null>(null);
   const navigate = useNavigate();
 
   const booksRaw = useQuery(api.books.getReadBooks);
@@ -79,6 +81,13 @@ const GlobalSearch: React.FC = () => {
     return out.slice(0, 8);
   }, [books, writings, artworks, query]);
 
+  // Reset the highlighted result whenever the result set changes
+  const [prevResults, setPrevResults] = useState(results);
+  if (results !== prevResults) {
+    setPrevResults(results);
+    setActiveIndex(-1);
+  }
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
@@ -100,6 +109,9 @@ const GlobalSearch: React.FC = () => {
   useEffect(() => {
     if (open) {
       setTimeout(() => inputRef.current?.focus(), 0);
+    } else {
+      // Restore focus to the trigger that opened the dialog
+      triggerRef.current?.focus();
     }
   }, [open]);
 
@@ -109,54 +121,93 @@ const GlobalSearch: React.FC = () => {
     navigate(url);
   };
 
+  const onInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (results.length === 0) return;
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setActiveIndex((i) => (i + 1) % results.length);
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setActiveIndex((i) => (i <= 0 ? results.length - 1 : i - 1));
+    } else if (e.key === "Enter" && activeIndex >= 0 && results[activeIndex]) {
+      e.preventDefault();
+      handleSelect(results[activeIndex].url);
+    }
+  };
+
   return (
     <>
       <button
-        onClick={() => setOpen(true)}
+        onClick={(e) => {
+          triggerRef.current = e.currentTarget;
+          setOpen(true);
+        }}
         className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm text-slate-500 bg-slate-100 hover:bg-slate-200 transition-colors"
         aria-label="Open search"
+        aria-haspopup="dialog"
+        aria-expanded={open}
       >
         <Search className="w-4 h-4" />
-        <span className="text-slate-400">Search...</span>
+        <span className="text-slate-500">Search...</span>
         <kbd className="hidden lg:inline-block px-1.5 py-0.5 text-xs bg-slate-50 rounded border border-slate-200">
           ⌘K
         </kbd>
       </button>
 
       <button
-        onClick={() => setOpen(true)}
+        onClick={(e) => {
+          triggerRef.current = e.currentTarget;
+          setOpen(true);
+        }}
         className="md:hidden p-2 rounded-lg text-slate-500 hover:bg-slate-100"
         aria-label="Open search"
+        aria-haspopup="dialog"
+        aria-expanded={open}
       >
         <Search className="w-5 h-5" />
       </button>
 
       {open && (
-        <div className="fixed inset-0 z-[60] flex items-start justify-center p-4 pt-[15vh]">
+        <div
+          className="fixed inset-0 z-[60] flex items-start justify-center p-4 pt-[15vh]"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Site search"
+        >
           <div
             className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
             onClick={() => { setQuery(""); setOpen(false); }}
           />
           <div className="relative w-full max-w-xl bg-slate-50 rounded-2xl shadow-2xl overflow-hidden">
             <div className="flex items-center gap-3 px-4 py-3 border-b border-slate-100">
-              <Search className="w-5 h-5 text-slate-400" />
+              <Search className="w-5 h-5 text-slate-500" />
               <input
                 ref={inputRef}
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
+                onKeyDown={onInputKeyDown}
                 placeholder="Search books, writing, art..."
-                className="flex-1 bg-transparent outline-none text-slate-800 placeholder:text-slate-400"
+                className="flex-1 bg-transparent outline-none text-slate-800 placeholder:text-slate-500"
+                role="combobox"
+                aria-expanded={results.length > 0}
+                aria-controls="global-search-results"
+                aria-activedescendant={
+                  activeIndex >= 0 && results[activeIndex]
+                    ? `search-result-${results[activeIndex].type}-${results[activeIndex].id}`
+                    : undefined
+                }
+                aria-autocomplete="list"
               />
               {query && (
                 <button
                   onClick={() => setQuery("")}
-                  className="p-1 rounded text-slate-400 hover:text-slate-600"
+                  className="p-1 rounded text-slate-500 hover:text-slate-600"
                   aria-label="Clear search"
                 >
                   <X className="w-4 h-4" />
                 </button>
               )}
-              <kbd className="hidden sm:inline-block px-2 py-0.5 text-xs text-slate-400 bg-slate-100 rounded">
+              <kbd className="hidden sm:inline-block px-2 py-0.5 text-xs text-slate-500 bg-slate-100 rounded">
                 ESC
               </kbd>
             </div>
@@ -169,12 +220,18 @@ const GlobalSearch: React.FC = () => {
               )}
 
               {results.length > 0 && (
-                <div className="py-2">
-                  {results.map((r) => (
+                <div className="py-2" role="listbox" id="global-search-results" aria-label="Search results">
+                  {results.map((r, i) => (
                     <button
                       key={`${r.type}-${r.id}`}
+                      id={`search-result-${r.type}-${r.id}`}
+                      role="option"
+                      aria-selected={i === activeIndex}
                       onClick={() => handleSelect(r.url)}
-                      className="w-full px-4 py-2 flex items-center gap-3 hover:bg-slate-50 transition-colors text-left"
+                      onMouseEnter={() => setActiveIndex(i)}
+                      className={`w-full px-4 py-2 flex items-center gap-3 transition-colors text-left ${
+                        i === activeIndex ? "bg-slate-100" : "hover:bg-slate-50"
+                      }`}
                     >
                       {r.type === "book" && r.image ? (
                         <div className="w-10 h-14 rounded bg-slate-100 overflow-hidden flex-shrink-0">
@@ -186,13 +243,13 @@ const GlobalSearch: React.FC = () => {
                       ) : (
                         <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center flex-shrink-0">
                           {r.type === "book" && (
-                            <BookOpen className="w-5 h-5 text-slate-400" />
+                            <BookOpen className="w-5 h-5 text-slate-500" />
                           )}
                           {r.type === "writing" && (
-                            <Feather className="w-5 h-5 text-slate-400" />
+                            <Feather className="w-5 h-5 text-slate-500" />
                           )}
                           {r.type === "artwork" && (
-                            <Palette className="w-5 h-5 text-slate-400" />
+                            <Palette className="w-5 h-5 text-slate-500" />
                           )}
                         </div>
                       )}
@@ -212,7 +269,7 @@ const GlobalSearch: React.FC = () => {
               )}
 
               {!query.trim() && (
-                <div className="px-4 py-6 text-sm text-slate-400">
+                <div className="px-4 py-6 text-sm text-slate-500">
                   Try searching for a book title, writing, or artwork...
                 </div>
               )}

@@ -46,7 +46,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({
   return (
     <button
       onClick={handleShare}
-      className="inline-flex items-center gap-1.5 min-h-11 px-2 text-xs text-slate-400 hover:text-primary-500 transition-colors"
+      className="inline-flex items-center gap-1.5 min-h-11 px-2 text-xs text-slate-500 hover:text-primary-500 transition-colors"
       title="Share this book"
       aria-label={`Share ${title}`}
     >

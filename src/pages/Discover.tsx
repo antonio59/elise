@@ -164,7 +164,7 @@ const Discover: React.FC = () => {
           Mark at least 3 books as read so we can learn your taste and recommend
           books you'll love.
         </p>
-        <p className="text-sm text-slate-400 mt-2">
+        <p className="text-sm text-slate-500 mt-2">
           You've read {profile.totalRead} book
           {profile.totalRead !== 1 ? "s" : ""} so far.
         </p>
@@ -218,7 +218,7 @@ const Discover: React.FC = () => {
       </div>
 
       {candidates.length > 0 && (
-        <p className="text-center text-xs text-slate-400 mt-4">
+        <p className="text-center text-xs text-slate-500 mt-4">
           Swipe or use the buttons. Right = want it, Left = pass.
         </p>
       )}

@@ -246,7 +246,7 @@ const MyPhotos: React.FC = () => {
                       </span>
                     ))}
                     {photo.tags.length > 3 && (
-                      <span className="text-[10px] text-slate-400">
+                      <span className="text-[10px] text-slate-500">
                         +{photo.tags.length - 3}
                       </span>
                     )}

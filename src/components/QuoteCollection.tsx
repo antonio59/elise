@@ -90,7 +90,7 @@ const QuoteCollection: React.FC = () => {
                 onClick={() => setIsPublic(!isPublic)}
                 className="flex items-center gap-2 text-sm text-slate-600"
               >
-                {isPublic ? <Globe className="w-4 h-4 text-success-500" /> : <Lock className="w-4 h-4 text-slate-400" />}
+                {isPublic ? <Globe className="w-4 h-4 text-success-500" /> : <Lock className="w-4 h-4 text-slate-500" />}
                 {isPublic ? "Public" : "Private"}
               </button>
               <button type="submit" disabled={submitting || !text.trim()} className="btn btn-gradient btn-sm">
@@ -126,12 +126,12 @@ const QuoteCollection: React.FC = () => {
                         {q.bookTitle}
                       </span>
                     )}
-                    {q.page && <span className="text-xs text-slate-400">p. {q.page}</span>}
-                    {!q.isPublic && <Lock className="w-3 h-3 text-slate-400" />}
+                    {q.page && <span className="text-xs text-slate-500">p. {q.page}</span>}
+                    {!q.isPublic && <Lock className="w-3 h-3 text-slate-500" />}
                   </div>
                   <button
                     onClick={() => removeQuote({ id: q._id })}
-                    className="p-1.5 text-slate-400 hover:text-error-500 hover:bg-error-50 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                    className="p-1.5 text-slate-500 hover:text-error-500 hover:bg-error-50 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
                     title="Delete"
                     aria-label="Delete quote"
                   >
@@ -142,7 +142,7 @@ const QuoteCollection: React.FC = () => {
             ))}
           </AnimatePresence>
           {quotes.length > 6 && (
-            <p className="text-xs text-slate-400 text-center">+ {quotes.length - 6} more quotes</p>
+            <p className="text-xs text-slate-500 text-center">+ {quotes.length - 6} more quotes</p>
           )}
         </div>
       )}

@@ -109,8 +109,9 @@ Build settings (Pages dashboard → elise-reads → Settings → Builds):
 - Node version: `22` (set `NODE_VERSION=22` env var)
 - Env var: `VITE_CONVEX_URL=https://your-deployment.convex.cloud`
 
-SPA fallback and security headers live in `public/_redirects` and
-`public/_headers` (copied into `dist` at build time). Manual deploy:
+SPA fallback is handled by the Cloudflare Pages project configuration, and
+security headers live in `public/_headers` (copied into `dist` at build
+time). Manual deploy:
 
 ```bash
 pnpm run build && npx wrangler pages deploy dist --project-name=elise-reads

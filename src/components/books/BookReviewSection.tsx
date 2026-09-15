@@ -97,7 +97,7 @@ const BookReviewSection: React.FC<BookReviewSectionProps> = ({
             <button
               type="button"
               onClick={() => setShowEmojiGiphy(!showEmojiGiphy)}
-              className="absolute bottom-2 right-2 p-1.5 text-slate-400 hover:text-primary-500 hover:bg-slate-100 rounded-lg transition-colors"
+              className="absolute bottom-2 right-2 p-1.5 text-slate-500 hover:text-primary-500 hover:bg-slate-100 rounded-lg transition-colors"
               title="Emoji & GIF"
             >
               <Smile className="w-4 h-4" />

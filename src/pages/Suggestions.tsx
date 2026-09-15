@@ -162,12 +162,12 @@ const Suggestions: React.FC = () => {
                       {suggestion.suggestedBy}
                     </span>
                     {suggestion.suggestedByEmail && (
-                      <span className="text-slate-400">
+                      <span className="text-slate-500">
                         {" "}
                         ({suggestion.suggestedByEmail})
                       </span>
                     )}
-                    <span className="text-slate-400">
+                    <span className="text-slate-500">
                       {" "}
                       &middot;{" "}
                       {new Date(suggestion.createdAt).toLocaleDateString()}

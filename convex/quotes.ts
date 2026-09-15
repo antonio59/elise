@@ -2,6 +2,7 @@ import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 import { auth } from "./auth";
 import { quoteFields } from "./lib/validators";
+import { getSiteOwnerId } from "./lib/books";
 
 export const create = mutation({
   args: quoteFields,
@@ -50,10 +51,13 @@ export const getMyQuotes = query({
 export const getPublicQuotes = query({
   args: {},
   handler: async (ctx) => {
-    return await ctx.db
+    const ownerId = await getSiteOwnerId(ctx);
+    if (!ownerId) return [];
+    const quotes = await ctx.db
       .query("quotes")
       .withIndex("by_public_created", (q) => q.eq("isPublic", true))
       .order("desc")
       .take(50);
+    return quotes.filter((quote) => quote.userId === ownerId);
   },
 });

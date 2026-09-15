@@ -58,7 +58,7 @@ const GiphyPicker: React.FC<GiphyPickerProps> = ({ onSelect, onClose }) => {
           className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 text-sm font-medium transition-colors ${
             tab === "emoji"
               ? "text-primary-500 border-b-2 border-primary-400"
-              : "text-slate-400 hover:text-slate-600"
+              : "text-slate-500 hover:text-slate-600"
           }`}
         >
           <Smile className="w-4 h-4" />
@@ -70,7 +70,7 @@ const GiphyPicker: React.FC<GiphyPickerProps> = ({ onSelect, onClose }) => {
           className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 text-sm font-medium transition-colors ${
             tab === "gif"
               ? "text-primary-500 border-b-2 border-primary-400"
-              : "text-slate-400 hover:text-slate-600"
+              : "text-slate-500 hover:text-slate-600"
           }`}
         >
           <ImageIcon className="w-4 h-4" />
@@ -79,7 +79,7 @@ const GiphyPicker: React.FC<GiphyPickerProps> = ({ onSelect, onClose }) => {
         <button
           type="button"
           onClick={onClose}
-          className="px-3 text-slate-400 hover:text-slate-600"
+          className="px-3 text-slate-500 hover:text-slate-600"
           aria-label="Close GIF picker"
         >
           <X className="w-4 h-4" />
@@ -106,7 +106,7 @@ const GiphyPicker: React.FC<GiphyPickerProps> = ({ onSelect, onClose }) => {
         <div>
           <div className="p-3 flex gap-2">
             <div className="relative flex-1">
-              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
+              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-500" />
               <input
                 type="text"
                 value={query}
@@ -147,7 +147,7 @@ const GiphyPicker: React.FC<GiphyPickerProps> = ({ onSelect, onClose }) => {
               ))
             ) : loading ? null : (
               query && (
-                <p className="col-span-3 text-center text-sm text-slate-400 py-4">
+                <p className="col-span-3 text-center text-sm text-slate-500 py-4">
                   Search for GIFs to add to your review
                 </p>
               )

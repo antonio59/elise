@@ -19,12 +19,53 @@ const MIN_IMAGE_BYTES = 8_000;
 /** Real covers should be wider than Google’s ~128px thumbs. */
 const MIN_IMAGE_WIDTH = 200;
 
+/**
+ * Server-side cover fetches are restricted to known cover hosts — stored
+ * coverUrl values are user-influenced, so fetching them blindly is an SSRF
+ * surface. Redirects are followed but each hop is re-checked.
+ */
+const ALLOWED_COVER_HOSTS = new Set([
+  "books.google.com",
+  "covers.openlibrary.org",
+  "openlibrary.org",
+  "images-na.ssl-images-amazon.com",
+  "images.amazon.com",
+  "i.gr-assets.com",
+  "images.gr-assets.com",
+  "s.gr-assets.com",
+]);
+
+function isAllowedCoverUrl(raw: string): boolean {
+  try {
+    const u = new URL(raw);
+    if (u.protocol !== "https:") return false;
+    const host = u.hostname.toLowerCase();
+    return (
+      ALLOWED_COVER_HOSTS.has(host) || host.endsWith(".books.google.com")
+    );
+  } catch {
+    return false;
+  }
+}
+
+/** Fetch one URL, following redirects hop-by-hop so each is re-validated. */
+async function fetchChecked(url: string, hops = 0): Promise<Response | null> {
+  if (hops > 3 || !isAllowedCoverUrl(url)) return null;
+  const res = await fetch(url, { redirect: "manual" });
+  if (res.status >= 300 && res.status < 400) {
+    const loc = res.headers.get("location");
+    if (!loc) return null;
+    return fetchChecked(new URL(loc, url).toString(), hops + 1);
+  }
+  return res;
+}
+
 /** Try each URL in order; return the first real cover image (not a placeholder). */
 async function fetchFirstValidImage(urls: string[]): Promise<Blob | null> {
   for (const url of urls) {
     try {
-      const res = await fetch(url);
-      if (!res.ok) continue;
+      const res = await fetchChecked(url);
+      if (!res || !res.ok) continue;
       const blob = await res.blob();
       if (!blob.type.startsWith("image/")) continue;
       if (blob.size < MIN_IMAGE_BYTES) continue;

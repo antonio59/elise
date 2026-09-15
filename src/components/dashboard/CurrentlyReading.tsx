@@ -62,7 +62,7 @@ const CurrentlyReading: React.FC<CurrentlyReadingProps> = ({ books }) => {
                     to="/dashboard/books"
                     className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-slate-200 rounded"
                   >
-                    <Pencil className="w-3.5 h-3.5 text-slate-400" />
+                    <Pencil className="w-3.5 h-3.5 text-slate-500" />
                   </Link>
                 </div>
                 <p className="text-sm text-slate-500">{book.author}</p>
@@ -76,7 +76,7 @@ const CurrentlyReading: React.FC<CurrentlyReadingProps> = ({ books }) => {
                         }}
                       />
                     </div>
-                    <p className="text-xs text-slate-400 mt-1">
+                    <p className="text-xs text-slate-500 mt-1">
                       {book.pagesRead} / {book.pageCount} pages
                     </p>
                   </div>

@@ -174,7 +174,7 @@ const OnboardingTour: React.FC<OnboardingTourProps> = ({
         {!isLastStep && (
           <button
             onClick={onSkip}
-            className="absolute top-4 right-4 z-10 p-2 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+            className="absolute top-4 right-4 z-10 p-2 rounded-full text-slate-500 hover:text-slate-600 hover:bg-slate-100 transition-colors"
             aria-label="Skip tour"
           >
             <X className="w-5 h-5" />

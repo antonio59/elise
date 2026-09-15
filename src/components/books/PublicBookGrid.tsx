@@ -131,7 +131,7 @@ const PublicBookGrid: React.FC<PublicBookGridProps> = ({
                 </span>
               )}
               {book.rating && book.rating > 0 && (
-                <span className="text-[10px] text-slate-400">
+                <span className="text-[10px] text-slate-500">
                   {RATING_LABELS[book.rating]}
                 </span>
               )}

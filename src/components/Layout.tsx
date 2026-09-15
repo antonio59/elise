@@ -93,7 +93,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         <div role="group" aria-label="More" className="pt-3 mt-2 border-t border-slate-200">
           <p
             aria-hidden="true"
-            className="px-4 pb-1 text-[11px] font-semibold uppercase tracking-wider text-slate-400"
+            className="px-4 pb-1 text-[11px] font-semibold uppercase tracking-wider text-slate-500"
           >
             More
           </p>
@@ -163,6 +163,8 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           className="inline-flex items-center justify-center min-h-11 min-w-11 hover:bg-slate-100 rounded-lg"
           aria-label="Toggle navigation menu"
+          aria-expanded={mobileMenuOpen}
+          aria-controls="dashboard-mobile-menu"
         >
           {mobileMenuOpen ? (
             <X className="w-6 h-6" />
@@ -184,6 +186,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
               onClick={() => setMobileMenuOpen(false)}
             />
             <motion.aside
+              id="dashboard-mobile-menu"
               className="fixed top-0 left-0 bottom-0 w-64 bg-slate-50 z-50 p-6 flex flex-col md:hidden"
               initial={{ x: -256 }}
               animate={{ x: 0 }}
@@ -401,7 +404,7 @@ export const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
               {(siteSettings as { footerTagline?: string })?.footerTagline ||
                 "books I've read, art I make, and words I write"}
             </p>
-            <p className="text-xs text-slate-400 mt-2">
+            <p className="text-xs text-slate-500 mt-2">
               {(siteSettings as { footerNote?: string })?.footerNote ||
                 "made by me"}
             </p>

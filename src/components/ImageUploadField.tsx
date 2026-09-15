@@ -66,9 +66,9 @@ const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
           onClick={() => fileInputRef.current?.click()}
           className="w-full h-48 border-2 border-dashed border-slate-300 hover:border-accent-400 rounded-xl flex flex-col items-center justify-center gap-2 transition-colors"
         >
-          <ImageIcon className="w-10 h-10 text-slate-400" />
+          <ImageIcon className="w-10 h-10 text-slate-500" />
           <span className="text-slate-500">Click to upload image</span>
-          <span className="text-xs text-slate-400">
+          <span className="text-xs text-slate-500">
             PNG, JPG up to {maxSizeMB}MB
           </span>
         </button>

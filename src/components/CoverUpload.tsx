@@ -69,7 +69,7 @@ const CoverUpload: React.FC<CoverUploadProps> = ({ value, onChange }) => {
               <button
                 type="button"
                 onClick={() => onChange("")}
-                className="p-2 text-slate-400 hover:text-error-500 transition-colors"
+                className="p-2 text-slate-500 hover:text-error-500 transition-colors"
                 aria-label="Remove cover image"
               >
                 <X className="w-4 h-4" />
@@ -90,7 +90,7 @@ const CoverUpload: React.FC<CoverUploadProps> = ({ value, onChange }) => {
               {error}
             </p>
           ) : (
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-slate-500">
               JPG, PNG, or WebP. Or paste a URL from Google Books.
             </p>
           )}

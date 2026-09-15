@@ -148,7 +148,7 @@ const IdeasVault: React.FC = () => {
                 <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                   <button
                     onClick={() => handleArchive(idea._id)}
-                    className="p-1.5 text-slate-400 hover:text-amber-500 hover:bg-amber-50 rounded-lg"
+                    className="p-1.5 text-slate-500 hover:text-amber-500 hover:bg-amber-50 rounded-lg"
                     title="Archive"
                     aria-label="Archive idea"
                   >
@@ -156,7 +156,7 @@ const IdeasVault: React.FC = () => {
                   </button>
                   <button
                     onClick={() => removeIdea({ id: idea._id })}
-                    className="p-1.5 text-slate-400 hover:text-error-500 hover:bg-error-50 rounded-lg"
+                    className="p-1.5 text-slate-500 hover:text-error-500 hover:bg-error-50 rounded-lg"
                     title="Delete"
                     aria-label="Delete idea"
                   >

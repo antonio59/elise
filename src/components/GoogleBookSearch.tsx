@@ -153,7 +153,7 @@ const GoogleBookSearch: React.FC<GoogleBookSearchProps> = ({ onSelect }) => {
       </label>
       <div className="flex gap-2 mb-3">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
           <input
             type="text"
             value={query}
@@ -222,18 +222,18 @@ const GoogleBookSearch: React.FC<GoogleBookSearchProps> = ({ onSelect }) => {
                     <span className="text-xs text-primary-500 font-medium">{book.genre}</span>
                   )}
                   {book.pageCount > 0 && (
-                    <span className="text-xs text-slate-400">{book.pageCount} pages</span>
+                    <span className="text-xs text-slate-500">{book.pageCount} pages</span>
                   )}
                 </div>
               </div>
-              <Plus className="w-4 h-4 text-slate-400 flex-shrink-0" />
+              <Plus className="w-4 h-4 text-slate-500 flex-shrink-0" />
             </button>
           ))}
         </div>
       )}
 
       {searched && !loading && results.length === 0 && (
-        <p className="text-sm text-slate-400 text-center py-4">
+        <p className="text-sm text-slate-500 text-center py-4">
           No books found. Try a different search.
         </p>
       )}

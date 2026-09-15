@@ -30,7 +30,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({
   return (
     <div className="mb-8">
       {/* Breadcrumbs */}
-      <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-sm text-slate-400 mb-5">
+      <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-sm text-slate-500 mb-5">
         <Link
           to="/"
           className="flex items-center gap-1 hover:text-primary-600 transition-colors"

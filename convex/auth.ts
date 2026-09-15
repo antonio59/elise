@@ -17,7 +17,9 @@ const ALLOWED_EMAILS = (
 const CustomPassword = Password<DataModel>({
   profile(params) {
     const email = (params.email as string).toLowerCase().trim();
-    if (ALLOWED_EMAILS.length > 0 && !ALLOWED_EMAILS.includes(email)) {
+    // Fail closed: an unset/empty ALLOWED_EMAILS must deny signup rather than
+    // let anyone create an account (the first profile gets the admin role).
+    if (!ALLOWED_EMAILS.includes(email)) {
       throw new Error(
         JSON.stringify({
           error: "Access denied. This site is invite-only.",

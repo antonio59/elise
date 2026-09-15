@@ -55,7 +55,7 @@ const StickerSection: React.FC<StickerSectionProps> = ({ bookId }) => {
           {topStickers.map(([s, n]) => (
             <span key={s} className="text-sm leading-none" title={`${n} sticker${n > 1 ? "s" : ""}`}>
               {s}
-              {n > 1 && <sup className="text-[8px] text-slate-400 ml-px">{n}</sup>}
+              {n > 1 && <sup className="text-[8px] text-slate-500 ml-px">{n}</sup>}
             </span>
           ))}
         </div>
@@ -64,7 +64,7 @@ const StickerSection: React.FC<StickerSectionProps> = ({ bookId }) => {
       {/* Toggle button */}
       <button
         onClick={(e) => { e.stopPropagation(); setOpen((o) => !o); setError(null); }}
-        className="min-h-11 px-2 -ml-2 text-xs text-slate-400 hover:text-primary-500 transition-colors inline-flex items-center gap-0.5"
+        className="min-h-11 px-2 -ml-2 text-xs text-slate-500 hover:text-primary-500 transition-colors inline-flex items-center gap-0.5"
       >
         {atLimit ? "Your reactions" : "React"}
       </button>

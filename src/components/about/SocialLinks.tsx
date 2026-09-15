@@ -42,7 +42,7 @@ const SocialLinks: React.FC<SocialLinksProps> = ({
             Goodreads Profile
           </label>
           <input type="url" value={goodreadsUrl} onChange={(e) => setGoodreadsUrl(e.target.value)} className="input" placeholder="https://www.goodreads.com/user/show/..." />
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate-500 mt-1">
             Shows as a link on your public About page.
           </p>
         </div>

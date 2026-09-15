@@ -17,10 +17,6 @@ overrides:
   undici: "7.29.0"
   ws: "8.21.0"
 
-auditConfig:
-  ignoreGhsas:
-    - GHSA-96hv-2xvq-fx4p
-
 pnpm:
   autoInstallPeers: true
   strictPeerDependencies: false

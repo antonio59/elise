@@ -1,8 +1,39 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { v } from "convex/values";
 import { query, mutation } from "./_generated/server";
+import type { MutationCtx } from "./_generated/server";
 import { reactionFields } from "./lib/validators";
 import { requireAdmin } from "./lib/crud";
+import { checkRateLimit } from "./lib/rateLimit";
+import { getSiteOwnerId } from "./lib/books";
+
+type ReactionTargetType = "book" | "writing" | "artwork" | "photo";
+
+const TARGET_TABLES = {
+  book: "books",
+  writing: "writings",
+  artwork: "artworks",
+  photo: "photos",
+} as const;
+
+// A target is only a valid reaction surface if it exists and is publicly
+// visible: published for writings/artworks/photos, owner-owned for books
+// (all books shown publicly belong to the site owner).
+async function isPublicTarget(
+  ctx: MutationCtx,
+  targetType: ReactionTargetType,
+  targetId: string,
+): Promise<boolean> {
+  const id = ctx.db.normalizeId(TARGET_TABLES[targetType], targetId);
+  if (!id) return false;
+  const doc = await ctx.db.get(id);
+  if (!doc) return false;
+  if (targetType === "book") {
+    const ownerId = await getSiteOwnerId(ctx);
+    return !!ownerId && (doc as { userId?: unknown }).userId === ownerId;
+  }
+  return (doc as { isPublished?: boolean }).isPublished === true;
+}
 
 function getVisitorReactions(
   ctx: { db: { query: (table: "reactions") => any } },
@@ -25,7 +56,12 @@ export const toggle = mutation({
       throw new Error("Invalid reaction");
     }
 
-    // Rate limit: max 30 reactions per minute per visitor
+    if (!(await isPublicTarget(ctx, args.targetType, args.targetId))) {
+      throw new Error("Invalid reaction target");
+    }
+
+    // Rate limit: max 30 reactions per minute per visitor, plus a global
+    // ceiling since visitorId is client-controlled and forgeable.
     const oneMinuteAgo = Date.now() - 60_000;
     const recentCount = await ctx.db
       .query("reactions")
@@ -33,6 +69,16 @@ export const toggle = mutation({
       .filter((q) => q.gte(q.field("createdAt"), oneMinuteAgo))
       .collect();
     if (recentCount.length >= 30) {
+      throw new Error("Too many reactions. Please slow down.");
+    }
+    const globalAllowed = await checkRateLimit(
+      ctx,
+      "global",
+      "toggleReaction",
+      300,
+      60_000,
+    );
+    if (!globalAllowed) {
       throw new Error("Too many reactions. Please slow down.");
     }
 

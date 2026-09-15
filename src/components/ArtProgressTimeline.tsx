@@ -33,22 +33,22 @@ const ArtProgressTimeline: React.FC = () => {
       <div className="grid md:grid-cols-2 gap-6">
         {first && (
           <div className="text-center">
-            <p className="text-xs text-slate-400 mb-2 uppercase tracking-wide">First Piece</p>
+            <p className="text-xs text-slate-500 mb-2 uppercase tracking-wide">First Piece</p>
             <div className="aspect-square rounded-xl overflow-hidden bg-slate-100">
               <img src={first.imageUrl} alt={first.title} className="w-full h-full object-cover" />
             </div>
             <p className="text-sm font-medium text-slate-700 mt-2">{first.title}</p>
-            <p className="text-xs text-slate-400">{new Date(first.createdAt).toLocaleDateString()}</p>
+            <p className="text-xs text-slate-500">{new Date(first.createdAt).toLocaleDateString()}</p>
           </div>
         )}
         {latest && (
           <div className="text-center">
-            <p className="text-xs text-slate-400 mb-2 uppercase tracking-wide">Latest Piece</p>
+            <p className="text-xs text-slate-500 mb-2 uppercase tracking-wide">Latest Piece</p>
             <div className="aspect-square rounded-xl overflow-hidden bg-slate-100">
               <img src={latest.imageUrl} alt={latest.title} className="w-full h-full object-cover" />
             </div>
             <p className="text-sm font-medium text-slate-700 mt-2">{latest.title}</p>
-            <p className="text-xs text-slate-400">{new Date(latest.createdAt).toLocaleDateString()}</p>
+            <p className="text-xs text-slate-500">{new Date(latest.createdAt).toLocaleDateString()}</p>
           </div>
         )}
       </div>

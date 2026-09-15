@@ -78,7 +78,7 @@ const ReviewsPage: React.FC = () => {
         <div className="mb-8">
           <Link
             to="/dashboard"
-            className="inline-flex items-center gap-1 text-sm text-slate-400 hover:text-slate-600 mb-4"
+            className="inline-flex items-center gap-1 text-sm text-slate-500 hover:text-slate-600 mb-4"
           >
             <ArrowLeft className="w-4 h-4" />
             Dashboard

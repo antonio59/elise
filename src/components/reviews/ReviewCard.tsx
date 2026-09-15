@@ -94,7 +94,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ book, index, onSave }) => {
                       }`}
                     />
                   ))}
-                  <span className="text-xs text-slate-400 ml-1">
+                  <span className="text-xs text-slate-500 ml-1">
                     {RATING_LABELS[book.rating ?? 0]}
                   </span>
                 </div>
@@ -140,7 +140,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ book, index, onSave }) => {
               <h3 className="font-bold text-slate-800">{book.title}</h3>
               <button
                 onClick={() => setEditing(false)}
-                className="text-xs text-slate-400 hover:text-slate-600"
+                className="text-xs text-slate-500 hover:text-slate-600"
               >
                 cancel
               </button>
@@ -212,7 +212,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ book, index, onSave }) => {
                 >
                   edit
                 </button>
-                <span className="text-xs text-slate-400">tap to flip</span>
+                <span className="text-xs text-slate-500">tap to flip</span>
               </div>
             </div>
             {book.review ? (
@@ -220,11 +220,11 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ book, index, onSave }) => {
                 &ldquo;{book.review}&rdquo;
               </blockquote>
             ) : (
-              <p className="text-sm text-slate-400 italic">
+              <p className="text-sm text-slate-500 italic">
                 No written review - just a rating.
               </p>
             )}
-            <div className="mt-4 flex items-center gap-3 text-xs text-slate-400">
+            <div className="mt-4 flex items-center gap-3 text-xs text-slate-500">
               <div className="flex items-center gap-0.5">
                 {Array.from({ length: 5 }).map((_, i) => (
                   <Star

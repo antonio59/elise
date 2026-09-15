@@ -204,7 +204,7 @@ const PublicWritingDetail: React.FC = () => {
                   to={`/writing/${siblings.prev._id}`}
                   className="flex-1 rounded-2xl border border-slate-200 bg-white/80 p-4 hover:border-primary-300 transition-colors"
                 >
-                  <p className="text-xs uppercase tracking-wider text-slate-400 mb-1">
+                  <p className="text-xs uppercase tracking-wider text-slate-500 mb-1">
                     Previous
                   </p>
                   <p className="font-display font-bold text-slate-800 line-clamp-1">
@@ -219,7 +219,7 @@ const PublicWritingDetail: React.FC = () => {
                   to={`/writing/${siblings.next._id}`}
                   className="flex-1 rounded-2xl border border-slate-200 bg-white/80 p-4 hover:border-primary-300 transition-colors text-right sm:text-left"
                 >
-                  <p className="text-xs uppercase tracking-wider text-slate-400 mb-1">
+                  <p className="text-xs uppercase tracking-wider text-slate-500 mb-1">
                     Next
                   </p>
                   <p className="font-display font-bold text-slate-800 line-clamp-1">

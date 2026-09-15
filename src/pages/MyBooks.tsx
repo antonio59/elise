@@ -120,7 +120,7 @@ const MyBooks: React.FC = () => {
       />
 
       <div className="relative max-w-md">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
         <input
           type="text"
           value={searchQuery}
@@ -246,7 +246,7 @@ const MyBooks: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setShowReviewEmoji(!showReviewEmoji)}
-                  className="absolute bottom-2 right-2 p-1.5 text-slate-400 hover:text-primary-500 hover:bg-slate-100 rounded-lg transition-colors"
+                  className="absolute bottom-2 right-2 p-1.5 text-slate-500 hover:text-primary-500 hover:bg-slate-100 rounded-lg transition-colors"
                   title="Emoji & GIF"
                 >
                   <Smile className="w-4 h-4" />

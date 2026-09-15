@@ -51,7 +51,7 @@ const ReviewFilterBar: React.FC<ReviewFilterBarProps> = ({
           <option value="rating">Highest Rated</option>
           <option value="title">A–Z</option>
         </select>
-        <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400 pointer-events-none" />
+        <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-500 pointer-events-none" />
       </div>
     </div>
   );

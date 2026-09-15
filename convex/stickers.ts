@@ -1,5 +1,7 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
+import { checkRateLimit } from "./lib/rateLimit";
+import { getSiteOwnerId } from "./lib/books";
 
 const MAX_PER_VISITOR = 2; // max stickers per visitor per book
 
@@ -13,6 +15,26 @@ export const add = mutation({
   handler: async (ctx, args) => {
     if (args.sticker.length === 0 || args.sticker.length > 16) {
       throw new Error("Invalid sticker");
+    }
+
+    // Only the site owner's real books are valid targets.
+    const bookId = ctx.db.normalizeId("books", args.targetId);
+    const book = bookId ? await ctx.db.get(bookId) : null;
+    const ownerId = await getSiteOwnerId(ctx);
+    if (!book || !ownerId || book.userId !== ownerId) {
+      throw new Error("Book not found");
+    }
+
+    // Global ceiling — visitorId is client-controlled and forgeable.
+    const globalAllowed = await checkRateLimit(
+      ctx,
+      "global",
+      "addSticker",
+      200,
+      60 * 60 * 1000,
+    );
+    if (!globalAllowed) {
+      throw new Error("Too many stickers. Please try again later.");
     }
 
     const existing = await ctx.db

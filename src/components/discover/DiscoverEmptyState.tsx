@@ -15,7 +15,7 @@ const DiscoverEmptyState: React.FC<DiscoverEmptyStateProps> = ({
       <div className="flex flex-col items-center justify-center h-full">
         <Loader2 className="w-10 h-10 text-primary-400 animate-spin mb-4" />
         <p className="text-slate-500 font-medium">Finding books for you...</p>
-        <p className="text-sm text-slate-400 mt-1">
+        <p className="text-sm text-slate-500 mt-1">
           Analyzing your reading taste
         </p>
       </div>

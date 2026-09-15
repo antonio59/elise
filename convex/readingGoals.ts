@@ -1,7 +1,7 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 import { auth } from "./auth";
-import { getReadBooksForUser } from "./lib/books";
+import { getReadBooksForUser, getSiteOwnerId } from "./lib/books";
 
 // Get current year's reading goal
 export const getCurrentGoal = query({
@@ -17,11 +17,24 @@ export const getCurrentGoal = query({
   },
 });
 
-// Get all reading goals
+// Get all reading goals (public - scoped to the site owner, userId stripped)
 export const getAllGoals = query({
   args: {},
   handler: async (ctx) => {
-    return await ctx.db.query("readingGoals").order("desc").collect();
+    const ownerId = await getSiteOwnerId(ctx);
+    if (!ownerId) return [];
+    const goals = await ctx.db
+      .query("readingGoals")
+      .withIndex("by_user", (q) => q.eq("userId", ownerId))
+      .order("desc")
+      .collect();
+    return goals.map(({ _id, year, targetBooks, targetPages, createdAt }) => ({
+      _id,
+      year,
+      targetBooks,
+      targetPages,
+      createdAt,
+    }));
   },
 });
 
