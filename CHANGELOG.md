@@ -72,12 +72,12 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
-<<<<<<< Updated upstream
-=======
+- Merge pull request #73 from antonio59/feat/weekly-email-digest
+
+feat: enrich weekly summary email with reviews and feature nudges
 - Merge pull request #72 from antonio59/fix/security-audit-remediation
 
 fix: remediate security audit findings and accessibility issues
->>>>>>> Stashed changes
 - Merge pull request #71 from antonio59/dependabot/npm_and_yarn/minor-patch-0d68577f82
 
 chore(deps): bump the minor-patch group with 4 updates
@@ -846,6 +846,8 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
+- Update changelog [skip ci]
+- Update changelog [skip ci]
 - Update npm references to pnpm
 - Update changelog [skip ci]
 - Update changelog [skip ci]
@@ -931,6 +933,8 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Features
 
+- Allow extra weekly summary recipients via env var
+- Enrich weekly summary email with reviews and feature nudges
 - Back-to-top button, trimmed footer, share with book detail URLs
 - Public book detail pages + clickable book cards
 - Creative features + UI/UX improvements for Elise
