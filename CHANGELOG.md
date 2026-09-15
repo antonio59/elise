@@ -71,6 +71,9 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
+- Merge pull request #71 from antonio59/dependabot/npm_and_yarn/minor-patch-0d68577f82
+
+chore(deps): bump the minor-patch group with 4 updates
 - Full-scan cleanup: Cloudflare Pages, Goodreads import, security + a11y fixes (#70)
 
 * Fix Convex Auth JWT provider config wiped in April.
@@ -766,6 +769,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Chores
 
+- **deps**: Bump the minor-patch group with 4 updates
 - **deps-dev**: Bump vitest from 4.1.11 to 5.0.0
 - **deps**: Bump the minor-patch group with 8 updates
 - **deps**: Bump the minor-patch group with 6 updates (#67)
@@ -802,6 +806,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
