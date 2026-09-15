@@ -28,11 +28,15 @@ export const getPublished = query({
   },
   handler: async (ctx, args) => {
     if (args.albumId) {
-      return await ctx.db
+      const photos = await ctx.db
         .query("photos")
         .withIndex("by_album", (q) => q.eq("albumId", args.albumId))
         .order("desc")
         .take(args.limit ?? 1000);
+      const userId = await auth.getUserId(ctx);
+      return photos.filter(
+        (p) => p.isPublished || (userId && p.userId === userId),
+      );
     }
 
     return await ctx.db
@@ -67,8 +71,9 @@ export const getByAlbum = query({
       .order("desc")
       .collect();
     const userId = await auth.getUserId(ctx);
-    if (userId) return photos;
-    return photos.filter((p) => p.isPublished);
+    return photos.filter(
+      (p) => p.isPublished || (userId && p.userId === userId),
+    );
   },
 });
 
@@ -136,7 +141,7 @@ export const like = mutation({
     await checkLikeRateLimit(ctx, args.visitorId, "likePhoto");
 
     const photo = await ctx.db.get(args.id);
-    if (!photo) throw new Error("Photo not found");
+    if (!photo || !photo.isPublished) throw new Error("Photo not found");
 
     await ctx.db.patch(args.id, { likes: (photo.likes ?? 0) + 1 });
   },
@@ -161,18 +166,17 @@ export const getAlbums = query({
   args: {},
   handler: async (ctx) => {
     const userId = await auth.getUserId(ctx);
-    if (userId) {
-      return await ctx.db.query("photoAlbums").order("desc").collect();
-    }
-    // Anonymous callers only see albums that contain published photos —
-    // otherwise a private-only album would leak its name publicly.
+    // Anonymous and non-owner callers only see albums that contain published
+    // photos — otherwise a private-only album would leak its name publicly.
     const albums = await ctx.db.query("photoAlbums").order("desc").collect();
     const published = await ctx.db
       .query("photos")
       .withIndex("by_published", (q) => q.eq("isPublished", true))
       .collect();
     const publicAlbumIds = new Set(published.map((p) => p.albumId));
-    return albums.filter((a) => publicAlbumIds.has(a._id));
+    return albums.filter(
+      (a) => (userId && a.userId === userId) || publicAlbumIds.has(a._id),
+    );
   },
 });
 

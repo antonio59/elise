@@ -118,9 +118,9 @@ const SwipeCard: React.FC<SwipeCardProps> = ({ book, onSwipe, isTop }) => {
               aria-label="Toggle description"
             >
               {expanded ? (
-                <ChevronUp className="w-5 h-5 text-slate-400" />
+                <ChevronUp className="w-5 h-5 text-slate-500" />
               ) : (
-                <ChevronDown className="w-5 h-5 text-slate-400" />
+                <ChevronDown className="w-5 h-5 text-slate-500" />
               )}
             </button>
           </div>

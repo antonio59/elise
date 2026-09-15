@@ -119,11 +119,11 @@ const ImportGoodreadsModal: React.FC<ImportGoodreadsModalProps> = ({
               onClick={() => fileRef.current?.click()}
               className="w-full h-40 border-2 border-dashed border-slate-300 hover:border-primary-400 rounded-xl flex flex-col items-center justify-center gap-2 transition-colors"
             >
-              <FileUp className="w-10 h-10 text-slate-400" />
+              <FileUp className="w-10 h-10 text-slate-500" />
               <span className="text-slate-600 font-medium">
                 Choose your Goodreads CSV
               </span>
-              <span className="text-xs text-slate-400">goodreads_library_export.csv</span>
+              <span className="text-xs text-slate-500">goodreads_library_export.csv</span>
             </button>
             {error && (
               <p className="text-sm text-error-500" role="alert">
@@ -166,11 +166,11 @@ const ImportGoodreadsModal: React.FC<ImportGoodreadsModalProps> = ({
               {stage.rows.slice(0, 8).map((r, i) => (
                 <div key={i} className="px-3 py-2 text-sm">
                   <span className="font-medium text-slate-800">{r.title}</span>
-                  <span className="text-slate-400"> — {r.author}</span>
+                  <span className="text-slate-500"> — {r.author}</span>
                 </div>
               ))}
               {stage.rows.length > 8 && (
-                <div className="px-3 py-2 text-xs text-slate-400">
+                <div className="px-3 py-2 text-xs text-slate-500">
                   …and {stage.rows.length - 8} more
                 </div>
               )}
@@ -221,7 +221,7 @@ const ImportGoodreadsModal: React.FC<ImportGoodreadsModalProps> = ({
                 ` · ${stage.skipped} already on your shelf (skipped)`}
               .
             </p>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-slate-500">
               Covers fill in automatically over the next minute or two.
             </p>
             <Button className="w-full" onClick={handleClose}>

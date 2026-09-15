@@ -96,7 +96,7 @@ const AvatarCreatorModal: React.FC<AvatarCreatorModalProps> = ({
               <p className="text-sm text-slate-500">Pick a style, then keep shuffling until you love it</p>
             </div>
             <button onClick={handleClose} className="p-2 hover:bg-slate-100 rounded-lg" aria-label="Close avatar creator">
-              <X className="w-5 h-5 text-slate-400" />
+              <X className="w-5 h-5 text-slate-500" />
             </button>
           </div>
 
@@ -146,7 +146,7 @@ const AvatarCreatorModal: React.FC<AvatarCreatorModalProps> = ({
                       </div>
                       <div>
                         <p className="font-medium text-sm text-slate-800">{style.label}</p>
-                        <p className="text-xs text-slate-400">{style.desc}</p>
+                        <p className="text-xs text-slate-500">{style.desc}</p>
                       </div>
                     </div>
                   </button>

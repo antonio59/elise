@@ -3,6 +3,12 @@ import { v } from "convex/values";
 import { Resend } from "resend";
 import { escapeHtml } from "./lib/email";
 
+// Header-safe text for the subject line: strip CR/LF so a suggestion's
+// title/author can't inject extra headers or split the subject.
+function safeSubjectPart(s: string): string {
+  return s.replace(/[\r\n]+/g, " ").slice(0, 120);
+}
+
 // Send notification email when a book is suggested (internal only - scheduled
 // from bookSuggestions.submit; must not be publicly callable).
 export const sendSuggestionNotification = internalAction({
@@ -92,7 +98,7 @@ export const sendSuggestionNotification = internalAction({
     await resend.emails.send({
       from: "Elise Reads <noreply@elisereads.com>",
       to: "elise@elisereads.com",
-      subject: `📚 Someone suggested "${args.title}" by ${args.author}!`,
+      subject: `📚 Someone suggested "${safeSubjectPart(args.title)}" by ${safeSubjectPart(args.author)}!`,
       html,
     });
   },

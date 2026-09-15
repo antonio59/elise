@@ -175,7 +175,7 @@ const AddBookModal: React.FC<AddBookModalProps> = ({
                     <p className="text-sm text-slate-500 mt-0.5">{author}</p>
                     <div className="flex items-center gap-2 mt-1.5">
                       <span className="text-xs px-2 py-0.5 bg-primary-100 text-primary-700 rounded-full">{genre}</span>
-                      {pageCount && <span className="text-xs text-slate-400">{pageCount} pages</span>}
+                      {pageCount && <span className="text-xs text-slate-500">{pageCount} pages</span>}
                     </div>
                   </div>
                 </div>
@@ -194,7 +194,7 @@ const AddBookModal: React.FC<AddBookModalProps> = ({
                   getStatusLabel={getStatusLabel}
                 />
 
-                <p className="text-center text-xs text-slate-400">
+                <p className="text-center text-xs text-slate-500">
                   Not the right book?{" "}
                   <button
                     type="button"
@@ -228,7 +228,7 @@ const AddBookModal: React.FC<AddBookModalProps> = ({
                     <button
                       type="button"
                       onClick={() => setManualMode(!manualMode)}
-                      className="bg-slate-50 px-2 text-slate-400 uppercase tracking-wider hover:text-slate-600"
+                      className="bg-slate-50 px-2 text-slate-500 uppercase tracking-wider hover:text-slate-600"
                     >
                       {manualMode ? "back to search" : "can't find your book? add manually"}
                     </button>

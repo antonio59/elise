@@ -63,7 +63,7 @@ const BookFormFooter: React.FC<BookFormFooterProps> = ({
                 }`}
               >
                 <Icon
-                  className={`w-5 h-5 ${destination === dest.key ? "text-primary-600" : "text-slate-400"}`}
+                  className={`w-5 h-5 ${destination === dest.key ? "text-primary-600" : "text-slate-500"}`}
                 />
                 <span
                   className={`text-sm font-medium ${destination === dest.key ? "text-primary-600" : "text-slate-600"}`}

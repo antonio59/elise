@@ -150,7 +150,7 @@ const StreakCard: React.FC<StreakCardProps> = ({ type }) => {
             </motion.span>
           )}
         </div>
-        <p className="text-sm text-slate-400 mt-0.5">
+        <p className="text-sm text-slate-500 mt-0.5">
           Best:{" "}
           <span className="font-medium text-slate-500">
             {streak.bestStreak}

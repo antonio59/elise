@@ -9,7 +9,7 @@ const ReviewEmptyState: React.FC = () => {
       <h3 className="text-lg font-semibold text-slate-600 mb-2">
         No reviews yet
       </h3>
-      <p className="text-sm text-slate-400 mb-4">
+      <p className="text-sm text-slate-500 mb-4">
         Add ratings and reviews to your books in the Dashboard to see them here.
       </p>
       <Link to="/dashboard/books" className="btn btn-primary text-sm">

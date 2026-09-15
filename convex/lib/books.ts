@@ -31,6 +31,22 @@ export async function getAllBooks(ctx: QueryCtx): Promise<Doc<"books">[]> {
   return ctx.db.query("books").collect();
 }
 
+// Single-user site: the "owner" is the first user profile's user. Public
+// queries scope to this user so a second account's data never leaks onto
+// the public site.
+export async function getSiteOwnerId(
+  ctx: QueryCtx,
+): Promise<Id<"users"> | null> {
+  const profile = await ctx.db.query("userProfiles").first();
+  return profile?.userId ?? null;
+}
+
+export async function getOwnerBooks(ctx: QueryCtx): Promise<Doc<"books">[]> {
+  const ownerId = await getSiteOwnerId(ctx);
+  if (!ownerId) return [];
+  return getUserBooks(ctx, ownerId);
+}
+
 export async function getReadBooksForUser(
   ctx: QueryCtx,
   userId: Id<"users">,

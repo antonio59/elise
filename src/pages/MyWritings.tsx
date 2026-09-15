@@ -179,7 +179,7 @@ const MyWritings: React.FC = () => {
 
       {/* Search */}
       <div className="relative">
-        <Pencil className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+        <Pencil className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
         <input
           type="text"
           value={searchQuery}
@@ -257,11 +257,11 @@ const MyWritings: React.FC = () => {
                         title="Toggle favorite"
                         aria-label="Toggle favorite"
                       >
-                        <Heart className={`w-4 h-4 ${writing.isFavorite ? "text-pink-500 fill-pink-500" : "text-slate-400"}`} />
+                        <Heart className={`w-4 h-4 ${writing.isFavorite ? "text-pink-500 fill-pink-500" : "text-slate-500"}`} />
                       </button>
                       <button
                         onClick={(e) => { e.stopPropagation(); handleDelete(writing._id); }}
-                        className="p-2 hover:bg-error-50 rounded-lg text-slate-400 hover:text-error-500"
+                        className="p-2 hover:bg-error-50 rounded-lg text-slate-500 hover:text-error-500"
                         title="Delete"
                         aria-label="Delete writing"
                       >
@@ -278,7 +278,7 @@ const MyWritings: React.FC = () => {
 
       {/* Word count footer */}
       {filteredWritings.length > 0 && (
-        <div className="text-center text-sm text-slate-400 pt-4">
+        <div className="text-center text-sm text-slate-500 pt-4">
           {filteredWritings.length} piece{filteredWritings.length !== 1 ? "s" : ""} ·{" "}
           {filteredWritings.reduce((sum: number, w: Writing) => sum + w.wordCount, 0).toLocaleString()} words
         </div>
@@ -428,7 +428,7 @@ const WritingEditor: React.FC<WritingEditorProps> = ({ writing, onSave, onClose 
               <label className="text-sm font-medium text-slate-700">
                 Your writing *
               </label>
-              <span className="text-xs text-slate-400">{wordCount} words</span>
+              <span className="text-xs text-slate-500">{wordCount} words</span>
             </div>
             <div className="relative">
               <textarea
@@ -446,7 +446,7 @@ const WritingEditor: React.FC<WritingEditorProps> = ({ writing, onSave, onClose 
               <button
                 type="button"
                 onClick={() => setShowEmoji(!showEmoji)}
-                className="absolute bottom-3 right-3 p-1.5 text-slate-400 hover:text-primary-500 hover:bg-slate-100 rounded-lg transition-colors"
+                className="absolute bottom-3 right-3 p-1.5 text-slate-500 hover:text-primary-500 hover:bg-slate-100 rounded-lg transition-colors"
                 title="Emoji & GIF"
               >
                 <Smile className="w-4 h-4" />
@@ -463,7 +463,7 @@ const WritingEditor: React.FC<WritingEditorProps> = ({ writing, onSave, onClose 
           {/* Publish Toggle */}
           <div className="flex items-center justify-between p-3 bg-slate-50 rounded-xl">
             <div className="flex items-center gap-2">
-              {isPublished ? <Eye className="w-5 h-5 text-success-500" /> : <EyeOff className="w-5 h-5 text-slate-400" />}
+              {isPublished ? <Eye className="w-5 h-5 text-success-500" /> : <EyeOff className="w-5 h-5 text-slate-500" />}
               <div>
                 <p className="text-sm font-medium text-slate-700">
                   {isPublished ? "Published (visible to everyone)" : "Private (only you can see)"}

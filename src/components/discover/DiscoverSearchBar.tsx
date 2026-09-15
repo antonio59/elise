@@ -29,26 +29,26 @@ const DiscoverSearchBar: React.FC<DiscoverSearchBarProps> = ({
           <div className="flex items-center gap-1.5 text-sm">
             <Heart className="w-4 h-4 text-success-500" />
             <span className="font-medium text-slate-700">{stats.liked}</span>
-            <span className="text-slate-400">liked</span>
+            <span className="text-slate-500">liked</span>
           </div>
           <div className="flex items-center gap-1.5 text-sm">
             <X className="w-4 h-4 text-error-400" />
             <span className="font-medium text-slate-700">{stats.passed}</span>
-            <span className="text-slate-400">passed</span>
+            <span className="text-slate-500">passed</span>
           </div>
           <div className="flex items-center gap-1.5 text-sm">
             <TrendingUp className="w-4 h-4 text-primary-500" />
             <span className="font-medium text-slate-700">
               {stats.addedToWishlist}
             </span>
-            <span className="text-slate-400">wishlisted</span>
+            <span className="text-slate-500">wishlisted</span>
           </div>
         </div>
       )}
 
       {profile && profile.topGenres.length > 0 && (
         <div className="flex flex-wrap gap-2 mt-4">
-          <span className="text-xs text-slate-400 self-center">Based on:</span>
+          <span className="text-xs text-slate-500 self-center">Based on:</span>
           {profile.topGenres.slice(0, 4).map((genre: string) => (
             <span
               key={genre}

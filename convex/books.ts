@@ -4,7 +4,8 @@ import {
   requireBookOwner,
   getUserBooks,
   withCoverUrls,
-  getAllBooks,
+  getOwnerBooks,
+  getSiteOwnerId,
 } from "./lib/books";
 import { v } from "convex/values";
 import { auth } from "./auth";
@@ -49,7 +50,7 @@ export const getByStatus = query({
 export const getReadBooks = query({
   args: {},
   handler: async (ctx) => {
-    const books = await getAllBooks(ctx);
+    const books = await getOwnerBooks(ctx);
     return withCoverUrls(ctx, books.filter((b) => b.status === "read" || b.status === "reading"));
   },
 });
@@ -58,7 +59,7 @@ export const getReadBooks = query({
 export const getWishlist = query({
   args: {},
   handler: async (ctx) => {
-    const books = await getAllBooks(ctx);
+    const books = await getOwnerBooks(ctx);
     return withCoverUrls(ctx, books.filter((b) => b.status === "wishlist"));
   },
 });
@@ -67,7 +68,7 @@ export const getWishlist = query({
 export const getFavorites = query({
   args: {},
   handler: async (ctx) => {
-    const books = await getAllBooks(ctx);
+    const books = await getOwnerBooks(ctx);
     return withCoverUrls(ctx, books.filter((b) => b.isFavorite));
   },
 });
@@ -81,6 +82,9 @@ export const getById = query({
       if (!bookId) return null;
       const book = await ctx.db.get(bookId);
       if (!book) return null;
+      // Public endpoint: only ever expose the site owner's books.
+      const ownerId = await getSiteOwnerId(ctx);
+      if (!ownerId || book.userId !== ownerId) return null;
       const [withCover] = await withCoverUrls(ctx, [book]);
       return withCover;
     } catch {
@@ -217,7 +221,12 @@ export const markWishlistAsBought = mutation({
     if (name.length < 1) {
       throw new Error("Please enter your name");
     }
+    if (name.length > 100) {
+      throw new Error("Name is too long");
+    }
 
+    // Per-visitor limit plus a global ceiling — visitorId is client-controlled
+    // and forgeable, so the global bucket bounds total abuse per window.
     const allowed = await checkRateLimit(
       ctx,
       `bought_${args.visitorId}`,
@@ -225,12 +234,23 @@ export const markWishlistAsBought = mutation({
       5,
       60 * 60 * 1000,
     );
-    if (!allowed) {
+    const globalAllowed = await checkRateLimit(
+      ctx,
+      "global",
+      "markBought",
+      50,
+      60 * 60 * 1000,
+    );
+    if (!allowed || !globalAllowed) {
       throw new Error("Rate limit exceeded. Please try again later.");
     }
 
     const book = await ctx.db.get(args.id);
     if (!book) throw new Error("Book not found");
+    const ownerId = await getSiteOwnerId(ctx);
+    if (!ownerId || book.userId !== ownerId) {
+      throw new Error("Book not found");
+    }
     if (book.status !== "wishlist") {
       throw new Error("This book is not on the wishlist");
     }

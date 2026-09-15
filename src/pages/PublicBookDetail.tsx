@@ -201,7 +201,7 @@ const PublicBookDetail: React.FC = () => {
             )}
 
             {/* Dates */}
-            <div className="flex flex-wrap gap-4 text-xs text-slate-400">
+            <div className="flex flex-wrap gap-4 text-xs text-slate-500">
               {book.startedAt && (
                 <span className="flex items-center gap-1">
                   <Calendar className="w-3 h-3" />
@@ -249,7 +249,7 @@ const PublicBookDetail: React.FC = () => {
             {/* Mood tags */}
             {book.moodTags && book.moodTags.length > 0 && (
               <div>
-                <h3 className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">
+                <h3 className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-2">
                   Mood
                 </h3>
                 <div className="flex flex-wrap gap-1.5">

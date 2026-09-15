@@ -67,7 +67,6 @@ export const checkDuplicate = query({
               : existingBook.status === "reading"
                 ? "currently reading"
                 : "already on wishlist",
-          book: existingBook,
         };
       }
     }
@@ -79,10 +78,11 @@ export const checkDuplicate = query({
     );
 
     if (existingSuggestion) {
+      // Do not return the suggestion document — it carries the previous
+      // suggester's name/email (PII).
       return {
         exists: true,
         location: "already suggested",
-        suggestion: existingSuggestion,
       };
     }
 
@@ -97,6 +97,8 @@ export const submit = mutation({
     visitorId: v.string(),
   },
   handler: async (ctx, args) => {
+    // visitorId is client-controlled and forgeable — enforce a global
+    // ceiling alongside the per-visitor limit to bound total abuse.
     const allowed = await checkRateLimit(
       ctx,
       `suggest_${args.visitorId}`,
@@ -104,7 +106,14 @@ export const submit = mutation({
       3,
       60 * 60 * 1000,
     );
-    if (!allowed) {
+    const globalAllowed = await checkRateLimit(
+      ctx,
+      "global",
+      "submitSuggestion",
+      30,
+      60 * 60 * 1000,
+    );
+    if (!allowed || !globalAllowed) {
       throw new Error("Too many suggestions. Please try again later.");
     }
 
@@ -139,8 +148,11 @@ export const submit = mutation({
       throw new Error("This book has already been suggested!");
     }
 
+    // visitorId is rate-limit plumbing, not schema — strip it or the insert
+    // fails strict document validation.
+    const { visitorId: _visitorId, ...suggestion } = args;
     const suggestionId = await ctx.db.insert("bookSuggestions", {
-      ...args,
+      ...suggestion,
       status: "pending",
       createdAt: Date.now(),
     });

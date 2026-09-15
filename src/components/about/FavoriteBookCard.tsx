@@ -34,7 +34,7 @@ const FavoriteBookCard: React.FC<FavoriteBookCardProps> = ({
             Books I've Read More Than Once
           </label>
           <input type="text" value={rereads} onChange={(e) => setRereads(e.target.value)} className="input" placeholder="e.g. Harry Potter, The Hobbit, Matilda" />
-          <p className="text-xs text-slate-400 mt-1">Separate with commas</p>
+          <p className="text-xs text-slate-500 mt-1">Separate with commas</p>
         </div>
       </div>
     </div>

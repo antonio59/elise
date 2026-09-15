@@ -90,7 +90,7 @@ const ReactionsStats: React.FC<ReactionsStatsProps> = ({ reactionStats }) => {
                   className="flex items-center justify-between px-3 py-2 bg-slate-50 rounded-lg"
                 >
                   <div className="flex items-center gap-2 min-w-0">
-                    <span className="text-xs font-medium text-slate-400 w-4">
+                    <span className="text-xs font-medium text-slate-500 w-4">
                       {index + 1}
                     </span>
                     <span className="text-sm text-slate-700 truncate">

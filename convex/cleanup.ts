@@ -12,7 +12,6 @@ const LEGACY_TABLES = [
   "follows",
   "likes",
   "notifications",
-  "rateLimits",
   "reviews",
   "shares",
   "userPreferences",

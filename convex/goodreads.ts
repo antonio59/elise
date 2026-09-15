@@ -1,6 +1,7 @@
 import { mutation } from "./_generated/server";
 import { v } from "convex/values";
 import { auth } from "./auth";
+import { requireAdmin } from "./lib/crud";
 
 const importRow = v.object({
   title: v.string(),
@@ -29,6 +30,7 @@ const importRow = v.object({
 export const importBooks = mutation({
   args: { books: v.array(importRow) },
   handler: async (ctx, args) => {
+    await requireAdmin(ctx);
     const userId = await auth.getUserId(ctx);
     if (!userId) throw new Error("Not authenticated");
 

@@ -48,8 +48,9 @@ export const getBySeries = query({
       .order("desc")
       .collect();
     const userId = await auth.getUserId(ctx);
-    if (userId) return artworks;
-    return artworks.filter((a) => a.isPublished);
+    return artworks.filter(
+      (a) => a.isPublished || (userId && a.userId === userId),
+    );
   },
 });
 
@@ -118,7 +119,7 @@ export const like = mutation({
     await checkLikeRateLimit(ctx, args.visitorId, "likeArtwork");
 
     const artwork = await ctx.db.get(args.id);
-    if (!artwork) throw new Error("Artwork not found");
+    if (!artwork || !artwork.isPublished) throw new Error("Artwork not found");
 
     await ctx.db.patch(args.id, { likes: (artwork.likes ?? 0) + 1 });
   },

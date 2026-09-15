@@ -5,7 +5,7 @@ import {
   userProfileOptionalFields,
   userProfileExtendedFields,
 } from "./lib/validators";
-import { requireProfile } from "./lib/crud";
+import { requireProfile, requireAdmin } from "./lib/crud";
 export { isAdmin } from "./lib/admin";
 
 // Get current authenticated user
@@ -112,10 +112,11 @@ export const setOnboardingSeen = mutation({
   },
 });
 
-// Get site-wide reading stats (single user)
+// Get site-wide reading stats (admin only - includes unpublished counts)
 export const getStats = query({
   args: {},
   handler: async (ctx) => {
+    await requireAdmin(ctx);
     const profile = await ctx.db.query("userProfiles").first();
     const userId = profile?.userId;
 
@@ -174,11 +175,10 @@ export const getStats = query({
   },
 });
 
-// Generate upload URL for avatar
+// Generate upload URL for avatar (admin only)
 export const generateAvatarUploadUrl = mutation({
   handler: async (ctx) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) throw new Error("Not authenticated");
+    await requireAdmin(ctx);
     return await ctx.storage.generateUploadUrl();
   },
 });

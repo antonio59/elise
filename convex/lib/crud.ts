@@ -43,14 +43,13 @@ export async function checkLikeRateLimit(
   visitorId: string,
   rateLimitKey: string,
 ): Promise<void> {
-  const allowed = await checkRateLimit(
-    ctx,
-    `like_${visitorId}`,
-    rateLimitKey,
-    10,
-    60 * 60 * 1000,
-  );
-  if (!allowed) {
+  // visitorId is client-controlled and forgeable, so enforce a global
+  // ceiling per action in addition to the per-visitor limit.
+  const [allowed, globalAllowed] = await Promise.all([
+    checkRateLimit(ctx, `like_${visitorId}`, rateLimitKey, 10, 60 * 60 * 1000),
+    checkRateLimit(ctx, "global", rateLimitKey, 500, 60 * 60 * 1000),
+  ]);
+  if (!allowed || !globalAllowed) {
     throw new Error("Rate limit exceeded. Please try again later.");
   }
 }
