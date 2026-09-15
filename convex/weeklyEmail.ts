@@ -144,6 +144,17 @@ export const sendWeeklySummary = internalAction({
     if (!emailConfig) return;
     const { apiKey, allowedEmails } = emailConfig;
 
+    // Extra recipients (e.g. family) come from WEEKLY_SUMMARY_RECIPIENTS so
+    // they don't need to be in ALLOWED_EMAILS — which is also the sign-in
+    // allowlist and would grant them admin access.
+    const extraRecipients = (env?.WEEKLY_SUMMARY_RECIPIENTS || "")
+      .split(",")
+      .map((e) => e.trim().toLowerCase())
+      .filter(Boolean);
+    const recipients = [
+      ...new Set([...allowedEmails, ...extraRecipients]),
+    ];
+
     const resend = new Resend(apiKey);
 
     const reactionHtml = Object.entries(stats.reactionBreakdown)
@@ -294,7 +305,7 @@ export const sendWeeklySummary = internalAction({
 
     await resend.emails.send({
       from: "Elise Reads <noreply@elisereads.com>",
-      to: allowedEmails,
+      to: recipients,
       subject: "📬 Your weekly Elise Reads summary",
       html,
     });
