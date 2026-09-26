@@ -69,6 +69,49 @@ export const cleanupBadAuthRecords = internalMutation({
   },
 });
 
+// Repair: create a userProfiles row for an auth user that is missing one.
+// Accounts without a profile fail requireProfile/requireAdmin and crash the
+// dashboard. Run via:
+//   npx convex run migrations:ensureProfileForEmail --prod \
+//     '{"email":"someone@example.com","role":"admin"}'
+export const ensureProfileForEmail = internalMutation({
+  args: {
+    email: v.string(),
+    name: v.optional(v.string()),
+    isParent: v.optional(v.boolean()),
+    role: v.optional(v.union(v.literal("admin"), v.literal("viewer"))),
+  },
+  handler: async (ctx, args) => {
+    const email = args.email.toLowerCase().trim();
+    const users = await ctx.db.query("users").collect();
+    const user = users.find(
+      (u) => (u as { email?: string }).email?.toLowerCase() === email,
+    );
+    if (!user) throw new Error(`No auth user found for ${email}`);
+
+    const existing = await ctx.db
+      .query("userProfiles")
+      .withIndex("by_userId", (q) => q.eq("userId", user._id))
+      .first();
+    if (existing) return { created: false, profileId: existing._id };
+
+    const profileId = await ctx.db.insert("userProfiles", {
+      userId: user._id,
+      name:
+        args.name ||
+        (user as { name?: string }).name ||
+        email.split("@")[0],
+      isParent: args.isParent ?? false,
+      theme: "editorial" as never,
+      yearlyBookGoal: 24,
+      notifications: false,
+      role: args.role ?? "viewer",
+      hasSeenOnboarding: true,
+    });
+    return { created: true, profileId };
+  },
+});
+
 // One-time migration: sharpen stored Google Books cover URLs (fife on API URL).
 // Run via: npx convex run migrations:upgradeCoverUrls
 export const upgradeCoverUrls = internalMutation({

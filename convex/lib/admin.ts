@@ -19,7 +19,7 @@ export async function isAdmin(ctx: { db: unknown }): Promise<boolean> {
   const profile = await (ctx as any).db
     .query("userProfiles")
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    .withIndex("by_userId", (q: any) => q.eq(q.field("userId"), userId))
+    .withIndex("by_userId", (q: any) => q.eq("userId", userId))
     .first();
   return profile?.role === "admin";
 }
