@@ -21,9 +21,6 @@ const Settings: React.FC = () => {
   const profile = useQuery(api.users.getProfile);
   const updateProfile = useMutation(api.users.updateProfile);
 
-  const [name, setName] = useState("");
-  const [username, setUsername] = useState("");
-  const [bio, setBio] = useState("");
   const [theme, setTheme] = useState<string>("editorial");
   const [yearlyBookGoal, setYearlyBookGoal] = useState("");
   const [notifications, setNotifications] = useState(true);
@@ -37,9 +34,6 @@ const Settings: React.FC = () => {
 
   useEffect(() => {
     if (profile) {
-      setName(profile.name || "");
-      setUsername(profile.username || "");
-      setBio(profile.bio || "");
       setTheme(profile.theme || "editorial");
       setYearlyBookGoal(profile.yearlyBookGoal?.toString() || "");
       setNotifications(profile.notifications ?? true);
@@ -64,9 +58,6 @@ const Settings: React.FC = () => {
 
     try {
       await updateProfile({
-        name: name.trim() || undefined,
-        username: username.trim() || undefined,
-        bio: bio.trim() || undefined,
         theme: VALID_THEMES.includes(theme as ThemeValue) ? (theme as ThemeValue) : undefined,
         yearlyBookGoal: yearlyBookGoal ? parseInt(yearlyBookGoal) : undefined,
         notifications,
@@ -90,12 +81,12 @@ const Settings: React.FC = () => {
     <div className="max-w-2xl mx-auto space-y-8">
       <div>
         <h1 className="font-display text-3xl font-bold text-slate-900">Settings</h1>
-        <p className="text-slate-500 mt-1">Profile, appearance, and site copy</p>
+        <p className="text-slate-500 mt-1">Account, appearance, and site copy</p>
       </div>
 
       <form onSubmit={handleSave} className="space-y-6">
         <SettingsTabs>
-          <ProfileSettings bio={bio} setBio={setBio} email={user?.email} />
+          <ProfileSettings email={user?.email} />
           <AppearanceSettings
             theme={theme} setTheme={setTheme}
             heroTitle={heroTitle} setHeroTitle={setHeroTitle}

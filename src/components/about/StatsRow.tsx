@@ -39,8 +39,9 @@ const StatsRow: React.FC<StatsRowProps> = ({
       </h2>
       <div className="space-y-4">
         <div>
-          <label className="text-sm font-medium text-slate-600 mb-1 block">Reading Goal</label>
+          <label className="text-sm font-medium text-slate-600 mb-1 block">Reading Goal Note</label>
           <input type="text" value={goal} onChange={(e) => setGoal(e.target.value)} className="input" placeholder="e.g. Read 30 books in 2026" />
+          <p className="text-xs text-slate-400 mt-1">Shown on your public page as a sentence. The number that powers your progress tracker lives in Settings.</p>
         </div>
         <div>
           <label className="text-sm font-medium text-slate-600 mb-1 block">Currently Reading</label>

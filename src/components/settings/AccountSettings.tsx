@@ -30,7 +30,7 @@ const AccountSettings: React.FC<AccountSettingsProps> = ({
 
       <div>
         <label className="block text-sm font-medium text-slate-700 mb-1">
-          Yearly Book Goal
+          Books-per-year Target
         </label>
         <input
           type="number"
@@ -41,7 +41,8 @@ const AccountSettings: React.FC<AccountSettingsProps> = ({
           min="1"
         />
         <p className="text-xs text-slate-500 mt-1">
-          How many books do you want to read each year?
+          The number your progress tracker counts towards. The free-text goal
+          line on your public page is edited under About.
         </p>
       </div>
     </motion.div>

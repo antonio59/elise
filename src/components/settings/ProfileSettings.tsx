@@ -3,12 +3,10 @@ import { motion } from "framer-motion";
 import { User } from "lucide-react";
 
 interface ProfileSettingsProps {
-  bio: string;
-  setBio: (bio: string) => void;
   email: string | undefined;
 }
 
-const ProfileSettings: React.FC<ProfileSettingsProps> = ({ bio, setBio, email }) => {
+const ProfileSettings: React.FC<ProfileSettingsProps> = ({ email }) => {
   return (
     <motion.div
       className="card p-6"
@@ -20,25 +18,12 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ bio, setBio, email })
           <User className="w-5 h-5 text-white" />
         </div>
         <div>
-          <h2 className="font-bold text-slate-800">Profile</h2>
-          <p className="text-sm text-slate-500">Your public information</p>
+          <h2 className="font-bold text-slate-800">Account</h2>
+          <p className="text-sm text-slate-500">Your sign-in details</p>
         </div>
       </div>
 
       <div className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1">
-            Bio
-          </label>
-          <textarea
-            value={bio}
-            onChange={(e) => setBio(e.target.value)}
-            className="input"
-            rows={3}
-            placeholder="Tell visitors a bit about yourself..."
-          />
-        </div>
-
         <div>
           <label className="block text-sm font-medium text-slate-700 mb-1">
             Email
@@ -53,6 +38,18 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ bio, setBio, email })
             Email cannot be changed
           </p>
         </div>
+
+        <p className="text-sm text-slate-500">
+          Name, bio and avatar live on{" "}
+          <a
+            href="/dashboard/about"
+            className="text-primary-600 hover:text-primary-700 font-medium"
+          >
+            Edit About Page
+          </a>
+          {" - "}
+          that&apos;s everything visitors see.
+        </p>
       </div>
     </motion.div>
   );
