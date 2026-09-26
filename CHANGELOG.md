@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- Repair isAdmin crash that locked Elise out of sign-in
 - Remediate security audit findings and accessibility issues
 - Remove redundant Pages _redirects rule
 - Default to production Convex URL when env var is unset
@@ -848,6 +849,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
+- Update changelog [skip ci]
 - Update npm references to pnpm
 - Update changelog [skip ci]
 - Update changelog [skip ci]
@@ -950,6 +952,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Refactoring
 
+- Split About vs Settings into public content vs site config
 - Eliminate fallow debt — extract shared validators, helpers, and components
 - Extract getEmailConfig helper for convex email modules
 - Extract AnimatedForm component for IdeasVault and QuoteCollection
