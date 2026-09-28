@@ -777,6 +777,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Chores
 
+- **deps**: Bump the minor-patch group with 10 updates (#74)
 - **deps**: Bump the minor-patch group with 4 updates
 - **deps-dev**: Bump vitest from 4.1.11 to 5.0.0
 - **deps**: Bump the minor-patch group with 8 updates
@@ -814,6 +815,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
