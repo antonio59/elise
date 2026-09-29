@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- Polish home hero, stats, shelf and filter bar UX
 - Repair isAdmin crash that locked Elise out of sign-in
 - Remediate security audit findings and accessibility issues
 - Remove redundant Pages _redirects rule
@@ -73,6 +74,9 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
+- Merge pull request #76 from antonio59/fix/home-ux-polish
+
+fix: polish home hero, stats, shelf and filter bar UX
 - Merge pull request #73 from antonio59/feat/weekly-email-digest
 
 feat: enrich weekly summary email with reviews and feature nudges
@@ -815,6 +819,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
