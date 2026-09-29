@@ -54,7 +54,7 @@ const StatsRow: React.FC<StatsRowProps> = ({
               <button
                 key={genre}
                 onClick={() => toggleGenre(genre)}
-                className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
+                className={`px-3 py-1.5 rounded-full text-sm font-medium transition ${
                   genres.includes(genre) ? "bg-primary-500 text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                 }`}
               >

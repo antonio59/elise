@@ -46,7 +46,7 @@ const ReactionBar: React.FC<ReactionBarProps> = ({ targetType, targetId, classNa
             aria-pressed={hasReacted}
             className={`
               inline-flex items-center justify-center gap-1 min-h-11 min-w-11 px-2.5 rounded-full text-sm
-              transition-all duration-200 hover:scale-105 active:scale-95
+              transition duration-200 hover:scale-105 active:scale-95
               ${hasReacted
                 ? "bg-primary-100 text-primary-700 ring-1 ring-primary-300"
                 : "bg-slate-100 text-slate-600 hover:bg-slate-200"

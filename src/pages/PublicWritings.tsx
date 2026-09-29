@@ -136,7 +136,7 @@ const PublicWritings: React.FC = () => {
             return (
               <motion.div
                 key={writing._id}
-                className="card p-6 hover:shadow-md hover:border-violet-200 transition-all"
+                className="card p-6 hover:shadow-md hover:border-violet-200 transition"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}

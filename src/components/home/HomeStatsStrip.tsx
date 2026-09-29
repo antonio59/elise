@@ -1,15 +1,19 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { BookOpen, Feather, Camera } from "lucide-react";
+import { BookOpen, Feather, Camera, MessageSquareQuote, Star } from "lucide-react";
 
 interface HomeStatsStripProps {
   booksRead: number;
+  reviews: number;
+  fiveStars: number;
   writings: number;
   photos: number;
 }
 
 const HomeStatsStrip: React.FC<HomeStatsStripProps> = ({
   booksRead,
+  reviews,
+  fiveStars,
   writings,
   photos,
 }) => {
@@ -19,6 +23,20 @@ const HomeStatsStrip: React.FC<HomeStatsStripProps> = ({
       icon: BookOpen,
       value: booksRead,
       label: booksRead === 1 ? "book read" : "books read",
+    },
+    {
+      to: "/reviews",
+      icon: MessageSquareQuote,
+      value: reviews,
+      label: reviews === 1 ? "review" : "reviews",
+      hide: reviews === 0,
+    },
+    {
+      to: "/books",
+      icon: Star,
+      value: fiveStars,
+      label: fiveStars === 1 ? "five-star read" : "five-star reads",
+      hide: fiveStars === 0,
     },
     {
       to: "/writing",
@@ -40,10 +58,10 @@ const HomeStatsStrip: React.FC<HomeStatsStripProps> = ({
 
   return (
     <section className="px-4 py-6 border-y border-slate-200/80 bg-white/50">
-      <div className="max-w-6xl mx-auto flex flex-wrap items-center justify-center gap-x-8 gap-y-3">
+      <div className="max-w-6xl mx-auto flex flex-wrap items-center justify-center gap-x-10 gap-y-3">
         {items.map(({ to, icon: Icon, value, label }) => (
           <Link
-            key={to}
+            key={label}
             to={to}
             className="inline-flex items-center gap-2 min-h-11 text-slate-600 hover:text-primary-700 transition-colors"
           >

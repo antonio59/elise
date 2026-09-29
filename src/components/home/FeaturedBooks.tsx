@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { BookOpen, Gift, Star } from "lucide-react";
+import { BookOpen, ChevronLeft, ChevronRight, Gift, Star } from "lucide-react";
 import CoverImage from "../CoverImage";
 import BookMeta from "../books/BookMeta";
 import BookPeekModal, { type PeekBook } from "../books/BookPeekModal";
 import SectionHeader from "../SectionHeader";
 import { BookGridSkeleton } from "../Skeleton";
+
+/** How many shelf covers are visible without scrolling on desktop. */
+const SHELF_EAGER_COUNT = 8;
 
 const RATING_LABELS: Record<number, string> = {
   1: "not it",
@@ -71,6 +74,13 @@ const FeaturedBooks: React.FC<{
   onSuggestClick,
 }) => {
   const [peekBook, setPeekBook] = useState<PeekBook | null>(null);
+  const scrollShelf = (
+    e: React.MouseEvent<HTMLButtonElement>,
+    direction: 1 | -1,
+  ) => {
+    const el = e.currentTarget.parentElement?.querySelector(".shelf-scroll");
+    el?.scrollBy({ left: direction * el.clientWidth * 0.8 });
+  };
 
   return (
     <>
@@ -84,6 +94,7 @@ const FeaturedBooks: React.FC<{
               title="5-Star Shelf"
               action={{ label: "See all", to: "/books" }}
             />
+            <div className="relative group/shelf">
             <div className="shelf-scroll">
               {fiveStarBooks.map(
                 (book: {
@@ -92,13 +103,14 @@ const FeaturedBooks: React.FC<{
                   coverUrl?: string;
                   coverImageUrl?: string | null;
                   coverStorageId?: string;
-                }) => (
+                }, index: number) => (
                   <div key={book._id} className="w-28 sm:w-32">
                     <Link to={`/books/${book._id}`}>
-                    <div className="aspect-[2/3] rounded-lg overflow-hidden bg-slate-100 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg">
+                    <div className="aspect-[2/3] rounded-lg overflow-hidden bg-slate-100 shadow-sm transition-[transform,box-shadow] duration-200 hover:-translate-y-1 hover:shadow-lg">
                       <CoverImage
                         book={book}
                         className="w-full h-full object-cover"
+                        priority={index < SHELF_EAGER_COUNT}
                       />
                     </div>
                     <p className="mt-1.5 text-xs font-medium text-slate-700 line-clamp-1 hover:text-primary-600 transition-colors">
@@ -120,6 +132,23 @@ const FeaturedBooks: React.FC<{
                     </span>
                   </div>
                 </div>
+              ))}
+            </div>
+            {fiveStarBooks.length > 4 &&
+              ([-1, 1] as const).map((dir) => (
+                <button
+                  key={dir}
+                  type="button"
+                  onClick={(e) => scrollShelf(e, dir)}
+                  aria-label={dir === -1 ? "Scroll shelf left" : "Scroll shelf right"}
+                  className={`hidden sm:flex absolute top-[calc(50%-1rem)] -translate-y-1/2 ${dir === -1 ? "-left-4" : "-right-4"} w-9 h-9 items-center justify-center rounded-full bg-white/95 shadow-md ring-1 ring-slate-200 text-slate-600 hover:text-primary-600 opacity-0 group-hover/shelf:opacity-100 focus-visible:opacity-100 transition-opacity`}
+                >
+                  {dir === -1 ? (
+                    <ChevronLeft className="w-5 h-5" aria-hidden="true" />
+                  ) : (
+                    <ChevronRight className="w-5 h-5" aria-hidden="true" />
+                  )}
+                </button>
               ))}
             </div>
           </div>
@@ -181,7 +210,7 @@ const FeaturedBooks: React.FC<{
                       onClick={() => setPeekBook(book)}
                       aria-label={`Peek at ${book.title}`}
                     >
-                      <div className="aspect-[2/3] rounded-xl overflow-hidden bg-slate-100 shadow-md book-spine transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+                      <div className="aspect-[2/3] rounded-xl overflow-hidden bg-slate-100 shadow-md book-spine transition duration-200 hover:-translate-y-1 hover:shadow-xl">
                         <CoverImage
                           book={book}
                           className="w-full h-full object-cover"
@@ -290,7 +319,7 @@ const FeaturedBooks: React.FC<{
                     viewport={{ once: true }}
                   >
                     <Link to={`/books/${book._id}`}>
-                    <div className="relative aspect-[2/3] rounded-xl overflow-hidden bg-slate-100 shadow-sm group-hover:shadow-xl transition-all">
+                    <div className="relative aspect-[2/3] rounded-xl overflow-hidden bg-slate-100 shadow-sm group-hover:shadow-xl transition">
                       <CoverImage
                         book={book}
                         className="w-full h-full object-cover"

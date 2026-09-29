@@ -154,14 +154,14 @@ const SwipeCard: React.FC<SwipeCardProps> = ({ book, onSwipe, isTop }) => {
           <div className="flex items-center justify-center gap-6 p-4 border-t border-slate-100">
             <button
               onClick={() => onSwipe("left")}
-              className="w-14 h-14 rounded-full bg-error-50 hover:bg-error-100 border-2 border-error-200 flex items-center justify-center transition-all hover:scale-110 active:scale-95"
+              className="w-14 h-14 rounded-full bg-error-50 hover:bg-error-100 border-2 border-error-200 flex items-center justify-center transition hover:scale-110 active:scale-95"
               aria-label="Pass"
             >
               <X className="w-6 h-6 text-error-400" />
             </button>
             <button
               onClick={() => onSwipe("right")}
-              className="w-14 h-14 rounded-full bg-success-50 hover:bg-success-100 border-2 border-success-200 flex items-center justify-center transition-all hover:scale-110 active:scale-95"
+              className="w-14 h-14 rounded-full bg-success-50 hover:bg-success-100 border-2 border-success-200 flex items-center justify-center transition hover:scale-110 active:scale-95"
               aria-label="Want it"
             >
               <Heart className="w-6 h-6 text-success-500" />

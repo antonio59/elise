@@ -56,7 +56,7 @@ const BookFormFooter: React.FC<BookFormFooterProps> = ({
                 key={dest.key}
                 type="button"
                 onClick={() => onDestinationChange(dest.key)}
-                className={`p-3 rounded-xl border-2 transition-all flex flex-col items-center gap-1 ${
+                className={`p-3 rounded-xl border-2 transition flex flex-col items-center gap-1 ${
                   destination === dest.key
                     ? "border-primary-500 bg-primary-50"
                     : "border-slate-200 hover:border-slate-300"

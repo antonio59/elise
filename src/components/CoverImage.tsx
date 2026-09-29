@@ -15,6 +15,8 @@ interface CoverImageProps {
   };
   className?: string;
   fallback?: React.ReactNode;
+  /** Above-the-fold covers: load immediately instead of lazily. */
+  priority?: boolean;
 }
 
 /** Muted studio gradients - less rainbow / kawaii than the old pack. */
@@ -66,6 +68,7 @@ const CoverImage: React.FC<CoverImageProps> = ({
   book,
   className = "w-full h-full object-cover",
   fallback,
+  priority = false,
 }) => {
   const storageUrl = book.coverImageUrl ?? undefined;
   // Client fallback: do NOT use fife=w800 — that upscales Google's gray
@@ -108,7 +111,8 @@ const CoverImage: React.FC<CoverImageProps> = ({
       src={src}
       alt={book.title}
       className={className}
-      loading="lazy"
+      loading={priority ? "eager" : "lazy"}
+      fetchPriority={priority ? "high" : "auto"}
       decoding="async"
       width={600}
       height={900}

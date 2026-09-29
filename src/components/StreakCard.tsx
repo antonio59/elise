@@ -172,7 +172,7 @@ const StreakCard: React.FC<StreakCardProps> = ({ type }) => {
           <button
             onClick={handleCheckIn}
             disabled={loading}
-            className={`px-4 py-2 ${config.colors.button} active:scale-95 text-white rounded-xl font-semibold text-sm transition-all flex items-center gap-2 shadow-sm`}
+            className={`px-4 py-2 ${config.colors.button} active:scale-95 text-white rounded-xl font-semibold text-sm transition flex items-center gap-2 shadow-sm`}
           >
             {config.showIcon && <PenTool className="w-4 h-4" />}
             {loading ? "…" : config.checkInLabel}

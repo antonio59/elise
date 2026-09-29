@@ -60,7 +60,7 @@ const WishlistGrid: React.FC<WishlistGridProps> = ({ books, onBookClick }) => {
           onClick={() => onBookClick(book)}
         >
           <motion.div
-            className="relative aspect-[2/3] overflow-hidden rounded-xl shadow-md group-hover:shadow-xl transition-all"
+            className="relative aspect-[2/3] overflow-hidden rounded-xl shadow-md group-hover:shadow-xl transition"
             whileHover={{ y: -8, scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
           >

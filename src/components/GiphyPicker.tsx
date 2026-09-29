@@ -135,7 +135,7 @@ const GiphyPicker: React.FC<GiphyPickerProps> = ({ onSelect, onClose }) => {
                     onSelect(gif.url);
                     onClose();
                   }}
-                  className="aspect-square rounded-lg overflow-hidden hover:ring-2 ring-primary-400 transition-all"
+                  className="aspect-square rounded-lg overflow-hidden hover:ring-2 ring-primary-400 transition"
                 >
                   <img
                     src={gif.preview}

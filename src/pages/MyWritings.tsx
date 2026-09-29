@@ -161,7 +161,7 @@ const MyWritings: React.FC = () => {
           <button
             key={tab.key}
             onClick={() => setActiveType(tab.key)}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium transition-all text-sm ${
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium transition text-sm ${
               activeType === tab.key
                 ? "bg-gradient-to-r from-violet-500 to-primary-500 text-white shadow-sm"
                 : "text-slate-600 hover:bg-slate-50"
@@ -386,7 +386,7 @@ const WritingEditor: React.FC<WritingEditorProps> = ({ writing, onSave, onClose 
                 <button
                   key={t}
                   onClick={() => setType(t)}
-                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium transition-all text-sm ${
+                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium transition text-sm ${
                     type === t
                       ? `bg-gradient-to-r ${config.gradient} text-white shadow-sm`
                       : "bg-slate-100 text-slate-600 hover:bg-slate-200"

@@ -104,7 +104,7 @@ const LightboxModal: React.FC<LightboxModalProps> = ({
                 <button
                   onClick={onLike}
                   disabled={liked || liking}
-                  className={`w-full flex items-center justify-center gap-2 py-3 rounded-xl font-medium transition-all ${
+                  className={`w-full flex items-center justify-center gap-2 py-3 rounded-xl font-medium transition ${
                     liked
                       ? "bg-primary-100 text-primary-600"
                       : "bg-primary-500 text-white hover:bg-primary-600"

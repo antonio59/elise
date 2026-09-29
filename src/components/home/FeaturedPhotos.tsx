@@ -31,7 +31,7 @@ const FeaturedPhotos: React.FC<{
               transition={{ delay: index * 0.05 }}
             >
               <Link to="/photos">
-                <div className="rounded-2xl overflow-hidden bg-slate-100 shadow-sm hover:shadow-xl transition-all">
+                <div className="rounded-2xl overflow-hidden bg-slate-100 shadow-sm hover:shadow-xl transition">
                   <img
                     src={photo.imageUrl}
                     alt={photo.title}

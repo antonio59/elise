@@ -130,7 +130,7 @@ const AvatarCreatorModal: React.FC<AvatarCreatorModalProps> = ({
                   <button
                     key={style.id}
                     onClick={() => handleStyleChange(style.id)}
-                    className={`p-3 rounded-xl border-2 text-left transition-all ${
+                    className={`p-3 rounded-xl border-2 text-left transition ${
                       isSelected
                         ? "border-primary-400 bg-primary-50"
                         : "border-slate-200 hover:border-slate-300"

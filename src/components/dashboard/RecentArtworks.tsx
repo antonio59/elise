@@ -43,7 +43,7 @@ const RecentArtworks: React.FC<RecentArtworksProps> = ({
           {recentArtworks.map(
             (art: { _id: string; title: string; imageUrl: string }) => (
               <div key={art._id} className="group">
-                <div className="aspect-square rounded-xl overflow-hidden bg-slate-100 shadow-sm group-hover:shadow-lg transition-all">
+                <div className="aspect-square rounded-xl overflow-hidden bg-slate-100 shadow-sm group-hover:shadow-lg transition">
                   <img
                     src={art.imageUrl}
                     alt={art.title}

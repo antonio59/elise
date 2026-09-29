@@ -349,7 +349,7 @@ const PublicWishlist: React.FC = () => {
                   ) : (
                     <motion.button
                       onClick={() => setBuyingBookId(selectedBook._id)}
-                      className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white font-bold rounded-xl shadow-sm hover:shadow-md transition-all text-sm"
+                      className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white font-bold rounded-xl shadow-sm hover:shadow-md transition text-sm"
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                     >
