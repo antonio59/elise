@@ -74,6 +74,12 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
+<<<<<<< Updated upstream
+=======
+- Merge pull request #75 from antonio59/dependabot/npm_and_yarn/minor-patch-ed44d6b5e6
+
+chore(deps): bump the minor-patch group with 8 updates
+>>>>>>> Stashed changes
 - Merge pull request #76 from antonio59/fix/home-ux-polish
 
 fix: polish home hero, stats, shelf and filter bar UX
@@ -781,6 +787,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Chores
 
+- **deps**: Bump the minor-patch group with 8 updates
 - **deps**: Bump the minor-patch group with 10 updates (#74)
 - **deps**: Bump the minor-patch group with 4 updates
 - **deps-dev**: Bump vitest from 4.1.11 to 5.0.0
