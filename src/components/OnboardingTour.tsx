@@ -268,7 +268,7 @@ const OnboardingTour: React.FC<OnboardingTourProps> = ({
           <button
             onClick={handleBack}
             disabled={isFirstStep}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-medium transition-all ${
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-medium transition ${
               isFirstStep
                 ? "opacity-0 pointer-events-none"
                 : "text-slate-600 hover:bg-slate-100"
@@ -283,7 +283,7 @@ const OnboardingTour: React.FC<OnboardingTourProps> = ({
             {TOUR_STEPS.map((_, i) => (
               <div
                 key={i}
-                className={`h-2 rounded-full transition-all duration-300 ${
+                className={`h-2 rounded-full transition duration-300 ${
                   i === step
                     ? "bg-primary-500 w-5"
                     : i < step
@@ -296,7 +296,7 @@ const OnboardingTour: React.FC<OnboardingTourProps> = ({
 
           <motion.button
             onClick={handleNext}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold bg-gradient-to-r from-primary-500 to-accent-500 text-white hover:from-primary-600 hover:to-accent-600 transition-all shadow-md"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold bg-gradient-to-r from-primary-500 to-accent-500 text-white hover:from-primary-600 hover:to-accent-600 transition shadow-md"
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
           >

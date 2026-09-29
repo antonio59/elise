@@ -203,7 +203,7 @@ const ImportGoodreadsModal: React.FC<ImportGoodreadsModalProps> = ({
             </p>
             <div className="h-2 rounded-full bg-slate-100 overflow-hidden">
               <div
-                className="h-full bg-primary-500 transition-all"
+                className="h-full bg-primary-500 transition-[width]"
                 style={{ width: `${(stage.done / stage.total) * 100}%` }}
               />
             </div>

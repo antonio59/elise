@@ -99,7 +99,7 @@ const AppearanceSettings: React.FC<AppearanceSettingsProps> = ({
                 key={t.value}
                 type="button"
                 onClick={() => setTheme(t.value)}
-                className={`p-3 rounded-xl border-2 transition-all text-left ${
+                className={`p-3 rounded-xl border-2 transition text-left ${
                   theme === t.value
                     ? "border-primary-400 bg-primary-50 shadow-sm"
                     : "border-slate-200 hover:border-slate-300"

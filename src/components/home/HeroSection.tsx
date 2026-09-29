@@ -17,11 +17,15 @@ const HeroSection: React.FC<{
   heroTitle?: string;
   heroSubtitle?: string;
   nowReading?: HeroBook[];
-}> = ({ heroTitle, heroSubtitle, nowReading = [] }) => {
+  /** Shown when nothing is currently being read, so the hero is never bare. */
+  showcase?: HeroBook[];
+}> = ({ heroTitle, heroSubtitle, nowReading = [], showcase = [] }) => {
   const title = heroTitle ?? "Elise Reads";
   const subtitle =
     heroSubtitle ?? "books I've read, art I make, and words I write";
-  const covers = nowReading.slice(0, 3);
+  const isNowReading = nowReading.length > 0;
+  const covers = (isNowReading ? nowReading : showcase).slice(0, 3);
+  const hasCovers = covers.length > 0;
 
   return (
     <section className="relative py-12 sm:py-20 px-4 overflow-hidden">
@@ -29,9 +33,9 @@ const HeroSection: React.FC<{
 
       <div className="relative max-w-5xl mx-auto">
         <div
-          className={`flex flex-col ${covers.length > 0 ? "lg:flex-row lg:items-center lg:gap-12" : ""} gap-10`}
+          className={`flex flex-col ${hasCovers ? "lg:flex-row lg:items-center lg:gap-12" : ""} gap-10`}
         >
-          <div className={`text-center ${covers.length > 0 ? "lg:text-left lg:flex-1" : ""}`}>
+          <div className={`text-center ${hasCovers ? "lg:text-left lg:flex-1" : ""}`}>
             <motion.h1
               className="font-display text-5xl sm:text-6xl md:text-7xl font-bold mb-4 text-slate-900"
               initial={{ opacity: 0, y: 16 }}
@@ -42,7 +46,7 @@ const HeroSection: React.FC<{
             </motion.h1>
 
             <motion.p
-              className="text-lg md:text-xl text-slate-600 max-w-lg mx-auto lg:mx-0 mb-8 font-medium italic"
+              className={`text-lg md:text-xl text-slate-600 max-w-lg mx-auto ${hasCovers ? "lg:mx-0" : ""} mb-8 font-medium italic`}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
@@ -51,7 +55,7 @@ const HeroSection: React.FC<{
             </motion.p>
 
             <motion.div
-              className="flex flex-wrap justify-center lg:justify-start gap-3"
+              className={`flex flex-wrap justify-center ${hasCovers ? "lg:justify-start" : ""} gap-3`}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
@@ -63,14 +67,14 @@ const HeroSection: React.FC<{
             </motion.div>
           </div>
 
-          {covers.length > 0 && (
+          {hasCovers && (
             <motion.div
               className="flex justify-center lg:justify-end gap-3 sm:gap-4 lg:flex-1"
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.15, duration: 0.5 }}
               role="region"
-              aria-label="Currently reading"
+              aria-label={isNowReading ? "Currently reading" : "Favourite books"}
             >
               {covers.map((book, i) => (
                 <Link
@@ -87,6 +91,7 @@ const HeroSection: React.FC<{
                       <CoverImage
                         book={book}
                         className="w-full h-full object-cover"
+                        priority
                       />
                     </div>
                     <p className="mt-2 text-xs sm:text-sm font-semibold text-slate-700 line-clamp-1 text-center">

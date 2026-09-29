@@ -79,7 +79,7 @@ const FeaturedArt: React.FC<{ visible?: FeaturedArtVisibility }> = ({
               <Link
                 key={card.label}
                 to={card.to}
-                className={`group relative bg-gradient-to-br ${card.bg} rounded-2xl p-8 border ${card.border} shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 text-center overflow-hidden min-h-[44px]`}
+                className={`group relative bg-gradient-to-br ${card.bg} rounded-2xl p-8 border ${card.border} shadow-sm hover:shadow-lg transition duration-300 hover:-translate-y-1 text-center overflow-hidden min-h-[44px]`}
               >
                 <div
                   className={`w-14 h-14 ${card.iconBg} rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-105 transition-transform`}

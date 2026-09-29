@@ -27,7 +27,7 @@ const BookListItem: React.FC<BookListItemProps> = ({
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05 }}
     >
-      <div className="relative aspect-[2/3] rounded-xl overflow-hidden bg-slate-100 shadow-sm group-hover:shadow-xl transition-all">
+      <div className="relative aspect-[2/3] rounded-xl overflow-hidden bg-slate-100 shadow-sm group-hover:shadow-xl transition">
         <CoverImage book={book} className="w-full h-full object-cover" />
 
         {/* Hover overlay */}

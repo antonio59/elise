@@ -65,7 +65,7 @@ const GalleryGrid: React.FC<GalleryGridProps> = ({
               disabled={likingId === item._id}
               aria-label={likedIds.has(item._id) ? "Unsave pin" : "Save pin"}
               aria-pressed={likedIds.has(item._id)}
-              className={`absolute top-2.5 right-2.5 inline-flex items-center gap-1.5 min-h-11 px-3 rounded-lg text-xs font-semibold shadow-md transition-all ${
+              className={`absolute top-2.5 right-2.5 inline-flex items-center gap-1.5 min-h-11 px-3 rounded-lg text-xs font-semibold shadow-md transition ${
                 likedIds.has(item._id)
                   ? "bg-primary-600 text-white"
                   : "bg-primary-500 text-white opacity-100 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100 hover:bg-primary-600"

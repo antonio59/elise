@@ -50,7 +50,7 @@ const BookFilterBar: React.FC<BookFilterBarProps> = ({
           <button
             key={tab.key}
             onClick={() => onTabChange(tab.key)}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium transition-all ${
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium transition ${
               activeTab === tab.key
                 ? "bg-gradient-to-r from-primary-500 to-accent-500 text-white shadow-sm"
                 : "text-slate-600 hover:bg-slate-50"

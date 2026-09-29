@@ -91,7 +91,7 @@ const StickerSection: React.FC<StickerSectionProps> = ({ bookId }) => {
                     key={s}
                     onClick={(e) => handlePick(s, e)}
                     disabled={!!placing}
-                    className={`text-xl leading-none rounded-lg min-h-11 min-w-11 inline-flex items-center justify-center transition-all hover:bg-primary-50 hover:scale-110 active:scale-95 ${
+                    className={`text-xl leading-none rounded-lg min-h-11 min-w-11 inline-flex items-center justify-center transition hover:bg-primary-50 hover:scale-110 active:scale-95 ${
                       placing === s ? "animate-pulse" : ""
                     } ${visitorStickers.includes(s) ? "opacity-40" : ""}`}
                     title={s}

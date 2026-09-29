@@ -68,7 +68,7 @@ const RecentBooks: React.FC<RecentBooksProps> = ({ books, recentBooks }) => {
               rating?: number;
             }) => (
               <div key={book._id} className="group">
-                <div className="aspect-[2/3] rounded-xl overflow-hidden bg-slate-100 shadow-sm group-hover:shadow-lg transition-all">
+                <div className="aspect-[2/3] rounded-xl overflow-hidden bg-slate-100 shadow-sm group-hover:shadow-lg transition">
                   <CoverImage
                     book={book}
                     className="w-full h-full object-cover"

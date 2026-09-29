@@ -43,7 +43,7 @@ const RecentPhotos: React.FC<RecentPhotosProps> = ({
           {recentPhotos.map(
             (photo: { _id: string; title: string; imageUrl: string }) => (
               <div key={photo._id} className="group">
-                <div className="aspect-square rounded-xl overflow-hidden bg-slate-100 shadow-sm group-hover:shadow-lg transition-all">
+                <div className="aspect-square rounded-xl overflow-hidden bg-slate-100 shadow-sm group-hover:shadow-lg transition">
                   <img
                     src={photo.imageUrl}
                     alt={photo.title}

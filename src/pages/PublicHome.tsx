@@ -34,6 +34,14 @@ const PublicHome: React.FC = () => {
     return books.filter((b: { rating?: number }) => b.rating === 5);
   }, [books]);
 
+  // Hero fallback: favourites first, then 5-star reads, when nothing is "reading".
+  const heroShowcase = useMemo(() => {
+    if (!books) return [];
+    const fav = books.filter((b: { isFavorite?: boolean }) => b.isFavorite);
+    const rest = fiveStarBooks.filter((b) => !fav.includes(b));
+    return [...fav, ...rest].slice(0, 3);
+  }, [books, fiveStarBooks]);
+
   const booksForGrid = useMemo(() => {
     if (!books) return [];
     return books.filter((b: { status: string }) => b.status !== "reading");
@@ -44,16 +52,24 @@ const PublicHome: React.FC = () => {
     return books.filter((b: { status: string }) => b.status === "read").length;
   }, [books]);
 
+  const reviewCount = useMemo(() => {
+    if (!books) return 0;
+    return books.filter((b: { review?: string }) => !!b.review?.trim()).length;
+  }, [books]);
+
   return (
     <div className="min-h-screen">
       <HeroSection
         heroTitle={siteSettings?.heroTitle as string | undefined}
         heroSubtitle={siteSettings?.heroSubtitle as string | undefined}
         nowReading={nowReading}
+        showcase={heroShowcase}
       />
 
       <HomeStatsStrip
         booksRead={booksReadCount}
+        reviews={reviewCount}
+        fiveStars={fiveStarBooks.length}
         writings={writings?.length ?? 0}
         photos={photos?.length ?? 0}
       />

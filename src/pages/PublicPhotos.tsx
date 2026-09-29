@@ -48,7 +48,7 @@ const PublicPhotos: React.FC = () => {
         <div className="flex gap-2 flex-wrap mb-6">
           <button
             onClick={() => setSelectedAlbum("all")}
-            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition flex items-center gap-1.5 ${
               selectedAlbum === "all"
                 ? "bg-primary-100 text-primary-700"
                 : "text-slate-600 hover:bg-slate-100"
@@ -61,7 +61,7 @@ const PublicPhotos: React.FC = () => {
             <button
               key={album._id}
               onClick={() => setSelectedAlbum(album._id)}
-              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all flex items-center gap-1.5 ${
+              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition flex items-center gap-1.5 ${
                 selectedAlbum === album._id
                   ? "bg-primary-100 text-primary-700"
                   : "text-slate-600 hover:bg-slate-100"
@@ -79,7 +79,7 @@ const PublicPhotos: React.FC = () => {
         <div className="flex gap-2 flex-wrap mb-6">
           <button
             onClick={() => setSelectedTag(null)}
-            className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
+            className={`px-3 py-1 rounded-full text-xs font-medium transition ${
               selectedTag === null
                 ? "bg-primary-500 text-white"
                 : "bg-slate-100 text-slate-600 hover:bg-slate-200"
@@ -93,7 +93,7 @@ const PublicPhotos: React.FC = () => {
               onClick={() =>
                 setSelectedTag(tag === selectedTag ? null : tag)
               }
-              className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
+              className={`px-3 py-1 rounded-full text-xs font-medium transition ${
                 selectedTag === tag
                   ? "bg-primary-500 text-white"
                   : "bg-slate-100 text-slate-600 hover:bg-slate-200"

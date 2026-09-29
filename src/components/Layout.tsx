@@ -79,7 +79,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
               key={item.path}
               to={item.path}
               onClick={onItemClick}
-              className={`flex items-center gap-3 px-4 min-h-11 py-3 rounded-xl font-medium transition-all ${
+              className={`flex items-center gap-3 px-4 min-h-11 py-3 rounded-xl font-medium transition ${
                 isActive
                   ? "bg-primary-100 text-primary-800"
                   : "text-slate-600 hover:bg-slate-100"
@@ -105,7 +105,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                 key={item.path}
                 to={item.path}
                 onClick={onItemClick}
-                className={`flex items-center gap-3 px-4 min-h-11 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                className={`flex items-center gap-3 px-4 min-h-11 py-2.5 rounded-xl text-sm font-medium transition ${
                   isActive
                     ? "bg-primary-100 text-primary-800"
                     : "text-slate-500 hover:bg-slate-100"

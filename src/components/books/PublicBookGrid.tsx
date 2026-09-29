@@ -98,7 +98,7 @@ const PublicBookGrid: React.FC<PublicBookGridProps> = ({
             transition={{ delay: index * 0.03 }}
           >
             <Link to={`/books/${book._id}`} className="block">
-              <div className="relative aspect-[2/3] rounded-xl overflow-hidden bg-slate-100 shadow-sm group-hover:shadow-lg group-hover:-translate-y-0.5 transition-all duration-200">
+              <div className="relative aspect-[2/3] rounded-xl overflow-hidden bg-slate-100 shadow-sm group-hover:shadow-lg group-hover:-translate-y-0.5 transition duration-200">
                 <CoverImage
                   book={book}
                   className="w-full h-full object-cover cover-img"

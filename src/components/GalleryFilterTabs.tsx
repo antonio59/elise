@@ -62,7 +62,7 @@ export default function GalleryFilterTabs({
         <button
           key={tab.key}
           onClick={() => onChange(tab.key)}
-          className={`px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2 ${
+          className={`px-4 py-2 rounded-lg font-medium transition flex items-center gap-2 ${
             filter === tab.key
               ? tab.activeClass
               : "text-slate-600 hover:bg-slate-100"

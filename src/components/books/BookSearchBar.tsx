@@ -53,7 +53,7 @@ const BookSearchBar: React.FC<BookSearchBarProps> = ({
   return (
     <>
       <div className="flex flex-wrap gap-3 mb-4">
-        <div className="relative flex-1 min-w-[200px]">
+        <div className="relative basis-full sm:basis-auto flex-1 min-w-[200px]">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
           <input
             type="text"
@@ -70,17 +70,24 @@ const BookSearchBar: React.FC<BookSearchBarProps> = ({
         >
           All ({booksCount})
         </Button>
-        <Button
-          variant={filter === "favorites" ? "primary" : "secondary"}
-          size="sm"
-          onClick={() => onFilterChange("favorites")}
-        >
-          <Star className="w-3.5 h-3.5" /> ({favoritesCount})
-        </Button>
+        {(favoritesCount > 0 || filter === "favorites") && (
+          <Button
+            variant={filter === "favorites" ? "primary" : "secondary"}
+            size="sm"
+            onClick={() => onFilterChange("favorites")}
+            aria-label={`Favourites (${favoritesCount})`}
+            className="whitespace-nowrap"
+          >
+            <Star className="w-3.5 h-3.5" aria-hidden="true" />
+            {favoritesCount}
+          </Button>
+        )}
         <Button
           variant={showGenres ? "primary" : "secondary"}
           size="sm"
           onClick={onToggleGenres}
+          aria-label="Filter by genre"
+          aria-pressed={showGenres}
         >
           <SlidersHorizontal className="w-4 h-4" />
         </Button>
