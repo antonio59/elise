@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- **deps**: Patch undici (CVE-2026-85024) (#77)
 - Polish home hero, stats, shelf and filter bar UX
 - Repair isAdmin crash that locked Elise out of sign-in
 - Remediate security audit findings and accessibility issues
@@ -74,12 +75,9 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
-<<<<<<< Updated upstream
-=======
 - Merge pull request #75 from antonio59/dependabot/npm_and_yarn/minor-patch-ed44d6b5e6
 
 chore(deps): bump the minor-patch group with 8 updates
->>>>>>> Stashed changes
 - Merge pull request #76 from antonio59/fix/home-ux-polish
 
 fix: polish home hero, stats, shelf and filter bar UX
@@ -826,6 +824,8 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Documentation
 
+- Update changelog [skip ci]
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
