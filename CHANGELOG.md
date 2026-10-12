@@ -785,6 +785,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Chores
 
+- **deps**: Bump the minor-patch group with 8 updates (#78)
 - **deps**: Bump the minor-patch group with 8 updates
 - **deps**: Bump the minor-patch group with 10 updates (#74)
 - **deps**: Bump the minor-patch group with 4 updates
@@ -824,6 +825,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
