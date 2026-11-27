@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- **deps**: Clear Dependabot and OSV security alerts (#98)
 - **deps**: Patch undici (CVE-2026-85024) (#77)
 - Polish home hero, stats, shelf and filter bar UX
 - Repair isAdmin crash that locked Elise out of sign-in
@@ -831,6 +832,7 @@ Run migrations:claimOrphanedData from Convex dashboard to claim all data.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
